@@ -16,12 +16,27 @@
     <ClInclude Include="Include\GameEngineWrapper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Sector.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Vector.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\GameEngineWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Sector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
