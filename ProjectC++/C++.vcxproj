@@ -11,16 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\External\NDYGFX\Include\GraphicsEngine.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iAnimatedMesh.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iCamera.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iGraphicsEngineParams.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iImage.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iKeyListener.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iLight.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iMesh.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iTerrain.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iText.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\Vector.h" />
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\GameEngine.h" />
+    <ClInclude Include="Code\Graphics.h" />
     <ClInclude Include="Code\Sector.h" />
-    <ClInclude Include="Code\Vector.h" />
     <ClInclude Include="Code\World.h" />
     <ClInclude Include="Include\GameEngineWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\GameEngine.cpp" />
     <ClCompile Include="Code\GameEngineWrapper.cpp" />
+    <ClCompile Include="Code\Graphics.cpp" />
     <ClCompile Include="Code\Sector.cpp" />
     <ClCompile Include="Code\World.cpp" />
   </ItemGroup>
@@ -56,8 +68,8 @@
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(SolutionDir)\Obj\x86\$(ProjectName)\$(Configuration)\</IntDir>
     <OutDir>$(SolutionDir)\Bin\x86\</OutDir>
-    <IncludePath>$(SolutionDir)\External\hge181\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\External\hge181\lib\vc;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\External\NDYGFX\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\External\NDYGFX\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -76,7 +88,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>hge.lib;hgehelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

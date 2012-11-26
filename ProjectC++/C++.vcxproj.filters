@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="NDYGFX">
+      <UniqueIdentifier>{ee34e9cd-67ce-4728-bf13-8f34041c8957}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\GameEngine.h">
@@ -19,11 +22,44 @@
     <ClInclude Include="Code\Sector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Vector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Code\World.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphics.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iAnimatedMesh.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iCamera.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iGraphicsEngineParams.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iImage.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iKeyListener.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iLight.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iMesh.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iTerrain.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iText.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\Vector.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\GraphicsEngine.h">
+      <Filter>NDYGFX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +73,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Code\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

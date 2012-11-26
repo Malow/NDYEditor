@@ -2,7 +2,6 @@
 // Created by Johansson Rikard 21/11/12 for project Not Dead Yet at BTH(Blekinges Tekniska Högskola)
 
 #include "Vector.h"
-using namespace MaloW;
 
 const int SECTOR_LENGTH = 32;
 

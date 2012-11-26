@@ -10,4 +10,8 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <StartWorkingDirectory>C:\Users\Administrator\Desktop\NotDeadYet\NDYEditor\WorkingDir\</StartWorkingDirectory>
+  </PropertyGroup>
 </Project>
