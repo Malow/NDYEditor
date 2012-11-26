@@ -57,4 +57,26 @@ namespace System { namespace Windows { namespace Interop
 		return returnText;
 	}
 
+	void CppCLI::CreateWorld( int x, int y )
+	{
+		this->m_GameEngine->CreateWorld(x, y);
+	}
+
+	void CppCLI::SaveWorld(String^ msg)
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(msg).ToPointer();
+
+			m_GameEngine->SaveWorld(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
 }}}

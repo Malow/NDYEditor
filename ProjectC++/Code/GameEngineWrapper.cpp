@@ -42,3 +42,13 @@ char* GameEngineWrapper::ProcessText(char* msg)
 {
 	return m_GameEngine->ProcessText(msg);
 }
+
+void GameEngineWrapper::CreateWorld( int x, int y )
+{
+	
+}
+
+void GameEngineWrapper::SaveWorld( char* msg )
+{
+
+}

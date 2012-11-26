@@ -1,6 +1,6 @@
 #pragma once
 
-#include "World.h"
+
 
 class GameEngine
 {
@@ -19,8 +19,4 @@ public:
 	void OnResize(int width, int height);
 
 	char* ProcessText(char* msg);
-
-private:
-	void RenderFunc();
-	bool FrameFunc();
 };

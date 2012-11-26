@@ -25,4 +25,6 @@ Class System.Windows.Interop.CppCLI: AutoLayout, AnsiClass, Class, Public, Befor
     ProcessFrame(): PrivateScope, Public, HideBySig
     OnResize(Int32, Int32): PrivateScope, Public, HideBySig
     ProcessText(String): PrivateScope, Public, HideBySig
+    CreateWorld(Int32, Int32): PrivateScope, Public, HideBySig
+    SaveWorld(String): PrivateScope, Public, HideBySig
     Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
