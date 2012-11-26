@@ -36,5 +36,8 @@ namespace System { namespace Windows { namespace Interop
 		void OnResize(int width, int height);
 
 		String^ ProcessText(String^ text);
+
+		void CreateWorld(int x, int y);
+		void CppCLI::SaveWorld( String^ filePath );
 	};
 }}}
