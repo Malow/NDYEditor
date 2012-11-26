@@ -37,8 +37,6 @@ void GameEngine::Shutdown()
 
 void GameEngine::ProcessFrame()
 {
-	FrameFunc();
-	RenderFunc();
 	GetGraphics()->Update();
 }
 
@@ -47,17 +45,6 @@ void GameEngine::OnResize(int width, int height)
 {
 	m_ScreenWidth = width;
 	m_ScreenHeight = height;
-}
-
-
-bool GameEngine::FrameFunc()
-{
-	return false;
-}
-
-
-void GameEngine::RenderFunc()
-{
 }
 
 
