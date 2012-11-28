@@ -25,6 +25,7 @@
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
+    <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\World.h" />
     <ClInclude Include="Include\GameEngineWrapper.h" />

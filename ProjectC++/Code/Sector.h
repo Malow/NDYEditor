@@ -2,39 +2,34 @@
 // Created by Johansson Rikard 21/11/12 for project Not Dead Yet at BTH(Blekinges Tekniska Högskola)
 
 #include "Vector.h"
+#include <vector>
 
-const int SECTOR_LENGTH = 32;
+static const int SECTOR_LENGTH = 32;
 
 class Sector
 {
 private:
-	float**			zHeightMap;
-	Vector3**		zBlendMap;
+	float zHeightMap[SECTOR_LENGTH*SECTOR_LENGTH];
+	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*3];
 
 	// Save height and width just because it could be needed.
 public:
 	/*Default functions.*/
-
 	Sector();
-	//Sector(int width, int height); // Not needed sense we have SECTOR_LENGTH
 	virtual ~Sector();
 
-	/*Useful functions.*/
+	// Nullifies all the data in this sector
+	void Reset();
+
 	// Returns the blendmap as a double pointer (Vector3**).
-	inline Vector3** GetBlendMap(){ return this->zBlendMap; }
+	inline float* GetBlendMap() { return &zBlendMap[0]; }
+
 	// Returns the heightmap as a double pointer (Int**).
-	inline float** GetHeightMap(){ return this->zHeightMap; }
+	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
 	/*Modify points with 3d vectors*/
-	//Modify blendMap with 3d vector
-	bool ModifyPoint(Vector3 point, Vector3 value);
-	//Modify heightMap with 3d vector
-	bool ModifyPoint(Vector3 point, float value);
-	/* 2d vector if one like to use that*/
-	//Modify blendMap with 2d vector
-	bool ModifyPoint( Vector2 point, Vector3 value );
-	//Modify heihtMap with 2d vector
-	bool ModifyPoint( Vector2 point, float value );
+	// Modify blendMap with float
+	bool ModifyPoint( unsigned int x, unsigned int y, float value );
 
-	int GetSectorLength(){ return SECTOR_LENGTH; }
+	int GetSectorLength() { return SECTOR_LENGTH; }
 };

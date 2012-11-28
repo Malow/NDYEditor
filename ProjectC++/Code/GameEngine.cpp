@@ -11,7 +11,6 @@ GameEngine::GameEngine()
 
 GameEngine::~GameEngine()
 {
-	FreeGraphics();
 }
 
 
@@ -25,6 +24,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 
 	GetGraphics()->StartRendering();
+	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 
 	return 0;
 }
@@ -32,6 +32,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 
 void GameEngine::Shutdown()
 {
+	FreeGraphics();
 }
 
 
