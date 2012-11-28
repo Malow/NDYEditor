@@ -25,6 +25,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 
 	GetGraphics()->StartRendering();
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	GetGraphics()->SetFPSMax(30);
 
 	return 0;
 }
