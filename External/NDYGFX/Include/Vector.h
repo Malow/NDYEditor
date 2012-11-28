@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MALOWVECTOR
+#define MALOWVECTOR
 
 #include <math.h>
 
@@ -182,3 +183,6 @@ public:
 	operator D3DXVECTOR4 () const { return D3DXVECTOR4(x,y,z,w); }
 #endif
 };
+
+
+#endif
