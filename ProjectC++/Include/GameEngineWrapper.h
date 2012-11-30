@@ -29,4 +29,5 @@ public:
 
 	void CreateWorld(int x, int y);
 	void SaveWorld(char* msg);
+	void OpenWorld(char* msg);
 };

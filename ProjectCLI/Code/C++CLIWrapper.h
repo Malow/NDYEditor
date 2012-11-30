@@ -41,6 +41,7 @@ namespace System { namespace Windows { namespace Interop
 		void OnLeftMouseDown( unsigned int x, unsigned int y );
 
 		void CreateWorld(int x, int y);
-		void CppCLI::SaveWorld( String^ filePath );
+		void SaveWorld( String^ filePath );
+		void OpenWorld( String^ filePath );
 	};
 }}}

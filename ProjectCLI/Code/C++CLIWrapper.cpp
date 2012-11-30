@@ -62,14 +62,30 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->CreateWorld(x, y);
 	}
 
-	void CppCLI::SaveWorld(String^ msg)
+	void CppCLI::SaveWorld(String^ filePath)
 	{
 		char* lpText = nullptr;
 
 		// Konvertera String^ -> char*
 		try
 		{
-			lpText = (char*)Marshal::StringToHGlobalAnsi(msg).ToPointer();
+			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
+
+			m_GameEngine->SaveWorld(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+	void CppCLI::OpenWorld( String^ filePath )
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
 
 			m_GameEngine->SaveWorld(lpText);
 		}
@@ -88,5 +104,4 @@ namespace System { namespace Windows { namespace Interop
 	{
 		m_GameEngine->OnLeftMouseDown(x,y);
 	}
-
 }}}

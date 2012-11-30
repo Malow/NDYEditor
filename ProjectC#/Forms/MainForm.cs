@@ -87,7 +87,23 @@ namespace Example
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            string path = "";
+            OpenFileDialog fdlg = new OpenFileDialog();
+            fdlg.Title = "Open File";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                path = fdlg.FileName;
+            }
+            if (path != "")
+            {
+                path += ".map";
+
+                m_GameEngine.OpenWorld(path);
+            }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +129,7 @@ namespace Example
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            this.saveAsToolStripMenuItem_Click(sender, e);
         }
 
         private void form1_Load(object sender, EventArgs e)
