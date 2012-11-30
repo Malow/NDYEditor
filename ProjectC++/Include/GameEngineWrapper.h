@@ -22,6 +22,9 @@ public:
 	void ProcessFrame();
 	void OnResize(int width, int height);
 
+	void OnLeftMouseUp( unsigned int x, unsigned int y );
+	void OnLeftMouseDown( unsigned int x, unsigned int y );
+
 	char* ProcessText(char* msg);
 
 	void CreateWorld(int x, int y);

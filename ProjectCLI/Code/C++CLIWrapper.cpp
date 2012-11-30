@@ -79,4 +79,14 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
+	void CppCLI::OnLeftMouseUp( unsigned int x, unsigned int y )
+	{
+		m_GameEngine->OnLeftMouseUp(x,y);
+	}
+
+	void CppCLI::OnLeftMouseDown( unsigned int x, unsigned int y )
+	{
+		m_GameEngine->OnLeftMouseDown(x,y);
+	}
+
 }}}

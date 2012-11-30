@@ -36,7 +36,8 @@ namespace Example
                 Application.DoEvents();
             }
         }
-        //This is our update/Renderloop
+
+        //This is our update / Renderloop
         private void Run()
         {
             if (m_APILoaded)
@@ -118,6 +119,17 @@ namespace Example
         private void form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        
+        private void RenderBox_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void RenderBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
         }
     }
 }

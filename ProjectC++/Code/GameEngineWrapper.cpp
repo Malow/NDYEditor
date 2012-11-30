@@ -52,3 +52,13 @@ void GameEngineWrapper::SaveWorld( char* msg )
 {
 
 }
+
+void GameEngineWrapper::OnLeftMouseUp( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnLeftMouseUp(x,y);
+}
+
+void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnLeftMouseDown(x,y);
+}

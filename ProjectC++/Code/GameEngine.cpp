@@ -54,3 +54,13 @@ char* GameEngine::ProcessText(char* msg)
 {
 	return msg;
 }
+
+void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
+{
+
+}
+
+void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
+{
+
+}

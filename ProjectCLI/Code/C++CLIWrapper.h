@@ -37,6 +37,9 @@ namespace System { namespace Windows { namespace Interop
 
 		String^ ProcessText(String^ text);
 
+		void OnLeftMouseUp( unsigned int x, unsigned int y );
+		void OnLeftMouseDown( unsigned int x, unsigned int y );
+
 		void CreateWorld(int x, int y);
 		void CppCLI::SaveWorld( String^ filePath );
 	};
