@@ -4,20 +4,10 @@
 World::World( Observer* observer, const std::string& fileName) throw(const char*) : 
 	zSectors(NULL), 
 	zNrOfSectorsWidth(0), 
-	zNrOfSectorsHeight(0), 
-	zFileName(fileName)
+	zNrOfSectorsHeight(0)
 {
 	addObserver(observer);
 	notifyObservers( &WorldLoadedEvent(this) );
-
-	if ( !fileName.empty() )
-	{
-		zFileName = fileName;
-		zFile.open( zFileName.c_str() );
-
-		if ( !zFile.good() )
-			throw("Failed Opening File!");
-	}
 }
 
 
@@ -41,8 +31,7 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 
 World::~World()
 {
-	// Close File
-	zFile.close();
+	if ( zFile ) delete zFile, zFile=0;
 
 	// Delete the zSectors pointers.
 	if ( this->zSectors )
@@ -61,7 +50,7 @@ World::~World()
 			this->zSectors[i] = 0;
 		}
 
-		//Delete the zSector pointer.
+		// Delete the zSector pointer.
 		delete [] this->zSectors;
 		this->zSectors = NULL;
 	}
@@ -76,20 +65,22 @@ bool World::ModifyPoint( Vector2 pos, float value )
 }
 
 
-bool World::SaveFile( const std::string& fileName ) throw(const char*)
+void World::SaveFile()
 {
-	if ( !zFile.good() )
+	if ( zFile )
 	{
-		zFile.open(fileName);
-
-		if ( !zFile.good() )
-			throw("Failed Accessing File!");
-
-		// Check Map Size
-
+		for(unsigned int x=0; x<zNrOfSectorsWidth; ++x)
+		{
+			for(unsigned int y=0; y<zNrOfSectorsHeight; ++y)
+			{
+				if ( this->zSectors[x][y] && this->zSectors[x][y]->isEdited() )
+				{
+					zFile->writeHeightMap(this->zSectors[x][y]->GetHeightMap(),x,y);
+					this->zSectors[x][y]->setEdited(false);
+				}
+			}
+		}
 	}
-
-	return true;
 }
 
 
@@ -108,15 +99,16 @@ Sector* World::GetSector( const Vector2& pos ) throw(const char*)
 
 	if ( !s )
 	{
-		if ( !zFile.good() )
-		{
-			s = new Sector();
-			this->zSectors[(int)(pos.x)][(int)(pos.y)] = s;
-		}
-		else
+		s = new Sector();
+		this->zSectors[(int)(pos.x)][(int)(pos.y)] = s;
+
+		if ( zFile )
 		{
 			// Load From File
+			zFile->readHeightMap(s->GetHeightMap(),pos.x,pos.y);
 		}
+
+		notifyObservers( &SectorLoadedEvent(this,pos) );
 	}
 
 	return s;

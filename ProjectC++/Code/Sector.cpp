@@ -1,7 +1,7 @@
 #include "Sector.h"
 
 
-Sector::Sector()
+Sector::Sector() : zEditedFlag(false)
 {
 	Reset();
 }
@@ -21,6 +21,7 @@ void Sector::Reset()
 		zBlendMap[x*3+1] = 0.0f;
 		zBlendMap[x*3+2] = 0.0f;
 	}
+	zEditedFlag = true;
 }
 
 bool Sector::ModifyPoint( unsigned int x, unsigned int y, float value )
@@ -32,6 +33,8 @@ bool Sector::ModifyPoint( unsigned int x, unsigned int y, float value )
 #endif 
 
 	this->zHeightMap[y*SECTOR_LENGTH+x] += value;
+
+	zEditedFlag = true;
 
 	return true;
 }

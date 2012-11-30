@@ -28,6 +28,7 @@
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\World.h" />
+    <ClInclude Include="Code\WorldFile.h" />
     <ClInclude Include="Include\GameEngineWrapper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +37,7 @@
     <ClCompile Include="Code\Graphics.cpp" />
     <ClCompile Include="Code\Sector.cpp" />
     <ClCompile Include="Code\World.cpp" />
+    <ClCompile Include="Code\WorldFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EE71C2BC-BC4B-4FF4-B197-9FF385991C64}</ProjectGuid>

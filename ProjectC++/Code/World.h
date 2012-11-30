@@ -2,8 +2,8 @@
 
 #include "Sector.h"
 #include "Observer.h"
+#include "WorldFile.h"
 #include <string>
-#include <fstream>
 
 class World;
 
@@ -25,8 +25,7 @@ public:
 class World : public Observed
 {
 private:
-	std::string zFileName;
-	std::fstream zFile;
+	WorldFile* zFile;
 
 	Sector*** zSectors;
 
@@ -38,13 +37,10 @@ public:
 	virtual ~World();
 
 	// Save World To File
-	bool SaveFile( const std::string& fileName="" ) throw(const char*);
+	void SaveFile();
 
 	//Modify functions
-	bool ModifyPoint(Vector3 pos, float value);
 	bool ModifyPoint(Vector2 pos, float value);
-	bool ModifyPoint(Vector3 pos, Vector3 value);
-	bool ModifyPoint(Vector2 pos, Vector3 value);
 
 private:
 	// Get Sector X Y

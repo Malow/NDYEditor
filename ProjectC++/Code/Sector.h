@@ -11,6 +11,7 @@ class Sector
 private:
 	float zHeightMap[SECTOR_LENGTH*SECTOR_LENGTH];
 	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*3];
+	bool zEditedFlag;
 
 	// Save height and width just because it could be needed.
 public:
@@ -27,9 +28,10 @@ public:
 	// Returns the heightmap as a double pointer (Int**).
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
-	/*Modify points with 3d vectors*/
-	// Modify blendMap with float
+	// Modify point by value, set the edited flag
 	bool ModifyPoint( unsigned int x, unsigned int y, float value );
 
-	int GetSectorLength() { return SECTOR_LENGTH; }
+	inline int GetSectorLength() { return SECTOR_LENGTH; }
+	inline void setEdited( bool state ) { zEditedFlag = state; }
+	inline bool isEdited() const { return zEditedFlag; }
 };
