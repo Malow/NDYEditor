@@ -64,41 +64,41 @@
             this.TopPanelSplitter = new System.Windows.Forms.SplitContainer();
             this.Test = new System.Windows.Forms.Button();
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
+            this.btnRotate = new System.Windows.Forms.Button();
             this.bth_Move = new System.Windows.Forms.Button();
             this.btnSelect = new System.Windows.Forms.Button();
             this.RenderAndInfoSplitter = new System.Windows.Forms.SplitContainer();
             this.RenderBox = new System.Windows.Forms.Panel();
             this.InfoSplitter = new System.Windows.Forms.SplitContainer();
-            this.Label_Scale = new System.Windows.Forms.Label();
-            this.Label_Scale_Z = new System.Windows.Forms.Label();
-            this.TextBox_Scale_Z = new System.Windows.Forms.TextBox();
-            this.Label_Scale_Y = new System.Windows.Forms.Label();
-            this.TextBox_Scale_Y = new System.Windows.Forms.TextBox();
-            this.Label_Scale_X = new System.Windows.Forms.Label();
-            this.TextBox_Scale_X = new System.Windows.Forms.TextBox();
-            this.Label_Rotation = new System.Windows.Forms.Label();
-            this.Label_Rot_Z = new System.Windows.Forms.Label();
-            this.TextBox_Rot_Z = new System.Windows.Forms.TextBox();
-            this.Label_Rot_Y = new System.Windows.Forms.Label();
-            this.TextBox_Rot_Y = new System.Windows.Forms.TextBox();
-            this.Label_Rot_X = new System.Windows.Forms.Label();
-            this.TextBox_Rot_X = new System.Windows.Forms.TextBox();
-            this.Label_Position = new System.Windows.Forms.Label();
-            this.Label_Pos_Z = new System.Windows.Forms.Label();
-            this.TextBox_Pos_Z = new System.Windows.Forms.TextBox();
-            this.Label_Pos_Y = new System.Windows.Forms.Label();
-            this.TextBox_Pos_Y = new System.Windows.Forms.TextBox();
-            this.Label_Pos_X = new System.Windows.Forms.Label();
-            this.TextBox_Pos_X = new System.Windows.Forms.TextBox();
-            this.Label_Anim = new System.Windows.Forms.Label();
-            this.ComboBox_Animation = new System.Windows.Forms.ComboBox();
-            this.Label_Tex = new System.Windows.Forms.Label();
-            this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
-            this.Label_Model = new System.Windows.Forms.Label();
-            this.ComboBox_Model = new System.Windows.Forms.ComboBox();
-            this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
             this.Panel_Info = new System.Windows.Forms.Panel();
-            this.btnRotate = new System.Windows.Forms.Button();
+            this.Label_Scale = new System.Windows.Forms.Label();
+            this.Label_Rot_Y = new System.Windows.Forms.Label();
+            this.Label_Scale_Z = new System.Windows.Forms.Label();
+            this.TextBox_Pos_X = new System.Windows.Forms.TextBox();
+            this.TextBox_Scale_Z = new System.Windows.Forms.TextBox();
+            this.Label_Pos_X = new System.Windows.Forms.Label();
+            this.Label_Scale_Y = new System.Windows.Forms.Label();
+            this.TextBox_Pos_Y = new System.Windows.Forms.TextBox();
+            this.TextBox_Scale_Y = new System.Windows.Forms.TextBox();
+            this.Label_Pos_Y = new System.Windows.Forms.Label();
+            this.Label_Scale_X = new System.Windows.Forms.Label();
+            this.TextBox_Pos_Z = new System.Windows.Forms.TextBox();
+            this.TextBox_Scale_X = new System.Windows.Forms.TextBox();
+            this.Label_Pos_Z = new System.Windows.Forms.Label();
+            this.Label_Rotation = new System.Windows.Forms.Label();
+            this.Label_Position = new System.Windows.Forms.Label();
+            this.Label_Rot_Z = new System.Windows.Forms.Label();
+            this.TextBox_Rot_X = new System.Windows.Forms.TextBox();
+            this.TextBox_Rot_Z = new System.Windows.Forms.TextBox();
+            this.Label_Rot_X = new System.Windows.Forms.Label();
+            this.TextBox_Rot_Y = new System.Windows.Forms.TextBox();
+            this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
+            this.Label_Anim = new System.Windows.Forms.Label();
+            this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Animation = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Model = new System.Windows.Forms.ComboBox();
+            this.Label_Tex = new System.Windows.Forms.Label();
+            this.Label_Model = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
             this.TopPanelSplitter.Panel1.SuspendLayout();
@@ -116,8 +116,8 @@
             this.InfoSplitter.Panel1.SuspendLayout();
             this.InfoSplitter.Panel2.SuspendLayout();
             this.InfoSplitter.SuspendLayout();
-            this.Panel_ObjectInfo.SuspendLayout();
             this.Panel_Info.SuspendLayout();
+            this.Panel_ObjectInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -401,7 +401,7 @@
             this.Test.Location = new System.Drawing.Point(5, 5);
             this.Test.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(35, 34);
+            this.Test.Size = new System.Drawing.Size(35, 35);
             this.Test.TabIndex = 0;
             this.Test.Text = "A";
             this.Test.UseVisualStyleBackColor = true;
@@ -428,6 +428,17 @@
             this.LeftToolBarSplitter.SplitterDistance = 100;
             this.LeftToolBarSplitter.TabIndex = 0;
             // 
+            // btnRotate
+            // 
+            this.btnRotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnRotate.Location = new System.Drawing.Point(5, 65);
+            this.btnRotate.Name = "btnRotate";
+            this.btnRotate.Size = new System.Drawing.Size(90, 25);
+            this.btnRotate.TabIndex = 2;
+            this.btnRotate.Text = "Rotate";
+            this.btnRotate.UseVisualStyleBackColor = true;
+            this.btnRotate.Click += new System.EventHandler(this.btnRotate_Click);
+            // 
             // bth_Move
             // 
             this.bth_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -451,6 +462,7 @@
             this.btnSelect.Text = "Select";
             this.btnSelect.UseVisualStyleBackColor = true;
             this.btnSelect.Click += new System.EventHandler(this.SelectTool_Click);
+            this.btnSelect.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.btnSelect_KeyPress);
             // 
             // RenderAndInfoSplitter
             // 
@@ -505,258 +517,6 @@
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.TabIndex = 0;
             // 
-            // Label_Scale
-            // 
-            this.Label_Scale.AutoSize = true;
-            this.Label_Scale.Location = new System.Drawing.Point(15, 132);
-            this.Label_Scale.Name = "Label_Scale";
-            this.Label_Scale.Size = new System.Drawing.Size(47, 17);
-            this.Label_Scale.TabIndex = 20;
-            this.Label_Scale.Text = "Scale:";
-            // 
-            // Label_Scale_Z
-            // 
-            this.Label_Scale_Z.AutoSize = true;
-            this.Label_Scale_Z.Location = new System.Drawing.Point(15, 210);
-            this.Label_Scale_Z.Name = "Label_Scale_Z";
-            this.Label_Scale_Z.Size = new System.Drawing.Size(21, 17);
-            this.Label_Scale_Z.TabIndex = 19;
-            this.Label_Scale_Z.Text = "Z:";
-            // 
-            // TextBox_Scale_Z
-            // 
-            this.TextBox_Scale_Z.Location = new System.Drawing.Point(42, 207);
-            this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
-            this.TextBox_Scale_Z.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Scale_Z.TabIndex = 18;
-            // 
-            // Label_Scale_Y
-            // 
-            this.Label_Scale_Y.AutoSize = true;
-            this.Label_Scale_Y.Location = new System.Drawing.Point(15, 181);
-            this.Label_Scale_Y.Name = "Label_Scale_Y";
-            this.Label_Scale_Y.Size = new System.Drawing.Size(21, 17);
-            this.Label_Scale_Y.TabIndex = 17;
-            this.Label_Scale_Y.Text = "Y:";
-            // 
-            // TextBox_Scale_Y
-            // 
-            this.TextBox_Scale_Y.Location = new System.Drawing.Point(42, 181);
-            this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
-            this.TextBox_Scale_Y.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Scale_Y.TabIndex = 16;
-            // 
-            // Label_Scale_X
-            // 
-            this.Label_Scale_X.AutoSize = true;
-            this.Label_Scale_X.Location = new System.Drawing.Point(15, 152);
-            this.Label_Scale_X.Name = "Label_Scale_X";
-            this.Label_Scale_X.Size = new System.Drawing.Size(21, 17);
-            this.Label_Scale_X.TabIndex = 15;
-            this.Label_Scale_X.Text = "X:";
-            // 
-            // TextBox_Scale_X
-            // 
-            this.TextBox_Scale_X.Location = new System.Drawing.Point(42, 152);
-            this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_X.Name = "TextBox_Scale_X";
-            this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Scale_X.TabIndex = 14;
-            // 
-            // Label_Rotation
-            // 
-            this.Label_Rotation.AutoSize = true;
-            this.Label_Rotation.Location = new System.Drawing.Point(134, 13);
-            this.Label_Rotation.Name = "Label_Rotation";
-            this.Label_Rotation.Size = new System.Drawing.Size(72, 17);
-            this.Label_Rotation.TabIndex = 13;
-            this.Label_Rotation.Text = "Rotations:";
-            // 
-            // Label_Rot_Z
-            // 
-            this.Label_Rot_Z.AutoSize = true;
-            this.Label_Rot_Z.Location = new System.Drawing.Point(134, 91);
-            this.Label_Rot_Z.Name = "Label_Rot_Z";
-            this.Label_Rot_Z.Size = new System.Drawing.Size(21, 17);
-            this.Label_Rot_Z.TabIndex = 12;
-            this.Label_Rot_Z.Text = "Z:";
-            // 
-            // TextBox_Rot_Z
-            // 
-            this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 88);
-            this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
-            this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Rot_Z.TabIndex = 11;
-            // 
-            // Label_Rot_Y
-            // 
-            this.Label_Rot_Y.AutoSize = true;
-            this.Label_Rot_Y.Location = new System.Drawing.Point(134, 62);
-            this.Label_Rot_Y.Name = "Label_Rot_Y";
-            this.Label_Rot_Y.Size = new System.Drawing.Size(21, 17);
-            this.Label_Rot_Y.TabIndex = 10;
-            this.Label_Rot_Y.Text = "Y:";
-            // 
-            // TextBox_Rot_Y
-            // 
-            this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
-            this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
-            this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Rot_Y.TabIndex = 9;
-            // 
-            // Label_Rot_X
-            // 
-            this.Label_Rot_X.AutoSize = true;
-            this.Label_Rot_X.Location = new System.Drawing.Point(134, 33);
-            this.Label_Rot_X.Name = "Label_Rot_X";
-            this.Label_Rot_X.Size = new System.Drawing.Size(21, 17);
-            this.Label_Rot_X.TabIndex = 8;
-            this.Label_Rot_X.Text = "X:";
-            // 
-            // TextBox_Rot_X
-            // 
-            this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
-            this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Rot_X.Name = "TextBox_Rot_X";
-            this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Rot_X.TabIndex = 7;
-            // 
-            // Label_Position
-            // 
-            this.Label_Position.AutoSize = true;
-            this.Label_Position.Location = new System.Drawing.Point(15, 13);
-            this.Label_Position.Name = "Label_Position";
-            this.Label_Position.Size = new System.Drawing.Size(69, 17);
-            this.Label_Position.TabIndex = 6;
-            this.Label_Position.Text = "Positions:";
-            // 
-            // Label_Pos_Z
-            // 
-            this.Label_Pos_Z.AutoSize = true;
-            this.Label_Pos_Z.Location = new System.Drawing.Point(15, 91);
-            this.Label_Pos_Z.Name = "Label_Pos_Z";
-            this.Label_Pos_Z.Size = new System.Drawing.Size(21, 17);
-            this.Label_Pos_Z.TabIndex = 5;
-            this.Label_Pos_Z.Text = "Z:";
-            // 
-            // TextBox_Pos_Z
-            // 
-            this.TextBox_Pos_Z.Location = new System.Drawing.Point(42, 88);
-            this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
-            this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Pos_Z.TabIndex = 4;
-            // 
-            // Label_Pos_Y
-            // 
-            this.Label_Pos_Y.AutoSize = true;
-            this.Label_Pos_Y.Location = new System.Drawing.Point(15, 62);
-            this.Label_Pos_Y.Name = "Label_Pos_Y";
-            this.Label_Pos_Y.Size = new System.Drawing.Size(21, 17);
-            this.Label_Pos_Y.TabIndex = 3;
-            this.Label_Pos_Y.Text = "Y:";
-            // 
-            // TextBox_Pos_Y
-            // 
-            this.TextBox_Pos_Y.Location = new System.Drawing.Point(42, 62);
-            this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
-            this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Pos_Y.TabIndex = 2;
-            // 
-            // Label_Pos_X
-            // 
-            this.Label_Pos_X.AutoSize = true;
-            this.Label_Pos_X.Location = new System.Drawing.Point(15, 33);
-            this.Label_Pos_X.Name = "Label_Pos_X";
-            this.Label_Pos_X.Size = new System.Drawing.Size(21, 17);
-            this.Label_Pos_X.TabIndex = 1;
-            this.Label_Pos_X.Text = "X:";
-            // 
-            // TextBox_Pos_X
-            // 
-            this.TextBox_Pos_X.Location = new System.Drawing.Point(42, 33);
-            this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Pos_X.Name = "TextBox_Pos_X";
-            this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
-            this.TextBox_Pos_X.TabIndex = 0;
-            // 
-            // Label_Anim
-            // 
-            this.Label_Anim.AutoSize = true;
-            this.Label_Anim.Location = new System.Drawing.Point(14, 77);
-            this.Label_Anim.Name = "Label_Anim";
-            this.Label_Anim.Size = new System.Drawing.Size(74, 17);
-            this.Label_Anim.TabIndex = 5;
-            this.Label_Anim.Text = "Animation:";
-            // 
-            // ComboBox_Animation
-            // 
-            this.ComboBox_Animation.FormattingEnabled = true;
-            this.ComboBox_Animation.Location = new System.Drawing.Point(96, 74);
-            this.ComboBox_Animation.Name = "ComboBox_Animation";
-            this.ComboBox_Animation.Size = new System.Drawing.Size(110, 24);
-            this.ComboBox_Animation.Sorted = true;
-            this.ComboBox_Animation.TabIndex = 4;
-            this.ComboBox_Animation.Text = "None";
-            // 
-            // Label_Tex
-            // 
-            this.Label_Tex.AutoSize = true;
-            this.Label_Tex.Location = new System.Drawing.Point(14, 47);
-            this.Label_Tex.Name = "Label_Tex";
-            this.Label_Tex.Size = new System.Drawing.Size(60, 17);
-            this.Label_Tex.TabIndex = 3;
-            this.Label_Tex.Text = "Texture:";
-            // 
-            // ComboBox_Texture
-            // 
-            this.ComboBox_Texture.FormattingEnabled = true;
-            this.ComboBox_Texture.Location = new System.Drawing.Point(96, 44);
-            this.ComboBox_Texture.Name = "ComboBox_Texture";
-            this.ComboBox_Texture.Size = new System.Drawing.Size(110, 24);
-            this.ComboBox_Texture.Sorted = true;
-            this.ComboBox_Texture.TabIndex = 2;
-            this.ComboBox_Texture.Text = "None";
-            // 
-            // Label_Model
-            // 
-            this.Label_Model.AutoSize = true;
-            this.Label_Model.Location = new System.Drawing.Point(14, 17);
-            this.Label_Model.Name = "Label_Model";
-            this.Label_Model.Size = new System.Drawing.Size(50, 17);
-            this.Label_Model.TabIndex = 1;
-            this.Label_Model.Text = "Model:";
-            // 
-            // ComboBox_Model
-            // 
-            this.ComboBox_Model.FormattingEnabled = true;
-            this.ComboBox_Model.Location = new System.Drawing.Point(96, 14);
-            this.ComboBox_Model.Name = "ComboBox_Model";
-            this.ComboBox_Model.Size = new System.Drawing.Size(110, 24);
-            this.ComboBox_Model.Sorted = true;
-            this.ComboBox_Model.TabIndex = 0;
-            this.ComboBox_Model.Text = "None";
-            // 
-            // Panel_ObjectInfo
-            // 
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Texture);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Animation);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Model);
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Tex);
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
-            this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
-            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(228, 372);
-            this.Panel_ObjectInfo.TabIndex = 6;
-            this.Panel_ObjectInfo.Visible = false;
-            // 
             // Panel_Info
             // 
             this.Panel_Info.Controls.Add(this.Label_Scale);
@@ -787,16 +547,257 @@
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
-            // btnRotate
+            // Label_Scale
             // 
-            this.btnRotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnRotate.Location = new System.Drawing.Point(5, 65);
-            this.btnRotate.Name = "btnRotate";
-            this.btnRotate.Size = new System.Drawing.Size(90, 25);
-            this.btnRotate.TabIndex = 2;
-            this.btnRotate.Text = "Rotate";
-            this.btnRotate.UseVisualStyleBackColor = true;
-            this.btnRotate.Click += new System.EventHandler(this.btnRotate_Click);
+            this.Label_Scale.AutoSize = true;
+            this.Label_Scale.Location = new System.Drawing.Point(15, 132);
+            this.Label_Scale.Name = "Label_Scale";
+            this.Label_Scale.Size = new System.Drawing.Size(47, 17);
+            this.Label_Scale.TabIndex = 20;
+            this.Label_Scale.Text = "Scale:";
+            // 
+            // Label_Rot_Y
+            // 
+            this.Label_Rot_Y.AutoSize = true;
+            this.Label_Rot_Y.Location = new System.Drawing.Point(134, 62);
+            this.Label_Rot_Y.Name = "Label_Rot_Y";
+            this.Label_Rot_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_Y.TabIndex = 10;
+            this.Label_Rot_Y.Text = "Y:";
+            // 
+            // Label_Scale_Z
+            // 
+            this.Label_Scale_Z.AutoSize = true;
+            this.Label_Scale_Z.Location = new System.Drawing.Point(15, 210);
+            this.Label_Scale_Z.Name = "Label_Scale_Z";
+            this.Label_Scale_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_Z.TabIndex = 19;
+            this.Label_Scale_Z.Text = "Z:";
+            // 
+            // TextBox_Pos_X
+            // 
+            this.TextBox_Pos_X.Location = new System.Drawing.Point(42, 33);
+            this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_X.Name = "TextBox_Pos_X";
+            this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_X.TabIndex = 0;
+            // 
+            // TextBox_Scale_Z
+            // 
+            this.TextBox_Scale_Z.Location = new System.Drawing.Point(42, 207);
+            this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
+            this.TextBox_Scale_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_Z.TabIndex = 18;
+            // 
+            // Label_Pos_X
+            // 
+            this.Label_Pos_X.AutoSize = true;
+            this.Label_Pos_X.Location = new System.Drawing.Point(15, 33);
+            this.Label_Pos_X.Name = "Label_Pos_X";
+            this.Label_Pos_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_X.TabIndex = 1;
+            this.Label_Pos_X.Text = "X:";
+            // 
+            // Label_Scale_Y
+            // 
+            this.Label_Scale_Y.AutoSize = true;
+            this.Label_Scale_Y.Location = new System.Drawing.Point(15, 181);
+            this.Label_Scale_Y.Name = "Label_Scale_Y";
+            this.Label_Scale_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_Y.TabIndex = 17;
+            this.Label_Scale_Y.Text = "Y:";
+            // 
+            // TextBox_Pos_Y
+            // 
+            this.TextBox_Pos_Y.Location = new System.Drawing.Point(42, 62);
+            this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
+            this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_Y.TabIndex = 2;
+            // 
+            // TextBox_Scale_Y
+            // 
+            this.TextBox_Scale_Y.Location = new System.Drawing.Point(42, 181);
+            this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
+            this.TextBox_Scale_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_Y.TabIndex = 16;
+            // 
+            // Label_Pos_Y
+            // 
+            this.Label_Pos_Y.AutoSize = true;
+            this.Label_Pos_Y.Location = new System.Drawing.Point(15, 62);
+            this.Label_Pos_Y.Name = "Label_Pos_Y";
+            this.Label_Pos_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_Y.TabIndex = 3;
+            this.Label_Pos_Y.Text = "Y:";
+            // 
+            // Label_Scale_X
+            // 
+            this.Label_Scale_X.AutoSize = true;
+            this.Label_Scale_X.Location = new System.Drawing.Point(15, 152);
+            this.Label_Scale_X.Name = "Label_Scale_X";
+            this.Label_Scale_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_X.TabIndex = 15;
+            this.Label_Scale_X.Text = "X:";
+            // 
+            // TextBox_Pos_Z
+            // 
+            this.TextBox_Pos_Z.Location = new System.Drawing.Point(42, 88);
+            this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
+            this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_Z.TabIndex = 4;
+            // 
+            // TextBox_Scale_X
+            // 
+            this.TextBox_Scale_X.Location = new System.Drawing.Point(42, 152);
+            this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_X.Name = "TextBox_Scale_X";
+            this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_X.TabIndex = 14;
+            // 
+            // Label_Pos_Z
+            // 
+            this.Label_Pos_Z.AutoSize = true;
+            this.Label_Pos_Z.Location = new System.Drawing.Point(15, 91);
+            this.Label_Pos_Z.Name = "Label_Pos_Z";
+            this.Label_Pos_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_Z.TabIndex = 5;
+            this.Label_Pos_Z.Text = "Z:";
+            // 
+            // Label_Rotation
+            // 
+            this.Label_Rotation.AutoSize = true;
+            this.Label_Rotation.Location = new System.Drawing.Point(134, 13);
+            this.Label_Rotation.Name = "Label_Rotation";
+            this.Label_Rotation.Size = new System.Drawing.Size(72, 17);
+            this.Label_Rotation.TabIndex = 13;
+            this.Label_Rotation.Text = "Rotations:";
+            // 
+            // Label_Position
+            // 
+            this.Label_Position.AutoSize = true;
+            this.Label_Position.Location = new System.Drawing.Point(15, 13);
+            this.Label_Position.Name = "Label_Position";
+            this.Label_Position.Size = new System.Drawing.Size(69, 17);
+            this.Label_Position.TabIndex = 6;
+            this.Label_Position.Text = "Positions:";
+            // 
+            // Label_Rot_Z
+            // 
+            this.Label_Rot_Z.AutoSize = true;
+            this.Label_Rot_Z.Location = new System.Drawing.Point(134, 91);
+            this.Label_Rot_Z.Name = "Label_Rot_Z";
+            this.Label_Rot_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_Z.TabIndex = 12;
+            this.Label_Rot_Z.Text = "Z:";
+            // 
+            // TextBox_Rot_X
+            // 
+            this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
+            this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_X.Name = "TextBox_Rot_X";
+            this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_X.TabIndex = 7;
+            // 
+            // TextBox_Rot_Z
+            // 
+            this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 88);
+            this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
+            this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_Z.TabIndex = 11;
+            // 
+            // Label_Rot_X
+            // 
+            this.Label_Rot_X.AutoSize = true;
+            this.Label_Rot_X.Location = new System.Drawing.Point(134, 33);
+            this.Label_Rot_X.Name = "Label_Rot_X";
+            this.Label_Rot_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_X.TabIndex = 8;
+            this.Label_Rot_X.Text = "X:";
+            // 
+            // TextBox_Rot_Y
+            // 
+            this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
+            this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
+            this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_Y.TabIndex = 9;
+            // 
+            // Panel_ObjectInfo
+            // 
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Texture);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Animation);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Model);
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Tex);
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
+            this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
+            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(228, 372);
+            this.Panel_ObjectInfo.TabIndex = 6;
+            this.Panel_ObjectInfo.Visible = false;
+            // 
+            // Label_Anim
+            // 
+            this.Label_Anim.AutoSize = true;
+            this.Label_Anim.Location = new System.Drawing.Point(14, 77);
+            this.Label_Anim.Name = "Label_Anim";
+            this.Label_Anim.Size = new System.Drawing.Size(74, 17);
+            this.Label_Anim.TabIndex = 5;
+            this.Label_Anim.Text = "Animation:";
+            // 
+            // ComboBox_Texture
+            // 
+            this.ComboBox_Texture.FormattingEnabled = true;
+            this.ComboBox_Texture.Location = new System.Drawing.Point(96, 44);
+            this.ComboBox_Texture.Name = "ComboBox_Texture";
+            this.ComboBox_Texture.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Texture.Sorted = true;
+            this.ComboBox_Texture.TabIndex = 2;
+            this.ComboBox_Texture.Text = "None";
+            // 
+            // ComboBox_Animation
+            // 
+            this.ComboBox_Animation.FormattingEnabled = true;
+            this.ComboBox_Animation.Location = new System.Drawing.Point(96, 74);
+            this.ComboBox_Animation.Name = "ComboBox_Animation";
+            this.ComboBox_Animation.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Animation.Sorted = true;
+            this.ComboBox_Animation.TabIndex = 4;
+            this.ComboBox_Animation.Text = "None";
+            // 
+            // ComboBox_Model
+            // 
+            this.ComboBox_Model.FormattingEnabled = true;
+            this.ComboBox_Model.Location = new System.Drawing.Point(96, 14);
+            this.ComboBox_Model.Name = "ComboBox_Model";
+            this.ComboBox_Model.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Model.Sorted = true;
+            this.ComboBox_Model.TabIndex = 0;
+            this.ComboBox_Model.Text = "None";
+            // 
+            // Label_Tex
+            // 
+            this.Label_Tex.AutoSize = true;
+            this.Label_Tex.Location = new System.Drawing.Point(14, 47);
+            this.Label_Tex.Name = "Label_Tex";
+            this.Label_Tex.Size = new System.Drawing.Size(60, 17);
+            this.Label_Tex.TabIndex = 3;
+            this.Label_Tex.Text = "Texture:";
+            // 
+            // Label_Model
+            // 
+            this.Label_Model.AutoSize = true;
+            this.Label_Model.Location = new System.Drawing.Point(14, 17);
+            this.Label_Model.Name = "Label_Model";
+            this.Label_Model.Size = new System.Drawing.Size(50, 17);
+            this.Label_Model.TabIndex = 1;
+            this.Label_Model.Text = "Model:";
             // 
             // NDYEditor
             // 
@@ -813,6 +814,8 @@
             this.Name = "NDYEditor";
             this.Text = "BOOM! Editor";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Activated += new System.EventHandler(this.NDYEditor_Activated);
+            this.Deactivate += new System.EventHandler(this.NDYEditor_Deactivate);
             this.Load += new System.EventHandler(this.form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -832,10 +835,10 @@
             this.InfoSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.InfoSplitter)).EndInit();
             this.InfoSplitter.ResumeLayout(false);
-            this.Panel_ObjectInfo.ResumeLayout(false);
-            this.Panel_ObjectInfo.PerformLayout();
             this.Panel_Info.ResumeLayout(false);
             this.Panel_Info.PerformLayout();
+            this.Panel_ObjectInfo.ResumeLayout(false);
+            this.Panel_ObjectInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

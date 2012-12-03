@@ -2,6 +2,14 @@
 
 #include "World.h"
 
+enum MODE
+{
+	NONE,
+	SELECT,
+	MOVE,
+	ROT,
+};
+
 class GameEngine : public Observer
 {
 private:
@@ -9,6 +17,7 @@ private:
 	int m_ScreenHeight;
 
 	World* m_World;
+	MODE m_mode;
 
 public:
 	GameEngine();
@@ -19,6 +28,8 @@ public:
 
 	void ProcessFrame();
 	void OnResize(int width, int height);
+
+	void SetWindowFocused(bool value);
 
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );

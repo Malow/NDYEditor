@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using System.Runtime.InteropServices;
+
 
 namespace Example
 {
@@ -15,13 +17,14 @@ namespace Example
         NONE,
         SELECT,
         MOVE,
-        ROT,
+        ROT
     }
     public partial class NDYEditor : Form
     {
+
         CppCLI m_GameEngine = null;
         bool m_APILoaded = false;
-        MODE mode =  MODE.NONE;
+        MODE m_mode =  MODE.NONE;
 
         int SelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
 
@@ -33,10 +36,6 @@ namespace Example
             m_GameEngine.Init(RenderBox.Handle, RenderBox.Width, RenderBox.Height);
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             this.Resize += new EventHandler(form1_Resize);
-
-
-            
-
         }
 
         public void GameLoop()
@@ -45,6 +44,7 @@ namespace Example
             {
                 Run();
                 Application.DoEvents();
+                this.m_GameEngine.Update();
             }
         }
 
@@ -173,15 +173,15 @@ namespace Example
             {
                 this.Panel_Info.Show();
                 this.Panel_ObjectInfo.Show();
-                this.mode = MODE.MOVE;
-                m_GameEngine.ModeSelect((int)this.mode);
+                this.m_mode = MODE.MOVE;
+                m_GameEngine.ModeSelect((int)this.m_mode);
             }
             else
             {
                 this.Panel_Info.Hide();
                 this.Panel_ObjectInfo.Hide();
-                this.mode = MODE.SELECT;
-                m_GameEngine.ModeSelect((int)this.mode);
+                this.m_mode = MODE.SELECT;
+                m_GameEngine.ModeSelect((int)this.m_mode);
             }
         }
 
@@ -189,8 +189,8 @@ namespace Example
         {
             this.Panel_Info.Hide();
             this.Panel_ObjectInfo.Hide();
-            this.mode = MODE.SELECT;
-            m_GameEngine.ModeSelect((int)this.mode);
+            this.m_mode = MODE.SELECT;
+            m_GameEngine.ModeSelect((int)this.m_mode);
         }
 
         private void btnRotate_Click(object sender, EventArgs e)
@@ -199,15 +199,34 @@ namespace Example
             {
                 this.Panel_Info.Show();
                 this.Panel_ObjectInfo.Show();
-                this.mode = MODE.ROT;
-                m_GameEngine.ModeSelect((int)this.mode);
+                this.m_mode = MODE.ROT;
+                m_GameEngine.ModeSelect((int)this.m_mode);
             }
             else
             {
                 this.Panel_Info.Hide();
                 this.Panel_ObjectInfo.Hide();
-                this.mode = MODE.SELECT;
-                m_GameEngine.ModeSelect((int)this.mode);
+                this.m_mode = MODE.SELECT;
+                m_GameEngine.ModeSelect((int)this.m_mode);
+            }
+        }
+
+        private void NDYEditor_Activated(object sender, EventArgs e)
+        {
+            this.m_GameEngine.SetWindowFocused(false);
+        }
+
+        private void NDYEditor_Deactivate(object sender, EventArgs e)
+        {
+            this.m_GameEngine.SetWindowFocused(true);
+        }
+
+        private void btnSelect_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                this.m_mode = MODE.NONE;
+                this.m_GameEngine.ModeSelect((int)this.m_mode);
             }
         }
     }

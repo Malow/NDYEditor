@@ -110,4 +110,14 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->ModeSelect(mode);
 	}
 
+	void CppCLI::Update()
+	{
+		this->m_GameEngine->Update();
+	}
+
+	void CppCLI::SetWindowFocused( bool value )
+	{
+		this->m_GameEngine->SetWindowFocused(value);
+	}
+
 }}}

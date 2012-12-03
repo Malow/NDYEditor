@@ -34,6 +34,8 @@ namespace System { namespace Windows { namespace Interop
 
 		void ProcessFrame();
 		void OnResize(int width, int height);
+		void Update();
+		void SetWindowFocused(bool value);
 
 		String^ ProcessText(String^ text);
 

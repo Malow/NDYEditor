@@ -73,3 +73,13 @@ void GameEngineWrapper::ModeSelect( int mode )
 	this->m_GameEngine->SelectMode(mode);
 }
 
+void GameEngineWrapper::Update()
+{
+	this->m_GameEngine->ProcessFrame();
+}
+
+void GameEngineWrapper::SetWindowFocused( bool value )
+{
+	this->m_GameEngine->SetWindowFocused(value);
+}
+

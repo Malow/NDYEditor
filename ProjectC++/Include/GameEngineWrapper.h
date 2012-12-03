@@ -21,6 +21,8 @@ public:
 
 	void ProcessFrame();
 	void OnResize(int width, int height);
+	void Update();
+	void SetWindowFocused(bool value);
 
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );

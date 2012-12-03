@@ -4,8 +4,9 @@
 
 GameEngine::GameEngine()
 {
-	m_ScreenWidth = 0;
-	m_ScreenHeight = 0;
+	this->m_ScreenWidth = 0;
+	this->m_ScreenHeight = 0;
+	this->m_mode = MODE::NONE;
 }
 
 
@@ -26,6 +27,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->StartRendering();
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	GetGraphics()->SetFPSMax(30);
+	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 
 	return 0;
 }
@@ -62,7 +64,7 @@ void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
-
+	
 }
 
 void GameEngine::CreateWorld( int x, int y )
@@ -72,9 +74,22 @@ void GameEngine::CreateWorld( int x, int y )
 
 void GameEngine::SelectMode( int mode )
 {
-	//TODO
-	// Change mode here.
-	int test = mode; // tested so the correct value get here. And it was correct
+	this->m_mode = (MODE)mode;
+
+	if(this->m_mode == MODE::SELECT)
+	{
+		GetGraphics()->GetKeyListener()->SetMousePosition(
+			Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2, 
+			GetGraphics()->GetEngineParameters()->windowHeight / 2));
+
+		GetGraphics()->GetCamera()->SetUpdateCamera(true);
+		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	}
+	if(this->m_mode == MODE::MOVE || this->m_mode == MODE::NONE || this->m_mode == MODE::ROT)
+	{
+		GetGraphics()->GetCamera()->SetUpdateCamera(false);
+		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	}
 }
 
 void GameEngine::SaveWorld( char* msg )
@@ -85,4 +100,9 @@ void GameEngine::SaveWorld( char* msg )
 void GameEngine::OpenWorld( char* msg )
 {
 
+}
+
+void GameEngine::SetWindowFocused( bool value )
+{
+	GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
 }
