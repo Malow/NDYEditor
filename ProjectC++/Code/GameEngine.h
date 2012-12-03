@@ -1,12 +1,14 @@
 #pragma once
 
+#include "World.h"
 
-
-class GameEngine
+class GameEngine : public Observer
 {
 private:
 	int m_ScreenWidth;
 	int m_ScreenHeight;
+
+	World* m_World;
 
 public:
 	GameEngine();
@@ -22,4 +24,6 @@ public:
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
 
 	char* ProcessText(char* msg);
+
+	void CreateWorld(int x, int y);
 };

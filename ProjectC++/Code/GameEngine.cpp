@@ -64,3 +64,8 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 
 }
+
+void GameEngine::CreateWorld( int x, int y )
+{
+	this->m_World = new World(this, x, y);
+}

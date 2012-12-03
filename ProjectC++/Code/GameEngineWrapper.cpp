@@ -45,7 +45,7 @@ char* GameEngineWrapper::ProcessText(char* msg)
 
 void GameEngineWrapper::CreateWorld( int x, int y )
 {
-	
+	this->m_GameEngine->CreateWorld(x, y);
 }
 
 void GameEngineWrapper::SaveWorld( char* msg )

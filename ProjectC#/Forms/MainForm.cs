@@ -76,10 +76,18 @@ namespace Example
         {
             CreateMap form = new CreateMap();
             form.ShowDialog();
-            int xPos = form.GetReturnX();
-            int yPos = form.GetReturnY();
+            if (form.shouldCreateMap && form.GetReturnX() > 0 && form.GetReturnY() > 0)
+            {
+                int xPos = form.GetReturnX();
+                int yPos = form.GetReturnY();
 
-            this.m_GameEngine.CreateWorld(xPos, yPos);
+                this.m_GameEngine.CreateWorld(xPos, yPos);
+            }
+            else
+            {
+
+
+            }
 
             // talk to game engine here and make it create "a whole new world" :)
 
