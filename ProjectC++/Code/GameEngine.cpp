@@ -69,3 +69,20 @@ void GameEngine::CreateWorld( int x, int y )
 {
 	this->m_World = new World(this, x, y);
 }
+
+void GameEngine::SelectMode( int mode )
+{
+	//TODO
+	// Change mode here.
+	int test = mode; // tested so the correct value get here. And it was correct
+}
+
+void GameEngine::SaveWorld( char* msg )
+{
+
+}
+
+void GameEngine::OpenWorld( char* msg )
+{
+
+}

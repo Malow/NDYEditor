@@ -26,4 +26,8 @@ public:
 	char* ProcessText(char* msg);
 
 	void CreateWorld(int x, int y);
+	void SaveWorld(char* msg);
+	void OpenWorld(char* msg);
+
+	void SelectMode(int mode);
 };

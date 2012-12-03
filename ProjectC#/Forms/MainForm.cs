@@ -10,12 +10,22 @@ using System.Windows.Interop;
 
 namespace Example
 {
-    public partial class form1 : Form
+    enum MODE
+    {
+        NONE,
+        SELECT,
+        MOVE,
+        ROT,
+    }
+    public partial class NDYEditor : Form
     {
         CppCLI m_GameEngine = null;
         bool m_APILoaded = false;
+        MODE mode =  MODE.NONE;
 
-        public form1()
+        int SelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
+
+        public NDYEditor()
         {
             InitializeComponent();
 
@@ -24,7 +34,8 @@ namespace Example
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             this.Resize += new EventHandler(form1_Resize);
 
-            this.InfoSplitter.Panel1.Hide();
+
+            
 
         }
 
@@ -85,7 +96,7 @@ namespace Example
             }
             else
             {
-
+                MessageBox.Show("Both values must be above \"0\"", "Value Error");
 
             }
 
@@ -154,6 +165,50 @@ namespace Example
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
+        }
+
+        private void MoveTool_Click(object sender, EventArgs e)
+        {
+            if (this.SelectedObject != -1)
+            {
+                this.Panel_Info.Show();
+                this.Panel_ObjectInfo.Show();
+                this.mode = MODE.MOVE;
+                m_GameEngine.ModeSelect((int)this.mode);
+            }
+            else
+            {
+                this.Panel_Info.Hide();
+                this.Panel_ObjectInfo.Hide();
+                this.mode = MODE.SELECT;
+                m_GameEngine.ModeSelect((int)this.mode);
+            }
+        }
+
+        private void SelectTool_Click(object sender, EventArgs e)
+        {
+            this.Panel_Info.Hide();
+            this.Panel_ObjectInfo.Hide();
+            this.mode = MODE.SELECT;
+            m_GameEngine.ModeSelect((int)this.mode);
+        }
+
+        private void btnRotate_Click(object sender, EventArgs e)
+        {
+            if (this.SelectedObject != -1)
+            {
+                this.Panel_Info.Show();
+                this.Panel_ObjectInfo.Show();
+                this.mode = MODE.ROT;
+                m_GameEngine.ModeSelect((int)this.mode);
+            }
+            else
+            {
+                this.Panel_Info.Hide();
+                this.Panel_ObjectInfo.Hide();
+                this.mode = MODE.SELECT;
+                m_GameEngine.ModeSelect((int)this.mode);
+            }
         }
     }
 }

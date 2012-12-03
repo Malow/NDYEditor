@@ -68,3 +68,8 @@ void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
 	m_GameEngine->OnLeftMouseDown(x,y);
 }
 
+void GameEngineWrapper::ModeSelect( int mode )
+{
+	this->m_GameEngine->SelectMode(mode);
+}
+

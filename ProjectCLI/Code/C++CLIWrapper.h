@@ -43,5 +43,7 @@ namespace System { namespace Windows { namespace Interop
 		void CreateWorld(int x, int y);
 		void SaveWorld( String^ filePath );
 		void OpenWorld( String^ filePath );
+
+		void ModeSelect(int mode);
 	};
 }}}

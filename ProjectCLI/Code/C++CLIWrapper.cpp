@@ -104,4 +104,10 @@ namespace System { namespace Windows { namespace Interop
 	{
 		m_GameEngine->OnLeftMouseDown(x,y);
 	}
+
+	void CppCLI::ModeSelect( int mode )
+	{
+		this->m_GameEngine->ModeSelect(mode);
+	}
+
 }}}
