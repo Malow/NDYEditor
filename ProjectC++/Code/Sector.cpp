@@ -3,7 +3,6 @@
 
 Sector::Sector() : zEditedFlag(false)
 {
-	Reset();
 }
 
 

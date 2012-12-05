@@ -1,6 +1,7 @@
 #pragma once
 
 #include "World.h"
+#include "WorldRenderer.h"
 
 enum MODE
 {
@@ -13,11 +14,13 @@ enum MODE
 class GameEngine : public Observer
 {
 private:
-	int m_ScreenWidth;
-	int m_ScreenHeight;
+	int zScreenWidth;
+	int zScreenHeight;
 
-	World* m_World;
-	MODE m_mode;
+	World* zWorld;
+	WorldRenderer *zWorldRenderer;
+
+	MODE zMode;
 
 public:
 	GameEngine();

@@ -50,12 +50,12 @@ void GameEngineWrapper::CreateWorld( int x, int y )
 
 void GameEngineWrapper::SaveWorld( char* msg )
 {
-
+	m_GameEngine->SaveWorld(msg);
 }
 
 void GameEngineWrapper::OpenWorld( char* msg )
 {
-
+	m_GameEngine->OpenWorld(msg);
 }
 
 void GameEngineWrapper::OnLeftMouseUp( unsigned int x, unsigned int y )

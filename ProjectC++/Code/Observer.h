@@ -29,7 +29,7 @@ class Observed
 	std::set<Observer*> _observers;
 public:
 	inline void addObserver( Observer* observer ) { if ( observer ) _observers.insert(observer); }
-	inline bool removeObserver( Observer* observer ) { _observers.erase(observer); }
+	inline void removeObserver( Observer* observer ) { _observers.erase(observer); }
 protected:
 	inline void notifyObservers( Event* e ) { for( std::set<Observer*>::iterator i=_observers.begin(); i != _observers.end(); ++i ) { (*i)->onEvent(e); } }
 };

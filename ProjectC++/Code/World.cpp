@@ -8,12 +8,16 @@ World::World( Observer* observer, const std::string& fileName) throw(const char*
 {
 	addObserver(observer);
 	notifyObservers( &WorldLoadedEvent(this) );
+	zFile = new WorldFile(this, fileName, false);
+	zNrOfSectorsWidth = zFile->getWorldWidth();
+	zNrOfSectorsHeight = zFile->getWorldHeight();
 }
 
 
 World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight ) :
 	zNrOfSectorsWidth(nrOfSectorWidth),
-	zNrOfSectorsHeight(nrOfSectorHeight)
+	zNrOfSectorsHeight(nrOfSectorHeight),
+	zFile(0)
 {
 	addObserver(observer);
 
@@ -26,11 +30,14 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 			this->zSectors[i][o] = NULL;
 		}
 	}
+
+	notifyObservers( &WorldLoadedEvent(this) );
 }
 
 
 World::~World()
 {
+	// Close File
 	if ( zFile ) delete zFile, zFile=0;
 
 	// Delete the zSectors pointers.
@@ -100,6 +107,7 @@ Sector* World::GetSector( const Vector2& pos ) throw(const char*)
 	if ( !s )
 	{
 		s = new Sector();
+
 		this->zSectors[(int)(pos.x)][(int)(pos.y)] = s;
 
 		if ( zFile )
@@ -107,9 +115,38 @@ Sector* World::GetSector( const Vector2& pos ) throw(const char*)
 			// Load From File
 			zFile->readHeightMap(s->GetHeightMap(),pos.x,pos.y);
 		}
+		else
+		{
+			s->Reset();
+		}
 
 		notifyObservers( &SectorLoadedEvent(this,pos) );
 	}
 
 	return s;
+}
+
+
+void World::onEvent( Event* e )
+{
+	if ( WorldHeaderLoadedEvent* WHL = dynamic_cast<WorldHeaderLoadedEvent*>(e) )
+	{
+		zNrOfSectorsWidth = WHL->file->getWorldWidth();
+		zNrOfSectorsHeight = WHL->file->getWorldHeight();
+
+		// World Has Been Loaded
+		notifyObservers( &WorldLoadedEvent(this) );
+	}
+}
+
+
+void World::LoadAllSectors()
+{
+	for( unsigned int x=0; x<zNrOfSectorsWidth; ++x )
+	{
+		for( unsigned int y=0; y<zNrOfSectorsHeight; ++y )
+		{
+			GetSector( Vector2(x,y) );
+		}
+	}
 }

@@ -8,26 +8,14 @@
     <Filter Include="NDYGFX">
       <UniqueIdentifier>{ee34e9cd-67ce-4728-bf13-8f34041c8957}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{1a65aa88-7c70-4c22-8359-86b8474e3abe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor">
+      <UniqueIdentifier>{3d3ec62c-f559-4e58-8f23-83c381560700}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\GameEngine.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Debug.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\GameEngineWrapper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Sector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\World.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\External\NDYGFX\Include\iAnimatedMesh.h">
       <Filter>NDYGFX</Filter>
     </ClInclude>
@@ -61,31 +49,55 @@
     <ClInclude Include="..\External\NDYGFX\Include\GraphicsEngine.h">
       <Filter>NDYGFX</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Observer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Code\WorldRenderer.h">
+      <Filter>Source Files\World</Filter>
     </ClInclude>
     <ClInclude Include="Code\WorldFile.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Sector.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Debug.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameEngine.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\GameEngineWrapper.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphics.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Observer.h">
+      <Filter>Source Files\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\GameEngineWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\GameEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Sector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphics.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Code\WorldRenderer.cpp">
+      <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="Code\WorldFile.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Sector.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameEngine.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameEngineWrapper.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphics.cpp">
+      <Filter>Source Files\Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

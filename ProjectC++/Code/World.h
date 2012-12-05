@@ -22,7 +22,23 @@ public:
 	SectorLoadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
 };
 
-class World : public Observed
+class SectorEditedEvent : public Event
+{
+public:
+	World* world;
+	Vector2 sector;
+	SectorEditedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
+};
+
+class SectorUnloadedEvent : public Event
+{
+public:
+	World* world;
+	Vector2 sector;
+	SectorUnloadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
+};
+
+class World : public Observed, public Observer
 {
 private:
 	WorldFile* zFile;
@@ -39,8 +55,18 @@ public:
 	// Save World To File
 	void SaveFile();
 
-	//Modify functions
+	// Load All Sectors
+	void LoadAllSectors();
+
+	// Modify functions
 	bool ModifyPoint(Vector2 pos, float value);
+
+	// Inline Functions
+	inline unsigned int GetNumSectorsWidth() const { return zNrOfSectorsWidth; }
+	inline unsigned int GetNumSectorsHeight() const { return zNrOfSectorsHeight; }
+
+protected:
+	virtual void onEvent( Event* e );
 
 private:
 	// Get Sector X Y

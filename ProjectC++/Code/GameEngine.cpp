@@ -2,23 +2,27 @@
 #include "Graphics.h"
 
 
-GameEngine::GameEngine()
+GameEngine::GameEngine() :
+	zScreenWidth(0),
+	zScreenHeight(0),
+	zMode(MODE::NONE),
+	zWorld(0),
+	zWorldRenderer(0)
 {
-	this->m_ScreenWidth = 0;
-	this->m_ScreenHeight = 0;
-	this->m_mode = MODE::NONE;
 }
 
 
 GameEngine::~GameEngine()
 {
+	if ( zWorldRenderer ) delete zWorldRenderer;
+	if ( zWorld ) delete zWorld;
 }
 
 
 unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 {
-	m_ScreenWidth = width;
-	m_ScreenHeight = height;
+	zScreenWidth = width;
+	zScreenHeight = height;
 
 	InitGraphics(hWnd);
 
@@ -47,8 +51,8 @@ void GameEngine::ProcessFrame()
 
 void GameEngine::OnResize(int width, int height)
 {
-	m_ScreenWidth = width;
-	m_ScreenHeight = height;
+	zScreenWidth = width;
+	zScreenHeight = height;
 }
 
 
@@ -57,26 +61,40 @@ char* GameEngine::ProcessText(char* msg)
 	return msg;
 }
 
+
 void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 {
 
 }
+
 
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 	
 }
 
+
 void GameEngine::CreateWorld( int x, int y )
 {
-	this->m_World = new World(this, x, y);
+	if ( zWorldRenderer )
+		delete zWorldRenderer;
+
+	if ( zWorld )
+		delete zWorld;
+
+	this->zWorld = new World(this, x, y);
+	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	
+	// Load All Sectors
+	zWorld->LoadAllSectors();
 }
+
 
 void GameEngine::SelectMode( int mode )
 {
-	this->m_mode = (MODE)mode;
+	this->zMode = (MODE)mode;
 
-	if(this->m_mode == MODE::SELECT)
+	if(this->zMode == MODE::SELECT)
 	{
 		GetGraphics()->GetKeyListener()->SetMousePosition(
 			Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2, 
@@ -85,22 +103,33 @@ void GameEngine::SelectMode( int mode )
 		GetGraphics()->GetCamera()->SetUpdateCamera(true);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	}
-	if(this->m_mode == MODE::MOVE || this->m_mode == MODE::NONE || this->m_mode == MODE::ROT)
+	if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT)
 	{
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	}
 }
 
+
 void GameEngine::SaveWorld( char* msg )
 {
-
+	if ( zWorld )
+		zWorld->SaveFile();
 }
+
 
 void GameEngine::OpenWorld( char* msg )
 {
+	if ( zWorldRenderer )
+		delete zWorldRenderer;
 
+	if ( zWorld )
+		delete zWorld;
+
+	zWorld = new World(this, msg);
+	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
 }
+
 
 void GameEngine::SetWindowFocused( bool value )
 {

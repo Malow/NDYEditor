@@ -2,7 +2,17 @@
 
 struct WorldHeader
 {
-	unsigned int width, height;
+	unsigned int width;
+	unsigned int height;
+
+	WorldHeader() : width(10), height(10) {}
+};
+
+struct SectorHeader
+{
+	char textureOne[100];
+	char textureTwo[100];
+	char textureThree[100];
 };
 
 struct HeightMap
@@ -15,8 +25,9 @@ struct BlendMap
 	float blend[SECTOR_LENGTH*SECTOR_LENGTH*3];
 };
 
-WorldFile::WorldFile( const std::string& fileName ) : 
-	zFileName(fileName)
+WorldFile::WorldFile( Observer* observer, const std::string& fileName, bool readOnly ) : 
+	zFileName(fileName),
+	zReadOnly(readOnly)
 {
 	zFile.open(fileName, std::ios::binary);
 	
@@ -30,9 +41,19 @@ WorldFile::WorldFile( const std::string& fileName ) :
 	unsigned int end = zFile.tellg();
 	unsigned int size = end-beg;
 
-	if ( !size )
+	if ( size == 0 && !zReadOnly )
 	{
-		// Empty File
+		// Empty File, Write Default Header
+		WorldHeader defaultHeader;
+		zWidth = defaultHeader.width;
+		zHeight = defaultHeader.height;
+
+		// Write Header
+		if ( !readOnly )
+		{
+			zFile.seekp(std::ios::beg);
+			zFile.write( reinterpret_cast<const char*>(&defaultHeader), sizeof(WorldHeader) );
+		}
 	}
 	else
 	{
@@ -45,6 +66,9 @@ WorldFile::WorldFile( const std::string& fileName ) :
 		zWidth = header.width;
 		zHeight = header.height;
 	}
+
+	// Header Loaded
+	notifyObservers( &WorldHeaderLoadedEvent(this) );
 }
 
 
@@ -57,9 +81,12 @@ WorldFile::~WorldFile()
 
 void WorldFile::writeHeightMap( const float const* data, unsigned int mapx, unsigned int mapy )
 {
-	unsigned int mapIndex = mapy * zWidth + mapx;
-	zFile.seekp( getSectorsBegin() + mapIndex * sizeof(HeightMap) );
-	zFile.write((const char*)data,sizeof(HeightMap));
+	if ( !zReadOnly )
+	{
+		unsigned int mapIndex = mapy * zWidth + mapx;
+		zFile.seekp( getSectorsBegin() + mapIndex * sizeof(HeightMap) );
+		zFile.write((const char*)data,sizeof(HeightMap));
+	}
 }
 
 
