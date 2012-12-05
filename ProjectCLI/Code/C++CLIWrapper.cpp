@@ -120,4 +120,21 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->SetWindowFocused(value);
 	}
 
+	void CppCLI::SaveWorld( String^ filePath )
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
+
+			m_GameEngine->SaveWorld(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
 }}}

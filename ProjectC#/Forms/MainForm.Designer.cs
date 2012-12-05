@@ -50,9 +50,6 @@
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -66,7 +63,7 @@
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
             this.btnRotate = new System.Windows.Forms.Button();
             this.bth_Move = new System.Windows.Forms.Button();
-            this.btnSelect = new System.Windows.Forms.Button();
+            this.btn_Select = new System.Windows.Forms.Button();
             this.RenderAndInfoSplitter = new System.Windows.Forms.SplitContainer();
             this.RenderBox = new System.Windows.Forms.Panel();
             this.InfoSplitter = new System.Windows.Forms.SplitContainer();
@@ -99,6 +96,7 @@
             this.ComboBox_Model = new System.Windows.Forms.ComboBox();
             this.Label_Tex = new System.Windows.Forms.Label();
             this.Label_Model = new System.Windows.Forms.Label();
+            this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
             this.TopPanelSplitter.Panel1.SuspendLayout();
@@ -292,42 +290,22 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contentsToolStripMenuItem,
-            this.indexToolStripMenuItem,
-            this.searchToolStripMenuItem,
+            this.helpToolStripMenuItem1,
             this.toolStripSeparator5,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
-            // contentsToolStripMenuItem
-            // 
-            this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(136, 24);
-            this.contentsToolStripMenuItem.Text = "&Contents";
-            // 
-            // indexToolStripMenuItem
-            // 
-            this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(136, 24);
-            this.indexToolStripMenuItem.Text = "&Index";
-            // 
-            // searchToolStripMenuItem
-            // 
-            this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(136, 24);
-            this.searchToolStripMenuItem.Text = "&Search";
-            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(133, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(136, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
             this.aboutToolStripMenuItem.Text = "&About...";
             // 
             // statusStrip1
@@ -419,7 +397,7 @@
             // 
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRotate);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.bth_Move);
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnSelect);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Select);
             // 
             // LeftToolBarSplitter.Panel2
             // 
@@ -451,18 +429,18 @@
             this.bth_Move.UseVisualStyleBackColor = true;
             this.bth_Move.Click += new System.EventHandler(this.MoveTool_Click);
             // 
-            // btnSelect
+            // btn_Select
             // 
-            this.btnSelect.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnSelect.Location = new System.Drawing.Point(5, 5);
-            this.btnSelect.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(90, 25);
-            this.btnSelect.TabIndex = 0;
-            this.btnSelect.Text = "Select";
-            this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.SelectTool_Click);
-            this.btnSelect.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.btnSelect_KeyPress);
+            this.btn_Select.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_Select.Location = new System.Drawing.Point(5, 5);
+            this.btn_Select.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Select.Name = "btn_Select";
+            this.btn_Select.Size = new System.Drawing.Size(90, 25);
+            this.btn_Select.TabIndex = 0;
+            this.btn_Select.Text = "Select";
+            this.btn_Select.UseVisualStyleBackColor = true;
+            this.btn_Select.Click += new System.EventHandler(this.SelectTool_Click);
+            this.btn_Select.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.btnSelect_KeyPress);
             // 
             // RenderAndInfoSplitter
             // 
@@ -799,6 +777,13 @@
             this.Label_Model.TabIndex = 1;
             this.Label_Model.Text = "Model:";
             // 
+            // helpToolStripMenuItem1
+            // 
+            this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 24);
+            this.helpToolStripMenuItem1.Text = "Help";
+            this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
+            // 
             // NDYEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -868,9 +853,6 @@
         private System.Windows.Forms.ToolStripMenuItem customizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem contentsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -882,7 +864,7 @@
         private System.Windows.Forms.SplitContainer TopPanelSplitter;
         private System.Windows.Forms.SplitContainer LeftToolBarSplitter;
         private System.Windows.Forms.Button bth_Move;
-        private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.Button btn_Select;
         private System.Windows.Forms.SplitContainer RenderAndInfoSplitter;
         private System.Windows.Forms.Panel RenderBox;
         private System.Windows.Forms.SplitContainer InfoSplitter;
@@ -917,6 +899,7 @@
         private System.Windows.Forms.Panel Panel_ObjectInfo;
         private System.Windows.Forms.Panel Panel_Info;
         private System.Windows.Forms.Button btnRotate;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
     }
 }
 

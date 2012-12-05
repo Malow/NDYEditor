@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include "Graphics.h"
-
+#include "MaloWFileDebug.h"
 
 GameEngine::GameEngine() :
 	zScreenWidth(0),
@@ -134,4 +134,10 @@ void GameEngine::OpenWorld( char* msg )
 void GameEngine::SetWindowFocused( bool value )
 {
 	GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
+}
+
+void GameEngine::SaveWorld( char* msg )
+{
+	//TODO
+	// Save World from "Save" command and not "Save As"
 }

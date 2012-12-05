@@ -16,6 +16,10 @@ namespace Example
         {
             InitializeComponent();
         }
+        public bool GetShouldCreateMap()
+        {
+            return shouldCreateMap;
+        }
         public int GetReturnX()
         {
             return Convert.ToInt32(widthSize.Text);

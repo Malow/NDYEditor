@@ -25,6 +25,7 @@ namespace Example
         CppCLI m_GameEngine = null;
         bool m_APILoaded = false;
         MODE m_mode =  MODE.NONE;
+        bool filePathKnown = false;
 
         int SelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
 
@@ -87,17 +88,20 @@ namespace Example
         {
             CreateMap form = new CreateMap();
             form.ShowDialog();
-            if (form.shouldCreateMap && form.GetReturnX() > 0 && form.GetReturnY() > 0)
+            if (form.GetShouldCreateMap())
             {
-                int xPos = form.GetReturnX();
-                int yPos = form.GetReturnY();
+                if (form.shouldCreateMap && form.GetReturnX() > 0 && form.GetReturnY() > 0)
+                {
+                    int xPos = form.GetReturnX();
+                    int yPos = form.GetReturnY();
 
-                this.m_GameEngine.CreateWorld(xPos, yPos);
-            }
-            else
-            {
-                MessageBox.Show("Both values must be above \"0\"", "Value Error");
+                    this.m_GameEngine.CreateWorld(xPos, yPos);
+                }
+                else
+                {
+                    MessageBox.Show("Both values must be above \"0\"", "Value Error");
 
+                }
             }
 
             // talk to game engine here and make it create "a whole new world" :)
@@ -109,19 +113,16 @@ namespace Example
             string path = "";
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
+            fdlg.DefaultExt = "*.map";
             fdlg.InitialDirectory = @"c:\";
-            fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
+            fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
+            fdlg.AddExtension = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                path = fdlg.FileName;
-            }
-            if (path != "")
-            {
-                path += ".map";
-
-                m_GameEngine.OpenWorld(path);
+                m_GameEngine.OpenWorld(fdlg.FileName);
+                this.filePathKnown = true;
             }
         }
 
@@ -129,26 +130,43 @@ namespace Example
         {
             string path = "";
             SaveFileDialog fdlg = new SaveFileDialog();
+            fdlg.DefaultExt = "*.map";
             fdlg.Title = "Save File";
             fdlg.InitialDirectory = @"c:\";
-            fdlg.Filter = "All files (*.*)|*.*|All files (*.*)|*.*";
+            fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
+            fdlg.AddExtension = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 path = fdlg.FileName;
-            }
-            if (path != "")
-            {
-                path += ".map";
-
                 m_GameEngine.SaveWorldAs(path);
+                this.filePathKnown = true;
             }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.saveAsToolStripMenuItem_Click(sender, e);
+            if (this.filePathKnown)
+            {
+                this.saveAsToolStripMenuItem_Click(sender, e);
+                return;
+            }
+
+            string path = "";
+            SaveFileDialog fdlg = new SaveFileDialog();
+            fdlg.Title = "Save File";
+            fdlg.InitialDirectory = @"c:\";
+            fdlg.DefaultExt = "*.map";
+            fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
+            fdlg.FilterIndex = 2;
+            fdlg.RestoreDirectory = true;
+            fdlg.AddExtension = true;
+            if (fdlg.ShowDialog() == DialogResult.OK)
+            {
+                m_GameEngine.SaveWorld(fdlg.FileName);
+                this.filePathKnown = true;
+            }
         }
 
         private void form1_Load(object sender, EventArgs e)
@@ -228,6 +246,12 @@ namespace Example
                 this.m_mode = MODE.NONE;
                 this.m_GameEngine.ModeSelect((int)this.m_mode);
             }
+        }
+
+        private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            HelpMenu test = new HelpMenu();
+            test.Show();
         }
     }
 }
