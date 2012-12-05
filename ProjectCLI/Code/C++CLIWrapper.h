@@ -43,7 +43,7 @@ namespace System { namespace Windows { namespace Interop
 		void OnLeftMouseDown( unsigned int x, unsigned int y );
 
 		void CreateWorld(int x, int y);
-		void SaveWorld( String^ filePath );
+		void SaveWorldAs( String^ filePath );
 		void OpenWorld( String^ filePath );
 
 		void ModeSelect(int mode);

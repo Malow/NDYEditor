@@ -111,7 +111,7 @@ void GameEngine::SelectMode( int mode )
 }
 
 
-void GameEngine::SaveWorld( char* msg )
+void GameEngine::SaveWorldAs( char* msg )
 {
 	if ( zWorld )
 		zWorld->SaveFile();

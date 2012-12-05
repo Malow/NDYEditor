@@ -48,9 +48,9 @@ void GameEngineWrapper::CreateWorld( int x, int y )
 	this->m_GameEngine->CreateWorld(x, y);
 }
 
-void GameEngineWrapper::SaveWorld( char* msg )
+void GameEngineWrapper::SaveWorldAs( char* msg )
 {
-	m_GameEngine->SaveWorld(msg);
+	m_GameEngine->SaveWorldAs(msg);
 }
 
 void GameEngineWrapper::OpenWorld( char* msg )

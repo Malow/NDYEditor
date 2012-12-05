@@ -118,6 +118,7 @@ Sector* World::GetSector( const Vector2& pos ) throw(const char*)
 		else
 		{
 			s->Reset();
+			s->setEdited(true);
 		}
 
 		notifyObservers( &SectorLoadedEvent(this,pos) );

@@ -62,7 +62,7 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->CreateWorld(x, y);
 	}
 
-	void CppCLI::SaveWorld(String^ filePath)
+	void CppCLI::SaveWorldAs(String^ filePath)
 	{
 		char* lpText = nullptr;
 
@@ -71,7 +71,7 @@ namespace System { namespace Windows { namespace Interop
 		{
 			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
 
-			m_GameEngine->SaveWorld(lpText);
+			m_GameEngine->SaveWorldAs(lpText);
 		}
 		finally
 		{
@@ -87,7 +87,7 @@ namespace System { namespace Windows { namespace Interop
 		{
 			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
 
-			m_GameEngine->SaveWorld(lpText);
+			m_GameEngine->OpenWorld(lpText);
 		}
 		finally
 		{

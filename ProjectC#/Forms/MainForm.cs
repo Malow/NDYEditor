@@ -142,7 +142,7 @@ namespace Example
             {
                 path += ".map";
 
-                m_GameEngine.SaveWorld(path);
+                m_GameEngine.SaveWorldAs(path);
             }
         }
 

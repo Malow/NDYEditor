@@ -30,7 +30,7 @@ public:
 	char* ProcessText(char* msg);
 
 	void CreateWorld(int x, int y);
-	void SaveWorld(char* msg);
+	void SaveWorldAs(char* msg);
 	void OpenWorld(char* msg);
 
 	void ModeSelect(int mode);
