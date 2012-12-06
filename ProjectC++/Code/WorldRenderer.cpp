@@ -54,7 +54,10 @@ void WorldRenderer::onEvent( Event* e )
 		if(!file)
 		{
 			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->getPosition());
+			return;
 		}
+		file.close();
+		delete file;
 
 		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
 	}
