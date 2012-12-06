@@ -23,6 +23,7 @@
     <ClInclude Include="..\External\NDYGFX\Include\iText.h" />
     <ClInclude Include="..\External\NDYGFX\Include\Vector.h" />
     <ClInclude Include="Code\Debug.h" />
+    <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
     <ClInclude Include="Code\Observer.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Include\GameEngineWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Entity.cpp" />
     <ClCompile Include="Code\GameEngine.cpp" />
     <ClCompile Include="Code\GameEngineWrapper.cpp" />
     <ClCompile Include="Code\Graphics.cpp" />

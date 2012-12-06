@@ -50,6 +50,7 @@
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -96,7 +97,6 @@
             this.ComboBox_Model = new System.Windows.Forms.ComboBox();
             this.Label_Tex = new System.Windows.Forms.Label();
             this.Label_Model = new System.Windows.Forms.Label();
-            this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
             this.TopPanelSplitter.Panel1.SuspendLayout();
@@ -297,15 +297,22 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
+            // helpToolStripMenuItem1
+            // 
+            this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(128, 24);
+            this.helpToolStripMenuItem1.Text = "Help";
+            this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(125, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
             this.aboutToolStripMenuItem.Text = "&About...";
             // 
             // statusStrip1
@@ -379,10 +386,11 @@
             this.Test.Location = new System.Drawing.Point(5, 5);
             this.Test.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(35, 35);
+            this.Test.Size = new System.Drawing.Size(50, 35);
             this.Test.TabIndex = 0;
-            this.Test.Text = "A";
+            this.Test.Text = "Tree";
             this.Test.UseVisualStyleBackColor = true;
+            this.Test.Click += new System.EventHandler(this.Test_Click);
             // 
             // LeftToolBarSplitter
             // 
@@ -776,13 +784,6 @@
             this.Label_Model.Size = new System.Drawing.Size(50, 17);
             this.Label_Model.TabIndex = 1;
             this.Label_Model.Text = "Model:";
-            // 
-            // helpToolStripMenuItem1
-            // 
-            this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 24);
-            this.helpToolStripMenuItem1.Text = "Help";
-            this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // NDYEditor
             // 

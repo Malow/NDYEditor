@@ -9,6 +9,7 @@ enum MODE
 	SELECT,
 	MOVE,
 	ROT,
+	PLACETREE
 };
 
 class GameEngine : public Observer
@@ -21,6 +22,8 @@ private:
 	WorldRenderer *zWorldRenderer;
 
 	MODE zMode;
+
+	std::string zCreateModelPath;
 
 public:
 	GameEngine();
@@ -44,5 +47,6 @@ public:
 	void SaveWorld(char* msg);
 	void OpenWorld(char* msg);
 
-	void SelectMode(int mode);
+	void ChangeMode(int mode);
+	void SetCreateModelPath(char* filePath);
 };

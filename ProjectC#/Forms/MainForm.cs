@@ -17,7 +17,8 @@ namespace Example
         NONE,
         SELECT,
         MOVE,
-        ROT
+        ROT,
+        PLACETREE
     }
     public partial class NDYEditor : Form
     {
@@ -99,7 +100,6 @@ namespace Example
                 }
                 else
                 {
-                    MessageBox.Show("Both values must be above \"0\"", "Value Error");
 
                 }
             }
@@ -183,6 +183,11 @@ namespace Example
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
+            if (this.m_mode == MODE.PLACETREE)
+            {
+                this.m_mode = MODE.MOVE;
+                this.m_GameEngine.ChangeMode((int)this.m_mode);
+            }
         }
 
         private void MoveTool_Click(object sender, EventArgs e)
@@ -192,14 +197,14 @@ namespace Example
                 this.Panel_Info.Show();
                 this.Panel_ObjectInfo.Show();
                 this.m_mode = MODE.MOVE;
-                m_GameEngine.ModeSelect((int)this.m_mode);
+                m_GameEngine.ChangeMode((int)this.m_mode);
             }
             else
             {
                 this.Panel_Info.Hide();
                 this.Panel_ObjectInfo.Hide();
                 this.m_mode = MODE.SELECT;
-                m_GameEngine.ModeSelect((int)this.m_mode);
+                m_GameEngine.ChangeMode((int)this.m_mode);
             }
         }
 
@@ -208,7 +213,7 @@ namespace Example
             this.Panel_Info.Hide();
             this.Panel_ObjectInfo.Hide();
             this.m_mode = MODE.SELECT;
-            m_GameEngine.ModeSelect((int)this.m_mode);
+            m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
         private void btnRotate_Click(object sender, EventArgs e)
@@ -218,14 +223,14 @@ namespace Example
                 this.Panel_Info.Show();
                 this.Panel_ObjectInfo.Show();
                 this.m_mode = MODE.ROT;
-                m_GameEngine.ModeSelect((int)this.m_mode);
+                m_GameEngine.ChangeMode((int)this.m_mode);
             }
             else
             {
                 this.Panel_Info.Hide();
                 this.Panel_ObjectInfo.Hide();
                 this.m_mode = MODE.SELECT;
-                m_GameEngine.ModeSelect((int)this.m_mode);
+                m_GameEngine.ChangeMode((int)this.m_mode);
             }
         }
 
@@ -244,7 +249,7 @@ namespace Example
             if (e.KeyChar == (char)Keys.Escape)
             {
                 this.m_mode = MODE.NONE;
-                this.m_GameEngine.ModeSelect((int)this.m_mode);
+                this.m_GameEngine.ChangeMode((int)this.m_mode);
             }
         }
 
@@ -252,6 +257,13 @@ namespace Example
         {
             HelpMenu test = new HelpMenu();
             test.Show();
+        }
+
+        private void Test_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.PLACETREE;
+            this.m_GameEngine.ChangeMode((int)this.m_mode);
+            this.m_GameEngine.SetCreateModelPath("Media/Fern_02_v01.obj");
         }
     }
 }

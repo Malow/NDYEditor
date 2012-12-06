@@ -8,7 +8,7 @@ World::World( Observer* observer, const std::string& fileName) throw(const char*
 {
 	addObserver(observer);
 	notifyObservers( &WorldLoadedEvent(this) );
-	zFile = new WorldFile(this, fileName, false);
+	zFile = new WorldFile(this, fileName, false);	
 	zNrOfSectorsWidth = zFile->getWorldWidth();
 	zNrOfSectorsHeight = zFile->getWorldHeight();
 }
@@ -69,6 +69,20 @@ bool World::ModifyPoint( Vector2 pos, float value )
 	Sector* sector = GetSectorAtWorldPos( pos );
 	Vector2 localPos = Vector2(fmod(pos.x, (float)SECTOR_LENGTH), fmod(pos.y, (float)SECTOR_LENGTH));
 	return sector->ModifyPoint(localPos.x, localPos.y, value);
+}
+
+bool World::CreateEntity( Vector3 pos, ENTITYTYPE entityType, std::string filePath)
+{
+	if(entityType == ENTITYTYPE::TREE)
+	{
+		Entity* temp = new Entity(pos);
+		zEntities.push_back(temp);
+		notifyObservers( &EntityLoadedEvent(this,temp, filePath) );
+
+		return true;
+	}
+
+	return false;
 }
 
 

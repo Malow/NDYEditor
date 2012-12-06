@@ -68,9 +68,9 @@ void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
 	m_GameEngine->OnLeftMouseDown(x,y);
 }
 
-void GameEngineWrapper::ModeSelect( int mode )
+void GameEngineWrapper::ChangeMode( int mode )
 {
-	this->m_GameEngine->SelectMode(mode);
+	this->m_GameEngine->ChangeMode(mode);
 }
 
 void GameEngineWrapper::Update()
@@ -86,5 +86,10 @@ void GameEngineWrapper::SetWindowFocused( bool value )
 void GameEngineWrapper::SaveWorld( char* msg )
 {
 	this->m_GameEngine->SaveWorldAs(msg);
+}
+
+void GameEngineWrapper::SetCreateModelPath( char* filePath )
+{
+	this->m_GameEngine->SetCreateModelPath(filePath);
 }
 

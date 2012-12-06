@@ -34,5 +34,6 @@ public:
 	void SaveWorld(char* msg);
 	void OpenWorld(char* msg);
 
-	void ModeSelect(int mode);
+	void ChangeMode(int mode);
+	void SetCreateModelPath(char* filePath);
 };
