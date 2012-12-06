@@ -1,26 +1,23 @@
 #include "World.h"
+#include <windows.h>
 
 
 World::World( Observer* observer, const std::string& fileName) throw(const char*) : 
+	Observed(observer),
 	zSectors(NULL), 
 	zNrOfSectorsWidth(0), 
 	zNrOfSectorsHeight(0)
 {
-	addObserver(observer);
-	notifyObservers( &WorldLoadedEvent(this) );
-	zFile = new WorldFile(this, fileName, false);
-	zNrOfSectorsWidth = zFile->getWorldWidth();
-	zNrOfSectorsHeight = zFile->getWorldHeight();
+	zFile = new WorldFile(this, fileName, OPEN_EDIT);
 }
 
 
 World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight ) :
+	Observed(observer),
 	zNrOfSectorsWidth(nrOfSectorWidth),
 	zNrOfSectorsHeight(nrOfSectorHeight),
 	zFile(0)
 {
-	addObserver(observer);
-
 	this->zSectors = new Sector**[this->zNrOfSectorsWidth];
 	for(unsigned int i = 0; i < this->zNrOfSectorsWidth; i++)
 	{
@@ -31,7 +28,7 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 		}
 	}
 
-	notifyObservers( &WorldLoadedEvent(this) );
+	NotifyObservers( &WorldLoadedEvent(this) );
 }
 
 
@@ -64,11 +61,41 @@ World::~World()
 }
 
 
-bool World::ModifyPoint( Vector2 pos, float value )
+void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
 {
-	Sector* sector = GetSectorAtWorldPos( pos );
-	Vector2 localPos = Vector2(fmod(pos.x, (float)SECTOR_LENGTH), fmod(pos.y, (float)SECTOR_LENGTH));
-	return sector->ModifyPoint(localPos.x, localPos.y, value);
+	unsigned int sectorx = x / SECTOR_LENGTH;
+	unsigned int sectory = y / SECTOR_LENGTH;
+	unsigned int localx = x % SECTOR_LENGTH;
+	unsigned int localy = y % SECTOR_LENGTH;
+
+	Sector* sector = GetSector(sectorx, sectory);
+	sector->ModifyHeightAt(localx, localy, value);
+	
+	// Notify Sector Change
+	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
+}
+
+
+void World::SetHeightAt( unsigned int x, unsigned int y, float value )
+{
+	unsigned int sectorx = x / SECTOR_LENGTH;
+	unsigned int sectory = y / SECTOR_LENGTH;
+	unsigned int localx = x % SECTOR_LENGTH;
+	unsigned int localy = y % SECTOR_LENGTH;
+
+	Sector* sector = GetSector(sectorx, sectory);
+	sector->SetHeightAt(localx, localy, value);
+
+	// Notify Sector Change
+	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
+}
+
+
+float World::GetHeightAt( unsigned int x, unsigned int y )
+{
+	Sector* sector = GetSector(x/SECTOR_LENGTH,y/SECTOR_LENGTH);
+	sector->GetHeightAt(x%SECTOR_LENGTH,y%SECTOR_LENGTH);
+	return true;
 }
 
 
@@ -80,10 +107,10 @@ void World::SaveFile()
 		{
 			for(unsigned int y=0; y<zNrOfSectorsHeight; ++y)
 			{
-				if ( this->zSectors[x][y] && this->zSectors[x][y]->isEdited() )
+				if ( this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
 				{
-					zFile->writeHeightMap(this->zSectors[x][y]->GetHeightMap(),x,y);
-					this->zSectors[x][y]->setEdited(false);
+					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y *zNrOfSectorsWidth + x);
+					this->zSectors[x][y]->SetEdited(false);
 				}
 			}
 		}
@@ -91,37 +118,69 @@ void World::SaveFile()
 }
 
 
-Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
+void World::SaveFileAs( const std::string& fileName )
 {
-	return GetSector( Vector2(pos.x / (float)SECTOR_LENGTH, pos.y / (float)SECTOR_LENGTH) );
+	if ( fileName.empty() )
+		throw("Filename is empty!");
+
+	if ( zFile )
+	{
+		if ( fileName == zFile->GetFileName() )	// Saving to the currently open file
+		{
+			SaveFile();
+			return;
+		}
+		else
+		{
+			// Handle Save As
+			delete zFile;
+			CopyFile( zFile->GetFileName().c_str(), fileName.c_str(), false );
+			zFile = new WorldFile(this, fileName, OPEN_SAVE);
+			SaveFile();
+		}
+	}
+	else
+	{
+		DeleteFile( fileName.c_str() );
+		zFile = new WorldFile(this, fileName, OPEN_SAVE);
+		SaveFile();
+	}
+
+	delete zFile;
+	zFile = 0;
 }
 
 
-Sector* World::GetSector( const Vector2& pos ) throw(const char*)
+Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
 {
-	if( (this->zNrOfSectorsWidth) <= pos.x || (this->zNrOfSectorsHeight) <= pos.y )
+	return GetSector( (unsigned int)(pos.x / (float)SECTOR_LENGTH), (unsigned int)(pos.y / (float)SECTOR_LENGTH) );
+}
+
+
+Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
+{
+	if( (this->zNrOfSectorsWidth) <= x || (this->zNrOfSectorsHeight) <= y )
 		throw("Index Out Of Bounds");
 
-	Sector* s = this->zSectors[(int)(pos.x)][(int)(pos.y)];
+	Sector* s = this->zSectors[x][y];
 
 	if ( !s )
 	{
 		s = new Sector();
 
-		this->zSectors[(int)(pos.x)][(int)(pos.y)] = s;
+		this->zSectors[x][y] = s;
 
 		if ( zFile )
 		{
 			// Load From File
-			zFile->readHeightMap(s->GetHeightMap(),pos.x,pos.y);
+			zFile->ReadHeightMap(s->GetHeightMap(), y * zNrOfSectorsWidth + x);
 		}
 		else
 		{
 			s->Reset();
-			s->setEdited(true);
 		}
 
-		notifyObservers( &SectorLoadedEvent(this,pos) );
+		NotifyObservers( &SectorLoadedEvent(this,x,y) );
 	}
 
 	return s;
@@ -132,11 +191,16 @@ void World::onEvent( Event* e )
 {
 	if ( WorldHeaderLoadedEvent* WHL = dynamic_cast<WorldHeaderLoadedEvent*>(e) )
 	{
-		zNrOfSectorsWidth = WHL->file->getWorldWidth();
-		zNrOfSectorsHeight = WHL->file->getWorldHeight();
+		zNrOfSectorsWidth = WHL->header.width;
+		zNrOfSectorsHeight = WHL->header.height;
 
 		// World Has Been Loaded
-		notifyObservers( &WorldLoadedEvent(this) );
+		NotifyObservers( &WorldLoadedEvent(this) );
+	}
+	else if ( WorldHeaderCreateEvent* WHCE = dynamic_cast<WorldHeaderCreateEvent*>(e) )
+	{
+		WHCE->header.width = zNrOfSectorsWidth;
+		WHCE->header.height = zNrOfSectorsHeight;
 	}
 }
 
@@ -147,7 +211,7 @@ void World::LoadAllSectors()
 	{
 		for( unsigned int y=0; y<zNrOfSectorsHeight; ++y )
 		{
-			GetSector( Vector2(x,y) );
+			GetSector( x, y );
 		}
 	}
 }

@@ -10,16 +10,17 @@ class Sector
 {
 private:
 	float zHeightMap[SECTOR_LENGTH*SECTOR_LENGTH];
-	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*3];
+	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*4];
 	bool zEditedFlag;
 
-	// Save height and width just because it could be needed.
 public:
 	/*Default functions.*/
 	Sector();
 	virtual ~Sector();
 
-	// Nullifies all the data in this sector
+	/*
+	Sets the edited flag
+	*/
 	void Reset();
 
 	// Returns the blendmap as a double pointer (Vector3**).
@@ -28,10 +29,28 @@ public:
 	// Returns the heightmap as a double pointer (Int**).
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
-	// Modify point by value, set the edited flag
-	bool ModifyPoint( unsigned int x, unsigned int y, float value );
+	/*
+	Modify point by value, set the edited flag
+	Sets the edited flag
+	Throws when out of bounds
+	*/
+	void ModifyHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
 
+	/* 
+	Get the value at point
+	Throws when out of bounds 
+	*/
+	float GetHeightAt( unsigned int x, unsigned int y ) const throw(const char*);
+
+	/*
+	Sets the height at a point local to the sector
+	Sets the edited flag
+	Throws when out of bounds
+	*/
+	void SetHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
+
+	// Inline Functions
 	inline int GetSectorLength() { return SECTOR_LENGTH; }
-	inline void setEdited( bool state ) { zEditedFlag = state; }
-	inline bool isEdited() const { return zEditedFlag; }
+	inline void SetEdited( bool state ) { zEditedFlag = state; }
+	inline bool IsEdited() const { return zEditedFlag; }
 };
