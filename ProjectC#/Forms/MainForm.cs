@@ -210,8 +210,7 @@ namespace Example
 
         private void SelectTool_Click(object sender, EventArgs e)
         {
-            this.Panel_Info.Hide();
-            this.Panel_ObjectInfo.Hide();
+            this.hideAll();
             this.m_mode = MODE.SELECT;
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
@@ -220,6 +219,7 @@ namespace Example
         {
             if (this.SelectedObject != -1)
             {
+                this.hideAll();
                 this.Panel_Info.Show();
                 this.Panel_ObjectInfo.Show();
                 this.m_mode = MODE.ROT;
@@ -227,8 +227,7 @@ namespace Example
             }
             else
             {
-                this.Panel_Info.Hide();
-                this.Panel_ObjectInfo.Hide();
+                this.hideAll();
                 this.m_mode = MODE.SELECT;
                 m_GameEngine.ChangeMode((int)this.m_mode);
             }
@@ -264,6 +263,11 @@ namespace Example
             this.m_mode = MODE.PLACETREE;
             this.m_GameEngine.ChangeMode((int)this.m_mode);
             this.m_GameEngine.SetCreateModelPath("Media/Fern_02_v01.obj");
+        }
+        private void hideAll()
+        {
+            this.Panel_Info.Hide();
+            this.Panel_ObjectInfo.Hide();
         }
     }
 }
