@@ -100,7 +100,6 @@ void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
-	if(this->zMode == MODE::PLACETREE)
 	if(zWorld != NULL)
 	{
 		if(this->zMode == MODE::PLACE)

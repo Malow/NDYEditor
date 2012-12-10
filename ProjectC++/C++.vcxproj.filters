@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="NDYGFX">
-      <UniqueIdentifier>{ee34e9cd-67ce-4728-bf13-8f34041c8957}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\World">
       <UniqueIdentifier>{1a65aa88-7c70-4c22-8359-86b8474e3abe}</UniqueIdentifier>
     </Filter>
@@ -16,39 +13,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\External\NDYGFX\Include\iAnimatedMesh.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iCamera.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iGraphicsEngineParams.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iImage.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iKeyListener.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iLight.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iMesh.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iTerrain.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\iText.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\Vector.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\External\NDYGFX\Include\GraphicsEngine.h">
-      <Filter>NDYGFX</Filter>
-    </ClInclude>
     <ClInclude Include="Code\WorldRenderer.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>

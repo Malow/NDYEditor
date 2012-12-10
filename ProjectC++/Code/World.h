@@ -48,6 +48,7 @@ public:
 	SectorUnloadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
 };
 
+
 class EntityLoadedEvent : public Event
 {
 public:
@@ -92,11 +93,10 @@ public:
 	inline unsigned int GetNumSectorsWidth() const { return zNrOfSectorsWidth; }
 	inline unsigned int GetNumSectorsHeight() const { return zNrOfSectorsHeight; }
 
-protected:
-	virtual void onEvent( Event* e );
-
-private:
-	// Get Sector X Y
+	// Sector Functions
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
+
+protected:
+	virtual void onEvent( Event* e );
 };

@@ -42,7 +42,7 @@ World::~World()
 	{
 		for(unsigned int i = 0; i < this->zNrOfSectorsWidth; i++)
 		{
-			for(unsigned int o=0; o < this->zNrOfSectorsHeight; o++)
+			for(unsigned int o = 0; o < this->zNrOfSectorsHeight; o++)
 			{
 				if ( this->zSectors[i][o] )
 				{
