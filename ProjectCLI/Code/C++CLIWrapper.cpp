@@ -105,9 +105,9 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->OnLeftMouseDown(x,y);
 	}
 
-	void CppCLI::ModeSelect( int mode )
+	void CppCLI::ChangeMode( int mode )
 	{
-		this->m_GameEngine->ModeSelect(mode);
+		this->m_GameEngine->ChangeMode(mode);
 	}
 
 	void CppCLI::Update()
@@ -118,6 +118,40 @@ namespace System { namespace Windows { namespace Interop
 	void CppCLI::SetWindowFocused( bool value )
 	{
 		this->m_GameEngine->SetWindowFocused(value);
+	}
+
+	void CppCLI::SaveWorld( String^ filePath )
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
+
+			m_GameEngine->SaveWorld(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
+	void CppCLI::SetCreateModelPath( String^ filePath )
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
+
+			m_GameEngine->SetCreateModelPath(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
 	}
 
 }}}

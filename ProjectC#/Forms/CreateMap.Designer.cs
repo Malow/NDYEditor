@@ -71,7 +71,7 @@
             this.widthSize.Name = "widthSize";
             this.widthSize.Size = new System.Drawing.Size(100, 22);
             this.widthSize.TabIndex = 3;
-            this.widthSize.Text = "0";
+            this.widthSize.Text = "1";
             // 
             // heightSize
             // 
@@ -79,7 +79,7 @@
             this.heightSize.Name = "heightSize";
             this.heightSize.Size = new System.Drawing.Size(100, 22);
             this.heightSize.TabIndex = 5;
-            this.heightSize.Text = "0";
+            this.heightSize.Text = "1";
             // 
             // HeightLable
             // 

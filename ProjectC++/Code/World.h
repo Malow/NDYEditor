@@ -3,6 +3,7 @@
 #include "Sector.h"
 #include "Observer.h"
 #include "WorldFile.h"
+#include "Entity.h"
 #include <string>
 
 class World;
@@ -47,6 +48,15 @@ public:
 	SectorUnloadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
 };
 
+class EntityLoadedEvent : public Event
+{
+public:
+	World* world;
+	Entity* entity;
+	std::string fileName;
+	EntityLoadedEvent( World* world, Entity* entity, std::string fileName) : world(world), entity(entity), fileName(fileName){}
+};
+
 
 class World : public Observed, public Observer
 {
@@ -54,6 +64,8 @@ private:
 	WorldFile* zFile;
 
 	Sector*** zSectors;
+
+	std::vector <Entity*> zEntities;
 
 	unsigned int zNrOfSectorsWidth;
 	unsigned int zNrOfSectorsHeight;
@@ -73,6 +85,8 @@ public:
 	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
 	float GetHeightAt( unsigned int x, unsigned int y );
 	void SetHeightAt( unsigned int x, unsigned int y, float value );
+
+	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
 
 	// Inline Functions
 	inline unsigned int GetNumSectorsWidth() const { return zNrOfSectorsWidth; }

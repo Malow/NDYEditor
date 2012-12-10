@@ -76,6 +76,9 @@
     <ClInclude Include="Code\Observer.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Entity.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldRenderer.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Code\Graphics.cpp">
       <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Entity.cpp">
+      <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

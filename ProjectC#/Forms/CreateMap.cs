@@ -16,6 +16,10 @@ namespace Example
         {
             InitializeComponent();
         }
+        public bool GetShouldCreateMap()
+        {
+            return shouldCreateMap;
+        }
         public int GetReturnX()
         {
             return Convert.ToInt32(widthSize.Text);
@@ -31,8 +35,15 @@ namespace Example
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            this.shouldCreateMap = true;
-            this.Close();
+            if (Convert.ToInt32(heightSize.Text) > 0 && Convert.ToInt32(widthSize.Text) > 0)
+            {
+                this.shouldCreateMap = true;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Width or Height is not higher than 0", "Value Error");
+            }
         }
     }
 }

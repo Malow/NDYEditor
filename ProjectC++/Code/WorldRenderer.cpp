@@ -46,4 +46,20 @@ void WorldRenderer::onEvent( Event* e )
 			zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
 		}
 	}
+	if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
+	{
+		
+		std::ifstream file;
+		file.open(ELE->fileName);
+		if(!file)
+		{
+			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->getPosition());
+			return;
+		}
+		file.close();
+		delete file;
+
+		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
+	}
+
 }
