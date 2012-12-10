@@ -60,8 +60,10 @@
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.TopPanelSplitter = new System.Windows.Forms.SplitContainer();
-            this.Test = new System.Windows.Forms.Button();
+            this.btnRTS = new System.Windows.Forms.Button();
+            this.btnFPS = new System.Windows.Forms.Button();
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
+            this.btnPlaceObject = new System.Windows.Forms.Button();
             this.btnRotate = new System.Windows.Forms.Button();
             this.bth_Move = new System.Windows.Forms.Button();
             this.btn_Select = new System.Windows.Forms.Button();
@@ -90,6 +92,9 @@
             this.TextBox_Rot_Z = new System.Windows.Forms.TextBox();
             this.Label_Rot_X = new System.Windows.Forms.Label();
             this.TextBox_Rot_Y = new System.Windows.Forms.TextBox();
+            this.Panel_PlaceObject = new System.Windows.Forms.Panel();
+            this.Lable_Model = new System.Windows.Forms.Label();
+            this.Combo_Model = new System.Windows.Forms.ComboBox();
             this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
             this.Label_Anim = new System.Windows.Forms.Label();
             this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
@@ -115,6 +120,7 @@
             this.InfoSplitter.Panel2.SuspendLayout();
             this.InfoSplitter.SuspendLayout();
             this.Panel_Info.SuspendLayout();
+            this.Panel_PlaceObject.SuspendLayout();
             this.Panel_ObjectInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -372,7 +378,8 @@
             // 
             // TopPanelSplitter.Panel1
             // 
-            this.TopPanelSplitter.Panel1.Controls.Add(this.Test);
+            this.TopPanelSplitter.Panel1.Controls.Add(this.btnRTS);
+            this.TopPanelSplitter.Panel1.Controls.Add(this.btnFPS);
             // 
             // TopPanelSplitter.Panel2
             // 
@@ -381,16 +388,27 @@
             this.TopPanelSplitter.SplitterDistance = 45;
             this.TopPanelSplitter.TabIndex = 2;
             // 
-            // Test
+            // btnRTS
             // 
-            this.Test.Location = new System.Drawing.Point(5, 5);
-            this.Test.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(50, 35);
-            this.Test.TabIndex = 0;
-            this.Test.Text = "Tree";
-            this.Test.UseVisualStyleBackColor = true;
-            this.Test.Click += new System.EventHandler(this.Test_Click);
+            this.btnRTS.Location = new System.Drawing.Point(155, 5);
+            this.btnRTS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRTS.Name = "btnRTS";
+            this.btnRTS.Size = new System.Drawing.Size(45, 35);
+            this.btnRTS.TabIndex = 0;
+            this.btnRTS.Text = "RTS";
+            this.btnRTS.UseVisualStyleBackColor = true;
+            this.btnRTS.Click += new System.EventHandler(this.btnRTS_Click);
+            // 
+            // btnFPS
+            // 
+            this.btnFPS.Location = new System.Drawing.Point(105, 5);
+            this.btnFPS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnFPS.Name = "btnFPS";
+            this.btnFPS.Size = new System.Drawing.Size(45, 35);
+            this.btnFPS.TabIndex = 0;
+            this.btnFPS.Text = "FPS";
+            this.btnFPS.UseVisualStyleBackColor = true;
+            this.btnFPS.Click += new System.EventHandler(this.btnFPS_Click);
             // 
             // LeftToolBarSplitter
             // 
@@ -403,6 +421,7 @@
             // 
             // LeftToolBarSplitter.Panel1
             // 
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnPlaceObject);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRotate);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.bth_Move);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Select);
@@ -414,10 +433,20 @@
             this.LeftToolBarSplitter.SplitterDistance = 100;
             this.LeftToolBarSplitter.TabIndex = 0;
             // 
+            // btnPlaceObject
+            // 
+            this.btnPlaceObject.Location = new System.Drawing.Point(5, 5);
+            this.btnPlaceObject.Name = "btnPlaceObject";
+            this.btnPlaceObject.Size = new System.Drawing.Size(90, 25);
+            this.btnPlaceObject.TabIndex = 3;
+            this.btnPlaceObject.Text = "Place";
+            this.btnPlaceObject.UseVisualStyleBackColor = true;
+            this.btnPlaceObject.Click += new System.EventHandler(this.btnPlaceObject_Click);
+            // 
             // btnRotate
             // 
             this.btnRotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnRotate.Location = new System.Drawing.Point(5, 65);
+            this.btnRotate.Location = new System.Drawing.Point(5, 95);
             this.btnRotate.Name = "btnRotate";
             this.btnRotate.Size = new System.Drawing.Size(90, 25);
             this.btnRotate.TabIndex = 2;
@@ -428,7 +457,7 @@
             // bth_Move
             // 
             this.bth_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.bth_Move.Location = new System.Drawing.Point(5, 35);
+            this.bth_Move.Location = new System.Drawing.Point(5, 65);
             this.bth_Move.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bth_Move.Name = "bth_Move";
             this.bth_Move.Size = new System.Drawing.Size(90, 25);
@@ -440,7 +469,7 @@
             // btn_Select
             // 
             this.btn_Select.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Select.Location = new System.Drawing.Point(5, 5);
+            this.btn_Select.Location = new System.Drawing.Point(5, 35);
             this.btn_Select.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Select.Name = "btn_Select";
             this.btn_Select.Size = new System.Drawing.Size(90, 25);
@@ -498,6 +527,7 @@
             // 
             // InfoSplitter.Panel2
             // 
+            this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Size = new System.Drawing.Size(228, 626);
             this.InfoSplitter.SplitterDistance = 250;
@@ -713,6 +743,36 @@
             this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Y.TabIndex = 9;
             // 
+            // Panel_PlaceObject
+            // 
+            this.Panel_PlaceObject.Controls.Add(this.Lable_Model);
+            this.Panel_PlaceObject.Controls.Add(this.Combo_Model);
+            this.Panel_PlaceObject.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
+            this.Panel_PlaceObject.Name = "Panel_PlaceObject";
+            this.Panel_PlaceObject.Size = new System.Drawing.Size(228, 372);
+            this.Panel_PlaceObject.TabIndex = 21;
+            this.Panel_PlaceObject.Visible = false;
+            // 
+            // Lable_Model
+            // 
+            this.Lable_Model.AutoSize = true;
+            this.Lable_Model.Location = new System.Drawing.Point(29, 17);
+            this.Lable_Model.Name = "Lable_Model";
+            this.Lable_Model.Size = new System.Drawing.Size(50, 17);
+            this.Lable_Model.TabIndex = 1;
+            this.Lable_Model.Text = "Model:";
+            // 
+            // Combo_Model
+            // 
+            this.Combo_Model.FormattingEnabled = true;
+            this.Combo_Model.Location = new System.Drawing.Point(85, 14);
+            this.Combo_Model.Name = "Combo_Model";
+            this.Combo_Model.Size = new System.Drawing.Size(121, 24);
+            this.Combo_Model.Sorted = true;
+            this.Combo_Model.TabIndex = 0;
+            this.Combo_Model.Text = "None";
+            // 
             // Panel_ObjectInfo
             // 
             this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
@@ -799,10 +859,9 @@
             this.MinimumSize = new System.Drawing.Size(661, 345);
             this.Name = "NDYEditor";
             this.Text = "BOOM! Editor";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Activated += new System.EventHandler(this.NDYEditor_Activated);
             this.Deactivate += new System.EventHandler(this.NDYEditor_Deactivate);
-            this.Load += new System.EventHandler(this.form1_Load);
+            this.Load += new System.EventHandler(this.NDYEditor_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.TopPanelSplitter.Panel1.ResumeLayout(false);
@@ -823,6 +882,8 @@
             this.InfoSplitter.ResumeLayout(false);
             this.Panel_Info.ResumeLayout(false);
             this.Panel_Info.PerformLayout();
+            this.Panel_PlaceObject.ResumeLayout(false);
+            this.Panel_PlaceObject.PerformLayout();
             this.Panel_ObjectInfo.ResumeLayout(false);
             this.Panel_ObjectInfo.PerformLayout();
             this.ResumeLayout(false);
@@ -869,7 +930,7 @@
         private System.Windows.Forms.SplitContainer RenderAndInfoSplitter;
         private System.Windows.Forms.Panel RenderBox;
         private System.Windows.Forms.SplitContainer InfoSplitter;
-        private System.Windows.Forms.Button Test;
+        private System.Windows.Forms.Button btnFPS;
         private System.Windows.Forms.Label Label_Pos_X;
         private System.Windows.Forms.TextBox TextBox_Pos_X;
         private System.Windows.Forms.Label Label_Pos_Y;
@@ -901,6 +962,11 @@
         private System.Windows.Forms.Panel Panel_Info;
         private System.Windows.Forms.Button btnRotate;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
+        private System.Windows.Forms.Button btnPlaceObject;
+        private System.Windows.Forms.Panel Panel_PlaceObject;
+        private System.Windows.Forms.Label Lable_Model;
+        private System.Windows.Forms.ComboBox Combo_Model;
+        private System.Windows.Forms.Button btnRTS;
     }
 }
 

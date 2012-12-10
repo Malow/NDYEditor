@@ -48,7 +48,6 @@ void WorldRenderer::onEvent( Event* e )
 	}
 	if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
-		
 		std::ifstream file;
 		file.open(ELE->fileName);
 		if(!file)
@@ -57,7 +56,6 @@ void WorldRenderer::onEvent( Event* e )
 			return;
 		}
 		file.close();
-		delete file;
 
 		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
 	}

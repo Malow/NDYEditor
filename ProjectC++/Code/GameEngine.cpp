@@ -21,8 +21,14 @@ GameEngine::~GameEngine()
 
 unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 {
+	MaloW::ClearDebug();
+
 	zScreenWidth = width;
 	zScreenHeight = height;
+
+	/*GetGraphics()->GetEngineParameters()->windowWidth = zScreenWidth;
+	GetGraphics()->GetEngineParameters()->windowHeight = zScreenHeight;
+	GetGraphics()->GetEngineParameters()->SaveToFile("config.cfg");*/
 
 	InitGraphics(hWnd);
 
@@ -34,7 +40,8 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
-	MaloW::ClearDebug();
+
+	zCameraType = CameraType::FPS;
 
 	return 0;
 }
@@ -48,7 +55,26 @@ void GameEngine::Shutdown()
 
 void GameEngine::ProcessFrame()
 {
-	GetGraphics()->Update();
+	float dt = GetGraphics()->Update();
+	if(this->zCameraType == CameraType::FPS)
+	{
+		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
+		{
+			GetGraphics()->GetCamera()->MoveForward(dt);
+		}
+		if(GetGraphics()->GetKeyListener()->IsPressed('S'))
+		{
+			GetGraphics()->GetCamera()->MoveBackward(dt);
+		}
+		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
+		{
+			GetGraphics()->GetCamera()->MoveLeft(dt);
+		}
+		if(GetGraphics()->GetKeyListener()->IsPressed('D'))
+		{
+			GetGraphics()->GetCamera()->MoveRight(dt);
+		}
+	}
 }
 
 
@@ -56,6 +82,7 @@ void GameEngine::OnResize(int width, int height)
 {
 	zScreenWidth = width;
 	zScreenHeight = height;
+	GetGraphics()->ResizeGraphicsEngine(zScreenWidth, zScreenHeight);
 }
 
 
@@ -74,10 +101,13 @@ void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 	int i = 0;
-	if(this->zMode == MODE::PLACETREE)
+	if(zWorld != NULL)
 	{
-		// Create a tree on the position of the raytraced position
-		zWorld->CreateEntity(GetGraphics()->GetCamera()->GetPosition() + (GetGraphics()->GetCamera()->GetForward() * 30), ENTITYTYPE::TREE, zCreateModelPath);
+		if(this->zMode == MODE::PLACE)
+		{
+			// Create a tree on the position of the raytraced position
+			zWorld->CreateEntity(GetGraphics()->GetCamera()->GetPosition() + (GetGraphics()->GetCamera()->GetForward() * 30), ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+		}
 	}
 }
 
@@ -109,8 +139,9 @@ void GameEngine::ChangeMode( int mode )
 
 		GetGraphics()->GetCamera()->SetUpdateCamera(true);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+		GetGraphics()->GetCamera()->SetActiveWindowDisabling(true);
 	}
-	if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACETREE)
+	if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACE)
 	{
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
@@ -152,4 +183,34 @@ void GameEngine::SaveWorld( char* msg )
 void GameEngine::SetCreateModelPath( char* filePath )
 {
 	zCreateModelPath = std::string(filePath);
+}
+
+void GameEngine::ChangeCameraMode( char* cameraMode )
+{
+	string temp = std::string(cameraMode);
+	if(temp == "FPS")
+	{
+		GetGraphics()->ChangeCamera(CameraType::FPS);
+		zCameraType = CameraType::FPS;
+	}
+	if(temp == "RTS")
+	{
+		GetGraphics()->ChangeCamera(CameraType::RTS);
+		zCameraType = CameraType::RTS;
+	}
+}
+
+void GameEngine::KeyUp( int key )
+{
+	GetGraphics()->GetKeyListener()->KeyUp(key);
+}
+
+void GameEngine::KeyDown( int key )
+{
+	GetGraphics()->GetKeyListener()->KeyDown(key);
+}
+
+void GameEngine::SetCameraUpdate( bool value )
+{
+	GetGraphics()->GetCamera()->SetUpdateCamera(value);
 }

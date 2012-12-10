@@ -93,3 +93,23 @@ void GameEngineWrapper::SetCreateModelPath( char* filePath )
 	this->m_GameEngine->SetCreateModelPath(filePath);
 }
 
+void GameEngineWrapper::ChangeCameraMode( char* cameraMode )
+{
+	this->m_GameEngine->ChangeCameraMode(cameraMode);
+}
+
+void GameEngineWrapper::KeyUp( int key )
+{
+	m_GameEngine->KeyUp(key);
+}
+
+void GameEngineWrapper::KeyDown( int key )
+{
+	m_GameEngine->KeyDown(key);
+}
+
+void GameEngineWrapper::SetCameraUpdate( bool value )
+{
+	this->m_GameEngine->SetCameraUpdate(value);
+}
+
