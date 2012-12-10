@@ -11,18 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\External\NDYGFX\Include\GraphicsEngine.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iAnimatedMesh.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iCamera.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iGraphicsEngineParams.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iImage.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iKeyListener.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iLight.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iMesh.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iPhysicsEngine.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iTerrain.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\iText.h" />
-    <ClInclude Include="..\External\NDYGFX\Include\Vector.h" />
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\GameEngine.h" />

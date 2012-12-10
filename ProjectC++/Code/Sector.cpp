@@ -16,9 +16,10 @@ void Sector::Reset()
 	for( unsigned int x=0; x<SECTOR_LENGTH*SECTOR_LENGTH; ++x )
 	{
 		zHeightMap[x] = 0.0f;
-		zBlendMap[x*3] = 0.0f;
-		zBlendMap[x*3+1] = 0.0f;
-		zBlendMap[x*3+2] = 0.0f;
+		zBlendMap[x*4] = 1.0f;
+		zBlendMap[x*4+1] = 1.0f;
+		zBlendMap[x*4+2] = 0.0f;
+		zBlendMap[x*4+3] = 0.0f;
 	}
 
 	SetEdited(true);
