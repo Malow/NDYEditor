@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
+using System.IO;
 
 
 namespace Example
@@ -18,7 +19,7 @@ namespace Example
         SELECT,
         MOVE,
         ROT,
-        PLACETREE
+        PLACE
     }
     public partial class NDYEditor : Form
     {
@@ -38,8 +39,40 @@ namespace Example
             m_GameEngine.Init(RenderBox.Handle, RenderBox.Width, RenderBox.Height);
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             this.Resize += new EventHandler(form1_Resize);
+
+            this.KeyPreview = true;
+            this.KeyDown += new KeyEventHandler(ListenerKeyDown);
+            this.KeyUp += new KeyEventHandler(ListenerKeyUp);
+            this.MouseDown += new MouseEventHandler(ListenerMouseClick);
         }
 
+        void ListenerMouseClick(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Middle:
+
+                default:
+                    break;
+            }
+        }
+        void ListenerKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            m_GameEngine.KeyDown((int)e.KeyCode);
+            int i = 0;
+            if (e.KeyCode == Keys.X)
+            {
+                this.m_mode = MODE.NONE;
+                this.m_GameEngine.ChangeMode((int)this.m_mode);
+            }
+        }
+        void ListenerKeyUp(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            m_GameEngine.KeyUp((int)e.KeyCode);
+
+        }
         public void GameLoop()
         {
             while (this.Created)
@@ -115,7 +148,7 @@ namespace Example
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
             fdlg.DefaultExt = "*.map";
-            fdlg.InitialDirectory = @"c:\";
+            fdlg.InitialDirectory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), @"YourSubDirectoryName");
             fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
@@ -154,15 +187,10 @@ namespace Example
                 this.saveAsToolStripMenuItem_Click(sender, e);
                 return;
             }
-            else
+			else
             {
                 m_GameEngine.SaveWorld();
             }
-        }
-
-        private void form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         
@@ -173,36 +201,33 @@ namespace Example
 
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
-            m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
-            if (this.m_mode == MODE.PLACETREE)
+            if (this.m_mode == MODE.PLACE)
             {
-                this.m_mode = MODE.MOVE;
-                this.m_GameEngine.ChangeMode((int)this.m_mode);
+                this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.SelectedText);
             }
+            m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
         }
 
         private void MoveTool_Click(object sender, EventArgs e)
         {
             if (this.SelectedObject != -1)
             {
-                this.Panel_Info.Show();
-                this.Panel_ObjectInfo.Show();
                 this.m_mode = MODE.MOVE;
+                switchMode();
                 m_GameEngine.ChangeMode((int)this.m_mode);
             }
             else
             {
-                this.Panel_Info.Hide();
-                this.Panel_ObjectInfo.Hide();
                 this.m_mode = MODE.SELECT;
+                switchMode();
                 m_GameEngine.ChangeMode((int)this.m_mode);
             }
         }
 
         private void SelectTool_Click(object sender, EventArgs e)
         {
-            this.hideAll();
             this.m_mode = MODE.SELECT;
+            switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
@@ -210,16 +235,14 @@ namespace Example
         {
             if (this.SelectedObject != -1)
             {
-                this.hideAll();
-                this.Panel_Info.Show();
-                this.Panel_ObjectInfo.Show();
                 this.m_mode = MODE.ROT;
+                switchMode();
                 m_GameEngine.ChangeMode((int)this.m_mode);
             }
             else
             {
-                this.hideAll();
                 this.m_mode = MODE.SELECT;
+                switchMode();
                 m_GameEngine.ChangeMode((int)this.m_mode);
             }
         }
@@ -249,16 +272,76 @@ namespace Example
             test.Show();
         }
 
-        private void Test_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.PLACETREE;
-            this.m_GameEngine.ChangeMode((int)this.m_mode);
-            this.m_GameEngine.SetCreateModelPath("Media/Fern_02_v01.obj");
-        }
         private void hideAll()
         {
             this.Panel_Info.Hide();
             this.Panel_ObjectInfo.Hide();
+            this.Panel_PlaceObject.Hide();
+            this.Panel_Info.SendToBack();
+            this.Panel_ObjectInfo.SendToBack();
+            this.Panel_PlaceObject.SendToBack();
+        }
+
+        private void NDYEditor_Load(object sender, EventArgs e)
+        {
+            this.Load_Models();
+        }
+
+        private void Load_Models()
+        {
+            DirectoryInfo di = new DirectoryInfo("Media/");
+            FileInfo[] files = di.GetFiles("*obj");
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                //if(files[i].ToString() != "scale.obj")
+                this.Combo_Model.Items.Add(files[i].ToString());
+            }
+        }
+
+        private void btnPlaceObject_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.PLACE;
+            switchMode();
+            this.m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void switchMode()
+        {
+            if (this.m_mode == MODE.NONE)
+            {
+                this.hideAll();
+            }
+            if (this.m_mode == MODE.ROT || m_mode == MODE.MOVE)
+            {
+                this.hideAll();
+
+                this.Panel_Info.Show();
+                this.Panel_ObjectInfo.Show();
+
+                this.Panel_Info.BringToFront();
+                this.Panel_ObjectInfo.BringToFront();
+            }
+            if (this.m_mode == MODE.PLACE)
+            {
+                this.hideAll();
+
+                this.Panel_PlaceObject.Show();
+                this.Panel_PlaceObject.BringToFront();
+            }
+        }
+
+        private void btnFPS_Click(object sender, EventArgs e)
+        {
+            m_GameEngine.ChangeCameraMode("FPS");
+        }
+
+        private void btnRTS_Click(object sender, EventArgs e)
+        {
+            m_GameEngine.ChangeCameraMode("RTS");
+            this.m_mode = MODE.SELECT;
+            switchMode();
+            m_GameEngine.ChangeMode((int)this.m_mode);
         }
     }
 }

@@ -24,6 +24,9 @@ public:
 	void Update();
 	void SetWindowFocused(bool value);
 
+	void KeyDown(int key);
+	void KeyUp(int key);
+
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
 
@@ -36,4 +39,6 @@ public:
 
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
+	void ChangeCameraMode(char* cameraMode);
+	void SetCameraUpdate(bool value);
 };

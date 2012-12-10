@@ -9,7 +9,7 @@ enum MODE
 	SELECT,
 	MOVE,
 	ROT,
-	PLACETREE
+	PLACE
 };
 
 class GameEngine : public Observer
@@ -22,6 +22,7 @@ private:
 	WorldRenderer *zWorldRenderer;
 
 	MODE zMode;
+	CameraType zCameraType;
 
 	std::string zCreateModelPath;
 
@@ -37,6 +38,9 @@ public:
 
 	void SetWindowFocused(bool value);
 
+	void KeyDown(int key);
+	void KeyUp(int key);
+
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
 
@@ -49,4 +53,7 @@ public:
 
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
+	void ChangeCameraMode(char* cameraMode);
+	void SetCameraUpdate(bool value);
+	
 };

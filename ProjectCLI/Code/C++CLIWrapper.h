@@ -37,6 +37,9 @@ namespace System { namespace Windows { namespace Interop
 		void Update();
 		void SetWindowFocused(bool value);
 
+		void KeyDown(int key);
+		void KeyUp(int key);
+
 		String^ ProcessText(String^ text);
 
 		void OnLeftMouseUp( unsigned int x, unsigned int y );
@@ -49,5 +52,7 @@ namespace System { namespace Windows { namespace Interop
 
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);
+		void ChangeCameraMode( String^ cameraMode);
+		void SetCameraUpdate(bool value);
 	};
 }}}

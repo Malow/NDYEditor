@@ -142,4 +142,36 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
+	void CppCLI::ChangeCameraMode( String^ cameraMode )
+	{
+		char* lpText = nullptr;
+
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(cameraMode).ToPointer();
+
+			m_GameEngine->ChangeCameraMode(lpText);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
+	void CppCLI::KeyDown( int key )
+	{
+		this->m_GameEngine->KeyDown(key);
+	}
+
+	void CppCLI::KeyUp( int key )
+	{
+		this->m_GameEngine->KeyUp(key);
+	}
+
+	void CppCLI::SetCameraUpdate( bool value )
+	{
+		this->m_GameEngine->SetCameraUpdate(value);
+	}
+
 }}}

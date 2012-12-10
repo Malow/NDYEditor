@@ -63,7 +63,6 @@ void WorldRenderer::onEvent( Event* e )
 			return;
 		}
 		file.close();
-		delete file;
 
 		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
 	}
