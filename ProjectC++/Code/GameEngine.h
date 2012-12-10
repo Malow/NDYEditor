@@ -44,7 +44,7 @@ public:
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);
-	void SaveWorld(char* msg);
+	void SaveWorld();
 	void OpenWorld(char* msg);
 
 	void ChangeMode(int mode);

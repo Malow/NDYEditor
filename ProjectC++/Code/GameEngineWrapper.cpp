@@ -83,9 +83,9 @@ void GameEngineWrapper::SetWindowFocused( bool value )
 	this->m_GameEngine->SetWindowFocused(value);
 }
 
-void GameEngineWrapper::SaveWorld( char* msg )
+void GameEngineWrapper::SaveWorld()
 {
-	this->m_GameEngine->SaveWorldAs(msg);
+	this->m_GameEngine->SaveWorld();
 }
 
 void GameEngineWrapper::SetCreateModelPath( char* filePath )

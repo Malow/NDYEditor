@@ -73,8 +73,7 @@ void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
-	int i = 0;
-	if(this->zMode == MODE::PLACETREE)
+	if(zWorld && this->zMode == MODE::PLACETREE)
 	{
 		// Create a tree on the position of the raytraced position
 		zWorld->CreateEntity(GetGraphics()->GetCamera()->GetPosition() + (GetGraphics()->GetCamera()->GetForward() * 30), ENTITYTYPE::TREE, zCreateModelPath);
@@ -93,7 +92,7 @@ void GameEngine::CreateWorld( int x, int y )
 	this->zWorld = new World(this, x, y);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
 	
-	// Load All Sectors
+	// TODO: Fix With Anchors, Load All Sectors for now
 	zWorld->LoadAllSectors();
 }
 
@@ -135,6 +134,9 @@ void GameEngine::OpenWorld( char* msg )
 
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+
+	// TODO: Fix With Anchors, Load All Sectors for now
+	zWorld->LoadAllSectors();
 }
 
 
@@ -143,10 +145,12 @@ void GameEngine::SetWindowFocused( bool value )
 	GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
 }
 
-void GameEngine::SaveWorld( char* msg )
+void GameEngine::SaveWorld()
 {
-	//TODO
-	// Save World from "Save" command and not "Save As"
+	if ( !zWorld )
+		throw("World Does Not Exist!");
+
+	zWorld->SaveFile();
 }
 
 void GameEngine::SetCreateModelPath( char* filePath )

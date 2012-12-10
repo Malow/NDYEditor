@@ -19,6 +19,13 @@ WorldRenderer::~WorldRenderer()
 	{
 		delete zTerrain[x];
 	}
+
+	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
+	{
+		delete i->second;
+	}
+
+	zEntities.clear();
 }
 
 
@@ -48,7 +55,6 @@ void WorldRenderer::onEvent( Event* e )
 	}
 	if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
-		
 		std::ifstream file;
 		file.open(ELE->fileName);
 		if(!file)

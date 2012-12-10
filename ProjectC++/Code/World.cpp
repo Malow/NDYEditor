@@ -8,11 +8,7 @@ World::World( Observer* observer, const std::string& fileName) throw(const char*
 	zNrOfSectorsWidth(0), 
 	zNrOfSectorsHeight(0)
 {
-	addObserver(observer);
-	notifyObservers( &WorldLoadedEvent(this) );
-	zFile = new WorldFile(this, fileName, false);	
-	zNrOfSectorsWidth = zFile->getWorldWidth();
-	zNrOfSectorsHeight = zFile->getWorldHeight();
+	zFile = new WorldFile(this, fileName, OPEN_EDIT);
 }
 
 
@@ -86,7 +82,10 @@ bool World::CreateEntity( Vector3 pos, ENTITYTYPE entityType, std::string filePa
 	{
 		Entity* temp = new Entity(pos);
 		zEntities.push_back(temp);
-		notifyObservers( &EntityLoadedEvent(this,temp, filePath) );
+		NotifyObservers( &EntityLoadedEvent(this, temp, filePath) );
+		return true;
+	}
+	return false;
 }
 
 
@@ -121,7 +120,7 @@ void World::SaveFile()
 		{
 			for(unsigned int y=0; y<zNrOfSectorsHeight; ++y)
 			{
-				if ( this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
+				if ( this->zSectors && this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
 				{
 					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y *zNrOfSectorsWidth + x);
 					this->zSectors[x][y]->SetEdited(false);
@@ -147,8 +146,9 @@ void World::SaveFileAs( const std::string& fileName )
 		else
 		{
 			// Handle Save As
+			std::string filePath = zFile->GetFileName();
 			delete zFile;
-			CopyFile( zFile->GetFileName().c_str(), fileName.c_str(), false );
+			CopyFile( filePath.c_str(), fileName.c_str(), false );
 			zFile = new WorldFile(this, fileName, OPEN_SAVE);
 			SaveFile();
 		}
@@ -159,9 +159,6 @@ void World::SaveFileAs( const std::string& fileName )
 		zFile = new WorldFile(this, fileName, OPEN_SAVE);
 		SaveFile();
 	}
-
-	delete zFile;
-	zFile = 0;
 }
 
 
@@ -207,6 +204,16 @@ void World::onEvent( Event* e )
 	{
 		zNrOfSectorsWidth = WHL->header.width;
 		zNrOfSectorsHeight = WHL->header.height;
+
+		this->zSectors = new Sector**[this->zNrOfSectorsWidth];
+		for(unsigned int i = 0; i < this->zNrOfSectorsWidth; i++)
+		{
+			this->zSectors[i] = new Sector*[this->zNrOfSectorsHeight];
+			for( unsigned int o=0; o < this->zNrOfSectorsHeight; ++o )
+			{
+				this->zSectors[i][o] = NULL;
+			}
+		}
 
 		// World Has Been Loaded
 		NotifyObservers( &WorldLoadedEvent(this) );

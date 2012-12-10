@@ -127,8 +127,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1116, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(837, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -143,7 +142,7 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // newToolStripMenuItem
@@ -151,7 +150,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(167, 24);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -160,40 +159,40 @@
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(167, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(167, 24);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(167, 24);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(164, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(167, 24);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -209,34 +208,34 @@
             this.toolStripSeparator4,
             this.selectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(47, 24);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
             // 
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
             // 
             // redoToolStripMenuItem
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.redoToolStripMenuItem.Text = "&Redo";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(162, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
             // 
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.cutToolStripMenuItem.Text = "Cu&t";
             // 
             // copyToolStripMenuItem
@@ -244,7 +243,7 @@
             this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.copyToolStripMenuItem.Text = "&Copy";
             // 
             // pasteToolStripMenuItem
@@ -252,18 +251,18 @@
             this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(162, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
             // 
             // toolsToolStripMenuItem
@@ -272,19 +271,19 @@
             this.customizeToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(147, 24);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(147, 24);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -294,33 +293,33 @@
             this.toolStripSeparator5,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // helpToolStripMenuItem1
             // 
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(128, 24);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(125, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(113, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 703);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 567);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1116, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(837, 22);
             this.statusStrip1.TabIndex = 0;
             // 
             // BottomToolStripPanel
@@ -365,8 +364,8 @@
             this.TopPanelSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TopPanelSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.TopPanelSplitter.IsSplitterFixed = true;
-            this.TopPanelSplitter.Location = new System.Drawing.Point(0, 28);
-            this.TopPanelSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TopPanelSplitter.Location = new System.Drawing.Point(0, 24);
+            this.TopPanelSplitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TopPanelSplitter.Name = "TopPanelSplitter";
             this.TopPanelSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -377,16 +376,17 @@
             // TopPanelSplitter.Panel2
             // 
             this.TopPanelSplitter.Panel2.Controls.Add(this.LeftToolBarSplitter);
-            this.TopPanelSplitter.Size = new System.Drawing.Size(1116, 675);
+            this.TopPanelSplitter.Size = new System.Drawing.Size(837, 543);
             this.TopPanelSplitter.SplitterDistance = 45;
+            this.TopPanelSplitter.SplitterWidth = 3;
             this.TopPanelSplitter.TabIndex = 2;
             // 
             // Test
             // 
-            this.Test.Location = new System.Drawing.Point(5, 5);
-            this.Test.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Test.Location = new System.Drawing.Point(2, 2);
+            this.Test.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(50, 35);
+            this.Test.Size = new System.Drawing.Size(98, 41);
             this.Test.TabIndex = 0;
             this.Test.Text = "Tree";
             this.Test.UseVisualStyleBackColor = true;
@@ -398,7 +398,7 @@
             this.LeftToolBarSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.LeftToolBarSplitter.IsSplitterFixed = true;
             this.LeftToolBarSplitter.Location = new System.Drawing.Point(0, 0);
-            this.LeftToolBarSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.LeftToolBarSplitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.LeftToolBarSplitter.Name = "LeftToolBarSplitter";
             // 
             // LeftToolBarSplitter.Panel1
@@ -410,16 +410,18 @@
             // LeftToolBarSplitter.Panel2
             // 
             this.LeftToolBarSplitter.Panel2.Controls.Add(this.RenderAndInfoSplitter);
-            this.LeftToolBarSplitter.Size = new System.Drawing.Size(1116, 626);
+            this.LeftToolBarSplitter.Size = new System.Drawing.Size(837, 495);
             this.LeftToolBarSplitter.SplitterDistance = 100;
+            this.LeftToolBarSplitter.SplitterWidth = 3;
             this.LeftToolBarSplitter.TabIndex = 0;
             // 
             // btnRotate
             // 
             this.btnRotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnRotate.Location = new System.Drawing.Point(5, 65);
+            this.btnRotate.Location = new System.Drawing.Point(17, 53);
+            this.btnRotate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnRotate.Name = "btnRotate";
-            this.btnRotate.Size = new System.Drawing.Size(90, 25);
+            this.btnRotate.Size = new System.Drawing.Size(68, 20);
             this.btnRotate.TabIndex = 2;
             this.btnRotate.Text = "Rotate";
             this.btnRotate.UseVisualStyleBackColor = true;
@@ -428,10 +430,10 @@
             // bth_Move
             // 
             this.bth_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.bth_Move.Location = new System.Drawing.Point(5, 35);
-            this.bth_Move.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bth_Move.Location = new System.Drawing.Point(17, 28);
+            this.bth_Move.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bth_Move.Name = "bth_Move";
-            this.bth_Move.Size = new System.Drawing.Size(90, 25);
+            this.bth_Move.Size = new System.Drawing.Size(68, 20);
             this.bth_Move.TabIndex = 1;
             this.bth_Move.Text = "Move";
             this.bth_Move.UseVisualStyleBackColor = true;
@@ -440,10 +442,10 @@
             // btn_Select
             // 
             this.btn_Select.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Select.Location = new System.Drawing.Point(5, 5);
-            this.btn_Select.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Select.Location = new System.Drawing.Point(17, 4);
+            this.btn_Select.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btn_Select.Name = "btn_Select";
-            this.btn_Select.Size = new System.Drawing.Size(90, 25);
+            this.btn_Select.Size = new System.Drawing.Size(68, 20);
             this.btn_Select.TabIndex = 0;
             this.btn_Select.Text = "Select";
             this.btn_Select.UseVisualStyleBackColor = true;
@@ -456,7 +458,7 @@
             this.RenderAndInfoSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.RenderAndInfoSplitter.IsSplitterFixed = true;
             this.RenderAndInfoSplitter.Location = new System.Drawing.Point(0, 0);
-            this.RenderAndInfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RenderAndInfoSplitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.RenderAndInfoSplitter.Name = "RenderAndInfoSplitter";
             // 
             // RenderAndInfoSplitter.Panel1
@@ -466,8 +468,9 @@
             // RenderAndInfoSplitter.Panel2
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
-            this.RenderAndInfoSplitter.Size = new System.Drawing.Size(1012, 626);
-            this.RenderAndInfoSplitter.SplitterDistance = 780;
+            this.RenderAndInfoSplitter.Size = new System.Drawing.Size(734, 495);
+            this.RenderAndInfoSplitter.SplitterDistance = 503;
+            this.RenderAndInfoSplitter.SplitterWidth = 3;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
             // RenderBox
@@ -475,9 +478,8 @@
             this.RenderBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
-            this.RenderBox.Margin = new System.Windows.Forms.Padding(4);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(780, 626);
+            this.RenderBox.Size = new System.Drawing.Size(503, 495);
             this.RenderBox.TabIndex = 3;
             this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
@@ -488,7 +490,7 @@
             this.InfoSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.InfoSplitter.IsSplitterFixed = true;
             this.InfoSplitter.Location = new System.Drawing.Point(0, 0);
-            this.InfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.InfoSplitter.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.InfoSplitter.Name = "InfoSplitter";
             this.InfoSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -499,8 +501,9 @@
             // InfoSplitter.Panel2
             // 
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
-            this.InfoSplitter.Size = new System.Drawing.Size(228, 626);
+            this.InfoSplitter.Size = new System.Drawing.Size(228, 495);
             this.InfoSplitter.SplitterDistance = 250;
+            this.InfoSplitter.SplitterWidth = 3;
             this.InfoSplitter.TabIndex = 0;
             // 
             // Panel_Info
@@ -528,6 +531,7 @@
             this.Panel_Info.Controls.Add(this.TextBox_Rot_Y);
             this.Panel_Info.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Info.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Panel_Info.Name = "Panel_Info";
             this.Panel_Info.Size = new System.Drawing.Size(228, 250);
             this.Panel_Info.TabIndex = 21;
@@ -536,181 +540,193 @@
             // Label_Scale
             // 
             this.Label_Scale.AutoSize = true;
-            this.Label_Scale.Location = new System.Drawing.Point(15, 132);
+            this.Label_Scale.Location = new System.Drawing.Point(11, 107);
+            this.Label_Scale.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Scale.Name = "Label_Scale";
-            this.Label_Scale.Size = new System.Drawing.Size(47, 17);
+            this.Label_Scale.Size = new System.Drawing.Size(37, 13);
             this.Label_Scale.TabIndex = 20;
             this.Label_Scale.Text = "Scale:";
             // 
             // Label_Rot_Y
             // 
             this.Label_Rot_Y.AutoSize = true;
-            this.Label_Rot_Y.Location = new System.Drawing.Point(134, 62);
+            this.Label_Rot_Y.Location = new System.Drawing.Point(100, 50);
+            this.Label_Rot_Y.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Rot_Y.Name = "Label_Rot_Y";
-            this.Label_Rot_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_Y.Size = new System.Drawing.Size(17, 13);
             this.Label_Rot_Y.TabIndex = 10;
             this.Label_Rot_Y.Text = "Y:";
             // 
             // Label_Scale_Z
             // 
             this.Label_Scale_Z.AutoSize = true;
-            this.Label_Scale_Z.Location = new System.Drawing.Point(15, 210);
+            this.Label_Scale_Z.Location = new System.Drawing.Point(11, 171);
+            this.Label_Scale_Z.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Scale_Z.Name = "Label_Scale_Z";
-            this.Label_Scale_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_Z.Size = new System.Drawing.Size(17, 13);
             this.Label_Scale_Z.TabIndex = 19;
             this.Label_Scale_Z.Text = "Z:";
             // 
             // TextBox_Pos_X
             // 
-            this.TextBox_Pos_X.Location = new System.Drawing.Point(42, 33);
-            this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_X.Location = new System.Drawing.Point(32, 27);
+            this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Pos_X.Name = "TextBox_Pos_X";
-            this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_X.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Pos_X.TabIndex = 0;
             // 
             // TextBox_Scale_Z
             // 
-            this.TextBox_Scale_Z.Location = new System.Drawing.Point(42, 207);
-            this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_Z.Location = new System.Drawing.Point(32, 168);
+            this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
-            this.TextBox_Scale_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_Z.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Scale_Z.TabIndex = 18;
             // 
             // Label_Pos_X
             // 
             this.Label_Pos_X.AutoSize = true;
-            this.Label_Pos_X.Location = new System.Drawing.Point(15, 33);
+            this.Label_Pos_X.Location = new System.Drawing.Point(11, 27);
+            this.Label_Pos_X.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Pos_X.Name = "Label_Pos_X";
-            this.Label_Pos_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_X.Size = new System.Drawing.Size(17, 13);
             this.Label_Pos_X.TabIndex = 1;
             this.Label_Pos_X.Text = "X:";
             // 
             // Label_Scale_Y
             // 
             this.Label_Scale_Y.AutoSize = true;
-            this.Label_Scale_Y.Location = new System.Drawing.Point(15, 181);
+            this.Label_Scale_Y.Location = new System.Drawing.Point(11, 147);
+            this.Label_Scale_Y.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Scale_Y.Name = "Label_Scale_Y";
-            this.Label_Scale_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_Y.Size = new System.Drawing.Size(17, 13);
             this.Label_Scale_Y.TabIndex = 17;
             this.Label_Scale_Y.Text = "Y:";
             // 
             // TextBox_Pos_Y
             // 
-            this.TextBox_Pos_Y.Location = new System.Drawing.Point(42, 62);
-            this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_Y.Location = new System.Drawing.Point(32, 50);
+            this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
-            this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_Y.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Pos_Y.TabIndex = 2;
             // 
             // TextBox_Scale_Y
             // 
-            this.TextBox_Scale_Y.Location = new System.Drawing.Point(42, 181);
-            this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_Y.Location = new System.Drawing.Point(32, 147);
+            this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
-            this.TextBox_Scale_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_Y.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Scale_Y.TabIndex = 16;
             // 
             // Label_Pos_Y
             // 
             this.Label_Pos_Y.AutoSize = true;
-            this.Label_Pos_Y.Location = new System.Drawing.Point(15, 62);
+            this.Label_Pos_Y.Location = new System.Drawing.Point(11, 50);
+            this.Label_Pos_Y.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Pos_Y.Name = "Label_Pos_Y";
-            this.Label_Pos_Y.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_Y.Size = new System.Drawing.Size(17, 13);
             this.Label_Pos_Y.TabIndex = 3;
             this.Label_Pos_Y.Text = "Y:";
             // 
             // Label_Scale_X
             // 
             this.Label_Scale_X.AutoSize = true;
-            this.Label_Scale_X.Location = new System.Drawing.Point(15, 152);
+            this.Label_Scale_X.Location = new System.Drawing.Point(11, 124);
+            this.Label_Scale_X.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Scale_X.Name = "Label_Scale_X";
-            this.Label_Scale_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Scale_X.Size = new System.Drawing.Size(17, 13);
             this.Label_Scale_X.TabIndex = 15;
             this.Label_Scale_X.Text = "X:";
             // 
             // TextBox_Pos_Z
             // 
-            this.TextBox_Pos_Z.Location = new System.Drawing.Point(42, 88);
-            this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Pos_Z.Location = new System.Drawing.Point(32, 72);
+            this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
-            this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_Z.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Pos_Z.TabIndex = 4;
             // 
             // TextBox_Scale_X
             // 
-            this.TextBox_Scale_X.Location = new System.Drawing.Point(42, 152);
-            this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Scale_X.Location = new System.Drawing.Point(32, 124);
+            this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Scale_X.Name = "TextBox_Scale_X";
-            this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Scale_X.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Scale_X.TabIndex = 14;
             // 
             // Label_Pos_Z
             // 
             this.Label_Pos_Z.AutoSize = true;
-            this.Label_Pos_Z.Location = new System.Drawing.Point(15, 91);
+            this.Label_Pos_Z.Location = new System.Drawing.Point(11, 74);
+            this.Label_Pos_Z.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Pos_Z.Name = "Label_Pos_Z";
-            this.Label_Pos_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Pos_Z.Size = new System.Drawing.Size(17, 13);
             this.Label_Pos_Z.TabIndex = 5;
             this.Label_Pos_Z.Text = "Z:";
             // 
             // Label_Rotation
             // 
             this.Label_Rotation.AutoSize = true;
-            this.Label_Rotation.Location = new System.Drawing.Point(134, 13);
+            this.Label_Rotation.Location = new System.Drawing.Point(100, 11);
+            this.Label_Rotation.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Rotation.Name = "Label_Rotation";
-            this.Label_Rotation.Size = new System.Drawing.Size(72, 17);
+            this.Label_Rotation.Size = new System.Drawing.Size(55, 13);
             this.Label_Rotation.TabIndex = 13;
             this.Label_Rotation.Text = "Rotations:";
             // 
             // Label_Position
             // 
             this.Label_Position.AutoSize = true;
-            this.Label_Position.Location = new System.Drawing.Point(15, 13);
+            this.Label_Position.Location = new System.Drawing.Point(11, 11);
+            this.Label_Position.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Position.Name = "Label_Position";
-            this.Label_Position.Size = new System.Drawing.Size(69, 17);
+            this.Label_Position.Size = new System.Drawing.Size(52, 13);
             this.Label_Position.TabIndex = 6;
             this.Label_Position.Text = "Positions:";
             // 
             // Label_Rot_Z
             // 
             this.Label_Rot_Z.AutoSize = true;
-            this.Label_Rot_Z.Location = new System.Drawing.Point(134, 91);
+            this.Label_Rot_Z.Location = new System.Drawing.Point(100, 74);
+            this.Label_Rot_Z.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Rot_Z.Name = "Label_Rot_Z";
-            this.Label_Rot_Z.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_Z.Size = new System.Drawing.Size(17, 13);
             this.Label_Rot_Z.TabIndex = 12;
             this.Label_Rot_Z.Text = "Z:";
             // 
             // TextBox_Rot_X
             // 
-            this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
-            this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_X.Location = new System.Drawing.Point(121, 27);
+            this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Rot_X.Name = "TextBox_Rot_X";
-            this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_X.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Rot_X.TabIndex = 7;
             // 
             // TextBox_Rot_Z
             // 
-            this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 88);
-            this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_Z.Location = new System.Drawing.Point(121, 72);
+            this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
-            this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_Z.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Rot_Z.TabIndex = 11;
             // 
             // Label_Rot_X
             // 
             this.Label_Rot_X.AutoSize = true;
-            this.Label_Rot_X.Location = new System.Drawing.Point(134, 33);
+            this.Label_Rot_X.Location = new System.Drawing.Point(100, 27);
+            this.Label_Rot_X.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Rot_X.Name = "Label_Rot_X";
-            this.Label_Rot_X.Size = new System.Drawing.Size(21, 17);
+            this.Label_Rot_X.Size = new System.Drawing.Size(17, 13);
             this.Label_Rot_X.TabIndex = 8;
             this.Label_Rot_X.Text = "X:";
             // 
             // TextBox_Rot_Y
             // 
-            this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
-            this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Rot_Y.Location = new System.Drawing.Point(121, 50);
+            this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
-            this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Rot_Y.Size = new System.Drawing.Size(38, 20);
             this.TextBox_Rot_Y.TabIndex = 9;
             // 
             // Panel_ObjectInfo
@@ -723,26 +739,29 @@
             this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
             this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
+            this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(228, 372);
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(228, 242);
             this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 
             // Label_Anim
             // 
             this.Label_Anim.AutoSize = true;
-            this.Label_Anim.Location = new System.Drawing.Point(14, 77);
+            this.Label_Anim.Location = new System.Drawing.Point(10, 63);
+            this.Label_Anim.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Anim.Name = "Label_Anim";
-            this.Label_Anim.Size = new System.Drawing.Size(74, 17);
+            this.Label_Anim.Size = new System.Drawing.Size(56, 13);
             this.Label_Anim.TabIndex = 5;
             this.Label_Anim.Text = "Animation:";
             // 
             // ComboBox_Texture
             // 
             this.ComboBox_Texture.FormattingEnabled = true;
-            this.ComboBox_Texture.Location = new System.Drawing.Point(96, 44);
+            this.ComboBox_Texture.Location = new System.Drawing.Point(72, 36);
+            this.ComboBox_Texture.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ComboBox_Texture.Name = "ComboBox_Texture";
-            this.ComboBox_Texture.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Texture.Size = new System.Drawing.Size(84, 21);
             this.ComboBox_Texture.Sorted = true;
             this.ComboBox_Texture.TabIndex = 2;
             this.ComboBox_Texture.Text = "None";
@@ -750,9 +769,10 @@
             // ComboBox_Animation
             // 
             this.ComboBox_Animation.FormattingEnabled = true;
-            this.ComboBox_Animation.Location = new System.Drawing.Point(96, 74);
+            this.ComboBox_Animation.Location = new System.Drawing.Point(72, 60);
+            this.ComboBox_Animation.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ComboBox_Animation.Name = "ComboBox_Animation";
-            this.ComboBox_Animation.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Animation.Size = new System.Drawing.Size(84, 21);
             this.ComboBox_Animation.Sorted = true;
             this.ComboBox_Animation.TabIndex = 4;
             this.ComboBox_Animation.Text = "None";
@@ -760,9 +780,10 @@
             // ComboBox_Model
             // 
             this.ComboBox_Model.FormattingEnabled = true;
-            this.ComboBox_Model.Location = new System.Drawing.Point(96, 14);
+            this.ComboBox_Model.Location = new System.Drawing.Point(72, 11);
+            this.ComboBox_Model.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ComboBox_Model.Name = "ComboBox_Model";
-            this.ComboBox_Model.Size = new System.Drawing.Size(110, 24);
+            this.ComboBox_Model.Size = new System.Drawing.Size(84, 21);
             this.ComboBox_Model.Sorted = true;
             this.ComboBox_Model.TabIndex = 0;
             this.ComboBox_Model.Text = "None";
@@ -770,33 +791,34 @@
             // Label_Tex
             // 
             this.Label_Tex.AutoSize = true;
-            this.Label_Tex.Location = new System.Drawing.Point(14, 47);
+            this.Label_Tex.Location = new System.Drawing.Point(10, 38);
+            this.Label_Tex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Tex.Name = "Label_Tex";
-            this.Label_Tex.Size = new System.Drawing.Size(60, 17);
+            this.Label_Tex.Size = new System.Drawing.Size(46, 13);
             this.Label_Tex.TabIndex = 3;
             this.Label_Tex.Text = "Texture:";
             // 
             // Label_Model
             // 
             this.Label_Model.AutoSize = true;
-            this.Label_Model.Location = new System.Drawing.Point(14, 17);
+            this.Label_Model.Location = new System.Drawing.Point(10, 14);
+            this.Label_Model.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label_Model.Name = "Label_Model";
-            this.Label_Model.Size = new System.Drawing.Size(50, 17);
+            this.Label_Model.Size = new System.Drawing.Size(39, 13);
             this.Label_Model.TabIndex = 1;
             this.Label_Model.Text = "Model:";
             // 
             // NDYEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1116, 725);
+            this.ClientSize = new System.Drawing.Size(837, 589);
             this.Controls.Add(this.TopPanelSplitter);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.HelpButton = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimumSize = new System.Drawing.Size(661, 345);
+            this.MinimumSize = new System.Drawing.Size(500, 287);
             this.Name = "NDYEditor";
             this.Text = "BOOM! Editor";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

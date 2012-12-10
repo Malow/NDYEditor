@@ -97,6 +97,7 @@ namespace Example
                     int yPos = form.GetReturnY();
 
                     this.m_GameEngine.CreateWorld(xPos, yPos);
+                    filePathKnown = false;
                 }
                 else
                 {
@@ -137,6 +138,7 @@ namespace Example
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
             fdlg.AddExtension = true;
+
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 path = fdlg.FileName;
@@ -147,25 +149,14 @@ namespace Example
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.filePathKnown)
+            if (!this.filePathKnown)
             {
                 this.saveAsToolStripMenuItem_Click(sender, e);
                 return;
             }
-
-            string path = "";
-            SaveFileDialog fdlg = new SaveFileDialog();
-            fdlg.Title = "Save File";
-            fdlg.InitialDirectory = @"c:\";
-            fdlg.DefaultExt = "*.map";
-            fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
-            fdlg.FilterIndex = 2;
-            fdlg.RestoreDirectory = true;
-            fdlg.AddExtension = true;
-            if (fdlg.ShowDialog() == DialogResult.OK)
+            else
             {
-                m_GameEngine.SaveWorld(fdlg.FileName);
-                this.filePathKnown = true;
+                m_GameEngine.SaveWorld();
             }
         }
 

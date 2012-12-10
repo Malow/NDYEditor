@@ -12,6 +12,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
-    <StartWorkingDirectory>D:\Projekt\NDYEditor\WorkingDir\</StartWorkingDirectory>
+    <StartWorkingDirectory>C:\Users\Administrator\Desktop\NotDeadYet\NDYEditor\WorkingDir\</StartWorkingDirectory>
   </PropertyGroup>
 </Project>
