@@ -94,8 +94,12 @@ CollisionData WorldRenderer::GetCollisionDataWithGround()
 	return cd;
 }
 
-float WorldRenderer::GetYPosFromHeightMap( unsigned int x, unsigned y )
+float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 {
 	unsigned int tIndex = y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + x/SECTOR_LENGTH;
-	return zTerrain[tIndex]->GetYPositionAt(x%SECTOR_LENGTH, y%SECTOR_LENGTH);
+	if(zTerrain.size() > tIndex)
+	{
+		return zTerrain[tIndex]->GetYPositionAt(fmod(x, SECTOR_LENGTH), fmod(y, SECTOR_LENGTH));
+	}
+	return std::numeric_limits<float>::infinity();
 }

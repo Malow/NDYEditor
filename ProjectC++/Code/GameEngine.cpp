@@ -78,8 +78,19 @@ void GameEngine::ProcessFrame()
 	if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
 	{
 		Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
-		float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
-		ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
+		try
+		{
+			float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
+
+			if(yPos == std::numeric_limits<float>::infinity())
+			{
+				yPos = GetGraphics()->GetCamera()->GetPosition().y;
+			}
+			ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
+		}
+		catch(...)
+		{
+		}
 	}
 }
 
