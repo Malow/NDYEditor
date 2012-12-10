@@ -17,7 +17,7 @@ WorldRenderer::~WorldRenderer()
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
 	{
-		delete zTerrain[x];
+		zGraphics->DeleteTerrain(zTerrain[x]);
 	}
 
 	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )

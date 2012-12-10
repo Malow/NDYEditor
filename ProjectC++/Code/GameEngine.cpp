@@ -40,7 +40,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
-
+	
 	zCameraType = CameraType::FPS;
 
 	return 0;
