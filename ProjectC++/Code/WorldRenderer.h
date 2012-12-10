@@ -17,6 +17,9 @@ public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
 	virtual ~WorldRenderer();
 
+	CollisionData GetCollisionDataWithGround();
+	float GetYPosFromHeightMap(unsigned int x, unsigned y);
+
 protected:
 	virtual void onEvent( Event* e );
 };

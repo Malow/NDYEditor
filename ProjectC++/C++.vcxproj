@@ -19,6 +19,7 @@
     <ClInclude Include="..\External\NDYGFX\Include\iKeyListener.h" />
     <ClInclude Include="..\External\NDYGFX\Include\iLight.h" />
     <ClInclude Include="..\External\NDYGFX\Include\iMesh.h" />
+    <ClInclude Include="..\External\NDYGFX\Include\iPhysicsEngine.h" />
     <ClInclude Include="..\External\NDYGFX\Include\iTerrain.h" />
     <ClInclude Include="..\External\NDYGFX\Include\iText.h" />
     <ClInclude Include="..\External\NDYGFX\Include\Vector.h" />

@@ -17,7 +17,7 @@ WorldRenderer::~WorldRenderer()
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
 	{
-		delete zTerrain[x];
+		//delete zTerrain[x];
 	}
 
 	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
@@ -67,4 +67,35 @@ void WorldRenderer::onEvent( Event* e )
 		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
 	}
 
+}
+
+CollisionData WorldRenderer::GetCollisionDataWithGround()
+{
+	Vector3 position = Vector3(0, 0, 0);
+	int counter = 0;
+	bool found = false;
+
+	iCamera* cam = GetGraphics()->GetCamera();
+	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
+	CollisionData cd;
+	while(counter < zTerrain.size() && !found)
+	{
+		cd = pe->GetCollisionRayTerrain(cam->GetPosition(), cam->GetForward(), zTerrain[counter]);
+		if(cd.collision)
+		{
+			position = Vector3(cd.posx, cd.posy, cd.posz);
+			found = true;
+		}
+		counter++;
+	}
+	cam = NULL;
+	pe = NULL;
+
+	return cd;
+}
+
+float WorldRenderer::GetYPosFromHeightMap( unsigned int x, unsigned y )
+{
+	unsigned int tIndex = y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + x/SECTOR_LENGTH;
+	return zTerrain[tIndex]->GetYPositionAt(x%SECTOR_LENGTH, y%SECTOR_LENGTH);
 }

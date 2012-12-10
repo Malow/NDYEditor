@@ -7,7 +7,8 @@ GameEngine::GameEngine() :
 	zScreenHeight(0),
 	zMode(MODE::NONE),
 	zWorld(0),
-	zWorldRenderer(0)
+	zWorldRenderer(0),
+	zLockMouseToCamera(0)
 {
 }
 
@@ -41,8 +42,6 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 
-	zCameraType = CameraType::FPS;
-
 	return 0;
 }
 
@@ -56,24 +55,31 @@ void GameEngine::Shutdown()
 void GameEngine::ProcessFrame()
 {
 	float dt = GetGraphics()->Update();
-	if(this->zCameraType == CameraType::FPS)
+	GraphicsEngine* ge = GetGraphics();
+	if((ge->GetCamera()->GetCameraType() == CameraType::FPS || ge->GetCamera()->GetCameraType() == CameraType::RTS) && zLockMouseToCamera)
 	{
-		if(GetGraphics()->GetKeyListener()->IsPressed('W'))
+		if(ge->GetKeyListener()->IsPressed('W'))
 		{
-			GetGraphics()->GetCamera()->MoveForward(dt);
+			ge->GetCamera()->MoveForward(dt);
 		}
-		if(GetGraphics()->GetKeyListener()->IsPressed('S'))
+		if(ge->GetKeyListener()->IsPressed('S'))
 		{
-			GetGraphics()->GetCamera()->MoveBackward(dt);
+			ge->GetCamera()->MoveBackward(dt);
 		}
-		if(GetGraphics()->GetKeyListener()->IsPressed('A'))
+		if(ge->GetKeyListener()->IsPressed('A'))
 		{
-			GetGraphics()->GetCamera()->MoveLeft(dt);
+			ge->GetCamera()->MoveLeft(dt);
 		}
-		if(GetGraphics()->GetKeyListener()->IsPressed('D'))
+		if(ge->GetKeyListener()->IsPressed('D'))
 		{
-			GetGraphics()->GetCamera()->MoveRight(dt);
+			ge->GetCamera()->MoveRight(dt);
 		}
+	}
+	if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
+	{
+		Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+		float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
+		ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
 	}
 }
 
@@ -100,13 +106,14 @@ void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 
 void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
-	if(this->zMode == MODE::PLACETREE)
 	if(zWorld != NULL)
 	{
 		if(this->zMode == MODE::PLACE)
 		{
-			// Create a tree on the position of the raytraced position
-			zWorld->CreateEntity(GetGraphics()->GetCamera()->GetPosition() + (GetGraphics()->GetCamera()->GetForward() * 30), ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+			CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+			if(cd.collision)
+				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz) + (GetGraphics()->GetCamera()->GetForward() * 30),
+				ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
 		}
 	}
 }
@@ -133,13 +140,6 @@ void GameEngine::ChangeMode( int mode )
 	this->zMode = (MODE)mode;
 	if(this->zMode == MODE::SELECT)
 	{
-		GetGraphics()->GetKeyListener()->SetMousePosition(
-			Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2, 
-			GetGraphics()->GetEngineParameters()->windowHeight / 2));
-
-		GetGraphics()->GetCamera()->SetUpdateCamera(true);
-		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-		GetGraphics()->GetCamera()->SetActiveWindowDisabling(true);
 	}
 	if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACE)
 	{
@@ -193,16 +193,36 @@ void GameEngine::SetCreateModelPath( char* filePath )
 void GameEngine::ChangeCameraMode( char* cameraMode )
 {
 	string temp = std::string(cameraMode);
-	if(temp == "FPS")
+	GraphicsEngine* ge = GetGraphics();
+
+	zLockMouseToCamera = false;
+	GetGraphics()->GetCamera()->SetUpdateCamera(false);
+
+	if(temp == "FPS" && ge->GetCamera()->GetCameraType() != CameraType::FPS)
 	{
-		GetGraphics()->ChangeCamera(CameraType::FPS);
-		zCameraType = CameraType::FPS;
+		Vector3 oldPos = GetGraphics()->GetCamera()->GetPosition();
+		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
+		Vector3 oldUp = GetGraphics()->GetCamera()->GetUpVector();
+
+		ge->ChangeCamera(CameraType::FPS);
+
+		ge->GetCamera()->SetPosition(oldPos);
+		ge->GetCamera()->SetForward(oldForward);
+		ge->GetCamera()->SetUpVector(oldUp);
+
+
+		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	}
-	if(temp == "RTS")
+	if(temp == "RTS" && ge->GetCamera()->GetCameraType() != CameraType::RTS)
 	{
-		GetGraphics()->ChangeCamera(CameraType::RTS);
-		zCameraType = CameraType::RTS;
+		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
+		ge->GetCamera()->SetPosition(Vector3(ge->GetCamera()->GetPosition().x, 20, ge->GetCamera()->GetPosition().z));
+
+		ge->ChangeCamera(CameraType::RTS);
+
+		ge->GetCamera()->SetForward(oldForward);
 	}
+	ge = NULL;
 }
 
 void GameEngine::KeyUp( int key )
@@ -215,7 +235,24 @@ void GameEngine::KeyDown( int key )
 	GetGraphics()->GetKeyListener()->KeyDown(key);
 }
 
-void GameEngine::SetCameraUpdate( bool value )
+void GameEngine::LockMouseToCamera()
 {
-	GetGraphics()->GetCamera()->SetUpdateCamera(value);
+	zLockMouseToCamera = !zLockMouseToCamera;
+	if(zLockMouseToCamera)
+	{
+		if(GetGraphics()->GetCamera()->GetCameraType() == CameraType::FPS)
+		{
+			GetGraphics()->GetKeyListener()->SetMousePosition(
+				Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2, 
+				GetGraphics()->GetEngineParameters()->windowHeight / 2));
+
+			GetGraphics()->GetCamera()->SetUpdateCamera(true);
+			GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
+		}
+	}
+	else
+	{
+		GetGraphics()->GetCamera()->SetUpdateCamera(false);
+		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	}
 }

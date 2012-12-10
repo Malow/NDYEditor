@@ -79,6 +79,9 @@
     <ClInclude Include="Code\Entity.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="..\External\NDYGFX\Include\iPhysicsEngine.h">
+      <Filter>NDYGFX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldRenderer.cpp">

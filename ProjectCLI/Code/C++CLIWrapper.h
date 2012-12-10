@@ -53,6 +53,6 @@ namespace System { namespace Windows { namespace Interop
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);
 		void ChangeCameraMode( String^ cameraMode);
-		void SetCameraUpdate(bool value);
+		void LockMouseToCamera();
 	};
 }}}

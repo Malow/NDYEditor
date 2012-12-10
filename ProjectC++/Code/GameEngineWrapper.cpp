@@ -108,8 +108,8 @@ void GameEngineWrapper::KeyDown( int key )
 	m_GameEngine->KeyDown(key);
 }
 
-void GameEngineWrapper::SetCameraUpdate( bool value )
+void GameEngineWrapper::LockMouseToCamera()
 {
-	this->m_GameEngine->SetCameraUpdate(value);
+	this->m_GameEngine->LockMouseToCamera();
 }
 

@@ -43,28 +43,15 @@ namespace Example
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
             this.KeyUp += new KeyEventHandler(ListenerKeyUp);
-            this.MouseDown += new MouseEventHandler(ListenerMouseClick);
-        }
-
-        void ListenerMouseClick(object sender, MouseEventArgs e)
-        {
-            switch (e.Button)
-            {
-                case MouseButtons.Middle:
-
-                default:
-                    break;
-            }
         }
         void ListenerKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
             m_GameEngine.KeyDown((int)e.KeyCode);
-            int i = 0;
+
             if (e.KeyCode == Keys.X)
             {
-                this.m_mode = MODE.NONE;
-                this.m_GameEngine.ChangeMode((int)this.m_mode);
+                this.m_GameEngine.LockMouseToCamera();
             }
         }
         void ListenerKeyUp(object sender, KeyEventArgs e)
@@ -77,7 +64,7 @@ namespace Example
         {
             while (this.Created)
             {
-                Run();
+                //Run();
                 Application.DoEvents();
                 this.m_GameEngine.Update();
             }
@@ -308,7 +295,7 @@ namespace Example
 
         private void switchMode()
         {
-            if (this.m_mode == MODE.NONE)
+            if (this.m_mode == MODE.NONE || this.m_mode == MODE.SELECT)
             {
                 this.hideAll();
             }

@@ -25,6 +25,7 @@ private:
 	CameraType zCameraType;
 
 	std::string zCreateModelPath;
+	bool zLockMouseToCamera;
 
 public:
 	GameEngine();
@@ -54,6 +55,6 @@ public:
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
-	void SetCameraUpdate(bool value);
+	void LockMouseToCamera();
 	
 };

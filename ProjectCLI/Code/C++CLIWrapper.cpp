@@ -169,9 +169,9 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->KeyUp(key);
 	}
 
-	void CppCLI::SetCameraUpdate( bool value )
+	void CppCLI::LockMouseToCamera()
 	{
-		this->m_GameEngine->SetCameraUpdate(value);
+		this->m_GameEngine->LockMouseToCamera();
 	}
 
 }}}
