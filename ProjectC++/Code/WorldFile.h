@@ -8,36 +8,60 @@
 /*
 File Order:
 WorldHeader
-SectorHeaders
 HeightMaps
-BlendMaps
 */
 
+enum WORLDFILE_OPENMODE
+{
+	OPEN_LOAD = 0,
+	OPEN_SAVE = 1,
+	OPEN_EDIT = 2
+};
+
 class WorldFile;
+
+struct WorldHeader
+{
+	unsigned int width;
+	unsigned int height;
+
+	WorldHeader() : width(10), height(10) {}
+};
 
 class WorldHeaderLoadedEvent : public Event
 {
 public:
 	WorldFile* file;
-	WorldHeaderLoadedEvent( WorldFile* File ) : file(file) {}
+	WorldHeader header;
+	WorldHeaderLoadedEvent( WorldFile* file ) : file(file) {}
+};
+
+class WorldHeaderCreateEvent : public Event
+{
+public:
+	WorldFile* file;
+	WorldHeader header;
+
+	WorldHeaderCreateEvent( WorldFile* file ) : file(file)
+	{
+	}
 };
 
 class WorldFile : public Observed
 {
 	std::string zFileName;
 	std::fstream zFile;
-	unsigned int zWidth,zHeight;
-	bool zReadOnly;
+	WORLDFILE_OPENMODE zMode;
 
 public:
-	WorldFile( Observer* observer, const std::string& fileName, bool readOnly=true );
+	WorldFile( Observer* observer, const std::string& fileName, WORLDFILE_OPENMODE mode );
 	virtual ~WorldFile();
 
-	void writeHeightMap( const float const* data, unsigned int mapx, unsigned int mapy );
-	void readHeightMap( float* data, unsigned int mapx, unsigned int mapy );
+	void WriteHeightMap( const float* const data, unsigned int mapIndex );
+	void ReadHeightMap( float* data, unsigned int mapIndex );
 
-	inline unsigned int getWorldWidth() const { return zWidth; }
-	inline unsigned int getWorldHeight() const { return zHeight; }
+	inline const std::string& GetFileName() const { return zFileName; }
+
 private:
-	unsigned int getSectorsBegin() const;
+	unsigned int GetSectorsBegin() const;
 };

@@ -5,14 +5,14 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	zWorld(world),
 	zGraphics(graphics)
 {
-	zWorld->addObserver(this);
+	zWorld->AddObserver(this);
 	zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
 }
 
 
 WorldRenderer::~WorldRenderer()
 {
-	zWorld->removeObserver(this);
+	zWorld->RemoveObserver(this);
 
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
@@ -38,8 +38,8 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SLE->world == zWorld )
 		{
-			unsigned int tIndex = SLE->sector.y * zWorld->GetNumSectorsWidth() + SLE->sector.x;
-			Vector3 pos(SLE->sector.x * 32.0f + 16.0f, 0.0f, SLE->sector.y * 32.0f + 16.0f);
+			unsigned int tIndex = SLE->y * zWorld->GetNumSectorsWidth() + SLE->x;
+			Vector3 pos(SLE->x * 32.0f + 16.0f, 0.0f, SLE->y * 32.0f + 16.0f);
 			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,32.0f,32.0f), 32);
 
 			// TODO: Remove When FPS camera is implemented, this is just for testing

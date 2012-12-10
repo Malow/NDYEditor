@@ -19,17 +19,26 @@ class SectorLoadedEvent : public Event
 {
 public:
 	World* world;
-	Vector2 sector;
-	SectorLoadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
+	unsigned int x,y;
+	SectorLoadedEvent( World* world, unsigned int x, unsigned int y ) : world(world), x(x), y(y) {}
 };
 
-class SectorEditedEvent : public Event
+class SectorHeightMapChanged : public Event
 {
 public:
 	World* world;
-	Vector2 sector;
-	SectorEditedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
+	unsigned int sectorx, sectory, localx, localy;
+	SectorHeightMapChanged( World* world, unsigned int sectorx, unsigned int sectory, unsigned int localx, unsigned int localy ) :
+		world(world),
+		sectorx(sectorx),
+		sectory(sectory),
+		localx(localx),
+		localy(localy)
+	{
+
+	}
 };
+
 
 class SectorUnloadedEvent : public Event
 {
@@ -47,6 +56,7 @@ public:
 	std::string fileName;
 	EntityLoadedEvent( World* world, Entity* entity, std::string fileName) : world(world), entity(entity), fileName(fileName){}
 };
+
 
 class World : public Observed, public Observer
 {
@@ -66,12 +76,15 @@ public:
 
 	// Save World To File
 	void SaveFile();
+	void SaveFileAs( const std::string& fileName );
 
 	// Load All Sectors
 	void LoadAllSectors();
 
 	// Modify functions
-	bool ModifyPoint(Vector2 pos, float value);
+	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
+	float GetHeightAt( unsigned int x, unsigned int y );
+	void SetHeightAt( unsigned int x, unsigned int y, float value );
 
 	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
 
@@ -84,6 +97,6 @@ protected:
 
 private:
 	// Get Sector X Y
-	Sector* GetSector( const Vector2& pos ) throw(const char*);
+	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
 };

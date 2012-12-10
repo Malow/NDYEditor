@@ -152,7 +152,7 @@ void GameEngine::ChangeMode( int mode )
 void GameEngine::SaveWorldAs( char* msg )
 {
 	if ( zWorld )
-		zWorld->SaveFile();
+		zWorld->SaveFileAs( std::string(msg) );
 }
 
 
