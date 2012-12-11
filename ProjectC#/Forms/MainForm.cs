@@ -67,6 +67,10 @@ namespace Example
                 //Run();
                 Application.DoEvents();
                 this.m_GameEngine.Update();
+                if (m_mode == MODE.MOVE)
+                {
+                    GetAllSelectedInfo();
+                }
             }
         }
 
@@ -131,7 +135,6 @@ namespace Example
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string path = "";
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
             fdlg.DefaultExt = "*.map";
@@ -149,7 +152,6 @@ namespace Example
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string path = "";
             SaveFileDialog fdlg = new SaveFileDialog();
             fdlg.DefaultExt = "*.map";
             fdlg.Title = "Save File";
@@ -161,8 +163,7 @@ namespace Example
 
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                path = fdlg.FileName;
-                m_GameEngine.SaveWorldAs(path);
+                m_GameEngine.SaveWorldAs(fdlg.FileName);
                 this.filePathKnown = true;
             }
         }
@@ -193,6 +194,36 @@ namespace Example
                 this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.SelectedText);
             }
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
+            if (this.m_mode == MODE.SELECT)
+            {
+                GetAllSelectedInfo();
+            }
+            else if (this.m_mode == MODE.MOVE)
+            {
+                this.m_mode = MODE.SELECT;
+                switchMode();
+                m_GameEngine.ChangeMode((int)m_mode);
+            }
+        }
+        void GetAllSelectedInfo()
+        {
+            float x = 0;
+            float y = 0;
+            float z = 0;
+            m_GameEngine.GetSelectedInfo("pos", out x, out y, out z);
+            TextBox_Pos_X.Text = x.ToString();
+            TextBox_Pos_Y.Text = y.ToString();
+            TextBox_Pos_Z.Text = z.ToString();
+
+            m_GameEngine.GetSelectedInfo("rot", out x, out y, out z);
+            TextBox_Rot_X.Text = x.ToString();
+            TextBox_Rot_Y.Text = y.ToString();
+            TextBox_Rot_Z.Text = z.ToString();
+
+            m_GameEngine.GetSelectedInfo("scale", out x, out y, out z);
+            TextBox_Scale_X.Text = x.ToString();
+            TextBox_Scale_Y.Text = y.ToString();
+            TextBox_Scale_Z.Text = z.ToString();
         }
 
         private void MoveTool_Click(object sender, EventArgs e)
@@ -295,12 +326,35 @@ namespace Example
 
         private void switchMode()
         {
-            if (this.m_mode == MODE.NONE || this.m_mode == MODE.SELECT)
+            if (this.m_mode == MODE.NONE)
             {
                 this.hideAll();
             }
-            if (this.m_mode == MODE.ROT || m_mode == MODE.MOVE)
+            else if (this.m_mode == MODE.SELECT)
             {
+                btn_Select.Focus();
+                this.hideAll();
+
+                this.Panel_Info.Show();
+                this.Panel_ObjectInfo.Show();
+
+                this.Panel_Info.BringToFront();
+                this.Panel_ObjectInfo.BringToFront();
+            }
+            if (this.m_mode == MODE.ROT)
+            {
+                btn_Rotate.Focus();
+                this.hideAll();
+
+                this.Panel_Info.Show();
+                this.Panel_ObjectInfo.Show();
+
+                this.Panel_Info.BringToFront();
+                this.Panel_ObjectInfo.BringToFront();
+            }
+            else if (m_mode == MODE.MOVE)
+            {
+                btn_Move.Focus();
                 this.hideAll();
 
                 this.Panel_Info.Show();
@@ -311,6 +365,7 @@ namespace Example
             }
             if (this.m_mode == MODE.PLACE)
             {
+                btn_PlaceObject.Focus();
                 this.hideAll();
 
                 this.Panel_PlaceObject.Show();
@@ -329,6 +384,37 @@ namespace Example
             this.m_mode = MODE.SELECT;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void SetSelecetedObjectInfo(string info)
+        {
+            if(info == "pos")
+                if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
+                        float.Parse(TextBox_Pos_Z.Text));
+            if(info == "rot")
+                if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
+                           float.Parse(TextBox_Rot_Z.Text));
+            if(info == "scale")
+                if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
+                           float.Parse(TextBox_Scale_Z.Text));
+        }
+
+        private void PosTextChanged(object sender, EventArgs e)
+        {
+            SetSelecetedObjectInfo("pos");
+        }
+
+        private void RotTextChanged(object sender, EventArgs e)
+        {
+            SetSelecetedObjectInfo("rot");
+        }
+
+        private void ScaleTextChanged(object sender, EventArgs e)
+        {
+            SetSelecetedObjectInfo("scale");
         }
     }
 }

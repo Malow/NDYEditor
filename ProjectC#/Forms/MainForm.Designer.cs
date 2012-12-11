@@ -63,11 +63,11 @@
             this.btnRTS = new System.Windows.Forms.Button();
             this.btnFPS = new System.Windows.Forms.Button();
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
-            this.bntLowerGround = new System.Windows.Forms.Button();
-            this.btnRaiseGround = new System.Windows.Forms.Button();
-            this.btnPlaceObject = new System.Windows.Forms.Button();
-            this.btnRotate = new System.Windows.Forms.Button();
-            this.bth_Move = new System.Windows.Forms.Button();
+            this.btn_LowerGround = new System.Windows.Forms.Button();
+            this.btn_RaiseGround = new System.Windows.Forms.Button();
+            this.btn_PlaceObject = new System.Windows.Forms.Button();
+            this.btn_Rotate = new System.Windows.Forms.Button();
+            this.btn_Move = new System.Windows.Forms.Button();
             this.btn_Select = new System.Windows.Forms.Button();
             this.RenderAndInfoSplitter = new System.Windows.Forms.SplitContainer();
             this.RenderBox = new System.Windows.Forms.Panel();
@@ -423,11 +423,11 @@
             // 
             // LeftToolBarSplitter.Panel1
             // 
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.bntLowerGround);
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRaiseGround);
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnPlaceObject);
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRotate);
-            this.LeftToolBarSplitter.Panel1.Controls.Add(this.bth_Move);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_LowerGround);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_RaiseGround);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_PlaceObject);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Rotate);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Move);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Select);
             // 
             // LeftToolBarSplitter.Panel2
@@ -437,63 +437,63 @@
             this.LeftToolBarSplitter.SplitterDistance = 100;
             this.LeftToolBarSplitter.TabIndex = 0;
             // 
-            // bntLowerGround
+            // btn_LowerGround
             // 
-            this.bntLowerGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.bntLowerGround.Location = new System.Drawing.Point(5, 130);
-            this.bntLowerGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bntLowerGround.Name = "bntLowerGround";
-            this.bntLowerGround.Size = new System.Drawing.Size(90, 25);
-            this.bntLowerGround.TabIndex = 5;
-            this.bntLowerGround.Text = "Lower Ground";
-            this.bntLowerGround.UseVisualStyleBackColor = true;
+            this.btn_LowerGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_LowerGround.Location = new System.Drawing.Point(5, 130);
+            this.btn_LowerGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_LowerGround.Name = "btn_LowerGround";
+            this.btn_LowerGround.Size = new System.Drawing.Size(90, 25);
+            this.btn_LowerGround.TabIndex = 5;
+            this.btn_LowerGround.Text = "Lower Ground";
+            this.btn_LowerGround.UseVisualStyleBackColor = true;
             // 
-            // btnRaiseGround
+            // btn_RaiseGround
             // 
-            this.btnRaiseGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnRaiseGround.Location = new System.Drawing.Point(5, 105);
-            this.btnRaiseGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnRaiseGround.Name = "btnRaiseGround";
-            this.btnRaiseGround.Size = new System.Drawing.Size(90, 25);
-            this.btnRaiseGround.TabIndex = 4;
-            this.btnRaiseGround.Text = "Raise Ground";
-            this.btnRaiseGround.UseVisualStyleBackColor = true;
+            this.btn_RaiseGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_RaiseGround.Location = new System.Drawing.Point(5, 105);
+            this.btn_RaiseGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_RaiseGround.Name = "btn_RaiseGround";
+            this.btn_RaiseGround.Size = new System.Drawing.Size(90, 25);
+            this.btn_RaiseGround.TabIndex = 4;
+            this.btn_RaiseGround.Text = "Raise Ground";
+            this.btn_RaiseGround.UseVisualStyleBackColor = true;
             // 
-            // btnPlaceObject
+            // btn_PlaceObject
             // 
-            this.btnPlaceObject.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnPlaceObject.Location = new System.Drawing.Point(5, 5);
-            this.btnPlaceObject.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPlaceObject.Name = "btnPlaceObject";
-            this.btnPlaceObject.Size = new System.Drawing.Size(90, 25);
-            this.btnPlaceObject.TabIndex = 3;
-            this.btnPlaceObject.Text = "Place";
-            this.btnPlaceObject.UseVisualStyleBackColor = true;
-            this.btnPlaceObject.Click += new System.EventHandler(this.btnPlaceObject_Click);
+            this.btn_PlaceObject.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_PlaceObject.Location = new System.Drawing.Point(5, 5);
+            this.btn_PlaceObject.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_PlaceObject.Name = "btn_PlaceObject";
+            this.btn_PlaceObject.Size = new System.Drawing.Size(90, 25);
+            this.btn_PlaceObject.TabIndex = 3;
+            this.btn_PlaceObject.Text = "Place";
+            this.btn_PlaceObject.UseVisualStyleBackColor = true;
+            this.btn_PlaceObject.Click += new System.EventHandler(this.btnPlaceObject_Click);
             // 
-            // btnRotate
+            // btn_Rotate
             // 
-            this.btnRotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnRotate.Location = new System.Drawing.Point(5, 80);
-            this.btnRotate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnRotate.Name = "btnRotate";
-            this.btnRotate.Size = new System.Drawing.Size(90, 25);
-            this.btnRotate.TabIndex = 2;
-            this.btnRotate.Text = "Rotate";
-            this.btnRotate.UseVisualStyleBackColor = true;
-            this.btnRotate.Click += new System.EventHandler(this.btnRotate_Click);
+            this.btn_Rotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_Rotate.Location = new System.Drawing.Point(5, 80);
+            this.btn_Rotate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Rotate.Name = "btn_Rotate";
+            this.btn_Rotate.Size = new System.Drawing.Size(90, 25);
+            this.btn_Rotate.TabIndex = 2;
+            this.btn_Rotate.Text = "Rotate";
+            this.btn_Rotate.UseVisualStyleBackColor = true;
+            this.btn_Rotate.Click += new System.EventHandler(this.btnRotate_Click);
             // 
-            // bth_Move
+            // btn_Move
             // 
-            this.bth_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.bth_Move.Location = new System.Drawing.Point(5, 55);
-            this.bth_Move.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.bth_Move.Name = "bth_Move";
-            this.bth_Move.Size = new System.Drawing.Size(90, 25);
-            this.bth_Move.TabIndex = 1;
-            this.bth_Move.Text = "Move";
-            this.bth_Move.UseVisualStyleBackColor = true;
-            this.bth_Move.Click += new System.EventHandler(this.MoveTool_Click);
+            this.btn_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_Move.Location = new System.Drawing.Point(5, 55);
+            this.btn_Move.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_Move.Name = "btn_Move";
+            this.btn_Move.Size = new System.Drawing.Size(90, 25);
+            this.btn_Move.TabIndex = 1;
+            this.btn_Move.Text = "Move";
+            this.btn_Move.UseVisualStyleBackColor = true;
+            this.btn_Move.Click += new System.EventHandler(this.MoveTool_Click);
             // 
             // btn_Select
             // 
@@ -627,6 +627,7 @@
             this.TextBox_Pos_X.Name = "TextBox_Pos_X";
             this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_X.TabIndex = 0;
+            this.TextBox_Pos_X.TextChanged += new System.EventHandler(this.PosTextChanged);
             // 
             // TextBox_Scale_Z
             // 
@@ -661,6 +662,7 @@
             this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
             this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_Y.TabIndex = 2;
+            this.TextBox_Pos_Y.TextChanged += new System.EventHandler(this.PosTextChanged);
             // 
             // TextBox_Scale_Y
             // 
@@ -695,6 +697,7 @@
             this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
             this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_Z.TabIndex = 4;
+            this.TextBox_Pos_Z.TextChanged += new System.EventHandler(this.PosTextChanged);
             // 
             // TextBox_Scale_X
             // 
@@ -703,6 +706,7 @@
             this.TextBox_Scale_X.Name = "TextBox_Scale_X";
             this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_X.TabIndex = 14;
+            this.TextBox_Scale_X.TextChanged += new System.EventHandler(this.ScaleTextChanged);
             // 
             // Label_Pos_Z
             // 
@@ -747,6 +751,7 @@
             this.TextBox_Rot_X.Name = "TextBox_Rot_X";
             this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_X.TabIndex = 7;
+            this.TextBox_Rot_X.TextChanged += new System.EventHandler(this.RotTextChanged);
             // 
             // TextBox_Rot_Z
             // 
@@ -755,6 +760,7 @@
             this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
             this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Z.TabIndex = 11;
+            this.TextBox_Rot_Z.TextChanged += new System.EventHandler(this.RotTextChanged);
             // 
             // Label_Rot_X
             // 
@@ -772,6 +778,7 @@
             this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
             this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Y.TabIndex = 9;
+            this.TextBox_Rot_Y.TextChanged += new System.EventHandler(this.RotTextChanged);
             // 
             // Panel_PlaceObject
             // 
@@ -961,7 +968,7 @@
         private System.Windows.Forms.ToolStripContentPanel ContentPanel;
         private System.Windows.Forms.SplitContainer TopPanelSplitter;
         private System.Windows.Forms.SplitContainer LeftToolBarSplitter;
-        private System.Windows.Forms.Button bth_Move;
+        private System.Windows.Forms.Button btn_Move;
         private System.Windows.Forms.Button btn_Select;
         private System.Windows.Forms.SplitContainer RenderAndInfoSplitter;
         private System.Windows.Forms.Panel RenderBox;
@@ -996,15 +1003,15 @@
         private System.Windows.Forms.Label Label_Model;
         private System.Windows.Forms.Panel Panel_ObjectInfo;
         private System.Windows.Forms.Panel Panel_Info;
-        private System.Windows.Forms.Button btnRotate;
+        private System.Windows.Forms.Button btn_Rotate;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
-        private System.Windows.Forms.Button btnPlaceObject;
+        private System.Windows.Forms.Button btn_PlaceObject;
         private System.Windows.Forms.Panel Panel_PlaceObject;
         private System.Windows.Forms.Label Lable_Model;
         private System.Windows.Forms.ComboBox Combo_Model;
         private System.Windows.Forms.Button btnRTS;
-        private System.Windows.Forms.Button bntLowerGround;
-        private System.Windows.Forms.Button btnRaiseGround;
+        private System.Windows.Forms.Button btn_LowerGround;
+        private System.Windows.Forms.Button btn_RaiseGround;
     }
 }
 

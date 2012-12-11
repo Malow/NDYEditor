@@ -27,6 +27,9 @@ private:
 	std::string zCreateModelPath;
 	bool zLockMouseToCamera;
 
+	std::set<Entity*> zTargetedEntities;
+	Vector3 zPrevPosOfSelected;
+
 public:
 	GameEngine();
 	~GameEngine();
@@ -56,5 +59,7 @@ public:
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
+	void GetSelectedInfo(char* info, float& x, float& y, float& z);
+	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
 	
 };

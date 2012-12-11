@@ -1,13 +1,13 @@
 #pragma once
 #include "Vector.h"
-
+#include "Observer.h"
 
 enum ENTITYTYPE
 {
 	TREE
 };
 
-class Entity
+class Entity : public Observed
 {
 private:
 	Vector3 zPosition;
@@ -18,10 +18,18 @@ public:
 	Entity(Vector3 pos);
 	virtual ~Entity();
 
-	inline void SetPosition(Vector3 pos){ zPosition = pos; }
+	void SetPosition(Vector3 pos);
 	inline Vector3 GetPosition(){ return zPosition; }
-	inline void SetRotation(Vector3 rot){ zRotation = rot; }
+	void SetRotation(Vector3 rot);
 	inline Vector3 GetRotation(){ return zRotation; }
-	inline void SetScale(Vector3 scale){ zScale = scale; } 
+	void SetScale(Vector3 scale);
 	inline Vector3 GetScale(){ return zScale; }
+};
+
+
+class EntityUpdatedEvent : public Event
+{
+public:
+	Entity* entity;
+	EntityUpdatedEvent(Entity* entity) : entity(entity){}
 };

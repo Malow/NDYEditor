@@ -55,8 +55,9 @@ public:
 	World* world;
 	Entity* entity;
 	std::string fileName;
-	EntityLoadedEvent( World* world, Entity* entity, std::string fileName) : world(world), entity(entity), fileName(fileName){}
+	EntityLoadedEvent( World* world, Entity* entity, const std::string fileName) : world(world), entity(entity), fileName(fileName){}
 };
+
 
 
 class World : public Observed, public Observer
@@ -98,7 +99,7 @@ public:
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
 
 	// Extra
-	std::vector<Entity*> GetEntitiesInCircle(Vector3 pos, float radius);
+	void GetEntitiesInCircle(Vector3 pos, float radius, std::vector<Entity*>& entityVector);
 protected:
 	virtual void onEvent( Event* e );
 };

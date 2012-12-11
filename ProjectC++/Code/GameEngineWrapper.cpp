@@ -113,3 +113,19 @@ void GameEngineWrapper::LockMouseToCamera()
 	this->m_GameEngine->LockMouseToCamera();
 }
 
+void GameEngineWrapper::GetSelectedInfo( char* info, float& x, float& y, float& z)
+{
+	try
+	{
+		m_GameEngine->GetSelectedInfo(info, x, y, z);
+	}
+	catch(...)
+	{
+	}
+}
+
+void GameEngineWrapper::SetSelectedObjectInfo( char* info, float x, float y, float z )
+{
+	m_GameEngine->SetSelectedObjectInfo(info, x, y, z);
+}
+
