@@ -78,12 +78,12 @@ void WorldRenderer::onEvent( Event* e )
 		file.open(ELE->fileName);
 		if(!file)
 		{
-			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->getPosition());
+			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->GetPosition());
 			return;
 		}
 		file.close();
 
-		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->getPosition());
+		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->GetPosition());
 	}
 
 }
@@ -144,6 +144,29 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 			found = true;
 		}
 		counter++;
+	}
+	cam = NULL;
+	pe = NULL;
+
+	return cd;
+}
+
+CollisionData WorldRenderer::Get3DRayCollisionWithMesh()
+{
+	int counter = 0;
+	bool found = false;
+
+	iCamera* cam = GetGraphics()->GetCamera();
+	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
+	CollisionData cd;
+	while(counter < zEntities.size() && !found)
+	{
+		/*cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), );
+		if(cd.collision)
+		{
+			found = true;
+		}
+		counter++;*/
 	}
 	cam = NULL;
 	pe = NULL;

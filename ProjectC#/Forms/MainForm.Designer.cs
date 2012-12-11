@@ -63,6 +63,8 @@
             this.btnRTS = new System.Windows.Forms.Button();
             this.btnFPS = new System.Windows.Forms.Button();
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
+            this.bntLowerGround = new System.Windows.Forms.Button();
+            this.btnRaiseGround = new System.Windows.Forms.Button();
             this.btnPlaceObject = new System.Windows.Forms.Button();
             this.btnRotate = new System.Windows.Forms.Button();
             this.bth_Move = new System.Windows.Forms.Button();
@@ -421,6 +423,8 @@
             // 
             // LeftToolBarSplitter.Panel1
             // 
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.bntLowerGround);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRaiseGround);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnPlaceObject);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btnRotate);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.bth_Move);
@@ -432,6 +436,28 @@
             this.LeftToolBarSplitter.Size = new System.Drawing.Size(1116, 626);
             this.LeftToolBarSplitter.SplitterDistance = 100;
             this.LeftToolBarSplitter.TabIndex = 0;
+            // 
+            // bntLowerGround
+            // 
+            this.bntLowerGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.bntLowerGround.Location = new System.Drawing.Point(5, 130);
+            this.bntLowerGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.bntLowerGround.Name = "bntLowerGround";
+            this.bntLowerGround.Size = new System.Drawing.Size(90, 25);
+            this.bntLowerGround.TabIndex = 5;
+            this.bntLowerGround.Text = "Lower Ground";
+            this.bntLowerGround.UseVisualStyleBackColor = true;
+            // 
+            // btnRaiseGround
+            // 
+            this.btnRaiseGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnRaiseGround.Location = new System.Drawing.Point(5, 105);
+            this.btnRaiseGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnRaiseGround.Name = "btnRaiseGround";
+            this.btnRaiseGround.Size = new System.Drawing.Size(90, 25);
+            this.btnRaiseGround.TabIndex = 4;
+            this.btnRaiseGround.Text = "Raise Ground";
+            this.btnRaiseGround.UseVisualStyleBackColor = true;
             // 
             // btnPlaceObject
             // 
@@ -977,6 +1003,8 @@
         private System.Windows.Forms.Label Lable_Model;
         private System.Windows.Forms.ComboBox Combo_Model;
         private System.Windows.Forms.Button btnRTS;
+        private System.Windows.Forms.Button bntLowerGround;
+        private System.Windows.Forms.Button btnRaiseGround;
     }
 }
 

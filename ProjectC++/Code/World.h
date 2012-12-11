@@ -97,6 +97,8 @@ public:
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
 
+	// Extra
+	std::vector<Entity*> GetEntitiesInCircle(Vector3 pos, float radius);
 protected:
 	virtual void onEvent( Event* e );
 };
