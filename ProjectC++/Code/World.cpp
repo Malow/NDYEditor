@@ -80,7 +80,6 @@ bool World::CreateEntity( Vector3 pos, ENTITYTYPE entityType, std::string filePa
 {
 	if(entityType == ENTITYTYPE::TREE)
 	{
-		
 		Entity* temp = new Entity(pos);
 		zEntities.push_back(temp);
 		NotifyObservers( &EntityLoadedEvent(this, temp, filePath) );

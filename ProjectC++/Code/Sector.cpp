@@ -17,7 +17,7 @@ void Sector::Reset()
 	{
 		zHeightMap[x] = 0.0f;
 		zBlendMap[x*4] = 1.0f;
-		zBlendMap[x*4+1] = 1.0f;
+		zBlendMap[x*4+1] = 0.0f;
 		zBlendMap[x*4+2] = 0.0f;
 		zBlendMap[x*4+3] = 0.0f;
 	}

@@ -2,6 +2,7 @@
 #include "Graphics.h"
 #include "MaloWFileDebug.h"
 
+
 GameEngine::GameEngine() :
 	zScreenWidth(0),
 	zScreenHeight(0),
@@ -36,11 +37,12 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	zCreateModelPath = "";
 
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
-
-	GetGraphics()->StartRendering();
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
+	GetGraphics()->SetFPSMax(30);
+	GetGraphics()->StartRendering();
+	
+	
 
 	return 0;
 }
@@ -152,7 +154,7 @@ void GameEngine::ChangeMode( int mode )
 	if(this->zMode == MODE::SELECT)
 	{
 	}
-	if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACE)
+	else if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACE)
 	{
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);

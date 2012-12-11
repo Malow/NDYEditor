@@ -131,7 +131,6 @@ namespace Example
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string path = "";
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
             fdlg.DefaultExt = "*.map";

@@ -91,7 +91,7 @@ void WorldRenderer::onEvent( Event* e )
 CollisionData WorldRenderer::GetCollisionDataWithGround()
 {
 	Vector3 position = Vector3(0, 0, 0);
-	int counter = 0;
+	unsigned int counter = 0;
 	bool found = false;
 
 	iCamera* cam = GetGraphics()->GetCamera();
@@ -115,10 +115,10 @@ CollisionData WorldRenderer::GetCollisionDataWithGround()
 
 float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 {
-	unsigned int tIndex = y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + x/SECTOR_LENGTH;
+	unsigned int tIndex = (unsigned int)y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + (unsigned int)x/SECTOR_LENGTH;
 	if(zTerrain.size() > tIndex)
 	{
-		return zTerrain[tIndex]->GetYPositionAt(fmod(x, SECTOR_LENGTH), fmod(y, SECTOR_LENGTH));
+		return zTerrain[tIndex]->GetYPositionAt(fmod(x, (float)SECTOR_LENGTH), fmod(y, (float)SECTOR_LENGTH));
 	}
 	return std::numeric_limits<float>::infinity();
 }
