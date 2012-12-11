@@ -19,6 +19,7 @@ public:
 
 	CollisionData GetCollisionDataWithGround();
 	CollisionData Get3DRayCollisionDataWithGround();
+	CollisionData Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);
 
 protected:

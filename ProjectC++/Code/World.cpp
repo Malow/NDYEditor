@@ -237,3 +237,16 @@ void World::LoadAllSectors()
 		}
 	}
 }
+
+std::vector<Entity*> World::GetEntitiesInCircle( Vector3 pos, float radius )
+{
+	std::vector<Entity*> temp;
+	for(int i = 0; i < zEntities.size(); i++)
+	{
+		if((zEntities.at(i)->GetPosition() - pos).GetLength() < radius)
+		{
+
+		}
+	}
+	return temp;
+}

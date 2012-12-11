@@ -18,10 +18,10 @@ public:
 	Entity(Vector3 pos);
 	virtual ~Entity();
 
-	inline void setPosition(Vector3 pos){ zPosition = pos; }
-	inline Vector3 getPosition(){ return zPosition; }
-	inline void setRotation(Vector3 rot){ zRotation = rot; }
-	inline Vector3 getRotation(){ return zRotation; }
-	inline void setScale(Vector3 scale){ zScale = scale; } 
-	inline Vector3 getScale(){ return zScale; }
+	inline void SetPosition(Vector3 pos){ zPosition = pos; }
+	inline Vector3 GetPosition(){ return zPosition; }
+	inline void SetRotation(Vector3 rot){ zRotation = rot; }
+	inline Vector3 GetRotation(){ return zRotation; }
+	inline void SetScale(Vector3 scale){ zScale = scale; } 
+	inline Vector3 GetScale(){ return zScale; }
 };
