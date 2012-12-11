@@ -18,6 +18,7 @@ public:
 	virtual ~WorldRenderer();
 
 	CollisionData GetCollisionDataWithGround();
+	CollisionData Get3DRayCollisionDataWithGround();
 	float GetYPosFromHeightMap(float x, float y);
 
 protected:

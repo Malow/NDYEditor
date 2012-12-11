@@ -115,10 +115,38 @@ CollisionData WorldRenderer::GetCollisionDataWithGround()
 
 float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 {
+	if(zWorld == NULL)
+		return std::numeric_limits<float>::infinity();
+
 	unsigned int tIndex = y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + x/SECTOR_LENGTH;
 	if(zTerrain.size() > tIndex)
 	{
 		return zTerrain[tIndex]->GetYPositionAt(fmod(x, SECTOR_LENGTH), fmod(y, SECTOR_LENGTH));
 	}
 	return std::numeric_limits<float>::infinity();
+}
+
+CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
+{
+	Vector3 position = Vector3(0, 0, 0);
+	int counter = 0;
+	bool found = false;
+
+	iCamera* cam = GetGraphics()->GetCamera();
+	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
+	CollisionData cd;
+	while(counter < zTerrain.size() && !found)
+	{
+		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(cam->GetPosition(), cam->Get3DPickingRay(), zTerrain[counter]);
+		if(cd.collision)
+		{
+			position = Vector3(cd.posx, cd.posy, cd.posz);
+			found = true;
+		}
+		counter++;
+	}
+	cam = NULL;
+	pe = NULL;
+
+	return cd;
 }

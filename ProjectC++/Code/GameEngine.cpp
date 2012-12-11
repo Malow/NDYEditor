@@ -34,14 +34,15 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	InitGraphics(hWnd);
 
 	zCreateModelPath = "";
-
-	GetGraphics()->CreateSkyBox("Media/skymap.dds");
-
-	GetGraphics()->StartRendering();
-	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->SetFPSMax(30);
-	GetGraphics()->GetCamera()->SetUpdateCamera(false);
-
+	GraphicsEngine* ge = GetGraphics();
+	ge->CreateSkyBox("Media/skymap.dds");
+	ge->StartRendering();
+	ge->GetKeyListener()->SetCursorVisibility(true);
+	ge->SetFPSMax(30);
+	ge->GetCamera()->SetUpdateCamera(false);
+	ge->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	ge->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
+	ge->Update();
 	return 0;
 }
 
@@ -56,7 +57,7 @@ void GameEngine::ProcessFrame()
 {
 	float dt = GetGraphics()->Update();
 	GraphicsEngine* ge = GetGraphics();
-	if((ge->GetCamera()->GetCameraType() == CameraType::FPS || ge->GetCamera()->GetCameraType() == CameraType::RTS) && zLockMouseToCamera)
+	if((ge->GetCamera()->GetCameraType() == CameraType::FPS) && zLockMouseToCamera)
 	{
 		if(ge->GetKeyListener()->IsPressed('W'))
 		{
@@ -77,6 +78,23 @@ void GameEngine::ProcessFrame()
 	}
 	if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
 	{
+		if(ge->GetKeyListener()->IsPressed('W'))
+		{
+			ge->GetCamera()->MoveForward(dt);
+		}
+		if(ge->GetKeyListener()->IsPressed('S'))
+		{
+			ge->GetCamera()->MoveBackward(dt);
+		}
+		if(ge->GetKeyListener()->IsPressed('A'))
+		{
+			ge->GetCamera()->MoveLeft(dt);
+		}
+		if(ge->GetKeyListener()->IsPressed('D'))
+		{
+			ge->GetCamera()->MoveRight(dt);
+		}
+
 		Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
 		try
 		{
@@ -121,9 +139,9 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 	{
 		if(this->zMode == MODE::PLACE)
 		{
-			CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
-				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz) + (GetGraphics()->GetCamera()->GetForward() * 30),
+				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz),
 				ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
 		}
 	}

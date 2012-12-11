@@ -58,10 +58,10 @@ namespace Example
         {
             e.Handled = true;
             m_GameEngine.KeyUp((int)e.KeyCode);
-
         }
         public void GameLoop()
         {
+            m_GameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             while (this.Created)
             {
                 //Run();
