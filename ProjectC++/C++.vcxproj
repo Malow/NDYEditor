@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\CircleAndRect.h" />
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\GameEngine.h" />

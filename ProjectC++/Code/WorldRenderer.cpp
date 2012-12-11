@@ -7,6 +7,34 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 {
 	zWorld->AddObserver(this);
 	zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
+
+	// Loop Through Loaded Sectors And Create Render Objects
+	for( unsigned int x=0; x<zWorld->GetNumSectorsWidth(); ++x )
+	{
+		for( unsigned int y=0; y<zWorld->GetNumSectorsHeight(); ++y )
+		{
+			if ( zWorld->IsSectorLoaded(x,y) )
+			{
+				unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
+				Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
+				zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
+
+				// Blend Maps
+				const char* terrainTextures[3];
+				terrainTextures[0] = "Media/TerrainTexture.png";
+				terrainTextures[1] = "Media/BallTexture.png";
+				terrainTextures[2] = "Media/TerrainTexture.png";
+				zTerrain[tIndex]->SetTextures(terrainTextures);
+				zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
+
+				// Height Map
+				zTerrain[tIndex]->SetHeightMap( zWorld->GetSector(x, y)->GetHeightMap() );
+
+				// TODO: Remove When FPS camera is implemented, this is just for testing
+				zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
+			}
+		}
+	}
 }
 
 
@@ -47,7 +75,7 @@ void WorldRenderer::onEvent( Event* e )
 		{
 			unsigned int tIndex = SLE->y * zWorld->GetNumSectorsWidth() + SLE->x;
 			Vector3 pos(SLE->x * 32.0f + 16.0f, 0.0f, SLE->y * 32.0f + 16.0f);
-			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,32.0f,32.0f), SECTOR_LENGTH);
+			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
 
 			// Blend Maps
 			const char* terrainTextures[3];
@@ -66,10 +94,10 @@ void WorldRenderer::onEvent( Event* e )
 	}
 	else if ( SectorHeightMapChanged* SHMC = dynamic_cast<SectorHeightMapChanged*>(e) )
 	{
-		if ( SLE->world == zWorld )
+		if ( SHMC->world == zWorld )
 		{
-			unsigned int tIndex = SLE->y * zWorld->GetNumSectorsWidth() + SLE->x;
-			zTerrain[tIndex]->SetHeightMap( SLE->world->GetSector(SLE->x, SLE->y)->GetHeightMap() );
+			unsigned int tIndex = SHMC->sectory * zWorld->GetNumSectorsWidth() + SHMC->sectorx;
+			zTerrain[tIndex]->SetHeightMap( SHMC->world->GetSector(SHMC->sectorx, SHMC->sectory)->GetHeightMap() );
 		}
 	}
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
@@ -118,10 +146,13 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	if(zWorld == NULL)
 		return std::numeric_limits<float>::infinity();
 
-	unsigned int tIndex = y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + x/SECTOR_LENGTH;
+	unsigned int tIndex = (unsigned int)y/SECTOR_LENGTH * zWorld->GetNumSectorsWidth() + (unsigned int)x/SECTOR_LENGTH;
 	if(zTerrain.size() > tIndex)
 	{
-		return zTerrain[tIndex]->GetYPositionAt(fmod(x, (float)SECTOR_LENGTH), fmod(y, (float)SECTOR_LENGTH));
+		if ( zTerrain[tIndex] )
+		{
+			return zTerrain[tIndex]->GetYPositionAt(fmod(x, (float)SECTOR_LENGTH), fmod(y, (float)SECTOR_LENGTH));
+		}
 	}
 	return std::numeric_limits<float>::infinity();
 }
@@ -129,7 +160,7 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	Vector3 position = Vector3(0, 0, 0);
-	int counter = 0;
+	unsigned int counter = 0;
 	bool found = false;
 
 	iCamera* cam = GetGraphics()->GetCamera();

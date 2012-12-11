@@ -22,6 +22,5 @@ public:
 	CollisionData Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);
 
-protected:
 	virtual void onEvent( Event* e );
 };

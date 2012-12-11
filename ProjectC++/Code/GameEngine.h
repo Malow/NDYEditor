@@ -9,7 +9,9 @@ enum MODE
 	SELECT,
 	MOVE,
 	ROT,
-	PLACE
+	PLACE,
+	RAISE,
+	LOWER
 };
 
 class GameEngine : public Observer
@@ -26,6 +28,8 @@ private:
 
 	std::string zCreateModelPath;
 	bool zLockMouseToCamera;
+
+	float zBrushSize;
 
 public:
 	GameEngine();
@@ -52,9 +56,12 @@ public:
 	void SaveWorld();
 	void OpenWorld(char* msg);
 
+	void SetBrushSize(float size);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
-	
+
+protected:
+	virtual void onEvent( Event* e );
 };

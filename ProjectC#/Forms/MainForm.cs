@@ -19,7 +19,9 @@ namespace Example
         SELECT,
         MOVE,
         ROT,
-        PLACE
+        PLACE,
+        RAISE,
+        LOWER
     }
     public partial class NDYEditor : Form
     {
@@ -326,6 +328,20 @@ namespace Example
         {
             m_GameEngine.ChangeCameraMode("RTS");
             this.m_mode = MODE.SELECT;
+            switchMode();
+            m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void btnRaiseGround_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.RAISE;
+            switchMode();
+            m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void bntLowerGround_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.LOWER;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
         }

@@ -37,6 +37,7 @@ public:
 	void SaveWorld();
 	void OpenWorld(char* msg);
 
+	void SetBrushSize(float size);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);

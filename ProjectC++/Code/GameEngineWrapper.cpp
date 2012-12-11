@@ -43,73 +43,93 @@ char* GameEngineWrapper::ProcessText(char* msg)
 	return m_GameEngine->ProcessText(msg);
 }
 
+
 void GameEngineWrapper::CreateWorld( int x, int y )
 {
 	this->m_GameEngine->CreateWorld(x, y);
 }
+
 
 void GameEngineWrapper::SaveWorldAs( char* msg )
 {
 	m_GameEngine->SaveWorldAs(msg);
 }
 
+
 void GameEngineWrapper::OpenWorld( char* msg )
 {
 	m_GameEngine->OpenWorld(msg);
 }
+
 
 void GameEngineWrapper::OnLeftMouseUp( unsigned int x, unsigned int y )
 {
 	m_GameEngine->OnLeftMouseUp(x,y);
 }
 
+
 void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 	m_GameEngine->OnLeftMouseDown(x,y);
 }
+
 
 void GameEngineWrapper::ChangeMode( int mode )
 {
 	this->m_GameEngine->ChangeMode(mode);
 }
 
+
 void GameEngineWrapper::Update()
 {
 	this->m_GameEngine->ProcessFrame();
 }
+
 
 void GameEngineWrapper::SetWindowFocused( bool value )
 {
 	this->m_GameEngine->SetWindowFocused(value);
 }
 
+
 void GameEngineWrapper::SaveWorld()
 {
 	this->m_GameEngine->SaveWorld();
 }
+
 
 void GameEngineWrapper::SetCreateModelPath( char* filePath )
 {
 	this->m_GameEngine->SetCreateModelPath(filePath);
 }
 
+
 void GameEngineWrapper::ChangeCameraMode( char* cameraMode )
 {
 	this->m_GameEngine->ChangeCameraMode(cameraMode);
 }
+
 
 void GameEngineWrapper::KeyUp( int key )
 {
 	m_GameEngine->KeyUp(key);
 }
 
+
 void GameEngineWrapper::KeyDown( int key )
 {
 	m_GameEngine->KeyDown(key);
 }
 
+
 void GameEngineWrapper::LockMouseToCamera()
 {
 	this->m_GameEngine->LockMouseToCamera();
+}
+
+
+void GameEngineWrapper::SetBrushSize( float size )
+{
+	this->m_GameEngine->SetBrushSize(size);
 }
 

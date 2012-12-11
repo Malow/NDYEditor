@@ -49,6 +49,8 @@ namespace System { namespace Windows { namespace Interop
 		void SaveWorldAs( String^ filePath );
 		void SaveWorld();
 		void OpenWorld( String^ filePath );
+		void SetBrushSize( float size );
+
 
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);

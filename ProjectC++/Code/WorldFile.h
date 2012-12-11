@@ -13,9 +13,9 @@ HeightMaps
 
 enum WORLDFILE_OPENMODE
 {
-	OPEN_LOAD = 0,
-	OPEN_SAVE = 1,
-	OPEN_EDIT = 2
+	OPEN_LOAD = 1,
+	OPEN_SAVE = 2,
+	OPEN_EDIT = 3
 };
 
 class WorldFile;
@@ -50,18 +50,38 @@ public:
 class WorldFile : public Observed
 {
 	std::string zFileName;
-	std::fstream zFile;
+	std::fstream *zFile;
 	WORLDFILE_OPENMODE zMode;
+	unsigned int zNumSectors;
 
 public:
 	WorldFile( Observer* observer, const std::string& fileName, WORLDFILE_OPENMODE mode );
 	virtual ~WorldFile();
 
+
+	/*
+	Open The File, Reads the header
+	*/
+	void Open();
+
+	/*
+	Writes Heightmap to file
+	*/
 	void WriteHeightMap( const float* const data, unsigned int mapIndex );
-	void ReadHeightMap( float* data, unsigned int mapIndex );
+
+	/*
+	Reads Heightmap, Returns false if file does not contain a heightmap for this map
+	*/
+	bool ReadHeightMap( float* data, unsigned int mapIndex );
+
+	/*
+	Read the world header
+	*/
+	void ReadHeader();
 
 	inline const std::string& GetFileName() const { return zFileName; }
 
 private:
+	unsigned int GetHeightsBegin() const;
 	unsigned int GetSectorsBegin() const;
 };

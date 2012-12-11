@@ -9,7 +9,8 @@ GameEngine::GameEngine() :
 	zMode(MODE::NONE),
 	zWorld(0),
 	zWorldRenderer(0),
-	zLockMouseToCamera(0)
+	zLockMouseToCamera(0),
+	zBrushSize(3.0f)			// 5 Meters Brush By Default
 {
 }
 
@@ -28,21 +29,18 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	zScreenWidth = width;
 	zScreenHeight = height;
 
-	/*GetGraphics()->GetEngineParameters()->windowWidth = zScreenWidth;
-	GetGraphics()->GetEngineParameters()->windowHeight = zScreenHeight;
-	GetGraphics()->GetEngineParameters()->SaveToFile("config.cfg");*/
-
 	InitGraphics(hWnd);
 
 	zCreateModelPath = "";
 
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->GetCamera()->SetUpdateCamera(false);
+	GetGraphics()->GetCamera()->SetUpdateCamera(true);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
 	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->StartRendering();
+
 	return 0;
 }
 
@@ -96,18 +94,21 @@ void GameEngine::ProcessFrame()
 		}
 
 		Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
-		try
+		if ( zWorldRenderer )
 		{
-			float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
-
-			if(yPos == std::numeric_limits<float>::infinity())
+			try
 			{
-				yPos = GetGraphics()->GetCamera()->GetPosition().y;
+				float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
+
+				if(yPos == std::numeric_limits<float>::infinity())
+				{
+					yPos = GetGraphics()->GetCamera()->GetPosition().y;
+				}
+				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
 			}
-			ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
-		}
-		catch(...)
-		{
+			catch(...)
+			{
+			}
 		}
 	}
 }
@@ -137,12 +138,30 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 	if(zWorld != NULL)
 	{
-		if(this->zMode == MODE::PLACE)
+		if( this->zMode == MODE::PLACE )
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz),
 				ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+		}
+		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				for( unsigned int x = cd.posx - zBrushSize; x < cd.posx + zBrushSize; ++x )
+				{
+					for( unsigned int y = cd.posz - zBrushSize; y < cd.posz + zBrushSize; ++y )
+					{
+						// TODO: Vector2 Instead of Vector3
+						float distanceFactor = zBrushSize - Vector3(cd.posx - x, 0.0f, cd.posz - y).GetLength();
+						if ( distanceFactor < 0 ) continue;
+						distanceFactor /= zBrushSize;
+						zWorld->ModifyHeightAt(x,y,(zMode==MODE::LOWER?-0.5f:0.5f)*distanceFactor);
+					}
+				}
+			}
 		}
 	}
 }
@@ -150,14 +169,10 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 void GameEngine::CreateWorld( int x, int y )
 {
-	if ( zWorldRenderer )
-		delete zWorldRenderer;
-
-	if ( zWorld )
-		delete zWorld;
-
+	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer=0;
+	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, x, y);
-	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	this->zWorldRenderer = new WorldRenderer(zWorld,GetGraphics());
 	
 	// TODO: Fix With Anchors, Load All Sectors for now
 	zWorld->LoadAllSectors();
@@ -167,14 +182,6 @@ void GameEngine::CreateWorld( int x, int y )
 void GameEngine::ChangeMode( int mode )
 {
 	this->zMode = (MODE)mode;
-	if(this->zMode == MODE::SELECT)
-	{
-	}
-	else if(this->zMode == MODE::MOVE || this->zMode == MODE::NONE || this->zMode == MODE::ROT || this->zMode == MODE::PLACE)
-	{
-		GetGraphics()->GetCamera()->SetUpdateCamera(false);
-		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	}
 }
 
 
@@ -187,12 +194,8 @@ void GameEngine::SaveWorldAs( char* msg )
 
 void GameEngine::OpenWorld( char* msg )
 {
-	if ( zWorldRenderer )
-		delete zWorldRenderer;
-
-	if ( zWorld )
-		delete zWorld;
-
+	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
+	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
 
@@ -206,6 +209,7 @@ void GameEngine::SetWindowFocused( bool value )
 	GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
 }
 
+
 void GameEngine::SaveWorld()
 {
 	if ( !zWorld )
@@ -214,10 +218,12 @@ void GameEngine::SaveWorld()
 	zWorld->SaveFile();
 }
 
+
 void GameEngine::SetCreateModelPath( char* filePath )
 {
 	zCreateModelPath = std::string(filePath);
 }
+
 
 void GameEngine::ChangeCameraMode( char* cameraMode )
 {
@@ -254,15 +260,18 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 	ge = NULL;
 }
 
+
 void GameEngine::KeyUp( int key )
 {
 	GetGraphics()->GetKeyListener()->KeyUp(key);
 }
 
+
 void GameEngine::KeyDown( int key )
 {
 	GetGraphics()->GetKeyListener()->KeyDown(key);
 }
+
 
 void GameEngine::LockMouseToCamera()
 {
@@ -283,5 +292,20 @@ void GameEngine::LockMouseToCamera()
 	{
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	}
+}
+
+
+void GameEngine::SetBrushSize( float size )
+{
+	zBrushSize = size;
+}
+
+
+void GameEngine::onEvent( Event* e )
+{
+	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
+	{
+		
 	}
 }

@@ -35,7 +35,6 @@ public:
 		localx(localx),
 		localy(localy)
 	{
-
 	}
 };
 
@@ -82,23 +81,29 @@ public:
 	// Load All Sectors
 	void LoadAllSectors();
 
-	// Modify functions
+	// Modify Functions
 	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
 	float GetHeightAt( unsigned int x, unsigned int y );
 	void SetHeightAt( unsigned int x, unsigned int y, float value );
 
+	// Entity Functions
 	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
 
 	// Inline Functions
-	inline unsigned int GetNumSectorsWidth() const { return zNrOfSectorsWidth; }
-	inline unsigned int GetNumSectorsHeight() const { return zNrOfSectorsHeight; }
+	unsigned int GetNumSectorsWidth() const;
+	unsigned int GetNumSectorsHeight() const;
 
 	// Sector Functions
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
+	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 
-	// Extra
+	// Data Access
 	std::vector<Entity*> GetEntitiesInCircle(Vector3 pos, float radius);
+	void GetSectorsInCicle( const Vector2& center, float radius, std::vector<Sector*>& out );
+	void GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out );
+
 protected:
+	// Engine Events
 	virtual void onEvent( Event* e );
 };

@@ -1,5 +1,6 @@
 #include "World.h"
 #include <windows.h>
+#include "CircleAndRect.h"
 
 
 World::World( Observer* observer, const std::string& fileName) throw(const char*) : 
@@ -47,7 +48,7 @@ World::~World()
 				if ( this->zSectors[i][o] )
 				{
 					delete this->zSectors[i][o];
-					this->zSectors[i] = NULL;
+					this->zSectors[i][o] = NULL;
 				}
 			}
 			delete [] this->zSectors[i];
@@ -67,6 +68,9 @@ void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
 	unsigned int sectory = y / SECTOR_LENGTH;
 	unsigned int localx = x % SECTOR_LENGTH;
 	unsigned int localy = y % SECTOR_LENGTH;
+
+	if ( sectorx >= GetNumSectorsWidth() ) return;
+	if ( sectory >= GetNumSectorsHeight() ) return;
 
 	Sector* sector = GetSector(sectorx, sectory);
 	sector->ModifyHeightAt(localx, localy, value);
@@ -114,15 +118,15 @@ float World::GetHeightAt( unsigned int x, unsigned int y )
 
 void World::SaveFile()
 {
-	if ( zFile )
+	if ( zFile && this->zSectors )
 	{
-		for(unsigned int x=0; x<zNrOfSectorsWidth; ++x)
+		for(unsigned int x=0; x<GetNumSectorsWidth(); ++x)
 		{
-			for(unsigned int y=0; y<zNrOfSectorsHeight; ++y)
+			for(unsigned int y=0; y<GetNumSectorsHeight(); ++y)
 			{
-				if ( this->zSectors && this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
+				if ( this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
 				{
-					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y *zNrOfSectorsWidth + x);
+					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y*zNrOfSectorsWidth + x);
 					this->zSectors[x][y]->SetEdited(false);
 				}
 			}
@@ -170,7 +174,7 @@ Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
 
 Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 {
-	if( (this->zNrOfSectorsWidth) <= x || (this->zNrOfSectorsHeight) <= y )
+	if( (this->GetNumSectorsWidth()) <= x || (this->GetNumSectorsHeight()) <= y )
 		throw("Index Out Of Bounds");
 
 	Sector* s = this->zSectors[x][y];
@@ -184,7 +188,11 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 		if ( zFile )
 		{
 			// Load From File
-			zFile->ReadHeightMap(s->GetHeightMap(), y * zNrOfSectorsWidth + x);
+			if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
+			{
+				// Load Failed, reset
+				s->Reset();
+			}
 		}
 		else
 		{
@@ -226,16 +234,18 @@ void World::onEvent( Event* e )
 }
 
 
+// TODO: Doesn't Load Graphics
 void World::LoadAllSectors()
 {
-	for( unsigned int x=0; x<zNrOfSectorsWidth; ++x )
+	for( unsigned int x=0; x<GetNumSectorsWidth(); ++x )
 	{
-		for( unsigned int y=0; y<zNrOfSectorsHeight; ++y )
+		for( unsigned int y=0; y<GetNumSectorsHeight(); ++y )
 		{
 			GetSector( x, y );
 		}
 	}
 }
+
 
 std::vector<Entity*> World::GetEntitiesInCircle( Vector3 pos, float radius )
 {
@@ -248,4 +258,54 @@ std::vector<Entity*> World::GetEntitiesInCircle( Vector3 pos, float radius )
 		}
 	}
 	return temp;
+}
+
+
+// TODO: Test It
+void World::GetSectorsInCicle( const Vector2& center, float radius, std::vector<Sector*>& out )
+{
+	int centerX = center.x / SECTOR_LENGTH;
+	int centerY = center.y / SECTOR_LENGTH;
+	int radiusDiv = radius / SECTOR_LENGTH;
+
+	for( unsigned int x=center.x - radius; x < center.x + radius; ++x )
+	{
+		if ( x < 0 || x > GetNumSectorsWidth() ) continue;
+		for( unsigned int y=center.y - radius; y < center.y + radius; ++y)
+		{
+			if ( y < 0 || y > GetNumSectorsHeight() ) continue;
+			if ( DoesIntersect( Rect(Vector2(x*SECTOR_LENGTH,y*SECTOR_LENGTH),Vector2(SECTOR_LENGTH,SECTOR_LENGTH)), Circle(center,radius) ) )
+			{
+				out.push_back( GetSector(x,y) );
+			}
+		}
+	}
+}
+
+// TODO: Make Function
+void World::GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out )
+{
+	
+}
+
+
+bool World::IsSectorLoaded( unsigned int x, unsigned int y ) const
+{
+	if ( x > zNrOfSectorsWidth ) return false;
+	if ( y > zNrOfSectorsHeight ) return false;
+	return zSectors[x][y] != 0;
+}
+
+
+unsigned int World::GetNumSectorsWidth() const
+{
+	if ( !zNrOfSectorsWidth ) zFile->ReadHeader();
+	return zNrOfSectorsWidth;
+}
+
+
+unsigned int World::GetNumSectorsHeight() const
+{
+	if ( !zNrOfSectorsWidth ) zFile->ReadHeader();
+	return zNrOfSectorsHeight;
 }

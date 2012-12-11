@@ -174,4 +174,9 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->LockMouseToCamera();
 	}
 
+	void CppCLI::SetBrushSize( float size )
+	{
+		this->m_GameEngine->SetBrushSize( size );
+	}
+
 }}}
