@@ -42,4 +42,6 @@ public:
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
+	void GetSelectedInfo(char* info, float& x, float& y, float& z);
+	void SetSelectedObjectInfo( char* info, float x, float y, float z );
 };

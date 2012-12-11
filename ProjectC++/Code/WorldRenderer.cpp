@@ -112,6 +112,14 @@ void WorldRenderer::onEvent( Event* e )
 		file.close();
 
 		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->GetPosition());
+		zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
+		ELE->entity->AddObserver(this);
+	}
+	else if ( EntityUpdatedEvent* EUE = dynamic_cast<EntityUpdatedEvent*>(e) )
+	{
+		Vector3 temp = EUE->entity->GetRotation();
+		zEntities[EUE->entity]->SetPosition(EUE->entity->GetPosition());
+		zEntities[EUE->entity]->SetQuaternion(Vector4(temp.x, temp.y, temp.z, 0));
 	}
 
 }
@@ -182,25 +190,47 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	return cd;
 }
 
-CollisionData WorldRenderer::Get3DRayCollisionWithMesh()
+Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 {
 	int counter = 0;
 	bool found = false;
 
+	Entity* returnPointer = NULL;
+
 	iCamera* cam = GetGraphics()->GetCamera();
+	Vector3 camPos = cam->GetPosition();
 	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 	CollisionData cd;
+	std::vector<Entity*> closeEntities;
+	zWorld->GetEntitiesInCircle(cam->GetPosition(), 200.0f, closeEntities);
+
+	returnPointer = closeEntities.at(0);
+	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), 
+		zEntities[closeEntities.at(0)]);
+	if(cd.collision)
+	{
+		found = true;
+	}
+
 	while(counter < zEntities.size() && !found)
 	{
-		/*cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), );
+		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), 
+			zEntities[closeEntities.at(counter)]);
 		if(cd.collision)
 		{
 			found = true;
+			if((returnPointer->GetPosition() - camPos).GetLength() > (closeEntities.at(counter)->GetPosition() - camPos).GetLength())
+			{
+				returnPointer = closeEntities.at(counter);
+			}
 		}
-		counter++;*/
+		counter++;
 	}
 	cam = NULL;
 	pe = NULL;
 
-	return cd;
+	if(found)
+		return returnPointer;
+	else
+		return NULL;
 }

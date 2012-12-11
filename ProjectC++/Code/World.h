@@ -54,8 +54,9 @@ public:
 	World* world;
 	Entity* entity;
 	std::string fileName;
-	EntityLoadedEvent( World* world, Entity* entity, std::string fileName) : world(world), entity(entity), fileName(fileName){}
+	EntityLoadedEvent( World* world, Entity* entity, const std::string fileName) : world(world), entity(entity), fileName(fileName){}
 };
+
 
 
 class World : public Observed, public Observer
@@ -99,7 +100,7 @@ public:
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 
 	// Data Access
-	std::vector<Entity*> GetEntitiesInCircle(Vector3 pos, float radius);
+	void GetEntitiesInCircle(Vector3 pos, float radius, std::vector<Entity*>& entityVector);
 	void GetSectorsInCicle( const Vector2& center, float radius, std::vector<Sector*>& out );
 	void GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out );
 

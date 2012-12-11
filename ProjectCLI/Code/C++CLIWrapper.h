@@ -56,5 +56,7 @@ namespace System { namespace Windows { namespace Interop
 		void SetCreateModelPath( String^ filePath);
 		void ChangeCameraMode( String^ cameraMode);
 		void LockMouseToCamera();
+		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
+		void SetSelectedObjectInfo( String^ info, float x, float y, float z );
 	};
 }}}

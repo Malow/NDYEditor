@@ -247,17 +247,17 @@ void World::LoadAllSectors()
 }
 
 
-std::vector<Entity*> World::GetEntitiesInCircle( Vector3 pos, float radius )
+void World::GetEntitiesInCircle( Vector3 pos, float radius, std::vector<Entity*>& entityVector )
 {
-	std::vector<Entity*> temp;
+	radius = pow(radius, 2);
 	for(int i = 0; i < zEntities.size(); i++)
 	{
-		if((zEntities.at(i)->GetPosition() - pos).GetLength() < radius)
+		if((zEntities.at(i)->GetPosition() - pos).GetLengthSquared() < radius)
 		{
-
+			entityVector.push_back(zEntities.at(i));
 		}
 	}
-	return temp;
+	return;
 }
 
 

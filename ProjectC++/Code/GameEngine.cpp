@@ -55,6 +55,18 @@ void GameEngine::ProcessFrame()
 {
 	float dt = GetGraphics()->Update();
 	GraphicsEngine* ge = GetGraphics();
+	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
+	{
+		CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
+
+		if(cd.collision)
+		{
+			auto i = zTargetedEntities.begin();
+			(*i)->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
+		}
+	}
+
+
 	if((ge->GetCamera()->GetCameraType() == CameraType::FPS) && zLockMouseToCamera)
 	{
 		if(ge->GetKeyListener()->IsPressed('W'))
@@ -74,7 +86,7 @@ void GameEngine::ProcessFrame()
 			ge->GetCamera()->MoveRight(dt);
 		}
 	}
-	if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
+	else if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
 	{
 		if(ge->GetKeyListener()->IsPressed('W'))
 		{
@@ -138,7 +150,23 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 {
 	if(zWorld != NULL)
 	{
-		if( this->zMode == MODE::PLACE )
+		if(this->zMode == MODE::MOVE)
+		{
+			if(!zTargetedEntities.empty())
+			{
+				CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
+
+				if(cd.collision)
+				{
+					auto i = zTargetedEntities.begin();
+
+					(*i)->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
+
+					this->zPrevPosOfSelected = Vector3(-1, -1, -1);
+				}
+			}
+		}
+		else if(this->zMode == MODE::PLACE)
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
@@ -163,6 +191,19 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 				}
 			}
 		}
+		else if(this->zMode == MODE::SELECT)
+		{
+			Entity* returnEntity = zWorldRenderer->Get3DRayCollisionWithMesh();
+			if(returnEntity != NULL)
+			{
+				zTargetedEntities.clear();
+				zTargetedEntities.insert(returnEntity);
+			}
+			else
+			{
+				zTargetedEntities.clear();
+			}
+		}
 	}
 }
 
@@ -182,6 +223,25 @@ void GameEngine::CreateWorld( int x, int y )
 void GameEngine::ChangeMode( int mode )
 {
 	this->zMode = (MODE)mode;
+	if(this->zMode == MODE::MOVE)
+	{
+		if(!this->zTargetedEntities.empty())
+		{
+			auto i = zTargetedEntities.begin();
+			this->zPrevPosOfSelected = (*i)->GetPosition();
+		}
+	}
+	else
+	{
+		if(this->zPrevPosOfSelected.x != -1)
+		{
+			if(!this->zTargetedEntities.empty())
+			{
+				auto i = zTargetedEntities.begin();
+				(*i)->SetPosition(this->zPrevPosOfSelected);
+			}
+		}
+	}
 }
 
 
@@ -292,6 +352,56 @@ void GameEngine::LockMouseToCamera()
 	{
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+	}
+}
+
+
+void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
+{
+	if(zTargetedEntities.empty())
+		throw("No selected entity");
+
+	auto i = zTargetedEntities.begin();
+
+	if(std::string(info) == "pos")
+	{
+		x = (*i)->GetPosition().x;
+		y = (*i)->GetPosition().y;
+		z = (*i)->GetPosition().z;
+	}
+	else if(std::string(info) == "rot")
+	{
+		x = (*i)->GetRotation().x;
+		y = (*i)->GetRotation().y;
+		z = (*i)->GetRotation().z;
+	}
+	else if(std::string(info) == "scale")
+	{
+		x = (*i)->GetScale().x;
+		y = (*i)->GetScale().y;
+		z = (*i)->GetScale().z;
+	}
+}
+
+
+void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z )
+{
+	if(zTargetedEntities.empty())
+		throw("No selected entity");
+	string compareString = string(info);
+	auto i = zTargetedEntities.begin();
+
+	if(compareString == "pos")
+	{
+		(*i)->SetPosition(Vector3(x, y, z));
+	}
+	else if(compareString == "rot")
+	{
+		(*i)->SetRotation(Vector3(x, y, z));
+	}
+	else if(compareString == "scale")
+	{
+		(*i)->SetScale(Vector3(x, y, z));
 	}
 }
 

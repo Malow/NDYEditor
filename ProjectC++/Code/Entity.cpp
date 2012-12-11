@@ -22,3 +22,21 @@ Entity::~Entity()
 
 }
 
+void Entity::SetPosition( Vector3 pos )
+{
+	zPosition = pos;
+	NotifyObservers( &EntityUpdatedEvent(this) );
+}
+
+void Entity::SetRotation( Vector3 rot )
+{
+	zRotation = rot;
+	NotifyObservers(&EntityUpdatedEvent(this));
+}
+
+void Entity::SetScale( Vector3 scale )
+{
+	zScale = scale;
+	NotifyObservers(&EntityUpdatedEvent(this));
+}
+

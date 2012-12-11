@@ -174,9 +174,44 @@ namespace System { namespace Windows { namespace Interop
 		this->m_GameEngine->LockMouseToCamera();
 	}
 
+	void CppCLI::GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z )
+	{
+		char* lpText = nullptr;
+		float tempx, tempy, tempz;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->GetSelectedInfo(lpText, tempx, tempy, tempz);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+		x = tempx;
+		y = tempy;
+		z = tempz;
+	}
+
+	void CppCLI::SetSelectedObjectInfo( String^ info, float x, float y, float z )
+	{
+		char* lpText = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->SetSelectedObjectInfo(lpText, x, y, z);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
 	void CppCLI::SetBrushSize( float size )
 	{
 		this->m_GameEngine->SetBrushSize( size );
 	}
-
 }}}

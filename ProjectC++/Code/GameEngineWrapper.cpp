@@ -128,6 +128,23 @@ void GameEngineWrapper::LockMouseToCamera()
 }
 
 
+void GameEngineWrapper::GetSelectedInfo( char* info, float& x, float& y, float& z)
+{
+	try
+	{
+		m_GameEngine->GetSelectedInfo(info, x, y, z);
+	}
+	catch(...)
+	{
+	}
+}
+
+void GameEngineWrapper::SetSelectedObjectInfo( char* info, float x, float y, float z )
+{
+	m_GameEngine->SetSelectedObjectInfo(info, x, y, z);
+}
+
+
 void GameEngineWrapper::SetBrushSize( float size )
 {
 	this->m_GameEngine->SetBrushSize(size);
