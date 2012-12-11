@@ -418,14 +418,14 @@ namespace Example
             SetSelecetedObjectInfo("scale");
         }
 
-		 private void btnRaiseGround_Click(object sender, EventArgs e)
+        private void btn_RaiseGround_Click(object sender, EventArgs e)
         {
             this.m_mode = MODE.RAISE;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void bntLowerGround_Click(object sender, EventArgs e)
+        private void btn_LowerGround_Click(object sender, EventArgs e)
         {
             this.m_mode = MODE.LOWER;
             switchMode();

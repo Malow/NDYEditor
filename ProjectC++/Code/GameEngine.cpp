@@ -35,7 +35,7 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->GetCamera()->SetUpdateCamera(true);
+	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
 	GetGraphics()->SetFPSMax(30);
