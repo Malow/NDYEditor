@@ -447,6 +447,11 @@ namespace Example
             m_GameEngine.MouseMove(e.X, e.Y);
         }
 
+        private void RenderBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
+        }
+
 
     }
 }

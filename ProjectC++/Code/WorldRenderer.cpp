@@ -54,23 +54,7 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SLE->world == zWorld )
 		{
-			unsigned int tIndex = SLE->y * zWorld->GetNumSectorsWidth() + SLE->x;
-			Vector3 pos(SLE->x * 32.0f + 16.0f, 0.0f, SLE->y * 32.0f + 16.0f);
-			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
-
-			// Blend Maps
-			const char* terrainTextures[3];
-			terrainTextures[0] = "Media/TerrainTexture.png";
-			terrainTextures[1] = "Media/BallTexture.png";
-			terrainTextures[2] = "Media/TerrainTexture.png";
-			zTerrain[tIndex]->SetTextures(terrainTextures);
-			zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, SLE->world->GetSector(SLE->x, SLE->y)->GetBlendMap() );
-
-			// Height Map
-			zTerrain[tIndex]->SetHeightMap( SLE->world->GetSector(SLE->x, SLE->y)->GetHeightMap() );
-
-			// TODO: Remove When FPS camera is implemented, this is just for testing
-			zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
+			UpdateSector(SLE->x, SLE->y);
 		}
 	}
 	else if ( SectorHeightMapChanged* SHMC = dynamic_cast<SectorHeightMapChanged*>(e) )
@@ -241,13 +225,14 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 	{
 		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
 		Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
-		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
+		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH+1);
 
 		// Blend Maps
-		const char* terrainTextures[3];
+		const char* terrainTextures[4];
 		terrainTextures[0] = "Media/TerrainTexture.png";
 		terrainTextures[1] = "Media/BallTexture.png";
 		terrainTextures[2] = "Media/TerrainTexture.png";
+		terrainTextures[3] = "Media/TerrainTexture.png";
 		zTerrain[tIndex]->SetTextures(terrainTextures);
 		zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
 

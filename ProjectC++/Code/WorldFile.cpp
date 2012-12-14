@@ -10,7 +10,7 @@ struct SectorHeader
 
 struct HeightMap
 {
-	float height[SECTOR_LENGTH*SECTOR_LENGTH];
+	float height[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
 };
 
 struct BlendMap

@@ -528,7 +528,7 @@
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
             this.RenderAndInfoSplitter.Size = new System.Drawing.Size(734, 495);
-            this.RenderAndInfoSplitter.SplitterDistance = 505;
+            this.RenderAndInfoSplitter.SplitterDistance = 506;
             this.RenderAndInfoSplitter.SplitterWidth = 3;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -538,13 +538,14 @@
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(505, 495);
+            this.RenderBox.Size = new System.Drawing.Size(506, 495);
             this.RenderBox.TabIndex = 3;
             this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
             this.RenderBox.MouseEnter += new System.EventHandler(this.RenderBox_MouseEnter);
             this.RenderBox.MouseLeave += new System.EventHandler(this.RenderBox_MouseLeave);
             this.RenderBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseMove);
+            this.RenderBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseUp);
             // 
             // InfoSplitter
             // 
@@ -564,7 +565,7 @@
             // 
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
-            this.InfoSplitter.Size = new System.Drawing.Size(226, 495);
+            this.InfoSplitter.Size = new System.Drawing.Size(225, 495);
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.SplitterWidth = 3;
             this.InfoSplitter.TabIndex = 0;
@@ -596,7 +597,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
             this.Panel_Info.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(226, 250);
+            this.Panel_Info.Size = new System.Drawing.Size(225, 250);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -807,7 +808,7 @@
             this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceObject.Name = "Panel_PlaceObject";
-            this.Panel_PlaceObject.Size = new System.Drawing.Size(226, 242);
+            this.Panel_PlaceObject.Size = new System.Drawing.Size(225, 242);
             this.Panel_PlaceObject.TabIndex = 21;
             this.Panel_PlaceObject.Visible = false;
             // 
@@ -844,7 +845,7 @@
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
             this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(226, 242);
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(225, 242);
             this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 

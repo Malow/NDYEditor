@@ -74,9 +74,21 @@ void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
 
 	Sector* sector = GetSector(sectorx, sectory);
 	sector->ModifyHeightAt(localx, localy, value);
-	
-	// Notify Sector Change
 	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
+
+	// Overlap Left
+	if ( sectorx > 0 && localx == 0 )
+	{
+		GetSector(sectorx-1,sectory)->SetHeightAt(SECTOR_LENGTH,y,value);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory, SECTOR_LENGTH, localy) );
+	}
+
+	// Overlap Right
+	if ( sectorx+1 < GetNumSectorsWidth() && localx == SECTOR_LENGTH-1 )
+	{
+		GetSector(sectorx+1,sectory)->SetHeightAt(0,y,value);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorx+1, sectory, 0, localy) );
+	}
 }
 
 
