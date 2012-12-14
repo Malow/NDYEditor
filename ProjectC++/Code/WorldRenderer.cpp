@@ -13,26 +13,7 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	{
 		for( unsigned int y=0; y<zWorld->GetNumSectorsHeight(); ++y )
 		{
-			if ( zWorld->IsSectorLoaded(x,y) )
-			{
-				unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
-				Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
-				zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
-
-				// Blend Maps
-				const char* terrainTextures[3];
-				terrainTextures[0] = "Media/TerrainTexture.png";
-				terrainTextures[1] = "Media/BallTexture.png";
-				terrainTextures[2] = "Media/TerrainTexture.png";
-				zTerrain[tIndex]->SetTextures(terrainTextures);
-				zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
-
-				// Height Map
-				zTerrain[tIndex]->SetHeightMap( zWorld->GetSector(x, y)->GetHeightMap() );
-
-				// TODO: Remove When FPS camera is implemented, this is just for testing
-				zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
-			}
+			UpdateSector(x,y);
 		}
 	}
 }
@@ -96,8 +77,7 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SHMC->world == zWorld )
 		{
-			unsigned int tIndex = SHMC->sectory * zWorld->GetNumSectorsWidth() + SHMC->sectorx;
-			zTerrain[tIndex]->SetHeightMap( SHMC->world->GetSector(SHMC->sectorx, SHMC->sectory)->GetHeightMap() );
+			UpdateSectorHeightMap(SHMC->sectorx, SHMC->sectory);
 		}
 	}
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
@@ -124,6 +104,7 @@ void WorldRenderer::onEvent( Event* e )
 
 }
 
+
 CollisionData WorldRenderer::GetCollisionDataWithGround()
 {
 	Vector3 position = Vector3(0, 0, 0);
@@ -149,6 +130,7 @@ CollisionData WorldRenderer::GetCollisionDataWithGround()
 	return cd;
 }
 
+
 float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 {
 	if(zWorld == NULL)
@@ -164,6 +146,7 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	}
 	return std::numeric_limits<float>::infinity();
 }
+
 
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
@@ -190,9 +173,10 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	return cd;
 }
 
+
 Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 {
-	int counter = 0;
+	unsigned int counter = 0;
 	bool found = false;
 
 	Entity* returnPointer = NULL;
@@ -205,8 +189,10 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	zWorld->GetEntitiesInCircle(cam->GetPosition(), 200.0f, closeEntities);
 
 	returnPointer = closeEntities.at(0);
-	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), 
+	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), 
+		cam->Get3DPickingRay(), 
 		zEntities[closeEntities.at(0)]);
+
 	if(cd.collision)
 	{
 		found = true;
@@ -233,4 +219,42 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 		return returnPointer;
 	else
 		return NULL;
+}
+
+
+void WorldRenderer::UpdateSectorHeightMap( unsigned int x, unsigned int y )
+{
+	if ( zWorld->IsSectorLoaded(x,y) )
+	{
+		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
+		if ( zTerrain[tIndex] )
+		{
+			zTerrain[tIndex]->SetHeightMap( zWorld->GetSector(x, y)->GetHeightMap() );
+		}
+	}
+}
+
+
+void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
+{
+	if ( zWorld->IsSectorLoaded(x,y) )
+	{
+		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
+		Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
+		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH);
+
+		// Blend Maps
+		const char* terrainTextures[3];
+		terrainTextures[0] = "Media/TerrainTexture.png";
+		terrainTextures[1] = "Media/BallTexture.png";
+		terrainTextures[2] = "Media/TerrainTexture.png";
+		zTerrain[tIndex]->SetTextures(terrainTextures);
+		zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
+
+		// Height Map
+		UpdateSectorHeightMap(x,y);
+
+		// TODO: Remove When FPS camera is implemented, this is just for testing
+		zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
+	}
 }

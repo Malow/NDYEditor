@@ -10,7 +10,10 @@ GameEngine::GameEngine() :
 	zWorld(0),
 	zWorldRenderer(0),
 	zLockMouseToCamera(0),
-	zBrushSize(3.0f)			// 5 Meters Brush By Default
+	zBrushSize(3.0f),			// 3 Meters Brush By Default
+	zBrushSizeExtra(0.0f),
+	zDrawBrush(false),
+	zMouseInsideFrame(false)
 {
 }
 
@@ -242,6 +245,16 @@ void GameEngine::ChangeMode( int mode )
 			}
 		}
 	}
+
+	// Brush Control
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
+	{
+		zDrawBrush = true;
+	}
+	else
+	{
+		zDrawBrush = false;
+	}
 }
 
 
@@ -418,4 +431,23 @@ void GameEngine::onEvent( Event* e )
 	{
 		
 	}
+}
+
+
+void GameEngine::MouseMove( int x, int y )
+{
+	if ( zDrawBrush && zWorldRenderer && zMouseInsideFrame )
+	{
+		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+		if(cd.collision)
+		{
+			GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize,Vector2(cd.posx,cd.posz));
+		}
+	}
+}
+
+
+void GameEngine::MouseInsideFrame( bool flag )
+{
+	zMouseInsideFrame = flag;
 }

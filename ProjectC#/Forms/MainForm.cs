@@ -431,5 +431,22 @@ namespace Example
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
+
+        private void RenderBox_MouseLeave(object sender, EventArgs e)
+        {
+            m_GameEngine.MouseInsideFrame(false);
+        }
+
+        private void RenderBox_MouseEnter(object sender, EventArgs e)
+        {
+            m_GameEngine.MouseInsideFrame(true);
+        }
+
+        private void RenderBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            m_GameEngine.MouseMove(e.X, e.Y);
+        }
+
+
     }
 }

@@ -36,6 +36,8 @@ public:
 	void SaveWorldAs(char* msg);
 	void SaveWorld();
 	void OpenWorld(char* msg);
+	void MouseInsideFrame(bool flag);
+	void MouseMove(int x, int y);
 
 	void SetBrushSize(float size);
 	void ChangeMode(int mode);

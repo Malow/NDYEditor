@@ -23,4 +23,8 @@ public:
 	float GetYPosFromHeightMap(float x, float y);
 
 	virtual void onEvent( Event* e );
+
+protected:
+	void UpdateSectorHeightMap( unsigned int x, unsigned int y );
+	void UpdateSector( unsigned int x, unsigned int y );
 };

@@ -150,3 +150,15 @@ void GameEngineWrapper::SetBrushSize( float size )
 	this->m_GameEngine->SetBrushSize(size);
 }
 
+
+void GameEngineWrapper::MouseInsideFrame( bool flag )
+{
+	m_GameEngine->MouseInsideFrame(flag);
+}
+
+
+void GameEngineWrapper::MouseMove( int x, int y )
+{
+	m_GameEngine->MouseMove(x,y);
+}
+

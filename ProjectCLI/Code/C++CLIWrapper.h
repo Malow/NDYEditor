@@ -50,7 +50,8 @@ namespace System { namespace Windows { namespace Interop
 		void SaveWorld();
 		void OpenWorld( String^ filePath );
 		void SetBrushSize( float size );
-
+		void MouseInsideFrame(bool flag);
+		void MouseMove(int x, int y);
 
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);

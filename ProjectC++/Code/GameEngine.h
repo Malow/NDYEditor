@@ -32,6 +32,10 @@ private:
 	std::set<Entity*> zTargetedEntities;
 	Vector3 zPrevPosOfSelected;
 	float zBrushSize;
+	float zBrushSizeExtra;
+	bool zMouseInsideFrame;
+	bool zDrawBrush;
+
 public:
 	GameEngine();
 	~GameEngine();
@@ -58,6 +62,8 @@ public:
 	void OpenWorld(char* msg);
 
 	void SetBrushSize(float size);
+	void MouseInsideFrame(bool flag);
+	void MouseMove(int x, int y);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
