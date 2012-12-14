@@ -251,4 +251,14 @@ namespace System { namespace Windows { namespace Interop
 		x = tempx;
 	}
 
+	void CppCLI::MouseInsideFrame( bool flag )
+	{
+		m_GameEngine->MouseInsideFrame(flag);
+	}
+
+	void CppCLI::MouseMove( int x, int y )
+	{
+		m_GameEngine->MouseMove(x,y);
+	}
+
 }}}

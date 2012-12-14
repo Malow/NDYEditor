@@ -23,10 +23,10 @@ public:
 	*/
 	void Reset();
 
-	// Returns the blendmap as a double pointer (Vector3**).
+	// Returns the blendmap as a float array where each pixel is 4 floats.
 	inline float* GetBlendMap() { return &zBlendMap[0]; }
 
-	// Returns the heightmap as a double pointer (Int**).
+	// Returns the heightmap as a float array.
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
 	/*

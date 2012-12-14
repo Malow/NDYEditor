@@ -378,7 +378,7 @@
             this.TopPanelSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TopPanelSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.TopPanelSplitter.IsSplitterFixed = true;
-            this.TopPanelSplitter.Location = new System.Drawing.Point(0, 28);
+			this.TopPanelSplitter.Location = new System.Drawing.Point(0, 28);
             this.TopPanelSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TopPanelSplitter.Name = "TopPanelSplitter";
             this.TopPanelSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -397,7 +397,7 @@
             // 
             // btnRTS
             // 
-            this.btnRTS.Location = new System.Drawing.Point(155, 5);
+			this.btnRTS.Location = new System.Drawing.Point(155, 5);
             this.btnRTS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRTS.Name = "btnRTS";
             this.btnRTS.Size = new System.Drawing.Size(45, 34);
@@ -408,7 +408,7 @@
             // 
             // btnFPS
             // 
-            this.btnFPS.Location = new System.Drawing.Point(105, 5);
+			this.btnFPS.Location = new System.Drawing.Point(105, 5);
             this.btnFPS.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnFPS.Name = "btnFPS";
             this.btnFPS.Size = new System.Drawing.Size(45, 34);
@@ -423,7 +423,7 @@
             this.LeftToolBarSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.LeftToolBarSplitter.IsSplitterFixed = true;
             this.LeftToolBarSplitter.Location = new System.Drawing.Point(0, 0);
-            this.LeftToolBarSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.LeftToolBarSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.LeftToolBarSplitter.Name = "LeftToolBarSplitter";
             // 
             // LeftToolBarSplitter.Panel1
@@ -445,7 +445,7 @@
             // btn_LowerGround
             // 
             this.btn_LowerGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_LowerGround.Location = new System.Drawing.Point(7, 130);
+			this.btn_LowerGround.Location = new System.Drawing.Point(7, 130);
             this.btn_LowerGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_LowerGround.Name = "btn_LowerGround";
             this.btn_LowerGround.Size = new System.Drawing.Size(91, 25);
@@ -457,7 +457,7 @@
             // btn_RaiseGround
             // 
             this.btn_RaiseGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_RaiseGround.Location = new System.Drawing.Point(7, 105);
+			this.btn_RaiseGround.Location = new System.Drawing.Point(7, 105);
             this.btn_RaiseGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_RaiseGround.Name = "btn_RaiseGround";
             this.btn_RaiseGround.Size = new System.Drawing.Size(91, 25);
@@ -469,7 +469,7 @@
             // btn_PlaceObject
             // 
             this.btn_PlaceObject.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_PlaceObject.Location = new System.Drawing.Point(7, 5);
+			this.btn_PlaceObject.Location = new System.Drawing.Point(7, 5);
             this.btn_PlaceObject.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_PlaceObject.Name = "btn_PlaceObject";
             this.btn_PlaceObject.Size = new System.Drawing.Size(91, 25);
@@ -481,7 +481,7 @@
             // btn_Rotate
             // 
             this.btn_Rotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Rotate.Location = new System.Drawing.Point(7, 80);
+			this.btn_Rotate.Location = new System.Drawing.Point(7, 80);
             this.btn_Rotate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Rotate.Name = "btn_Rotate";
             this.btn_Rotate.Size = new System.Drawing.Size(91, 25);
@@ -493,7 +493,7 @@
             // btn_Move
             // 
             this.btn_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Move.Location = new System.Drawing.Point(7, 55);
+			this.btn_Move.Location = new System.Drawing.Point(7, 55);
             this.btn_Move.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Move.Name = "btn_Move";
             this.btn_Move.Size = new System.Drawing.Size(91, 25);
@@ -505,7 +505,7 @@
             // btn_Select
             // 
             this.btn_Select.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Select.Location = new System.Drawing.Point(7, 30);
+			this.btn_Select.Location = new System.Drawing.Point(7, 30);
             this.btn_Select.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_Select.Name = "btn_Select";
             this.btn_Select.Size = new System.Drawing.Size(91, 25);
@@ -521,7 +521,7 @@
             this.RenderAndInfoSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.RenderAndInfoSplitter.IsSplitterFixed = true;
             this.RenderAndInfoSplitter.Location = new System.Drawing.Point(0, 0);
-            this.RenderAndInfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.RenderAndInfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RenderAndInfoSplitter.Name = "RenderAndInfoSplitter";
             // 
             // RenderAndInfoSplitter.Panel1
@@ -531,7 +531,7 @@
             // RenderAndInfoSplitter.Panel2
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
-            this.RenderAndInfoSplitter.Size = new System.Drawing.Size(1012, 626);
+			            this.RenderAndInfoSplitter.Size = new System.Drawing.Size(1012, 626);
             this.RenderAndInfoSplitter.SplitterDistance = 782;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -542,10 +542,12 @@
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Margin = new System.Windows.Forms.Padding(4);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(782, 626);
-            this.RenderBox.TabIndex = 3;
-            this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
+			this.RenderBox.Size = new System.Drawing.Size(782, 626);
+            this.RenderBox.TabIndex = 3;            this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
+            this.RenderBox.MouseEnter += new System.EventHandler(this.RenderBox_MouseEnter);
+            this.RenderBox.MouseLeave += new System.EventHandler(this.RenderBox_MouseLeave);
+            this.RenderBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseMove);
             // 
             // InfoSplitter
             // 
@@ -553,7 +555,7 @@
             this.InfoSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.InfoSplitter.IsSplitterFixed = true;
             this.InfoSplitter.Location = new System.Drawing.Point(0, 0);
-            this.InfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+			this.InfoSplitter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.InfoSplitter.Name = "InfoSplitter";
             this.InfoSplitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -566,7 +568,7 @@
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
-            this.InfoSplitter.Size = new System.Drawing.Size(226, 626);
+			this.InfoSplitter.Size = new System.Drawing.Size(226, 626);
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.TabIndex = 0;
             // 
@@ -595,8 +597,8 @@
             this.Panel_Info.Controls.Add(this.TextBox_Rot_Y);
             this.Panel_Info.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
-            this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_Info.Name = "Panel_Info";
+this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+                        this.Panel_Info.Name = "Panel_Info";
             this.Panel_Info.Size = new System.Drawing.Size(226, 250);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
@@ -630,18 +632,17 @@
             // 
             // TextBox_Pos_X
             // 
-            this.TextBox_Pos_X.Location = new System.Drawing.Point(43, 33);
+			this.TextBox_Pos_X.Location = new System.Drawing.Point(43, 33);
             this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Pos_X.Name = "TextBox_Pos_X";
-            this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
+            this.TextBox_Pos_X.Name = "TextBox_Pos_X";            this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_X.TabIndex = 0;
             this.TextBox_Pos_X.TextChanged += new System.EventHandler(this.PosTextChanged);
             // 
             // TextBox_Scale_Z
             // 
-            this.TextBox_Scale_Z.Location = new System.Drawing.Point(43, 207);
+			this.TextBox_Scale_Z.Location = new System.Drawing.Point(43, 207);
             this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
+                        this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
             this.TextBox_Scale_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_Z.TabIndex = 18;
             // 
@@ -665,18 +666,18 @@
             // 
             // TextBox_Pos_Y
             // 
-            this.TextBox_Pos_Y.Location = new System.Drawing.Point(43, 62);
+			this.TextBox_Pos_Y.Location = new System.Drawing.Point(43, 62);
             this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
+                        this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
             this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_Y.TabIndex = 2;
             this.TextBox_Pos_Y.TextChanged += new System.EventHandler(this.PosTextChanged);
             // 
             // TextBox_Scale_Y
             // 
-            this.TextBox_Scale_Y.Location = new System.Drawing.Point(43, 181);
+			this.TextBox_Scale_Y.Location = new System.Drawing.Point(43, 181);
             this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
+                        this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
             this.TextBox_Scale_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_Y.TabIndex = 16;
             // 
@@ -700,7 +701,7 @@
             // 
             // TextBox_Pos_Z
             // 
-            this.TextBox_Pos_Z.Location = new System.Drawing.Point(43, 89);
+			this.TextBox_Pos_Z.Location = new System.Drawing.Point(43, 89);
             this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
             this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
@@ -709,9 +710,9 @@
             // 
             // TextBox_Scale_X
             // 
-            this.TextBox_Scale_X.Location = new System.Drawing.Point(43, 153);
+			this.TextBox_Scale_X.Location = new System.Drawing.Point(43, 153);
             this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Scale_X.Name = "TextBox_Scale_X";
+                        this.TextBox_Scale_X.Name = "TextBox_Scale_X";
             this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_X.TabIndex = 14;
             this.TextBox_Scale_X.TextChanged += new System.EventHandler(this.ScaleTextChanged);
@@ -754,7 +755,7 @@
             // 
             // TextBox_Rot_X
             // 
-            this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
+			this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
             this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Rot_X.Name = "TextBox_Rot_X";
             this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
@@ -763,9 +764,9 @@
             // 
             // TextBox_Rot_Z
             // 
-            this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 89);
+			this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 89);
             this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
+                        this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
             this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Z.TabIndex = 11;
             this.TextBox_Rot_Z.TextChanged += new System.EventHandler(this.RotTextChanged);
@@ -781,7 +782,7 @@
             // 
             // TextBox_Rot_Y
             // 
-            this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
+			this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
             this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
             this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
@@ -790,7 +791,7 @@
             // 
             // Panel_Lower_Raise_Ground
             // 
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
+			this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
             this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
             this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
             this.Panel_Lower_Raise_Ground.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -811,14 +812,13 @@
             // 
             // Label_InnerRing_Size
             // 
-            this.Label_InnerRing_Size.AutoSize = true;
+			this.Label_InnerRing_Size.AutoSize = true;
             this.Label_InnerRing_Size.Location = new System.Drawing.Point(13, 36);
             this.Label_InnerRing_Size.Name = "Label_InnerRing_Size";
             this.Label_InnerRing_Size.Size = new System.Drawing.Size(39, 17);
             this.Label_InnerRing_Size.TabIndex = 1;
             this.Label_InnerRing_Size.Text = "Size:";
-            // 
-            // TextBox_BothCircles_Size
+            //             // TextBox_BothCircles_Size
             // 
             this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(58, 36);
             this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
@@ -836,10 +836,10 @@
             this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
             this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
-            this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(226, 372);
-            this.Panel_ObjectInfo.TabIndex = 6;
+			this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+                        this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
+			this.Panel_ObjectInfo.Size = new System.Drawing.Size(226, 372);
+                       this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 
             // Label_Anim
@@ -854,9 +854,9 @@
             // ComboBox_Texture
             // 
             this.ComboBox_Texture.FormattingEnabled = true;
-            this.ComboBox_Texture.Location = new System.Drawing.Point(96, 44);
+			this.ComboBox_Texture.Location = new System.Drawing.Point(96, 44);
             this.ComboBox_Texture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Texture.Name = "ComboBox_Texture";
+                        this.ComboBox_Texture.Name = "ComboBox_Texture";
             this.ComboBox_Texture.Size = new System.Drawing.Size(111, 24);
             this.ComboBox_Texture.Sorted = true;
             this.ComboBox_Texture.TabIndex = 2;
@@ -865,9 +865,9 @@
             // ComboBox_Animation
             // 
             this.ComboBox_Animation.FormattingEnabled = true;
-            this.ComboBox_Animation.Location = new System.Drawing.Point(96, 74);
+			this.ComboBox_Animation.Location = new System.Drawing.Point(96, 74);
             this.ComboBox_Animation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Animation.Name = "ComboBox_Animation";
+                        this.ComboBox_Animation.Name = "ComboBox_Animation";
             this.ComboBox_Animation.Size = new System.Drawing.Size(111, 24);
             this.ComboBox_Animation.Sorted = true;
             this.ComboBox_Animation.TabIndex = 4;
@@ -876,9 +876,9 @@
             // ComboBox_Model
             // 
             this.ComboBox_Model.FormattingEnabled = true;
-            this.ComboBox_Model.Location = new System.Drawing.Point(96, 14);
+			this.ComboBox_Model.Location = new System.Drawing.Point(96, 14);
             this.ComboBox_Model.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Model.Name = "ComboBox_Model";
+                        this.ComboBox_Model.Name = "ComboBox_Model";
             this.ComboBox_Model.Size = new System.Drawing.Size(111, 24);
             this.ComboBox_Model.Sorted = true;
             this.ComboBox_Model.TabIndex = 0;

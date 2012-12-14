@@ -34,6 +34,10 @@ private:
 	Vector3 zMoveOffSet;
 
 	float zBrushSize;
+	float zBrushSizeExtra;
+	bool zMouseInsideFrame;
+	bool zDrawBrush;
+
 public:
 	GameEngine();
 	~GameEngine();
@@ -64,6 +68,8 @@ public:
 	void SetBrushSize(float size);
 	void SetBrushSizeExtra( float size );
 	void GetBrushSize(char* info, float& size);
+	void MouseInsideFrame(bool flag);
+	void MouseMove(int x, int y);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);

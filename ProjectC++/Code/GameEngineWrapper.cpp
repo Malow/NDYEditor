@@ -170,3 +170,14 @@ void GameEngineWrapper::GetNrOfSelectedEntities( int& x )
 	m_GameEngine->GetNrOfSelectedEntities(x);
 }
 
+void GameEngineWrapper::MouseInsideFrame( bool flag )
+{
+	m_GameEngine->MouseInsideFrame(flag);
+}
+
+
+void GameEngineWrapper::MouseMove( int x, int y )
+{
+	m_GameEngine->MouseMove(x,y);
+}
+

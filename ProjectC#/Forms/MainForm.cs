@@ -457,20 +457,19 @@ namespace Example
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void TextBox_InnerRing_Size_TextChanged(object sender, EventArgs e)
+		private void RenderBox_MouseLeave(object sender, EventArgs e)
         {
-            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
+            m_GameEngine.MouseInsideFrame(false);
         }
 
-        private void SetBothRingsSize(object sender, EventArgs e)
+        private void RenderBox_MouseEnter(object sender, EventArgs e)
         {
-            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
-            m_GameEngine.SetBrushSizeExtra(float.Parse(this.TextBox_BothCircles_Size.Text));
+            m_GameEngine.MouseInsideFrame(true);
         }
-        private void GetNrOfSelectedEntities()
-        {
 
-            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
+        private void RenderBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            m_GameEngine.MouseMove(e.X, e.Y);
         }
-    }
+		private void TextBox_InnerRing_Size_TextChanged(object sender, EventArgs e)        {            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));        }        private void SetBothRingsSize(object sender, EventArgs e)        {            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));            m_GameEngine.SetBrushSizeExtra(float.Parse(this.TextBox_BothCircles_Size.Text));        }        private void GetNrOfSelectedEntities()        {            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );        }    }
 }

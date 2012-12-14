@@ -55,6 +55,9 @@ namespace System { namespace Windows { namespace Interop
 
 		void RemoveSelectedEntities();
 
+		void MouseInsideFrame(bool flag);
+		void MouseMove(int x, int y);
+
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);
 		void ChangeCameraMode( String^ cameraMode);
