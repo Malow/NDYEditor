@@ -50,7 +50,10 @@ namespace System { namespace Windows { namespace Interop
 		void SaveWorld();
 		void OpenWorld( String^ filePath );
 		void SetBrushSize( float size );
+		void SetBrushSizeExtra( float size );
+		void GetBrushSize(String^ info, [Out] float% size);
 
+		void RemoveSelectedEntities();
 
 		void ChangeMode(int mode);
 		void SetCreateModelPath( String^ filePath);
@@ -58,5 +61,6 @@ namespace System { namespace Windows { namespace Interop
 		void LockMouseToCamera();
 		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void SetSelectedObjectInfo( String^ info, float x, float y, float z );
+		void GetNrOfSelectedEntities([Out] int% x);
 	};
 }}}

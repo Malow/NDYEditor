@@ -309,3 +309,11 @@ unsigned int World::GetNumSectorsHeight() const
 	if ( !zNrOfSectorsWidth ) zFile->ReadHeader();
 	return zNrOfSectorsHeight;
 }
+
+void World::RemoveEntity( Entity* entity )
+{
+	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
+	NotifyObservers( &EntityRemovedEvent(entity));
+	delete *i;
+	zEntities.erase(i);
+}

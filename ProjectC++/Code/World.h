@@ -57,6 +57,13 @@ public:
 	EntityLoadedEvent( World* world, Entity* entity, const std::string fileName) : world(world), entity(entity), fileName(fileName){}
 };
 
+class EntityRemovedEvent : public Event
+{
+public:
+	Entity* entity;
+	EntityRemovedEvent( Entity* entity ) : entity(entity){}
+};
+
 
 
 class World : public Observed, public Observer
@@ -89,6 +96,7 @@ public:
 
 	// Entity Functions
 	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
+	void RemoveEntity(Entity* entity);
 
 	// Inline Functions
 	unsigned int GetNumSectorsWidth() const;

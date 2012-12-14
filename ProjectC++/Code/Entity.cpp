@@ -40,3 +40,9 @@ void Entity::SetScale( Vector3 scale )
 	NotifyObservers(&EntityUpdatedEvent(this));
 }
 
+void Entity::SetSelected( bool selected )
+{
+	zSelected = selected;
+	NotifyObservers(&EntityUpdatedEvent(this));
+}
+

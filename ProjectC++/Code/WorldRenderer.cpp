@@ -120,6 +120,15 @@ void WorldRenderer::onEvent( Event* e )
 		Vector3 temp = EUE->entity->GetRotation();
 		zEntities[EUE->entity]->SetPosition(EUE->entity->GetPosition());
 		zEntities[EUE->entity]->SetQuaternion(Vector4(temp.x, temp.y, temp.z, 0));
+		if(EUE->entity->GetSelected())
+			zEntities[EUE->entity]->SetSpecialColor(COLOR::RED_COLOR);
+		else
+			zEntities[EUE->entity]->SetSpecialColor(COLOR::NULL_COLOR);
+	}
+	else if ( EntityRemovedEvent* ERE = dynamic_cast<EntityRemovedEvent*>(e) )
+	{
+		GetGraphics()->DeleteMesh(zEntities[ERE->entity]);
+		zEntities.erase(ERE->entity);
 	}
 
 }
@@ -192,7 +201,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 
 Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 {
-	int counter = 0;
+	unsigned int counter = 0;
 	bool found = false;
 
 	Entity* returnPointer = NULL;

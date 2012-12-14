@@ -31,7 +31,7 @@ namespace Example
         MODE m_mode =  MODE.NONE;
         bool filePathKnown = false;
 
-        int SelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
+        int m_NrSelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
 
         public NDYEditor()
         {
@@ -54,6 +54,10 @@ namespace Example
             if (e.KeyCode == Keys.X)
             {
                 this.m_GameEngine.LockMouseToCamera();
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                this.m_GameEngine.RemoveSelectedEntities();
             }
         }
         void ListenerKeyUp(object sender, KeyEventArgs e)
@@ -230,7 +234,8 @@ namespace Example
 
         private void MoveTool_Click(object sender, EventArgs e)
         {
-            if (this.SelectedObject != -1)
+            GetNrOfSelectedEntities();
+            if (this.m_NrSelectedObject > 0)
             {
                 this.m_mode = MODE.MOVE;
                 switchMode();
@@ -238,9 +243,7 @@ namespace Example
             }
             else
             {
-                this.m_mode = MODE.SELECT;
-                switchMode();
-                m_GameEngine.ChangeMode((int)this.m_mode);
+                this.SelectTool_Click(sender, e);
             }
         }
 
@@ -253,7 +256,7 @@ namespace Example
 
         private void btnRotate_Click(object sender, EventArgs e)
         {
-            if (this.SelectedObject != -1)
+            if (this.m_NrSelectedObject != -1)
             {
                 this.m_mode = MODE.ROT;
                 switchMode();
@@ -292,16 +295,6 @@ namespace Example
             test.Show();
         }
 
-        private void hideAll()
-        {
-            this.Panel_Info.Hide();
-            this.Panel_ObjectInfo.Hide();
-            this.Panel_PlaceObject.Hide();
-            this.Panel_Info.SendToBack();
-            this.Panel_ObjectInfo.SendToBack();
-            this.Panel_PlaceObject.SendToBack();
-        }
-
         private void NDYEditor_Load(object sender, EventArgs e)
         {
             this.Load_Models();
@@ -326,6 +319,18 @@ namespace Example
             this.m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
+        private void hideAll()
+        {
+            this.Panel_Info.Hide();
+            this.Panel_ObjectInfo.Hide();
+            this.Panel_PlaceObject.Hide();
+            this.Panel_Lower_Raise_Ground.Hide();
+            this.Panel_Info.SendToBack();
+            this.Panel_ObjectInfo.SendToBack();
+            this.Panel_PlaceObject.SendToBack();
+            this.Panel_Lower_Raise_Ground.SendToBack();
+        }
+
         private void switchMode()
         {
             if (this.m_mode == MODE.NONE)
@@ -343,7 +348,7 @@ namespace Example
                 this.Panel_Info.BringToFront();
                 this.Panel_ObjectInfo.BringToFront();
             }
-            if (this.m_mode == MODE.ROT)
+            else if (this.m_mode == MODE.ROT)
             {
                 btn_Rotate.Focus();
                 this.hideAll();
@@ -365,13 +370,33 @@ namespace Example
                 this.Panel_Info.BringToFront();
                 this.Panel_ObjectInfo.BringToFront();
             }
-            if (this.m_mode == MODE.PLACE)
+            else if (this.m_mode == MODE.PLACE)
             {
                 btn_PlaceObject.Focus();
                 this.hideAll();
 
                 this.Panel_PlaceObject.Show();
                 this.Panel_PlaceObject.BringToFront();
+            }
+            else if (this.m_mode == MODE.LOWER)
+            {
+                btn_LowerGround.Focus();
+                this.hideAll();
+
+                this.Panel_Lower_Raise_Ground.Show();
+                this.Panel_Lower_Raise_Ground.BringToFront();
+            }
+            else if (this.m_mode == MODE.RAISE)
+            {
+                btn_RaiseGround.Focus();
+                this.hideAll();
+
+                this.Panel_Lower_Raise_Ground.Show();
+                this.Panel_Lower_Raise_Ground.BringToFront();
+
+                float temp;
+                m_GameEngine.GetBrushSize("InnerCircle", out temp);
+                this.TextBox_BothCircles_Size.Text = temp.ToString();
             }
         }
 
@@ -430,6 +455,22 @@ namespace Example
             this.m_mode = MODE.LOWER;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void TextBox_InnerRing_Size_TextChanged(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
+        }
+
+        private void SetBothRingsSize(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
+            m_GameEngine.SetBrushSizeExtra(float.Parse(this.TextBox_BothCircles_Size.Text));
+        }
+        private void GetNrOfSelectedEntities()
+        {
+
+            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
         }
     }
 }

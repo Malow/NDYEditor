@@ -214,4 +214,41 @@ namespace System { namespace Windows { namespace Interop
 	{
 		this->m_GameEngine->SetBrushSize( size );
 	}
+
+	void CppCLI::GetBrushSize( String^ info, [Out] float% size )
+	{
+		char* lpText = nullptr;
+		float tempSize;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->GetBrushSize(lpText, tempSize);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+		size = tempSize;
+	}
+
+	void CppCLI::SetBrushSizeExtra( float size )
+	{
+
+		m_GameEngine->SetBrushSizeExtra( size );
+	}
+
+	void CppCLI::RemoveSelectedEntities()
+	{
+		m_GameEngine->RemoveSelectedEntities();
+	}
+
+	void CppCLI::GetNrOfSelectedEntities( [Out] int% x )
+	{
+		int tempx;
+		m_GameEngine->GetNrOfSelectedEntities(tempx);
+		x = tempx;
+	}
+
 }}}

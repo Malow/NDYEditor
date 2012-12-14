@@ -13,6 +13,7 @@ private:
 	Vector3 zPosition;
 	Vector3 zRotation;
 	Vector3 zScale;
+	bool zSelected;	
 public:
 	Entity();
 	Entity(Vector3 pos);
@@ -24,6 +25,8 @@ public:
 	inline Vector3 GetRotation(){ return zRotation; }
 	void SetScale(Vector3 scale);
 	inline Vector3 GetScale(){ return zScale; }
+	void SetSelected(bool selected);
+	inline bool GetSelected(){ return zSelected; }
 };
 
 

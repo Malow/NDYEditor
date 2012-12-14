@@ -58,11 +58,15 @@ void GameEngine::ProcessFrame()
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
 		CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
-
+		
 		if(cd.collision)
 		{
 			auto i = zTargetedEntities.begin();
-			(*i)->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
+			zMoveOffSet = Vector3(cd.posx, cd.posy, cd.posz) - zPrevPosOfSelected[(*i)];
+			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet);
+
+			for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet);
 		}
 	}
 
@@ -158,11 +162,8 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 				if(cd.collision)
 				{
-					auto i = zTargetedEntities.begin();
-
-					(*i)->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
-
-					this->zPrevPosOfSelected = Vector3(-1, -1, -1);
+					for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet);
 				}
 			}
 		}
@@ -170,8 +171,10 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
+			{
 				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz),
 				ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+			}
 		}
 		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
 		{
@@ -196,11 +199,46 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 			Entity* returnEntity = zWorldRenderer->Get3DRayCollisionWithMesh();
 			if(returnEntity != NULL)
 			{
-				zTargetedEntities.clear();
-				zTargetedEntities.insert(returnEntity);
+				if(!zTargetedEntities.count(returnEntity) && GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
+				{
+					zTargetedEntities.insert(returnEntity);
+					zPrevPosOfSelected[returnEntity] = returnEntity->GetPosition();
+					returnEntity->SetSelected(true);
+				}
+				else if(!GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
+				{
+					if(!zTargetedEntities.count(returnEntity))
+					{
+						for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+							(*it)->SetSelected(false);
+						zPrevPosOfSelected.clear();
+						zTargetedEntities.clear();
+
+						zTargetedEntities.insert(returnEntity);
+						zPrevPosOfSelected[returnEntity] = returnEntity->GetPosition();
+						returnEntity->SetSelected(true);
+					}
+					else
+					{
+						for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+							(*it)->SetSelected(false);
+						zPrevPosOfSelected.clear();
+						zTargetedEntities.clear();
+					}
+					
+				}
+				else
+				{
+					zTargetedEntities.erase(returnEntity);
+					returnEntity->SetSelected(false);
+					zPrevPosOfSelected.erase(returnEntity);
+				}
 			}
 			else
 			{
+				for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+					(*it)->SetSelected(false);
+				zPrevPosOfSelected.clear();
 				zTargetedEntities.clear();
 			}
 		}
@@ -227,18 +265,18 @@ void GameEngine::ChangeMode( int mode )
 	{
 		if(!this->zTargetedEntities.empty())
 		{
-			auto i = zTargetedEntities.begin();
-			this->zPrevPosOfSelected = (*i)->GetPosition();
+			for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+				this->zPrevPosOfSelected[(*it)] = (*it)->GetPosition();
 		}
 	}
 	else
 	{
-		if(this->zPrevPosOfSelected.x != -1)
+		if(this->zPrevPosOfSelected.empty())
 		{
 			if(!this->zTargetedEntities.empty())
 			{
-				auto i = zTargetedEntities.begin();
-				(*i)->SetPosition(this->zPrevPosOfSelected);
+				for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+					(*it)->SetPosition(this->zPrevPosOfSelected[(*it)]);
 			}
 		}
 	}
@@ -359,7 +397,8 @@ void GameEngine::LockMouseToCamera()
 void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
 {
 	if(zTargetedEntities.empty())
-		throw("No selected entity");
+		return;
+		//throw("No selected entity");
 
 	auto i = zTargetedEntities.begin();
 
@@ -387,7 +426,8 @@ void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
 void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z )
 {
 	if(zTargetedEntities.empty())
-		throw("No selected entity");
+		return;
+		//throw("No selected entity");
 	string compareString = string(info);
 	auto i = zTargetedEntities.begin();
 
@@ -411,6 +451,10 @@ void GameEngine::SetBrushSize( float size )
 	zBrushSize = size;
 }
 
+void GameEngine::SetBrushSizeExtra( float size )
+{
+	//Set Size on outer circle
+}
 
 void GameEngine::onEvent( Event* e )
 {
@@ -418,4 +462,26 @@ void GameEngine::onEvent( Event* e )
 	{
 		
 	}
+}
+
+void GameEngine::GetBrushSize( char* info, float& size )
+{
+	if(string(info) == "InnerCircle") // Returns the innercircle size
+		size = 3;
+	if(string(info) == "OuterCircle") // Returns the outercircle size
+		size = 3;
+
+}
+
+void GameEngine::RemoveSelectedEntities()
+{
+	for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+		zWorld->RemoveEntity((*it));
+	zTargetedEntities.clear();
+	zPrevPosOfSelected.clear();
+}
+
+void GameEngine::GetNrOfSelectedEntities( int& x )
+{
+	x = zTargetedEntities.size();
 }

@@ -37,11 +37,16 @@ public:
 	void SaveWorld();
 	void OpenWorld(char* msg);
 
+	void RemoveSelectedEntities();
+
 	void SetBrushSize(float size);
+	void SetBrushSizeExtra( float size );
+	void GetBrushSize(char* info, float& size);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo( char* info, float x, float y, float z );
+	void GetNrOfSelectedEntities(int& x);
 };

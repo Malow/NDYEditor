@@ -150,3 +150,23 @@ void GameEngineWrapper::SetBrushSize( float size )
 	this->m_GameEngine->SetBrushSize(size);
 }
 
+void GameEngineWrapper::GetBrushSize( char* info, float& size )
+{
+	m_GameEngine->GetBrushSize(info, size);
+}
+
+void GameEngineWrapper::SetBrushSizeExtra( float size )
+{
+	m_GameEngine->SetBrushSizeExtra( size );
+}
+
+void GameEngineWrapper::RemoveSelectedEntities()
+{
+	m_GameEngine->RemoveSelectedEntities();
+}
+
+void GameEngineWrapper::GetNrOfSelectedEntities( int& x )
+{
+	m_GameEngine->GetNrOfSelectedEntities(x);
+}
+
