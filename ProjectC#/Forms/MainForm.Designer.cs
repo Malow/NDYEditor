@@ -531,7 +531,7 @@
             // RenderAndInfoSplitter.Panel2
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
-			            this.RenderAndInfoSplitter.Size = new System.Drawing.Size(1012, 626);
+			this.RenderAndInfoSplitter.Size = new System.Drawing.Size(1012, 626);
             this.RenderAndInfoSplitter.SplitterDistance = 782;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -543,11 +543,13 @@
             this.RenderBox.Margin = new System.Windows.Forms.Padding(4);
             this.RenderBox.Name = "RenderBox";
 			this.RenderBox.Size = new System.Drawing.Size(782, 626);
-            this.RenderBox.TabIndex = 3;            this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
+            this.RenderBox.TabIndex = 3;
+			this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
             this.RenderBox.MouseEnter += new System.EventHandler(this.RenderBox_MouseEnter);
             this.RenderBox.MouseLeave += new System.EventHandler(this.RenderBox_MouseLeave);
             this.RenderBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseMove);
+            this.RenderBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseUp);
             // 
             // InfoSplitter
             // 
@@ -599,7 +601,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
 this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
                         this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(226, 250);
+            this.Panel_Info.Size = new System.Drawing.Size(225, 250);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -824,7 +826,6 @@ this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
             this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(100, 22);
             this.TextBox_BothCircles_Size.TabIndex = 0;
-            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBothRingsSize);
             // 
             // Panel_ObjectInfo
             // 
@@ -837,9 +838,9 @@ this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
 			this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-                        this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
+            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
 			this.Panel_ObjectInfo.Size = new System.Drawing.Size(226, 372);
-                       this.Panel_ObjectInfo.TabIndex = 6;
+            this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 
             // Label_Anim

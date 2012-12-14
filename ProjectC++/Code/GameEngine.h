@@ -38,6 +38,8 @@ private:
 	bool zMouseInsideFrame;
 	bool zDrawBrush;
 
+	bool zLeftMouseDown;
+	Vector2 zBrushLastPos;
 public:
 	GameEngine();
 	~GameEngine();

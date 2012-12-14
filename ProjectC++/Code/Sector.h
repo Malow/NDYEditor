@@ -9,7 +9,7 @@ static const int SECTOR_LENGTH = 32;
 class Sector
 {
 private:
-	float zHeightMap[SECTOR_LENGTH*SECTOR_LENGTH];
+	float zHeightMap[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
 	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*4];
 	bool zEditedFlag;
 

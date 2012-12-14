@@ -471,5 +471,14 @@ namespace Example
         {
             m_GameEngine.MouseMove(e.X, e.Y);
         }
-		private void TextBox_InnerRing_Size_TextChanged(object sender, EventArgs e)        {            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));        }        private void SetBothRingsSize(object sender, EventArgs e)        {            m_GameEngine.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));            m_GameEngine.SetBrushSizeExtra(float.Parse(this.TextBox_BothCircles_Size.Text));        }        private void GetNrOfSelectedEntities()        {            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );        }    }
+		private void RenderBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
+        }
+        private void GetNrOfSelectedEntities()
+        {
+            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
+        }
+
+    }
 }

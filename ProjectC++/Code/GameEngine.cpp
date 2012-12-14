@@ -13,7 +13,8 @@ GameEngine::GameEngine() :
 	zBrushSize(3.0f),			// 3 Meters Brush By Default
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
-	zMouseInsideFrame(false)
+	zMouseInsideFrame(false),
+	zLeftMouseDown(false)
 {
 }
 
@@ -149,7 +150,7 @@ char* GameEngine::ProcessText(char* msg)
 
 void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
 {
-
+	zLeftMouseDown = false;
 }
 
 
@@ -196,6 +197,8 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 					}
 				}
 			}
+			zBrushLastPos = Vector2(cd.posx, cd.posz);
+			zLeftMouseDown = true;
 		}
 		else if(this->zMode == MODE::SELECT)
 		{
@@ -501,12 +504,24 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 
 void GameEngine::MouseMove( int x, int y )
 {
-	if ( zDrawBrush && zWorldRenderer && zMouseInsideFrame )
+	bool checkCollision = false;
+
+	if ( zDrawBrush ) checkCollision = true;
+	if ( zMode == RAISE || zMode == LOWER ) checkCollision = true;
+
+	if ( checkCollision && zWorldRenderer )
 	{
 		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 		if(cd.collision)
 		{
 			GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize,Vector2(cd.posx,cd.posz));
+			
+			// Brush Drawing
+			if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2 )
+			{
+				this->OnLeftMouseDown(x,y);
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+			}
 		}
 	}
 }
