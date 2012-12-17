@@ -5,12 +5,13 @@
 #include <vector>
 
 static const int SECTOR_LENGTH = 32;
+static const int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
 
 class Sector
 {
 private:
 	float zHeightMap[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
-	float zBlendMap[SECTOR_LENGTH*SECTOR_LENGTH*4];
+	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	bool zEditedFlag;
 
 public:
@@ -23,20 +24,19 @@ public:
 	*/
 	void Reset();
 
-	// Returns the blendmap as a float array where each pixel is 4 floats.
+	// Returns the blend map as a float array where each pixel is 4 floats.
 	inline float* GetBlendMap() { return &zBlendMap[0]; }
 
-	// Returns the heightmap as a float array.
+	// Returns the height map as a float array.
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
-	/*
-	Modify point by value, set the edited flag
-	Sets the edited flag
-	Throws when out of bounds
-	*/
-	void ModifyHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
+	// Sets texture blending at point
+	void SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val );
 
-	/* 
+	// Returns the texture blending at point
+	Vector4 GetBlendingAt( unsigned int x, unsigned int y ) const;
+
+	/*
 	Get the value at point
 	Throws when out of bounds 
 	*/

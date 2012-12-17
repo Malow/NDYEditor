@@ -20,35 +20,43 @@ enum WORLDFILE_OPENMODE
 
 class WorldFile;
 
-struct WorldHeader
+struct WorldFileHeader
 {
 	unsigned int width;
 	unsigned int height;
 
-	WorldHeader() : width(10), height(10) {}
+	WorldFileHeader() : width(10), height(10) {}
 };
 
 class WorldHeaderLoadedEvent : public Event
 {
 public:
 	WorldFile* file;
-	WorldHeader header;
-	WorldHeaderLoadedEvent( WorldFile* file ) : file(file) {}
+	const WorldFileHeader& header;
+
+	WorldHeaderLoadedEvent( WorldFile* file, const WorldFileHeader& header ) :
+		file(file),
+		header(header)
+	{
+	}
 };
 
 class WorldHeaderCreateEvent : public Event
 {
 public:
 	WorldFile* file;
-	WorldHeader header;
+	WorldFileHeader& header;
 
-	WorldHeaderCreateEvent( WorldFile* file ) : file(file)
+	WorldHeaderCreateEvent( WorldFile* file, WorldFileHeader& header ) : 
+		file(file),
+		header(header)
 	{
 	}
 };
 
 class WorldFile : public Observed
 {
+	WorldFileHeader zHeader;
 	std::string zFileName;
 	std::fstream *zFile;
 	WORLDFILE_OPENMODE zMode;
@@ -65,23 +73,41 @@ public:
 	void Open();
 
 	/*
-	Writes Heightmap to file
+	Writes blend map to file
 	*/
 	void WriteHeightMap( const float* const data, unsigned int mapIndex );
 
 	/*
-	Reads Heightmap, Returns false if file does not contain a heightmap for this map
+	Reads Height map, Returns false if file does not contain a height map for this map
 	*/
 	bool ReadHeightMap( float* data, unsigned int mapIndex );
+
+
+	/*
+	Writes blend map to file
+	*/
+	void WriteBlendMap( const float* const data, unsigned int mapIndex );
+
+	/*
+	Reads blend map
+	*/
+	bool ReadBlendMap( float* data, unsigned int mapIndex );
 
 	/*
 	Read the world header
 	*/
 	void ReadHeader();
 
+	/*
+	Returns World Header
+	*/
+	const WorldFileHeader& GetHeader() const { return zHeader; }
+
 	inline const std::string& GetFileName() const { return zFileName; }
 
 private:
+	unsigned int GetBlendsBegin() const;
 	unsigned int GetHeightsBegin() const;
 	unsigned int GetSectorsBegin() const;
+	
 };

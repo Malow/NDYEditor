@@ -38,6 +38,14 @@ World::~World()
 	// Close File
 	if ( zFile ) delete zFile, zFile=0;
 
+	// Delete Entities
+	for( auto i = zEntities.begin(); i != zEntities.end(); )
+	{
+		NotifyObservers( &EntityRemovedEvent(this,*i));
+		delete *i;
+		i = zEntities.erase(i);
+	}
+
 	// Delete the zSectors pointers.
 	if ( this->zSectors )
 	{
@@ -64,30 +72,9 @@ World::~World()
 
 void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
 {
-	unsigned int sectorx = x / SECTOR_LENGTH;
-	unsigned int sectory = y / SECTOR_LENGTH;
-	unsigned int localx = x % SECTOR_LENGTH;
-	unsigned int localy = y % SECTOR_LENGTH;
-
-	if ( sectorx >= GetNumSectorsWidth() ) return;
-	if ( sectory >= GetNumSectorsHeight() ) return;
-
-	Sector* sector = GetSector(sectorx, sectory);
-	sector->ModifyHeightAt(localx, localy, value);
-	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
-
-	// Overlap Left
-	if ( sectorx > 0 && localx == 0 )
+	if ( value != 0.0f )
 	{
-		GetSector(sectorx-1,sectory)->SetHeightAt(SECTOR_LENGTH,y,value);
-		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory, SECTOR_LENGTH, localy) );
-	}
-
-	// Overlap Right
-	if ( sectorx+1 < GetNumSectorsWidth() && localx == SECTOR_LENGTH-1 )
-	{
-		GetSector(sectorx+1,sectory)->SetHeightAt(0,y,value);
-		NotifyObservers( &SectorHeightMapChanged(this, sectorx+1, sectory, 0, localy) );
+		SetHeightAt(x,y,GetHeightAt(x,y)+value);
 	}
 }
 
@@ -117,14 +104,34 @@ void World::SetHeightAt( unsigned int x, unsigned int y, float value )
 
 	// Notify Sector Change
 	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
+
+	// Overlap Left
+	if ( sectorx > 0 && localx == 0 )
+	{
+		GetSector(sectorx-1,sectory)->SetHeightAt(SECTOR_LENGTH,localy,value);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory, SECTOR_LENGTH, localy) );
+	}
+
+	// Overlap Up
+	if ( sectory > 0 && localy == 0 )
+	{
+		GetSector(sectorx,sectory-1)->SetHeightAt(localx,SECTOR_LENGTH,value);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory-1, localx, SECTOR_LENGTH) );
+	}
+
+	// Overlap Left Up Corner
+	if ( sectorx > 0 && localy == 0 && sectorx > 0 && localx == 0 )
+	{
+		GetSector(sectorx-1,sectory-1)->SetHeightAt(SECTOR_LENGTH,SECTOR_LENGTH,value);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory-1, SECTOR_LENGTH, SECTOR_LENGTH) );
+	}
 }
 
 
 float World::GetHeightAt( unsigned int x, unsigned int y )
 {
 	Sector* sector = GetSector(x/SECTOR_LENGTH,y/SECTOR_LENGTH);
-	sector->GetHeightAt(x%SECTOR_LENGTH,y%SECTOR_LENGTH);
-	return true;
+	return sector->GetHeightAt(x%SECTOR_LENGTH,y%SECTOR_LENGTH);
 }
 
 
@@ -138,7 +145,8 @@ void World::SaveFile()
 			{
 				if ( this->zSectors[x][y] && this->zSectors[x][y]->IsEdited() )
 				{
-					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y*zNrOfSectorsWidth + x);
+					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y * zNrOfSectorsWidth + x);
+					zFile->WriteBlendMap(this->zSectors[x][y]->GetBlendMap(), y * zNrOfSectorsWidth + x);
 					this->zSectors[x][y]->SetEdited(false);
 				}
 			}
@@ -186,7 +194,7 @@ Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
 
 Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 {
-	if( (this->GetNumSectorsWidth()) <= x || (this->GetNumSectorsHeight()) <= y )
+	if( x >= this->GetNumSectorsWidth() || y >= this->GetNumSectorsHeight() )
 		throw("Index Out Of Bounds");
 
 	Sector* s = this->zSectors[x][y];
@@ -203,6 +211,11 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 			if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
 			{
 				// Load Failed, reset
+				s->Reset();
+			}
+
+			if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x ) )
+			{
 				s->Reset();
 			}
 		}
@@ -246,7 +259,6 @@ void World::onEvent( Event* e )
 }
 
 
-// TODO: Doesn't Load Graphics
 void World::LoadAllSectors()
 {
 	for( unsigned int x=0; x<GetNumSectorsWidth(); ++x )
@@ -318,14 +330,15 @@ unsigned int World::GetNumSectorsWidth() const
 
 unsigned int World::GetNumSectorsHeight() const
 {
-	if ( !zNrOfSectorsWidth ) zFile->ReadHeader();
+	if ( !zNrOfSectorsHeight ) zFile->ReadHeader();
 	return zNrOfSectorsHeight;
 }
 
+
 void World::RemoveEntity( Entity* entity )
 {
+	NotifyObservers( &EntityRemovedEvent(this,entity));
 	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
-	NotifyObservers( &EntityRemovedEvent(entity));
 	delete *i;
 	zEntities.erase(i);
 }

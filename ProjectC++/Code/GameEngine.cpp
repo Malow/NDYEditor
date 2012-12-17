@@ -193,7 +193,14 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 						float distanceFactor = zBrushSize - Vector3(cd.posx - x, 0.0f, cd.posz - y).GetLength();
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
-						zWorld->ModifyHeightAt(x,y,(zMode==MODE::LOWER?-0.5f:0.5f)*distanceFactor);
+
+						try 
+						{
+							zWorld->ModifyHeightAt(x,y,(zMode==MODE::LOWER?-0.5f:0.5f)*distanceFactor);
+						}
+						catch(...)
+						{
+						}
 					}
 				}
 			}
@@ -467,10 +474,12 @@ void GameEngine::SetBrushSize( float size )
 	zBrushSize = size;
 }
 
+
 void GameEngine::SetBrushSizeExtra( float size )
 {
 	//Set Size on outer circle
 }
+
 
 void GameEngine::onEvent( Event* e )
 {
@@ -489,6 +498,7 @@ void GameEngine::GetBrushSize( char* info, float& size )
 
 }
 
+
 void GameEngine::RemoveSelectedEntities()
 {
 	for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
@@ -497,10 +507,12 @@ void GameEngine::RemoveSelectedEntities()
 	zPrevPosOfSelected.clear();
 }
 
+
 void GameEngine::GetNrOfSelectedEntities( int& x )
 {
 	x = zTargetedEntities.size();
 }
+
 
 void GameEngine::MouseMove( int x, int y )
 {
@@ -514,7 +526,7 @@ void GameEngine::MouseMove( int x, int y )
 		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 		if(cd.collision)
 		{
-			GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize,Vector2(cd.posx,cd.posz));
+			GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
 			
 			// Brush Drawing
 			if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2 )

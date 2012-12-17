@@ -39,6 +39,7 @@ extern "C"
 		virtual iImage* CreateImage(Vector2 pos, Vector2 dimensions, const char* texture) = 0;
 		virtual void DeleteImage(iImage* delImg) = 0;
 
+		/*! fontTexturePath shall not contain the file type. */
 		virtual iText* CreateText(const char* text, Vector2 pos, float size, const char* fontTexturePath) = 0;
 		virtual void DeleteText(iText* deltxt) = 0;
 
@@ -60,8 +61,8 @@ extern "C"
 		virtual iGraphicsEngineParams* GetEngineParameters() const = 0;
 
 		virtual void CreateSkyBox(const char* texture) = 0;
-
-		virtual void SetSpecialCircle(float& innerRadius, float& outerRadius, Vector2& targetPos) const = 0;
+		/*! OBS! InnerRadius has to be greater than zero. */
+		virtual void SetSpecialCircle(float innerRadius, float outerRadius, Vector2& targetPos) const = 0;
 
 		virtual void StartRendering() = 0;
 

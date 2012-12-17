@@ -15,7 +15,7 @@ struct HeightMap
 
 struct BlendMap
 {
-	float blend[SECTOR_LENGTH*SECTOR_LENGTH*4];
+	float blend[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 };
 
 
@@ -46,6 +46,17 @@ void WorldFile::WriteHeightMap( const float* const data, unsigned int mapIndex )
 }
 
 
+void WorldFile::WriteBlendMap( const float* const data, unsigned int mapIndex )
+{
+	if ( !zFile ) Open();
+	if ( zMode != OPEN_LOAD )
+	{
+		zFile->seekp( GetBlendsBegin() + mapIndex * sizeof(BlendMap), std::ios::beg );
+		zFile->write((const char*)data,sizeof(BlendMap));
+	}
+}
+
+
 bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
 {
 	if ( !zFile ) Open();
@@ -56,15 +67,31 @@ bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
 }
 
 
+bool WorldFile::ReadBlendMap( float* data, unsigned int mapIndex )
+{
+	if ( !zFile ) Open();
+	zFile->seekg( GetBlendsBegin() + mapIndex * sizeof(BlendMap), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	zFile->read((char*)data,sizeof(BlendMap));
+	return true;
+}
+
+
 unsigned int WorldFile::GetSectorsBegin() const
 {
-	return sizeof(WorldHeader);
+	return sizeof(WorldFileHeader);
 }
 
 
 unsigned int WorldFile::GetHeightsBegin() const
 {
 	return GetSectorsBegin() + zNumSectors * sizeof(SectorHeader);
+}
+
+
+unsigned int WorldFile::GetBlendsBegin() const
+{
+	return GetHeightsBegin() + sizeof( HeightMap ) * zNumSectors;
 }
 
 
@@ -94,18 +121,17 @@ void WorldFile::Open()
 			throw("Failed Opening File!");
 	}
 
-	if ( OPEN_SAVE == OPEN_SAVE )
+	if ( zMode == OPEN_SAVE )
 	{
-		// New Header
-		WorldHeaderCreateEvent WHCE(this);
-		NotifyObservers(&WHCE);
+		// New header
+		NotifyObservers(&WorldHeaderCreateEvent(this,zHeader));
 
-		// Save Header
+		// Save header
 		zFile->seekp(0, std::ios::beg);
-		zFile->write( reinterpret_cast<const char*>(&WHCE.header), sizeof(WorldHeader));
+		zFile->write( reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
 
-		// Save Num Sectors
-		zNumSectors = WHCE.header.width * WHCE.header.height;
+		// Save number of sectors
+		zNumSectors = zHeader.width * zHeader.height;
 	}
 	else if ( zMode == OPEN_EDIT )
 	{
@@ -117,18 +143,17 @@ void WorldFile::Open()
 		if ( size == 0 )
 			throw("Empty File!");
 
-		if ( size < sizeof(WorldHeader) )
+		if ( size < sizeof(WorldFileHeader) )
 			throw("File Doesn't Have Header!");
 
 		// Read File Header
-		WorldHeaderLoadedEvent headerEvent(this);
-		zFile->read( reinterpret_cast<char*>(&headerEvent.header), sizeof(WorldHeader) );
+		zFile->read( reinterpret_cast<char*>(&zHeader), sizeof(WorldFileHeader) );
 
-		// Save Num Sectors
-		zNumSectors = headerEvent.header.width * headerEvent.header.height;
+		// Save number of sectors
+		zNumSectors = zHeader.width * zHeader.height;
 
 		// Header Loaded
-		NotifyObservers( &headerEvent );
+		NotifyObservers( &WorldHeaderLoadedEvent(this,zHeader) );
 	}
 }
 
@@ -137,4 +162,3 @@ void WorldFile::ReadHeader()
 {
 	if( !zFile ) Open();
 }
-

@@ -31,7 +31,7 @@ WorldRenderer::~WorldRenderer()
 
 	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
 	{
-		delete i->second;
+		zGraphics->DeleteMesh( i->second );
 	}
 
 	zEntities.clear();
@@ -91,8 +91,11 @@ void WorldRenderer::onEvent( Event* e )
 	}
 	else if ( EntityRemovedEvent* ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{
-		GetGraphics()->DeleteMesh(zEntities[ERE->entity]);
-		zEntities.erase(ERE->entity);
+		if ( ERE->world == zWorld )
+		{
+			GetGraphics()->DeleteMesh(zEntities[ERE->entity]);
+			zEntities.erase(ERE->entity);
+		}
 	}
 
 }
@@ -147,12 +150,14 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	unsigned int counter = 0;
 	bool found = false;
 
-	iCamera* cam = GetGraphics()->GetCamera();
-	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 	CollisionData cd;
 	while(counter < zTerrain.size() && !found)
 	{
-		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(cam->GetPosition(), cam->Get3DPickingRay(), zTerrain[counter]);
+		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(
+			GetGraphics()->GetCamera()->GetPosition(), 
+			GetGraphics()->GetCamera()->Get3DPickingRay(), 
+			zTerrain[counter]);
+
 		if(cd.collision)
 		{
 			position = Vector3(cd.posx, cd.posy, cd.posz);
@@ -160,8 +165,6 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 		}
 		counter++;
 	}
-	cam = NULL;
-	pe = NULL;
 
 	return cd;
 }
@@ -193,8 +196,11 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 
 	while(counter < zEntities.size() && !found)
 	{
-		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), 
+		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(
+			cam->GetPosition(), 
+			cam->Get3DPickingRay(), 
 			zEntities[closeEntities.at(counter)]);
+
 		if(cd.collision)
 		{
 			found = true;
@@ -236,13 +242,28 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 		Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
 		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH+1);
 
-		// Blend Maps
-		const char* terrainTextures[4];
-		terrainTextures[0] = "Media/TerrainTexture.png";
-		terrainTextures[1] = "Media/BallTexture.png";
-		terrainTextures[2] = "Media/TerrainTexture.png";
-		terrainTextures[3] = "Media/TerrainTexture.png";
-		zTerrain[tIndex]->SetTextures(terrainTextures);
+		// Special Sector Textures for 0,0
+		if ( x == 0 && y == 0 )
+		{
+			// Blend Maps
+			const char* terrainTextures[4];
+			terrainTextures[0] = "Media/BallTexture.png";
+			terrainTextures[1] = "Media/TerrainTexture.png";
+			terrainTextures[2] = "Media/TerrainTexture.png";
+			terrainTextures[3] = "Media/TerrainTexture.png";
+			zTerrain[tIndex]->SetTextures(terrainTextures);
+		}
+		else
+		{
+			// Blend Maps
+			const char* terrainTextures[4];
+			terrainTextures[0] = "Media/TerrainTexture.png";
+			terrainTextures[1] = "Media/BallTexture.png";
+			terrainTextures[2] = "Media/TerrainTexture.png";
+			terrainTextures[3] = "Media/TerrainTexture.png";
+			zTerrain[tIndex]->SetTextures(terrainTextures);
+		}
+
 		zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
 
 		// Height Map

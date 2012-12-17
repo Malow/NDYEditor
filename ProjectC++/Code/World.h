@@ -60,8 +60,9 @@ public:
 class EntityRemovedEvent : public Event
 {
 public:
+	World* world;
 	Entity* entity;
-	EntityRemovedEvent( Entity* entity ) : entity(entity){}
+	EntityRemovedEvent( World* world, Entity* entity ) : world(world), entity(entity) {}
 };
 
 

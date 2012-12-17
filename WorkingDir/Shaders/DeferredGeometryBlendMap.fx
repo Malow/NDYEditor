@@ -1,8 +1,9 @@
-//--------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 //
-//	Written by Markus Tillman for project "Not dead yet" at Blekinga Tekniska Högskola.
-//	//**TODO:implement**
-//--------------------------------------------------------------------------------------
+//	Written by Markus Tillman for project "Not dead yet" at Blekinge Tekniska Högskola.
+//	
+//	This shader renders geometry (deferred with 4 GBuffers) with up to 4 textures(blendmap).
+//-----------------------------------------------------------------------------------------
 #include "stdafx.fx"
 
 //-----------------------------------------------------------------------------------------
@@ -12,6 +13,7 @@
 Texture2D tex1; //R-channel in blendmap. ex: grass
 Texture2D tex2; //G-channel in blendmap. ex: dirt
 Texture2D tex3; //B-channel in blendmap. ex: leaves
+Texture2D tex4; //A-channel in blendmap. ex: footprints?**TILLMAN**
 Texture2D<float4> blendMap;
 //Texture2D tex4; //**extra, ex: blood, footprints**
 
@@ -36,20 +38,20 @@ cbuffer PerObject
 //-----------------------------------------------------------------------------------------
 struct VSIn
 {
-	float4 pos		: POSITION; //3 används**tillman
+	float3 pos		: POSITION;
 	float2 tex		: TEXCOORD;
 	float3 norm		: NORMAL;
-	float4 color	: COLOR; //3 anv'nds**
+	float3 color	: COLOR;
 };
 
 struct PSSceneIn
 {
-	float4 pos		: SV_POSITION;
+	float4 pos		: SV_POSITION; 
 	float2 tex		: TEXCOORD;
 	float3 norm		: NORMAL;
-	float4 color	: COLOR;
+	float3 color	: COLOR;
 
-	float4 posW		: POSITION;	//world position
+	float4 posW		: POSITION;	//world position 
 };
 
 struct PSOut			
@@ -67,12 +69,12 @@ struct PSOut
 //-----------------------------------------------------------------------------------------
 PSSceneIn VSScene(VSIn input)
 {
-	input.color.w = 1.0f;
-	input.pos.w = 1.0f;
+	//input.color.w = 1.0f;
+	//input.pos.w = 1.0f; //**
 
 	PSSceneIn output = (PSSceneIn)0;
-	output.pos = mul(input.pos, WVP);
-	output.posW = mul(input.pos, worldMatrix);
+	output.pos = mul(float4(input.pos, 1.0f), WVP);
+	output.posW = mul(float4(input.pos, 1.0f), worldMatrix);
 	output.tex = input.tex;
 	output.norm = normalize(mul(input.norm, (float3x3)worldMatrixInverseTranspose));
 	output.color = input.color;
@@ -95,10 +97,10 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 		//finalColor = blendMap.Sample(LinearWrapSampler, input.tex).rgb; //Debug
 		
 		//Sample textures
-		float3 tex1Color  = tex1.Sample(LinearWrapSampler, input.tex).rgb; 
-		float3 tex2Color = tex2.Sample(LinearWrapSampler, input.tex).rgb;
-		float3 tex3Color = tex3.Sample(LinearWrapSampler, input.tex).rgb;
-		float3 blendMapColor = blendMap.Sample(LinearWrapSampler, input.tex).rgb;
+		float3 tex1Color = tex1.Sample(LinearWrapSampler, input.tex * 4.0f).rgb; 
+		float3 tex2Color = tex2.Sample(LinearWrapSampler, input.tex * 4.0f).rgb;
+		float3 tex3Color = tex3.Sample(LinearWrapSampler, input.tex * 4.0f).rgb;
+		float3 blendMapColor = normalize(blendMap.Sample(LinearWrapSampler, input.tex).rgb); //**alpha - tillman**
 
 		//Inverse of all blend weights to scale final color to be in range [0,1]
 		float inverseTotal = 1.0f / (blendMapColor.r + blendMapColor.g + blendMapColor.b);
@@ -108,12 +110,12 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 		tex2Color *= blendMapColor.g * inverseTotal;
 		tex3Color *= blendMapColor.b * inverseTotal;
 
-		//Blendmapped color
+		//Blendmapped color (normalize it)
 		finalColor = (tex1Color + tex2Color + tex3Color) * diffuseColor.rgb;
 	}
 	else
 	{
-		finalColor = input.color.rgb; //Geometry color
+		finalColor = input.color; //Geometry color
 	}
 	output.Texture.xyz = finalColor;
 	output.Texture.w = -1.0f;
