@@ -272,6 +272,6 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 		UpdateSectorHeightMap(x,y);
 
 		// TODO: Remove When FPS camera is implemented, this is just for testing
-		zGraphics->GetCamera()->SetPosition(pos+Vector3(10.0f,1.0f,0.0f));
+		zGraphics->GetCamera()->SetPosition(pos+Vector3(0.0f,10.0f,0.0f));
 	}
 }

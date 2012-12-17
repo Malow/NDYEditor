@@ -58,8 +58,7 @@ void Sector::SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
 
 	for( unsigned int x=0; x<4; ++x )
 	{
-		// TODO: Uncomment when working
-		// zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + 0 ] = val[x];
+		zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + 0 ] = val[x];
 	}
 }
 
@@ -73,8 +72,7 @@ Vector4 Sector::GetBlendingAt( unsigned int x, unsigned int y ) const
 
 	for( unsigned int x=0; x<4; ++x )
 	{
-		// TODO: Uncomment when working
-		// vec[x] = zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + x];
+		vec[x] = zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + x];
 	}
 
 	return vec;

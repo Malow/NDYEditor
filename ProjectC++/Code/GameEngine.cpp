@@ -74,14 +74,14 @@ void GameEngine::ProcessFrame()
 		if(cd.collision)
 		{
 			auto i = zTargetedEntities.begin();
-			zMoveOffSet = Vector3(cd.posx, cd.posy, cd.posz) - zPrevPosOfSelected[(*i)]; // TODO SET cd.posy TO ZERO WHEN BELOW IS FIXED
-			/*float tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z); REMOVED UNTILL FIXED*/
-			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet /*+ Vector3(0,tempY,0)*/); // TODO REMOVED UNTILL FIXED
+			zMoveOffSet = Vector3(cd.posx, 0.0f, cd.posz) - zPrevPosOfSelected[(*i)];
+			float tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z);
+			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet + Vector3(0,tempY,0));
 
 			for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 			{
-				/*tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);*/ // TODO REMOVED UNTILL FIXED
-				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet /*+ Vector3(0,tempY,0)*/); // TODO REMOVED UNTILL FIXED
+				tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
+				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0,tempY,0));
 			}
 		}
 	}
@@ -136,7 +136,7 @@ void GameEngine::ProcessFrame()
 				{
 					yPos = GetGraphics()->GetCamera()->GetPosition().y;
 				}
-				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos, temp.z));
+				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos+10.0f, temp.z));
 			}
 			catch(...)
 			{
@@ -178,11 +178,11 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 				if(cd.collision)
 				{
-					/*float tempY;*/ // TODO REMOVED UNTILL FIXED
+					float tempY;
 					for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 					{
-						//tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z); // TODO REMOVED UNTILL FIXED
-						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet /*+ Vector3(0, tempY, 0)*/); // TODO REMOVED UNTILL FIXED
+						tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
+						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0, tempY, 0));
 						zPrevPosOfSelected[(*it)] = (*it)->GetPosition();
 					}
 				}
@@ -206,8 +206,7 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 				{
 					for( unsigned int y = cd.posz - zBrushSize; y < cd.posz + zBrushSize; ++y )
 					{
-						// TODO: Vector2 Instead of Vector3
-						float distanceFactor = zBrushSize - Vector3(cd.posx - x, 0.0f, cd.posz - y).GetLength();
+						float distanceFactor = zBrushSize - Vector2(cd.posx - x, cd.posz - y).GetLength();
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
 
@@ -513,18 +512,6 @@ void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z
 }
 
 
-void GameEngine::SetBrushSize( float size )
-{
-	zBrushSize = size;
-}
-
-
-void GameEngine::SetBrushSizeExtra( float size )
-{
-	//Set Size on outer circle
-}
-
-
 void GameEngine::onEvent( Event* e )
 {
 	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
@@ -597,5 +584,5 @@ void GameEngine::SetBrushAttr( char* info, float size )
 	else if(string(info) == "OuterCircle") // sets the outercircle size
 		zBrushSizeExtra = size;
 	else if(string(info) == "Strength") // sets the strength size
-		zBrushStrength = size; //TODO SET STRENGTH
+		zBrushStrength = size;
 }
