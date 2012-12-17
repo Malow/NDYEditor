@@ -210,11 +210,6 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
-	void CppCLI::SetBrushSize( float size )
-	{
-		this->m_GameEngine->SetBrushSize( size );
-	}
-
 	void CppCLI::GetBrushSize( String^ info, [Out] float% size )
 	{
 		char* lpText = nullptr;
@@ -231,12 +226,6 @@ namespace System { namespace Windows { namespace Interop
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
 		}
 		size = tempSize;
-	}
-
-	void CppCLI::SetBrushSizeExtra( float size )
-	{
-
-		m_GameEngine->SetBrushSizeExtra( size );
 	}
 
 	void CppCLI::RemoveSelectedEntities()
@@ -259,6 +248,22 @@ namespace System { namespace Windows { namespace Interop
 	void CppCLI::MouseMove( int x, int y )
 	{
 		m_GameEngine->MouseMove(x,y);
+	}
+
+	void CppCLI::SetBrushAttr( String^ info, float size )
+	{
+		char* lpText = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->SetBrushAttr(lpText, size);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
 	}
 
 }}}

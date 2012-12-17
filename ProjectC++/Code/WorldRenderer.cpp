@@ -71,6 +71,8 @@ void WorldRenderer::onEvent( Event* e )
 		if(!file)
 		{
 			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->GetPosition());
+			zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
+			ELE->entity->AddObserver(this);
 			return;
 		}
 		file.close();

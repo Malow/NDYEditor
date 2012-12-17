@@ -2,6 +2,10 @@
 #include "Graphics.h"
 #include "MaloWFileDebug.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <time.h>
+
 
 GameEngine::GameEngine() :
 	zScreenWidth(0),
@@ -14,7 +18,9 @@ GameEngine::GameEngine() :
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
 	zMouseInsideFrame(false),
-	zLeftMouseDown(false)
+	zLeftMouseDown(false),
+	zBrushStrength(1)		// 1 unit by default
+
 {
 }
 
@@ -45,6 +51,8 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->SetFPSMax(30);
 	GetGraphics()->StartRendering();
 
+	srand( time(NULL) );
+
 	return 0;
 }
 
@@ -66,11 +74,15 @@ void GameEngine::ProcessFrame()
 		if(cd.collision)
 		{
 			auto i = zTargetedEntities.begin();
-			zMoveOffSet = Vector3(cd.posx, cd.posy, cd.posz) - zPrevPosOfSelected[(*i)];
-			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet);
+			zMoveOffSet = Vector3(cd.posx, cd.posy, cd.posz) - zPrevPosOfSelected[(*i)]; // TODO SET cd.posy TO ZERO WHEN BELOW IS FIXED
+			/*float tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z); REMOVED UNTILL FIXED*/
+			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet /*+ Vector3(0,tempY,0)*/); // TODO REMOVED UNTILL FIXED
 
 			for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
-				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet);
+			{
+				/*tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);*/ // TODO REMOVED UNTILL FIXED
+				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet /*+ Vector3(0,tempY,0)*/); // TODO REMOVED UNTILL FIXED
+			}
 		}
 	}
 
@@ -166,8 +178,13 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 				if(cd.collision)
 				{
+					/*float tempY;*/ // TODO REMOVED UNTILL FIXED
 					for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
-						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet);
+					{
+						//tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z); // TODO REMOVED UNTILL FIXED
+						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet /*+ Vector3(0, tempY, 0)*/); // TODO REMOVED UNTILL FIXED
+						zPrevPosOfSelected[(*it)] = (*it)->GetPosition();
+					}
 				}
 			}
 		}
@@ -255,6 +272,33 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 				zTargetedEntities.clear();
 			}
 		}
+		else if(this->zMode == MODE::PLACEBRUSH)
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				float length;
+				float theta;
+				float x;
+				float z;
+				int temp = zBrushSize * 1000;
+				vector<Entity*> insideCicrle;
+				zWorld->GetEntitiesInCircle(Vector3(cd.posx, cd.posy, cd.posz), zBrushSize, insideCicrle);
+				if(insideCicrle.size() < zBrushStrength)
+				{
+					theta = (rand() / (float)RAND_MAX) * M_PI * 2;
+					length = (rand() / (float)RAND_MAX) * zBrushSize;
+					x = (cos(theta) * length);
+					z = (sin(theta) * length);
+
+					zWorld->CreateEntity(Vector3(cd.posx+x, cd.posy, cd.posz+z),
+						ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+				}
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+				zLeftMouseDown = true;
+			}
+
+		}
 	}
 }
 
@@ -284,7 +328,7 @@ void GameEngine::ChangeMode( int mode )
 	}
 	else
 	{
-		if(this->zPrevPosOfSelected.empty())
+		if(!this->zPrevPosOfSelected.empty())
 		{
 			if(!this->zTargetedEntities.empty())
 			{
@@ -295,7 +339,7 @@ void GameEngine::ChangeMode( int mode )
 	}
 
 	// Brush Control
-	if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH)
 	{
 		zDrawBrush = true;
 	}
@@ -491,10 +535,12 @@ void GameEngine::onEvent( Event* e )
 
 void GameEngine::GetBrushSize( char* info, float& size )
 {
-	if(string(info) == "InnerCircle") // Returns the innercircle size
-		size = 3;
-	if(string(info) == "OuterCircle") // Returns the outercircle size
-		size = 3;
+	if(string(info) == "InnerCircle") // Returns the inner circle size
+		size = zBrushSize;
+	if(string(info) == "OuterCircle") // Returns the outer circle size
+		size = zBrushSize + zBrushSizeExtra;
+	if(string(info) == "Strength") // Returns the strength size
+		size = zBrushStrength;
 
 }
 
@@ -519,7 +565,7 @@ void GameEngine::MouseMove( int x, int y )
 	bool checkCollision = false;
 
 	if ( zDrawBrush ) checkCollision = true;
-	if ( zMode == RAISE || zMode == LOWER ) checkCollision = true;
+	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH) checkCollision = true;
 
 	if ( checkCollision && zWorldRenderer )
 	{
@@ -542,4 +588,14 @@ void GameEngine::MouseMove( int x, int y )
 void GameEngine::MouseInsideFrame( bool flag )
 {
 	zMouseInsideFrame = flag;
+}
+
+void GameEngine::SetBrushAttr( char* info, float size )
+{
+	if(string(info) == "InnerCircle") // sets the innercircle size
+		zBrushSize = size;
+	else if(string(info) == "OuterCircle") // sets the outercircle size
+		zBrushSizeExtra = size;
+	else if(string(info) == "Strength") // sets the strength size
+		zBrushStrength = size; //TODO SET STRENGTH
 }
