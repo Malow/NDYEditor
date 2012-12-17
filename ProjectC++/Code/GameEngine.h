@@ -3,6 +3,7 @@
 #include "World.h"
 #include "WorldRenderer.h"
 
+
 enum MODE
 {
 	NONE,
@@ -11,7 +12,8 @@ enum MODE
 	ROT,
 	PLACE,
 	RAISE,
-	LOWER
+	LOWER,
+	PLACEBRUSH
 };
 
 class GameEngine : public Observer
@@ -35,6 +37,7 @@ private:
 
 	float zBrushSize;
 	float zBrushSizeExtra;
+	float zBrushStrength;
 	bool zMouseInsideFrame;
 	bool zDrawBrush;
 
@@ -67,8 +70,7 @@ public:
 
 	void RemoveSelectedEntities();
 
-	void SetBrushSize(float size);
-	void SetBrushSizeExtra( float size );
+	void SetBrushAttr(char* info, float size);
 	void GetBrushSize(char* info, float& size);
 	void MouseInsideFrame(bool flag);
 	void MouseMove(int x, int y);

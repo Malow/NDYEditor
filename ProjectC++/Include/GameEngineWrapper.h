@@ -41,8 +41,7 @@ public:
 
 	void RemoveSelectedEntities();
 
-	void SetBrushSize(float size);
-	void SetBrushSizeExtra( float size );
+	void SetBrushAttr(char* info, float size);
 	void GetBrushSize(char* info, float& size);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);

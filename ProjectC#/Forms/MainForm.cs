@@ -21,7 +21,8 @@ namespace Example
         ROT,
         PLACE,
         RAISE,
-        LOWER
+        LOWER,
+        PLACEBRUSH
     }
     public partial class NDYEditor : Form
     {
@@ -46,6 +47,7 @@ namespace Example
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
             this.KeyUp += new KeyEventHandler(ListenerKeyUp);
         }
+
         void ListenerKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
@@ -121,17 +123,13 @@ namespace Example
             form.ShowDialog();
             if (form.GetShouldCreateMap())
             {
-                if (form.shouldCreateMap && form.GetReturnX() > 0 && form.GetReturnY() > 0)
+                if (form.GetReturnX() > 0 && form.GetReturnY() > 0)
                 {
                     int xPos = form.GetReturnX();
                     int yPos = form.GetReturnY();
 
                     this.m_GameEngine.CreateWorld(xPos, yPos);
                     filePathKnown = false;
-                }
-                else
-                {
-
                 }
             }
 
@@ -144,7 +142,7 @@ namespace Example
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
             fdlg.DefaultExt = "*.map";
-            fdlg.InitialDirectory = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), @"YourSubDirectoryName");
+            fdlg.InitialDirectory = Application.StartupPath;
             fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
@@ -161,7 +159,7 @@ namespace Example
             SaveFileDialog fdlg = new SaveFileDialog();
             fdlg.DefaultExt = "*.map";
             fdlg.Title = "Save File";
-            fdlg.InitialDirectory = @"c:\";
+            fdlg.InitialDirectory = Application.StartupPath;
             fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
@@ -195,9 +193,13 @@ namespace Example
 
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (this.m_mode == MODE.PLACE)
+            if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
             {
-                this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.SelectedText);
+                this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.Text);
+            }
+            if (this.m_mode == MODE.PLACEBRUSH) // This has to be in front of OnLeftMouseDown
+            {
+                this.m_GameEngine.SetCreateModelPath("Media/" + this.ComboBox_Model_Brush.Text);
             }
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
             if (this.m_mode == MODE.SELECT)
@@ -309,6 +311,9 @@ namespace Example
             {
                 //if(files[i].ToString() != "scale.obj")
                 this.Combo_Model.Items.Add(files[i].ToString());
+                this.Combo_Model.Text = files[i].ToString();
+                this.ComboBox_Model_Brush.Items.Add(files[i].ToString());
+                this.ComboBox_Model_Brush.Text = files[i].ToString();
             }
         }
 
@@ -398,6 +403,21 @@ namespace Example
                 m_GameEngine.GetBrushSize("InnerCircle", out temp);
                 this.TextBox_BothCircles_Size.Text = temp.ToString();
             }
+            else if (this.m_mode == MODE.PLACEBRUSH)
+            {
+                btn_PlaceBrush.Focus();
+                this.hideAll();
+
+                this.Panel_PlaceBrush.Show();
+                this.Panel_PlaceBrush.BringToFront();
+
+                float temp;
+                m_GameEngine.GetBrushSize("InnerCircle", out temp);
+                this.TextBox_BrushPlace_Inner.Text = temp.ToString();
+
+                m_GameEngine.GetBrushSize("Strength", out temp);
+                this.TextBox_StrengthCircle.Text = temp.ToString();
+            }
         }
 
         private void btnFPS_Click(object sender, EventArgs e)
@@ -478,6 +498,65 @@ namespace Example
         private void GetNrOfSelectedEntities()
         {
             m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
+        }
+        private void SetBrushSize(float size)
+        {
+            m_GameEngine.SetBrushAttr("InnerCircle", size);
+        }
+        private void SetBrushSizeExtra(float size)
+        {
+            m_GameEngine.SetBrushAttr("OuterCircle", size);
+        }
+
+        private void TextBox_BothCircles_Size_TextChanged(object sender, EventArgs e)
+        {
+            if (this.TextBox_BothCircles_Size.Text != "")
+            {
+                this.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
+            }
+            else
+            {
+                this.SetBrushSize(0.0f);
+            }
+            this.SetBrushSizeExtra(0.0f);
+        }
+
+        private void bnt_None_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.NONE;
+            switchMode();
+            m_GameEngine.ChangeMode((int)m_mode);
+        }
+
+        private void btn_PlaceBrush_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.PLACEBRUSH;
+            switchMode();
+            m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void TextBox_BrushPlace_Inner_TextChanged(object sender, EventArgs e)
+        {
+            if (this.TextBox_BrushPlace_Inner.Text != "")
+            {
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BrushPlace_Inner.Text));
+            }
+            else
+            {
+                m_GameEngine.SetBrushAttr("InnerCircle", 0.0f);
+            }
+        }
+
+        private void TextBox_StrengthCircle_TextChanged(object sender, EventArgs e)
+        {
+            if (this.TextBox_StrengthCircle.Text != "") // CHANGE HERE
+            {
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_StrengthCircle.Text)); // CHANGE HERE
+            }
+            else
+            {
+                m_GameEngine.SetBrushAttr("Strength", 0.0f);
+            }
         }
 
     }
