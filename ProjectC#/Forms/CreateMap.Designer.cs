@@ -72,6 +72,7 @@
             this.widthSize.Size = new System.Drawing.Size(100, 22);
             this.widthSize.TabIndex = 3;
             this.widthSize.Text = "1";
+            this.widthSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // heightSize
             // 
@@ -80,6 +81,7 @@
             this.heightSize.Size = new System.Drawing.Size(100, 22);
             this.heightSize.TabIndex = 5;
             this.heightSize.Text = "1";
+            this.heightSize.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // HeightLable
             // 

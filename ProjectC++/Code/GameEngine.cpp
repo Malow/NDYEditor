@@ -532,6 +532,7 @@ void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z
 	if(compareString == "pos")
 	{
 		(*i)->SetPosition(Vector3(x, y, z));
+		zPrevPosOfSelected[(*i)] = Vector3(x, y, z);
 	}
 	else if(compareString == "rot")
 	{
