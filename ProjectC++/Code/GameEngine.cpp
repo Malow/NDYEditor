@@ -29,6 +29,8 @@ GameEngine::~GameEngine()
 {
 	if ( zWorldRenderer ) delete zWorldRenderer;
 	if ( zWorld ) delete zWorld;
+	
+	FreeGraphics();
 }
 
 
@@ -59,12 +61,15 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 
 void GameEngine::Shutdown()
 {
-	FreeGraphics();
+	
 }
 
 
 void GameEngine::ProcessFrame()
 {
+	if ( !GetGraphics() )
+		return;
+
 	float dt = GetGraphics()->Update();
 	GraphicsEngine* ge = GetGraphics();
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
@@ -224,7 +229,7 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
 		}
-		else if ( zMode == MODE::TEXTUREBRUSH )
+		else if ( zMode == MODE::DRAWTEX )
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
@@ -627,7 +632,7 @@ void GameEngine::MouseMove( int x, int y )
 	bool checkCollision = false;
 
 	if ( zDrawBrush ) checkCollision = true;
-	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH || zMode == TEXTUREBRUSH ) checkCollision = true;
+	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH || zMode == DRAWTEX ) checkCollision = true;
 
 	if ( checkCollision && zWorldRenderer )
 	{

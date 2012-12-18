@@ -13,7 +13,7 @@ bool InitGraphics( unsigned int hWnd )
 GraphicsEngine* GetGraphics()
 {
 	if ( !engine )
-		throw("Engine Not Initialized!");
+		return 0;
 
 	return engine;
 }
@@ -24,6 +24,8 @@ bool FreeGraphics()
 		return false;
 
 	delete engine;
+
+	engine = 0;
 
 	return true;
 }

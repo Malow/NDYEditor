@@ -24,17 +24,22 @@ namespace System { namespace Windows { namespace Interop
 
 	void CppCLI::Shutdown()
 	{
-		if ( m_GameEngine ) delete m_GameEngine, m_GameEngine = 0;
+		if ( m_GameEngine ) 
+		{
+			m_GameEngine->Shutdown(); 
+			delete m_GameEngine;
+			m_GameEngine = 0;
+		}
 	}
 
 	void CppCLI::ProcessFrame()
 	{
-		m_GameEngine->ProcessFrame();
+		if ( m_GameEngine ) m_GameEngine->ProcessFrame();
 	}
 
 	void CppCLI::OnResize(int width, int height)
 	{
-		m_GameEngine->OnResize(width, height);
+		if ( m_GameEngine ) m_GameEngine->OnResize(width, height);
 	}
 
 	String^ CppCLI::ProcessText(String^ msg)
@@ -97,32 +102,32 @@ namespace System { namespace Windows { namespace Interop
 
 	void CppCLI::OnLeftMouseUp( unsigned int x, unsigned int y )
 	{
-		m_GameEngine->OnLeftMouseUp(x,y);
+		if ( m_GameEngine ) m_GameEngine->OnLeftMouseUp(x,y);
 	}
 
 	void CppCLI::OnLeftMouseDown( unsigned int x, unsigned int y )
 	{
-		m_GameEngine->OnLeftMouseDown(x,y);
+		if ( m_GameEngine ) m_GameEngine->OnLeftMouseDown(x,y);
 	}
 
 	void CppCLI::ChangeMode( int mode )
 	{
-		this->m_GameEngine->ChangeMode(mode);
+		if ( m_GameEngine ) this->m_GameEngine->ChangeMode(mode);
 	}
 
 	void CppCLI::Update()
 	{
-		this->m_GameEngine->Update();
+		if ( m_GameEngine ) this->m_GameEngine->Update();
 	}
 
 	void CppCLI::SetWindowFocused( bool value )
 	{
-		this->m_GameEngine->SetWindowFocused(value);
+		if ( m_GameEngine ) this->m_GameEngine->SetWindowFocused(value);
 	}
 
 	void CppCLI::SaveWorld()
 	{
-		this->m_GameEngine->SaveWorld();
+		if ( m_GameEngine ) this->m_GameEngine->SaveWorld();
 	}
 
 	void CppCLI::SetCreateModelPath( String^ filePath )

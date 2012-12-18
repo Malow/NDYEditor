@@ -683,5 +683,17 @@ namespace Example
             m_GameEngine.SetBrushAttr("Tex4", this.ComboBox_Tex4.Text);
         }
 
+        private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)
+        {
+        }
+
+        private void NDYEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (m_GameEngine != null)
+            {
+                m_GameEngine.Shutdown();
+            }
+        }
+
     }
 }

@@ -53,7 +53,7 @@ public:
 	void SetHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
 
 	// Returns The Texture Name (0<=index<4)
-	const std::string& GetTextureName( unsigned int index ) const;
+	std::string GetTextureName( unsigned int index ) const;
 	void SetTextureName( unsigned int index, const std::string& name );
 
 	// Inline Functions

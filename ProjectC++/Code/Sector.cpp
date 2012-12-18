@@ -85,7 +85,7 @@ Vector4 Sector::GetBlendingAt( unsigned int x, unsigned int y ) const
 	return vec;
 }
 
-const std::string& Sector::GetTextureName( unsigned int index ) const
+std::string Sector::GetTextureName( unsigned int index ) const
 {
 	if ( index > 3 ) throw("Index Out Of Range");
 
