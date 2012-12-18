@@ -6,6 +6,8 @@
 #include "Entity.h"
 #include <string>
 
+static const unsigned int SECTOR_WORLD_SIZE = 32;
+
 class World;
 
 class WorldLoadedEvent : public Event
@@ -90,10 +92,15 @@ public:
 	// Load All Sectors
 	void LoadAllSectors();
 
-	// Modify Functions
+	// Modify Height Functions
 	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
 	float GetHeightAt( unsigned int x, unsigned int y );
 	void SetHeightAt( unsigned int x, unsigned int y, float value );
+
+	// Modify Blend Functions
+	void ModifyBlendingAt( unsigned int x, unsigned int y, const Vector4& val );
+	Vector4 GetBlendingAt( unsigned int x, unsigned int y );
+	void SetBlendingAt(unsigned int x, unsigned int y, const Vector4& val );
 
 	// Entity Functions
 	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
@@ -109,11 +116,13 @@ public:
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 
 	// Data Access
-	void GetEntitiesInCircle(Vector3 pos, float radius, std::vector<Entity*>& entityVector);
-	void GetSectorsInCicle( const Vector2& center, float radius, std::vector<Sector*>& out );
-	void GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out );
+	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
+	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
+	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
+	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
 
 protected:
 	// Engine Events
 	virtual void onEvent( Event* e );
+	
 };

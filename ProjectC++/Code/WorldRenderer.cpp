@@ -184,7 +184,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
 	CollisionData cd;
 	std::vector<Entity*> closeEntities;
-	zWorld->GetEntitiesInCircle(cam->GetPosition(), 200.0f, closeEntities);
+	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
 
 	returnPointer = closeEntities.at(0);
 	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), 
@@ -242,7 +242,10 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 	{
 		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
 		Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
-		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(32.0f,1.0f,32.0f), SECTOR_LENGTH+1);
+
+		zTerrain[tIndex] = zGraphics->CreateTerrain(pos,
+			Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE),
+			SECTOR_HEIGHT_SIZE);
 
 		// Special Sector Textures for 0,0
 		if ( x == 0 && y == 0 )
@@ -266,7 +269,7 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
 
-		zTerrain[tIndex]->SetBlendMap( SECTOR_LENGTH, zWorld->GetSector(x, y)->GetBlendMap() );
+		zTerrain[tIndex]->SetBlendMap( SECTOR_BLEND_SIZE, zWorld->GetSector(x, y)->GetBlendMap() );
 
 		// Height Map
 		UpdateSectorHeightMap(x,y);

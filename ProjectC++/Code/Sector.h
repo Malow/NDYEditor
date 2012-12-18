@@ -4,24 +4,27 @@
 #include "Vector.h"
 #include <vector>
 
-static const int SECTOR_LENGTH = 32;
-static const int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
+static const unsigned int SECTOR_LENGTH = 32;
+static const unsigned int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
+static const unsigned int SECTOR_HEIGHT_SIZE = SECTOR_LENGTH+1;
+static const unsigned int TEXTURE_NAME_LENGTH = 100;
 
 class Sector
 {
 private:
-	float zHeightMap[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
+	float zHeightMap[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	bool zEditedFlag;
+
+	// Texture Names
+	char zTextureNames[TEXTURE_NAME_LENGTH][4];
 
 public:
 	/*Default functions.*/
 	Sector();
 	virtual ~Sector();
 
-	/*
-	Sets the edited flag
-	*/
+	// Sets the edited flag
 	void Reset();
 
 	// Returns the blend map as a float array where each pixel is 4 floats.
@@ -48,6 +51,10 @@ public:
 	Throws when out of bounds
 	*/
 	void SetHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
+
+	// Returns The Texture Name (0<=index<4)
+	const std::string& GetTextureName( unsigned int index ) const;
+	void SetTextureName( unsigned int index, const std::string& name );
 
 	// Inline Functions
 	inline int GetSectorLength() { return SECTOR_LENGTH; }

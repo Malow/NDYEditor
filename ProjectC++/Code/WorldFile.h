@@ -4,6 +4,8 @@
 #include <fstream>
 #include "Sector.h"
 #include "Observer.h"
+#include "WorldEvents.h"
+
 
 /*
 File Order:
@@ -18,40 +20,13 @@ enum WORLDFILE_OPENMODE
 	OPEN_EDIT = 3
 };
 
-class WorldFile;
-
-struct WorldFileHeader
+class WorldFileHeader
 {
+public:
 	unsigned int width;
 	unsigned int height;
 
 	WorldFileHeader() : width(10), height(10) {}
-};
-
-class WorldHeaderLoadedEvent : public Event
-{
-public:
-	WorldFile* file;
-	const WorldFileHeader& header;
-
-	WorldHeaderLoadedEvent( WorldFile* file, const WorldFileHeader& header ) :
-		file(file),
-		header(header)
-	{
-	}
-};
-
-class WorldHeaderCreateEvent : public Event
-{
-public:
-	WorldFile* file;
-	WorldFileHeader& header;
-
-	WorldHeaderCreateEvent( WorldFile* file, WorldFileHeader& header ) : 
-		file(file),
-		header(header)
-	{
-	}
 };
 
 class WorldFile : public Observed

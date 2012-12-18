@@ -13,7 +13,8 @@ enum MODE
 	PLACE,
 	RAISE,
 	LOWER,
-	PLACEBRUSH
+	PLACEBRUSH,
+	TEXTUREBRUSH
 };
 
 class GameEngine : public Observer

@@ -202,17 +202,45 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				for( unsigned int x = cd.posx - zBrushSize; x < cd.posx + zBrushSize; ++x )
+				std::vector<Vector2> nodes;
+				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
 				{
-					for( unsigned int y = cd.posz - zBrushSize; y < cd.posz + zBrushSize; ++y )
+					for( unsigned int x=0; x<nodes.size(); ++x )
 					{
-						float distanceFactor = zBrushSize - Vector2(cd.posx - x, cd.posz - y).GetLength();
+						float distanceFactor = zBrushSize - Vector2(cd.posx - nodes[x].x, cd.posz - nodes[x].y).GetLength();
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
 
 						try 
 						{
-							zWorld->ModifyHeightAt(x,y,(zMode==MODE::LOWER?-0.5f:0.5f)*distanceFactor);
+							zWorld->ModifyHeightAt(nodes[x].x,nodes[x].y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
+						}
+						catch(...)
+						{
+						}
+					}
+				}
+			}
+			zBrushLastPos = Vector2(cd.posx, cd.posz);
+			zLeftMouseDown = true;
+		}
+		else if ( zMode == MODE::TEXTUREBRUSH )
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				std::vector<Vector2> nodes;
+				if ( zWorld->GetTextureNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
+				{
+					for( unsigned int x=0; x<nodes.size(); ++x )
+					{
+						float distanceFactor = zBrushSize - Vector2(cd.posx - nodes[x].x, cd.posz - nodes[x].y).GetLength();
+						if ( distanceFactor < 0 ) continue;
+						distanceFactor /= zBrushSize;
+
+						try 
+						{
+							//zWorld->ModifyHeightAt(nodes[x].x,nodes[x].y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
 						}
 						catch(...)
 						{
@@ -281,9 +309,8 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 				float x;
 				float z;
 				int temp = zBrushSize * 1000;
-				vector<Entity*> insideCicrle;
-				zWorld->GetEntitiesInCircle(Vector3(cd.posx, cd.posy, cd.posz), zBrushSize, insideCicrle);
-				if(insideCicrle.size() < zBrushStrength)
+				vector<Entity*> insideCircle;
+				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle) < zBrushStrength )
 				{
 					theta = (rand() / (float)RAND_MAX) * M_PI * 2;
 					length = (rand() / (float)RAND_MAX) * zBrushSize;
@@ -552,7 +579,7 @@ void GameEngine::MouseMove( int x, int y )
 	bool checkCollision = false;
 
 	if ( zDrawBrush ) checkCollision = true;
-	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH) checkCollision = true;
+	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH || zMode == TEXTUREBRUSH ) checkCollision = true;
 
 	if ( checkCollision && zWorldRenderer )
 	{

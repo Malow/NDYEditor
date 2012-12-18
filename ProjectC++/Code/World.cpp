@@ -94,10 +94,12 @@ bool World::CreateEntity( Vector3 pos, ENTITYTYPE entityType, std::string filePa
 
 void World::SetHeightAt( unsigned int x, unsigned int y, float value )
 {
-	unsigned int sectorx = x / SECTOR_LENGTH;
-	unsigned int sectory = y / SECTOR_LENGTH;
-	unsigned int localx = x % SECTOR_LENGTH;
-	unsigned int localy = y % SECTOR_LENGTH;
+	unsigned int sectorx = x / SECTOR_WORLD_SIZE;
+	unsigned int sectory = y / SECTOR_WORLD_SIZE;
+
+	// Snap Local Coordinates
+	unsigned int localx = (x % SECTOR_WORLD_SIZE);
+	unsigned int localy = (y % SECTOR_WORLD_SIZE);
 
 	Sector* sector = GetSector(sectorx, sectory);
 	sector->SetHeightAt(localx, localy, value);
@@ -130,8 +132,8 @@ void World::SetHeightAt( unsigned int x, unsigned int y, float value )
 
 float World::GetHeightAt( unsigned int x, unsigned int y )
 {
-	Sector* sector = GetSector(x/SECTOR_LENGTH,y/SECTOR_LENGTH);
-	return sector->GetHeightAt(x%SECTOR_LENGTH,y%SECTOR_LENGTH);
+	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
+	return sector->GetHeightAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE);
 }
 
 
@@ -188,7 +190,7 @@ void World::SaveFileAs( const std::string& fileName )
 
 Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
 {
-	return GetSector( (unsigned int)(pos.x / (float)SECTOR_LENGTH), (unsigned int)(pos.y / (float)SECTOR_LENGTH) );
+	return GetSector( (unsigned int)(pos.x / (float)SECTOR_WORLD_SIZE), (unsigned int)(pos.y / (float)SECTOR_WORLD_SIZE) );
 }
 
 
@@ -271,45 +273,91 @@ void World::LoadAllSectors()
 }
 
 
-void World::GetEntitiesInCircle( Vector3 pos, float radius, std::vector<Entity*>& entityVector )
+unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const
 {
-	radius = pow(radius, 2);
-	for(int i = 0; i < zEntities.size(); i++)
+	unsigned int counter=0;
+
+	for(auto i = zEntities.cbegin(); i != zEntities.cend(); i++)
 	{
-		if((zEntities.at(i)->GetPosition() - pos).GetLengthSquared() < radius)
+		Vector2 pos( (*i)->GetPosition().x, (*i)->GetPosition().z );
+		if( Vector2(center-pos).GetLength() < radius)
 		{
-			entityVector.push_back(zEntities.at(i));
+			out.push_back(*i);
+			counter++;
 		}
 	}
-	return;
+
+	return counter;
 }
 
 
-// TODO: Test It
-void World::GetSectorsInCicle( const Vector2& center, float radius, std::vector<Sector*>& out )
+unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std::vector<Vector2>& out ) const
 {
-	int centerX = center.x / SECTOR_LENGTH;
-	int centerY = center.y / SECTOR_LENGTH;
-	int radiusDiv = radius / SECTOR_LENGTH;
+	unsigned int counter=0;
 
-	for( unsigned int x=center.x - radius; x < center.x + radius; ++x )
+	// Calculate Height Node Density
+	float density = 1.0f/(float)SECTOR_WORLD_SIZE;
+
+	// Snap Center To Closest Position
+	float centerSnapX = floor( center.x * density );
+	float centerSnapY = floor( center.y * density );
+
+	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
-		if ( x < 0 || x > GetNumSectorsWidth() ) continue;
-		for( unsigned int y=center.y - radius; y < center.y + radius; ++y)
+		// Outside World
+		if ( x < 0 || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			continue;
+
+		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
 		{
-			if ( y < 0 || y > GetNumSectorsHeight() ) continue;
-			if ( DoesIntersect( Rect(Vector2(x*SECTOR_LENGTH,y*SECTOR_LENGTH),Vector2(SECTOR_LENGTH,SECTOR_LENGTH)), Circle(center,radius) ) )
+			// Outside World
+			if ( y < 0 || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+				continue;
+
+			if ( Circle(center,radius).IsInside(Vector2(x,y) ) )
 			{
-				out.push_back( GetSector(x,y) );
+				out.push_back( Vector2(x,y) );
+				counter++;
 			}
 		}
 	}
+
+	return counter;
 }
 
-// TODO: Make Function
-void World::GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out )
+
+unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const
 {
-	
+	unsigned int counter=0;
+
+	// Calculate Height Node Density
+	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_LENGTH );
+
+	// Snap Center To Closest Position
+	float centerSnapX = floor( center.x * density );
+	float centerSnapY = floor( center.y * density );
+
+	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
+	{
+		// Outside World
+		if ( x < 0 || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			continue;
+
+		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
+		{
+			// Outside World
+			if ( y < 0 || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+				continue;
+
+			if ( Circle(center,radius).IsInside(Vector2(x,y) ) )
+			{
+				out.push_back( Vector2(x,y) );
+				counter++;
+			}
+		}
+	}
+
+	return counter;
 }
 
 
@@ -341,4 +389,62 @@ void World::RemoveEntity( Entity* entity )
 	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
 	delete *i;
 	zEntities.erase(i);
+}
+
+
+unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const
+{
+	unsigned int counter=0;
+
+	// Calculate Height Node Density
+	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_BLEND_SIZE );
+
+	// Snap Center To Closest Position
+	float centerSnapX = floor( center.x * density );
+	float centerSnapY = floor( center.y * density );
+
+	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
+	{
+		// Outside World
+		if ( x < 0 || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			continue;
+
+		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
+		{
+			// Outside World
+			if ( y < 0 || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+				continue;
+
+			if ( Circle(center,radius).IsInside(Vector2(x,y) ) )
+			{
+				out.push_back( Vector2(x,y) );
+				counter++;
+			}
+		}
+	}
+
+	return counter;
+}
+
+
+Vector4 World::GetBlendingAt( unsigned int x, unsigned int y )
+{
+	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
+	return sector->GetBlendingAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE);
+}
+
+
+void World::ModifyBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
+{
+	if ( val.GetLength() > 0.0f )
+	{
+		SetBlendingAt( x,y, GetBlendingAt(x,y) + val );
+	}
+}
+
+
+void World::SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
+{
+	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
+	return sector->SetBlendingAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE,val);
 }

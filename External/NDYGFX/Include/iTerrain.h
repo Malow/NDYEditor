@@ -18,7 +18,7 @@ extern "C"
 			virtual ~iTerrain() {}
 
 		public:
-			//Returns the Y-position on the terrain at x,z.
+			//Returns the Y-position in local space on the terrain at x,z in local space.
 			virtual float GetYPositionAt(float x, float z) const throw(const char*) = 0; 
 
 			//Sets the scale for the terrain.
@@ -31,6 +31,8 @@ extern "C"
 			virtual void SetBlendMap(unsigned int size, float const* const data) = 0;
 			//Set diffuse color.
 			virtual void SetDiffuseColor(const Vector3& color) = 0;
+			//Set the number of times a texture shall repeat over a surface.
+			virtual void SetTextureScale(float textureScale = 1.0f) = 0; //**tillman - default value**
 
 
 			/*virtual Vector3 GetPosition() const = 0;

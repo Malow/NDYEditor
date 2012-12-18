@@ -46,6 +46,9 @@
     <ClInclude Include="Code\CircleAndRect.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="Code\WorldEvents.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldRenderer.cpp">

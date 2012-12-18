@@ -19,6 +19,7 @@
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\World.h" />
+    <ClInclude Include="Code\WorldEvents.h" />
     <ClInclude Include="Code\WorldFile.h" />
     <ClInclude Include="Code\WorldRenderer.h" />
     <ClInclude Include="Include\GameEngineWrapper.h" />
