@@ -13,7 +13,8 @@ enum MODE
 	PLACE,
 	RAISE,
 	LOWER,
-	PLACEBRUSH
+	PLACEBRUSH,
+	DRAWTEX
 };
 
 class GameEngine : public Observer
@@ -71,7 +72,9 @@ public:
 	void RemoveSelectedEntities();
 
 	void SetBrushAttr(char* info, float size);
-	void GetBrushSize(char* info, float& size);
+	void SetBrushAttr(char* info, char* stringValue);
+	void GetBrushAttr(char* info, float& size);
+	void GetBrushAttr(char* info, char* string);
 	void MouseInsideFrame(bool flag);
 	void MouseMove(int x, int y);
 	void ChangeMode(int mode);

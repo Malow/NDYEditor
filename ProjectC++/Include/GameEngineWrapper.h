@@ -42,7 +42,9 @@ public:
 	void RemoveSelectedEntities();
 
 	void SetBrushAttr(char* info, float size);
-	void GetBrushSize(char* info, float& size);
+	void SetBrushAttr(char* info, char* stringValue);
+	void GetBrushAttr(char* info, float& size);
+	void GetBrushAttr(char* info, char* tempString);
 	void ChangeMode(int mode);
 	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);

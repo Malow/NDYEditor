@@ -22,7 +22,8 @@ namespace Example
         PLACE,
         RAISE,
         LOWER,
-        PLACEBRUSH
+        PLACEBRUSH,
+        DRAWTEX
     }
     public partial class NDYEditor : Form
     {
@@ -193,6 +194,17 @@ namespace Example
 
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.RenderBox_LeftMouseDown(sender, e);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                this.RenderBox_RightMouseDown(sender, e);
+            }
+        }
+        private void RenderBox_LeftMouseDown(object sender, MouseEventArgs e)
+        {
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
             {
                 this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.Text);
@@ -212,6 +224,29 @@ namespace Example
                 switchMode();
                 m_GameEngine.ChangeMode((int)m_mode);
             }
+        }
+        private void RenderBox_RightMouseDown(object sender, MouseEventArgs e)
+        {
+            if (this.m_mode == MODE.DRAWTEX)
+            {
+                string temp;
+                m_GameEngine.GetBrushAttr("Tex1", out temp);
+                this.ComboBox_Tex1.Text = temp;
+
+                m_GameEngine.GetBrushAttr("Tex2", out temp);
+                this.ComboBox_Tex2.Text = temp;
+
+                m_GameEngine.GetBrushAttr("Tex3", out temp);
+                this.ComboBox_Tex3.Text = temp;
+
+                m_GameEngine.GetBrushAttr("Tex4", out temp);
+                this.ComboBox_Tex4.Text = temp;
+
+                this.Panel_Textures.Show();
+                this.Panel_Textures.BringToFront();
+            }
+
+
         }
         void GetAllSelectedInfo()
         {
@@ -300,6 +335,7 @@ namespace Example
         private void NDYEditor_Load(object sender, EventArgs e)
         {
             this.Load_Models();
+            this.Load_Textures();
         }
 
         private void Load_Models()
@@ -316,6 +352,23 @@ namespace Example
                 this.ComboBox_Model_Brush.Text = files[i].ToString();
             }
         }
+        private void Load_Textures()
+        {
+            DirectoryInfo di = new DirectoryInfo("Media/Textures/");
+            FileInfo[] files = di.GetFiles();
+            for (int i = 0; i < files.Length; i++)
+            {
+                //if(files[i].ToString() != "scale.obj")
+                this.ComboBox_Tex1.Items.Add(files[i].ToString());
+                this.ComboBox_Tex2.Items.Add(files[i].ToString());
+                this.ComboBox_Tex3.Items.Add(files[i].ToString());
+                this.ComboBox_Tex4.Items.Add(files[i].ToString());
+            }
+            this.ComboBox_Tex1.Text = files[0].ToString();
+            this.ComboBox_Tex2.Text = files[0].ToString();
+            this.ComboBox_Tex3.Text = files[0].ToString();
+            this.ComboBox_Tex4.Text = files[0].ToString();
+        }
 
         private void btnPlaceObject_Click(object sender, EventArgs e)
         {
@@ -330,10 +383,14 @@ namespace Example
             this.Panel_ObjectInfo.Hide();
             this.Panel_PlaceObject.Hide();
             this.Panel_Lower_Raise_Ground.Hide();
+            this.Panel_Tex_Picker.Hide();
+            this.Panel_Textures.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
             this.Panel_Lower_Raise_Ground.SendToBack();
+            this.Panel_Tex_Picker.SendToBack();
+            this.Panel_Textures.SendToBack();
         }
 
         private void switchMode()
@@ -400,7 +457,7 @@ namespace Example
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
                 float temp;
-                m_GameEngine.GetBrushSize("InnerCircle", out temp);
+                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 this.TextBox_BothCircles_Size.Text = temp.ToString();
             }
             else if (this.m_mode == MODE.PLACEBRUSH)
@@ -412,12 +469,26 @@ namespace Example
                 this.Panel_PlaceBrush.BringToFront();
 
                 float temp;
-                m_GameEngine.GetBrushSize("InnerCircle", out temp);
+                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 this.TextBox_BrushPlace_Inner.Text = temp.ToString();
 
-                m_GameEngine.GetBrushSize("Strength", out temp);
+                m_GameEngine.GetBrushAttr("Strength", out temp);
                 this.TextBox_StrengthCircle.Text = temp.ToString();
             }
+            else if (this.m_mode == MODE.DRAWTEX)
+            {
+                btn_DrawTex.Focus();
+                this.hideAll();
+
+                this.Panel_Tex_Picker.Show();
+                this.Panel_Tex_Picker.BringToFront();
+
+                this.setDrawTex();
+            }
+        }
+        private void setDrawTex(object sender, EventArgs e)
+        {
+            this.setDrawTex();
         }
 
         private void btnFPS_Click(object sender, EventArgs e)
@@ -557,6 +628,59 @@ namespace Example
             {
                 m_GameEngine.SetBrushAttr("Strength", 0.0f);
             }
+        }
+
+        private void btn_Browse_Tex1_Click(object sender, EventArgs e)
+        {
+            this.folderBrowserDialog1.SelectedPath = Application.StartupPath;
+            this.folderBrowserDialog1.ShowDialog();
+        }
+
+        private void btn_DrawTex_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.DRAWTEX;
+            switchMode();
+            m_GameEngine.ChangeMode((int)m_mode);
+        }
+
+        private void setDrawTex()
+        {
+            if (this.RadioBtn_Tex1.Checked == true)
+            {
+                m_GameEngine.SetBrushAttr("DrawTex", 0);
+            }
+            else if (this.RadioBtn_Tex2.Checked == true)
+            {
+                m_GameEngine.SetBrushAttr("DrawTex", 1);
+            }
+            else if (this.RadioBtn_Tex3.Checked == true)
+            {
+                m_GameEngine.SetBrushAttr("DrawTex", 2);
+            }
+            else if (this.RadioBtn_Tex4.Checked == true)
+            {
+                m_GameEngine.SetBrushAttr("DrawTex", 3);
+            }
+        }
+
+        private void ComboBox_Tex1_TextChanged(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushAttr("Tex1", this.ComboBox_Tex1.Text);
+        }
+
+        private void ComboBox_Tex2_TextChanged(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushAttr("Tex2", this.ComboBox_Tex2.Text);
+        }
+
+        private void ComboBox_Tex3_TextChanged(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushAttr("Tex3", this.ComboBox_Tex3.Text);
+        }
+
+        private void ComboBox_Tex4_TextChanged(object sender, EventArgs e)
+        {
+            m_GameEngine.SetBrushAttr("Tex4", this.ComboBox_Tex4.Text);
         }
 
     }
