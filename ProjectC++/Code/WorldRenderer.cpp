@@ -99,7 +99,13 @@ void WorldRenderer::onEvent( Event* e )
 			zEntities.erase(ERE->entity);
 		}
 	}
-
+	else if ( SectorBlendMapChanged* SHMC = dynamic_cast<SectorBlendMapChanged*>(e) )
+	{
+		if ( SHMC->world == zWorld )
+		{
+			UpdateSectorBlendMap( SHMC->sectorx, SHMC->sectory );
+		}
+	}
 }
 
 
@@ -232,6 +238,16 @@ void WorldRenderer::UpdateSectorHeightMap( unsigned int x, unsigned int y )
 		{
 			zTerrain[tIndex]->SetHeightMap( zWorld->GetSector(x, y)->GetHeightMap() );
 		}
+	}
+}
+
+
+void WorldRenderer::UpdateSectorBlendMap( unsigned int x, unsigned int y )
+{
+	if ( zWorld->IsSectorLoaded(x,y) )
+	{
+		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
+		zTerrain[tIndex]->SetBlendMap( SECTOR_BLEND_SIZE, zWorld->GetSector(x, y)->GetBlendMap() );
 	}
 }
 

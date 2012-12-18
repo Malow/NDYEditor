@@ -22,7 +22,7 @@ void Sector::Reset()
 	for( unsigned int x=0; x<SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE; ++x )
 	{
 		zBlendMap[x*4] = 1.0f;
-		zBlendMap[x*4+1] = 0.0f;
+		zBlendMap[x*4+1] = (x<1000? 0.0f : 1.0f);
 		zBlendMap[x*4+2] = 0.0f;
 		zBlendMap[x*4+3] = 0.0f;
 	}
@@ -56,30 +56,36 @@ void Sector::SetHeightAt( unsigned int x, unsigned int y, float value ) throw(co
 }
 
 
-void Sector::SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
+void Sector::SetBlendingAt( float x, float y, const Vector4& val )
 {
 	if ( x >= SECTOR_BLEND_SIZE || y >= SECTOR_BLEND_SIZE )
 		throw("Out Of Bounds!");
 
-	for( unsigned int x=0; x<4; ++x )
+	float scaledX = (x / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+	float scaledY = (y / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+
+	for( unsigned int i=0; i<4; ++i )
 	{
-		zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + 0 ] = val[x];
+		zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ] = val[i];
 	}
 
 	SetEdited(true);
 }
 
 
-Vector4 Sector::GetBlendingAt( unsigned int x, unsigned int y ) const
+Vector4 Sector::GetBlendingAt( float x, float y ) const
 {
 	if ( x >= SECTOR_BLEND_SIZE || y >= SECTOR_BLEND_SIZE )
 		throw("Out Of Bounds!");
 
+	float scaledX = (x / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+	float scaledY = (y / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+
 	Vector4 vec;
 
-	for( unsigned int x=0; x<4; ++x )
+	for( unsigned int i=0; i<4; ++i )
 	{
-		vec[x] = zBlendMap[ (y * (SECTOR_BLEND_SIZE) + x) * 4 + x];
+		vec[i] = zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ];
 	}
 
 	return vec;

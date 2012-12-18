@@ -27,4 +27,5 @@ public:
 protected:
 	void UpdateSectorHeightMap( unsigned int x, unsigned int y );
 	void UpdateSector( unsigned int x, unsigned int y );
+	void UpdateSectorBlendMap( unsigned int x, unsigned int y );
 };

@@ -400,8 +400,8 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_BLEND_SIZE );
 
 	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x * density );
-	float centerSnapY = floor( center.y * density );
+	float centerSnapX = floor( center.x * density ) / density;
+	float centerSnapY = floor( center.y * density ) / density;
 
 	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
@@ -427,14 +427,14 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 }
 
 
-Vector4 World::GetBlendingAt( unsigned int x, unsigned int y )
+Vector4 World::GetBlendingAt( float x, float y )
 {
 	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
-	return sector->GetBlendingAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE);
+	return sector->GetBlendingAt(fmod(x,SECTOR_WORLD_SIZE),fmod(y,SECTOR_WORLD_SIZE));
 }
 
 
-void World::ModifyBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
+void World::ModifyBlendingAt( float x, float y, const Vector4& val )
 {
 	if ( val.GetLength() > 0.0f )
 	{
@@ -443,8 +443,14 @@ void World::ModifyBlendingAt( unsigned int x, unsigned int y, const Vector4& val
 }
 
 
-void World::SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val )
+void World::SetBlendingAt( float x, float y, const Vector4& val )
 {
 	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
-	return sector->SetBlendingAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE,val);
+	sector->SetBlendingAt(fmod(x,SECTOR_WORLD_SIZE),fmod(y,SECTOR_WORLD_SIZE),val);
+
+	NotifyObservers( &SectorBlendMapChanged(this, 
+		x/SECTOR_WORLD_SIZE,
+		y/SECTOR_WORLD_SIZE,
+		fmod(x,SECTOR_WORLD_SIZE),
+		fmod(y,SECTOR_WORLD_SIZE)) );
 }

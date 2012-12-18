@@ -4,6 +4,7 @@
 #include "Vector.h"
 #include <vector>
 
+static const unsigned int SECTOR_WORLD_SIZE = 32;
 static const unsigned int SECTOR_LENGTH = 32;
 static const unsigned int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
 static const unsigned int SECTOR_HEIGHT_SIZE = SECTOR_LENGTH+1;
@@ -34,10 +35,10 @@ public:
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
 	// Sets texture blending at point
-	void SetBlendingAt( unsigned int x, unsigned int y, const Vector4& val );
+	void SetBlendingAt( float x, float y, const Vector4& val );
 
 	// Returns the texture blending at point
-	Vector4 GetBlendingAt( unsigned int x, unsigned int y ) const;
+	Vector4 GetBlendingAt( float x, float y ) const;
 
 	/*
 	Get the value at point

@@ -6,68 +6,6 @@
 #include "Entity.h"
 #include <string>
 
-static const unsigned int SECTOR_WORLD_SIZE = 32;
-
-class World;
-
-class WorldLoadedEvent : public Event
-{
-public:
-	World* world;
-	WorldLoadedEvent( World* world ) : world(world) {}
-};
-
-class SectorLoadedEvent : public Event
-{
-public:
-	World* world;
-	unsigned int x,y;
-	SectorLoadedEvent( World* world, unsigned int x, unsigned int y ) : world(world), x(x), y(y) {}
-};
-
-class SectorHeightMapChanged : public Event
-{
-public:
-	World* world;
-	unsigned int sectorx, sectory, localx, localy;
-	SectorHeightMapChanged( World* world, unsigned int sectorx, unsigned int sectory, unsigned int localx, unsigned int localy ) :
-		world(world),
-		sectorx(sectorx),
-		sectory(sectory),
-		localx(localx),
-		localy(localy)
-	{
-	}
-};
-
-
-class SectorUnloadedEvent : public Event
-{
-public:
-	World* world;
-	Vector2 sector;
-	SectorUnloadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
-};
-
-
-class EntityLoadedEvent : public Event
-{
-public:
-	World* world;
-	Entity* entity;
-	std::string fileName;
-	EntityLoadedEvent( World* world, Entity* entity, const std::string fileName) : world(world), entity(entity), fileName(fileName){}
-};
-
-class EntityRemovedEvent : public Event
-{
-public:
-	World* world;
-	Entity* entity;
-	EntityRemovedEvent( World* world, Entity* entity ) : world(world), entity(entity) {}
-};
-
-
 
 class World : public Observed, public Observer
 {
@@ -98,9 +36,9 @@ public:
 	void SetHeightAt( unsigned int x, unsigned int y, float value );
 
 	// Modify Blend Functions
-	void ModifyBlendingAt( unsigned int x, unsigned int y, const Vector4& val );
-	Vector4 GetBlendingAt( unsigned int x, unsigned int y );
-	void SetBlendingAt(unsigned int x, unsigned int y, const Vector4& val );
+	void ModifyBlendingAt( float x, float y, const Vector4& val );
+	Vector4 GetBlendingAt( float x, float y );
+	void SetBlendingAt( float x, float y, const Vector4& val );
 
 	// Entity Functions
 	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);

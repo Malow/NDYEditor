@@ -19,8 +19,8 @@ GameEngine::GameEngine() :
 	zDrawBrush(false),
 	zMouseInsideFrame(false),
 	zLeftMouseDown(false),
-	zBrushStrength(1)		// 1 unit by default
-
+	zBrushStrength(1),		// 1 unit by default
+	zTexBrushSelectedTex(0)
 {
 }
 
@@ -243,9 +243,12 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
 
+						Vector4 drawColor(0.0f,0.0f,0.0f,0.0f);
+						drawColor[zTexBrushSelectedTex] = 1.0f;
+
 						try 
 						{
-							//zWorld->ModifyHeightAt(nodes[x].x,nodes[x].y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
+							zWorld->ModifyBlendingAt(nodes[x].x,nodes[x].y,drawColor);
 						}
 						catch(...)
 						{
@@ -673,7 +676,7 @@ void GameEngine::SetBrushAttr( char* info, float size )
 	}
 	else if(string(info) == "DrawTex")
 	{
-		// TODO Set what texture to draw (float from 0-3)
+		zTexBrushSelectedTex = (unsigned int)size;
 	}
 }
 
@@ -681,18 +684,14 @@ void GameEngine::SetBrushAttr( char* info, char* stringValue )
 {
 	if(string(info) == "Tex1")
 	{
-
 	}
 	else if(string(info) == "Tex2")
 	{
-
 	}
 	else if(string(info) == "Tex3")
 	{
-
 	}
 	else if(string(info) == "Tex4")
 	{
-
 	}
 }

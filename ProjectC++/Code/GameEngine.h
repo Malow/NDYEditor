@@ -44,6 +44,8 @@ private:
 
 	bool zLeftMouseDown;
 	Vector2 zBrushLastPos;
+
+	unsigned int zTexBrushSelectedTex;
 public:
 	GameEngine();
 	~GameEngine();
