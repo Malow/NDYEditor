@@ -210,7 +210,7 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
-	void CppCLI::GetBrushSize( String^ info, [Out] float% size )
+	void CppCLI::GetBrushAttr( String^ info, [Out] float% size )
 	{
 		char* lpText = nullptr;
 		float tempSize;
@@ -219,7 +219,7 @@ namespace System { namespace Windows { namespace Interop
 		{
 			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
 
-			m_GameEngine->GetBrushSize(lpText, tempSize);
+			m_GameEngine->GetBrushAttr(lpText, tempSize);
 		}
 		finally
 		{
@@ -227,6 +227,26 @@ namespace System { namespace Windows { namespace Interop
 		}
 		size = tempSize;
 	}
+	void CppCLI::GetBrushAttr( String^ info, [Out] String^% tempString )
+	{
+		char* lpText1 = nullptr;
+		char* lpText2 = new char[100];
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText1 = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+
+			m_GameEngine->GetBrushAttr(lpText1, lpText2);
+		}
+		finally
+		{
+			tempString = gcnew String(lpText2);
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText1)); // Free memory
+			delete lpText2;
+		}
+	}
+
 
 	void CppCLI::RemoveSelectedEntities()
 	{
@@ -263,6 +283,25 @@ namespace System { namespace Windows { namespace Interop
 		finally
 		{
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
+	void CppCLI::SetBrushAttr( String^ info, String^ stringValue )
+	{
+		char* lpText = nullptr;
+		char* lpText1 = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+			lpText1 = (char*)Marshal::StringToHGlobalAnsi(stringValue).ToPointer();
+
+			m_GameEngine->SetBrushAttr(lpText, lpText1);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText1)); // Free memory
 		}
 	}
 

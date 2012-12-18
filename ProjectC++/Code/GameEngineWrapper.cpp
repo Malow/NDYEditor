@@ -144,9 +144,14 @@ void GameEngineWrapper::SetSelectedObjectInfo( char* info, float x, float y, flo
 	m_GameEngine->SetSelectedObjectInfo(info, x, y, z);
 }
 
-void GameEngineWrapper::GetBrushSize( char* info, float& size )
+void GameEngineWrapper::GetBrushAttr( char* info, float& size )
 {
-	m_GameEngine->GetBrushSize(info, size);
+	m_GameEngine->GetBrushAttr(info, size);
+}
+
+void GameEngineWrapper::GetBrushAttr( char* info, char* tempString)
+{
+	m_GameEngine->GetBrushAttr(info, tempString);
 }
 
 void GameEngineWrapper::RemoveSelectedEntities()
@@ -173,5 +178,10 @@ void GameEngineWrapper::MouseMove( int x, int y )
 void GameEngineWrapper::SetBrushAttr( char* info, float size )
 {
 	m_GameEngine->SetBrushAttr(info, size);
+}
+
+void GameEngineWrapper::SetBrushAttr( char* info, char* stringValue )
+{
+	m_GameEngine->SetBrushAttr(info, stringValue);
 }
 

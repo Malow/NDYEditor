@@ -547,7 +547,7 @@ void GameEngine::onEvent( Event* e )
 	}
 }
 
-void GameEngine::GetBrushSize( char* info, float& size )
+void GameEngine::GetBrushAttr( char* info, float& size )
 {
 	if(string(info) == "InnerCircle") // Returns the inner circle size
 		size = zBrushSize;
@@ -556,6 +556,54 @@ void GameEngine::GetBrushSize( char* info, float& size )
 	if(string(info) == "Strength") // Returns the strength size
 		size = zBrushStrength;
 
+}
+
+void GameEngine::GetBrushAttr( char* info, char* SChar )
+{
+	std::string tempString = "";
+	if(std::string(info) == "Tex1")
+	{
+		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+		if(cd.collision)
+		{
+			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
+
+			tempString = "sallad.jpg"; // Only 100 long
+		}
+	}
+	else if(std::string(info) == "Tex2")
+	{
+		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+		if(cd.collision)
+		{
+			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
+
+			tempString = "Derp Herp_1.jpg"; // Only 100 long
+		}
+	}
+	else if(std::string(info) == "Tex3")
+	{
+		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+		if(cd.collision)
+		{
+			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
+
+			tempString = "Omnomnom.jpg"; // Only 100 long
+		}
+	}
+	else if(std::string(info) == "Tex4")
+	{
+		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+		if(cd.collision)
+		{
+			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
+
+			tempString = "huehuehue.jpg"; // Only 100 long
+		}
+	}
+	for(int i = 0; i < tempString.length(); i++)
+		SChar[i] = tempString[i];
+	SChar[tempString.length()] = 0;
 }
 
 
@@ -607,9 +655,39 @@ void GameEngine::MouseInsideFrame( bool flag )
 void GameEngine::SetBrushAttr( char* info, float size )
 {
 	if(string(info) == "InnerCircle") // sets the innercircle size
+	{
 		zBrushSize = size;
+	}
 	else if(string(info) == "OuterCircle") // sets the outercircle size
+	{
 		zBrushSizeExtra = size;
+	}
 	else if(string(info) == "Strength") // sets the strength size
+	{
 		zBrushStrength = size;
+	}
+	else if(string(info) == "DrawTex")
+	{
+		// TODO Set what texture to draw (float from 0-3)
+	}
+}
+
+void GameEngine::SetBrushAttr( char* info, char* stringValue )
+{
+	if(string(info) == "Tex1")
+	{
+
+	}
+	else if(string(info) == "Tex2")
+	{
+
+	}
+	else if(string(info) == "Tex3")
+	{
+
+	}
+	else if(string(info) == "Tex4")
+	{
+
+	}
 }

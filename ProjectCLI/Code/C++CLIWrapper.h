@@ -50,7 +50,9 @@ namespace System { namespace Windows { namespace Interop
 		void SaveWorld();
 		void OpenWorld( String^ filePath );
 		void SetBrushAttr(String^ info, float size );
-		void GetBrushSize(String^ info, [Out] float% size);
+		void SetBrushAttr(String^ info, String^ size );
+		void GetBrushAttr(String^ info, [Out] float% size);
+		void GetBrushAttr(String^ info, [Out] String^% tempString);
 
 		void RemoveSelectedEntities();
 
