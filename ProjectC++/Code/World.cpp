@@ -296,11 +296,11 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 	unsigned int counter=0;
 
 	// Calculate Height Node Density
-	float density = 1.0f/(float)SECTOR_WORLD_SIZE;
+	float density = (float)SECTOR_WORLD_SIZE/1.0f;
 
 	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x * density );
-	float centerSnapY = floor( center.y * density );
+	float centerSnapX = floor( center.x / density ) * density;
+	float centerSnapY = floor( center.y / density ) * density;
 
 	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
@@ -334,8 +334,8 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_LENGTH );
 
 	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x * density );
-	float centerSnapY = floor( center.y * density );
+	float centerSnapX = floor( center.x / density ) * density;
+	float centerSnapY = floor( center.y / density ) * density;
 
 	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
@@ -392,7 +392,8 @@ void World::RemoveEntity( Entity* entity )
 }
 
 
-unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const
+// TODO: Make it work correctly, Alexivan
+unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
 {
 	unsigned int counter=0;
 
@@ -400,24 +401,24 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_BLEND_SIZE );
 
 	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x * density ) / density;
-	float centerSnapY = floor( center.y * density ) / density;
+	float centerSnapX = floor( center.x / density ) * density;
+	float centerSnapY = floor( center.y / density ) * density;
 
 	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
 		// Outside World
-		if ( x < 0 || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		if ( x < 0.0f || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 			continue;
 
 		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
 		{
 			// Outside World
-			if ( y < 0 || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( y < 0.0f || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 				continue;
 
-			if ( Circle(center,radius).IsInside(Vector2(x,y) ) )
+			if ( Circle(Vector2(centerSnapX,centerSnapY),radius).IsInside(Vector2(x,y) ) )
 			{
-				out.push_back( Vector2(x,y) );
+				out.insert( Vector2(x,y) );
 				counter++;
 			}
 		}

@@ -86,10 +86,10 @@ void WorldRenderer::onEvent( Event* e )
 		Vector3 temp = EUE->entity->GetRotation();
 		zEntities[EUE->entity]->SetPosition(EUE->entity->GetPosition());
 
-		zEntities[EUE->entity]->SetQuaternion(Vector4(0, 0, 0, 1));
-		zEntities[EUE->entity]->RotateAxis(Vector3(1, 0, 0), EUE->entity->GetRotation().x * (3.1415 / 180));
-		zEntities[EUE->entity]->RotateAxis(Vector3(0, 1, 0), EUE->entity->GetRotation().y * (3.1415 / 180));
-		zEntities[EUE->entity]->RotateAxis(Vector3(0, 0, 1), EUE->entity->GetRotation().z * (3.1415 / 180));
+		zEntities[EUE->entity]->SetQuaternion(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		zEntities[EUE->entity]->RotateAxis(Vector3(1.0f, 0.0f, 0.0f), EUE->entity->GetRotation().x * (3.1415f / 180.0f));
+		zEntities[EUE->entity]->RotateAxis(Vector3(0.0f, 1.0f, 0.0f), EUE->entity->GetRotation().y * (3.1415f / 180.0f));
+		zEntities[EUE->entity]->RotateAxis(Vector3(0.0f, 0.0f, 1.0f), EUE->entity->GetRotation().z * (3.1415f / 180.0f));
 		if(EUE->entity->GetSelected())
 			zEntities[EUE->entity]->SetSpecialColor(COLOR::RED_COLOR);
 		else
@@ -274,10 +274,10 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 		{
 			// Blend Maps
 			const char* terrainTextures[4];
-			terrainTextures[0] = "Media/BallTexture.png";
-			terrainTextures[1] = "Media/TerrainTexture.png";
-			terrainTextures[2] = "Media/TerrainTexture.png";
-			terrainTextures[3] = "Media/TerrainTexture.png";
+			terrainTextures[0] = "Media/Red.png";
+			terrainTextures[1] = "Media/Green.png";
+			terrainTextures[2] = "Media/Blue.png";
+			terrainTextures[3] = "Media/BallTexture.png";
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
 		else
@@ -291,7 +291,8 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
 
-		zTerrain[tIndex]->SetBlendMap( SECTOR_BLEND_SIZE, zWorld->GetSector(x, y)->GetBlendMap() );
+		// Update Blend Map
+		UpdateSectorBlendMap(x,y);
 
 		// Height Map
 		UpdateSectorHeightMap(x,y);

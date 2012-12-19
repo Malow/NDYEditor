@@ -14,12 +14,12 @@ GameEngine::GameEngine() :
 	zWorld(0),
 	zWorldRenderer(0),
 	zLockMouseToCamera(0),
-	zBrushSize(3.0f),			// 3 Meters Brush By Default
+	zBrushSize(1.0f),			// 3 Meters Brush By Default
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
 	zMouseInsideFrame(false),
 	zLeftMouseDown(false),
-	zBrushStrength(1),		// 1 unit by default
+	zBrushStrength(1),			// 1 unit by default
 	zTexBrushSelectedTex(0)
 {
 }
@@ -234,12 +234,12 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				std::vector<Vector2> nodes;
+				std::set<Vector2> nodes;
 				if ( zWorld->GetTextureNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
 				{
-					for( unsigned int x=0; x<nodes.size(); ++x )
+					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
-						float distanceFactor = zBrushSize - Vector2(cd.posx - nodes[x].x, cd.posz - nodes[x].y).GetLength();
+						float distanceFactor = zBrushSize - Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
 
@@ -248,7 +248,7 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 						try 
 						{
-							zWorld->ModifyBlendingAt(nodes[x].x,nodes[x].y,drawColor);
+							zWorld->ModifyBlendingAt(i->x,i->y,drawColor);
 						}
 						catch(...)
 						{
@@ -405,7 +405,8 @@ void GameEngine::OpenWorld( char* msg )
 
 void GameEngine::SetWindowFocused( bool value )
 {
-	GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
+	if ( GetGraphics() )
+		GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
 }
 
 
@@ -663,11 +664,11 @@ void GameEngine::MouseInsideFrame( bool flag )
 
 void GameEngine::SetBrushAttr( char* info, float size )
 {
-	if(string(info) == "InnerCircle") // sets the innercircle size
+	if(string(info) == "InnerCircle") // sets the inner circle size
 	{
 		zBrushSize = size;
 	}
-	else if(string(info) == "OuterCircle") // sets the outercircle size
+	else if(string(info) == "OuterCircle") // sets the outer circle size
 	{
 		zBrushSizeExtra = size;
 	}

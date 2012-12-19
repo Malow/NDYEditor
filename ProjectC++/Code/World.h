@@ -57,7 +57,7 @@ public:
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
 	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
-	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
+	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 
 protected:
 	// Engine Events
