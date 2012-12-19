@@ -131,11 +131,9 @@ namespace Example
 
                     this.m_GameEngine.CreateWorld(xPos, yPos);
                     filePathKnown = false;
+                    this.toolStripStatusLabel1.Text = "Not Saved!";
                 }
             }
-
-            // talk to game engine here and make it create "a whole new world" :)
-
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -150,6 +148,7 @@ namespace Example
             fdlg.AddExtension = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
+                this.toolStripStatusLabel1.Text = "Not Saved!";
                 m_GameEngine.OpenWorld(fdlg.FileName);
                 this.filePathKnown = true;
             }
@@ -175,15 +174,16 @@ namespace Example
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.toolStripStatusLabel1.Text = "Saving!";
             if (!this.filePathKnown)
             {
                 this.saveAsToolStripMenuItem_Click(sender, e);
-                return;
             }
 			else
             {
                 m_GameEngine.SaveWorld();
             }
+            this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
         }
 
         
@@ -492,7 +492,7 @@ namespace Example
         }
         private void setDrawTex(object sender, EventArgs e)
         {
-            m_GameEngine.SetBrushAttr("DrawTex", float.Parse((sender as ComboBox).AccessibleName));
+            m_GameEngine.SetBrushAttr("DrawTex", float.Parse((sender as RadioButton).AccessibleName));
         }
 
         private void btnFPS_Click(object sender, EventArgs e)

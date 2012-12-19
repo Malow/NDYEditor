@@ -148,6 +148,8 @@ void GameEngine::ProcessFrame()
 			}
 		}
 	}
+
+	Sleep(0);
 }
 
 
@@ -667,6 +669,11 @@ void GameEngine::SetBrushAttr( char* info, float size )
 	if(string(info) == "InnerCircle") // sets the inner circle size
 	{
 		zBrushSize = size;
+	}
+	else if(string(info) == "InnerAndOuterCircle") // sets the outer circle size
+	{
+		zBrushSize = size;
+		zBrushSizeExtra = 0;
 	}
 	else if(string(info) == "OuterCircle") // sets the outer circle size
 	{
