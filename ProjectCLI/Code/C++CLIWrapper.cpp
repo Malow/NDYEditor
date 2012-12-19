@@ -194,9 +194,19 @@ namespace System { namespace Windows { namespace Interop
 		{
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
 		}
-		x = tempx;
-		y = tempy;
-		z = tempz;
+		if(info == "scale")
+		{
+			x = tempx * 20;
+			y = tempy * 20;
+			z = tempz * 20;
+		}
+		else
+		{
+			x = tempx;
+			y = tempy;
+			z = tempz;
+		}
+		
 	}
 
 	void CppCLI::SetSelectedObjectInfo( String^ info, float x, float y, float z )
@@ -206,8 +216,12 @@ namespace System { namespace Windows { namespace Interop
 		try
 		{
 			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
-
-			m_GameEngine->SetSelectedObjectInfo(lpText, x, y, z);
+			if(info == "scale")
+				m_GameEngine->SetSelectedObjectInfo(lpText, x * 0.05, y * 0.05, z * 0.05);
+			else
+			{
+				m_GameEngine->SetSelectedObjectInfo(lpText, x, y, z);
+			}
 		}
 		finally
 		{

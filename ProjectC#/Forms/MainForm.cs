@@ -76,10 +76,10 @@ namespace Example
                 //Run();
                 Application.DoEvents();
                 this.m_GameEngine.Update();
-                if (m_mode == MODE.MOVE)
+                /*if (m_mode == MODE.MOVE)
                 {
                     GetAllSelectedInfo();
-                }
+                }*/
             }
         }
 
@@ -326,12 +326,6 @@ namespace Example
             }
         }
 
-        private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            HelpMenu test = new HelpMenu();
-            test.Show();
-        }
-
         private void NDYEditor_Load(object sender, EventArgs e)
         {
             this.Load_Models();
@@ -385,12 +379,14 @@ namespace Example
             this.Panel_Lower_Raise_Ground.Hide();
             this.Panel_Tex_Picker.Hide();
             this.Panel_Textures.Hide();
+            this.Panel_PlaceBrush.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
             this.Panel_Lower_Raise_Ground.SendToBack();
             this.Panel_Tex_Picker.SendToBack();
             this.Panel_Textures.SendToBack();
+            this.Panel_PlaceBrush.SendToBack();
         }
 
         private void switchMode()
@@ -447,6 +443,13 @@ namespace Example
 
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
+
+                float temp;
+                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
+                this.TextBox_BothCircles_Size.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("Strength", out temp);
+                this.TextBox_Strength_RaiseLower.Text = temp.ToString();
             }
             else if (this.m_mode == MODE.RAISE)
             {
@@ -459,6 +462,9 @@ namespace Example
                 float temp;
                 m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 this.TextBox_BothCircles_Size.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("Strength", out temp);
+                this.TextBox_Strength_RaiseLower.Text = temp.ToString();
             }
             else if (this.m_mode == MODE.PLACEBRUSH)
             {
@@ -482,13 +488,11 @@ namespace Example
 
                 this.Panel_Tex_Picker.Show();
                 this.Panel_Tex_Picker.BringToFront();
-
-                this.setDrawTex();
             }
         }
         private void setDrawTex(object sender, EventArgs e)
         {
-            this.setDrawTex();
+            m_GameEngine.SetBrushAttr("DrawTex", float.Parse((sender as ComboBox).AccessibleName));
         }
 
         private void btnFPS_Click(object sender, EventArgs e)
@@ -502,36 +506,6 @@ namespace Example
             this.m_mode = MODE.SELECT;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-		private void SetSelecetedObjectInfo(string info)
-        {
-            if(info == "pos")
-                if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
-                        float.Parse(TextBox_Pos_Z.Text));
-            if(info == "rot")
-                if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
-                           float.Parse(TextBox_Rot_Z.Text));
-            if(info == "scale")
-                if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
-                           float.Parse(TextBox_Scale_Z.Text));
-        }
-
-        private void PosTextChanged(object sender, EventArgs e)
-        {
-            SetSelecetedObjectInfo("pos");
-        }
-
-        private void RotTextChanged(object sender, EventArgs e)
-        {
-            SetSelecetedObjectInfo("rot");
-        }
-
-        private void ScaleTextChanged(object sender, EventArgs e)
-        {
-            SetSelecetedObjectInfo("scale");
         }
 
         private void btn_RaiseGround_Click(object sender, EventArgs e)
@@ -570,27 +544,6 @@ namespace Example
         {
             m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
         }
-        private void SetBrushSize(float size)
-        {
-            m_GameEngine.SetBrushAttr("InnerCircle", size);
-        }
-        private void SetBrushSizeExtra(float size)
-        {
-            m_GameEngine.SetBrushAttr("OuterCircle", size);
-        }
-
-        private void TextBox_BothCircles_Size_TextChanged(object sender, EventArgs e)
-        {
-            if (this.TextBox_BothCircles_Size.Text != "")
-            {
-                this.SetBrushSize(float.Parse(this.TextBox_BothCircles_Size.Text));
-            }
-            else
-            {
-                this.SetBrushSize(0.0f);
-            }
-            this.SetBrushSizeExtra(0.0f);
-        }
 
         private void bnt_None_Click(object sender, EventArgs e)
         {
@@ -606,61 +559,11 @@ namespace Example
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void TextBox_BrushPlace_Inner_TextChanged(object sender, EventArgs e)
-        {
-            if (this.TextBox_BrushPlace_Inner.Text != "")
-            {
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BrushPlace_Inner.Text));
-            }
-            else
-            {
-                m_GameEngine.SetBrushAttr("InnerCircle", 0.0f);
-            }
-        }
-
-        private void TextBox_StrengthCircle_TextChanged(object sender, EventArgs e)
-        {
-            if (this.TextBox_StrengthCircle.Text != "") // CHANGE HERE
-            {
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_StrengthCircle.Text)); // CHANGE HERE
-            }
-            else
-            {
-                m_GameEngine.SetBrushAttr("Strength", 0.0f);
-            }
-        }
-
-        private void btn_Browse_Tex1_Click(object sender, EventArgs e)
-        {
-            this.folderBrowserDialog1.SelectedPath = Application.StartupPath;
-            this.folderBrowserDialog1.ShowDialog();
-        }
-
         private void btn_DrawTex_Click(object sender, EventArgs e)
         {
             this.m_mode = MODE.DRAWTEX;
             switchMode();
             m_GameEngine.ChangeMode((int)m_mode);
-        }
-
-        private void setDrawTex()
-        {
-            if (this.RadioBtn_Tex1.Checked == true)
-            {
-                m_GameEngine.SetBrushAttr("DrawTex", 0);
-            }
-            else if (this.RadioBtn_Tex2.Checked == true)
-            {
-                m_GameEngine.SetBrushAttr("DrawTex", 1);
-            }
-            else if (this.RadioBtn_Tex3.Checked == true)
-            {
-                m_GameEngine.SetBrushAttr("DrawTex", 2);
-            }
-            else if (this.RadioBtn_Tex4.Checked == true)
-            {
-                m_GameEngine.SetBrushAttr("DrawTex", 3);
-            }
         }
 
         private void ComboBox_Tex1_TextChanged(object sender, EventArgs e)
@@ -711,6 +614,33 @@ namespace Example
             {
                 e.Handled = true;
             }
+        }
+
+        private void SetSelecetedObjectInfo(object sender, EventArgs e)
+        {
+            string info = (sender as TextBox).AccessibleName;
+
+            if (info == "pos")
+                if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
+                        float.Parse(TextBox_Pos_Z.Text));
+            if (info == "rot")
+                if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
+                           float.Parse(TextBox_Rot_Z.Text));
+            if (info == "scale")
+                if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
+                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
+                           float.Parse(TextBox_Scale_Z.Text));
+        }
+
+        private void SetBrushAttr(object sender, EventArgs e)
+        {
+            if(sender is TextBox)
+                if((sender as TextBox).Text != "")
+                    m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, float.Parse((sender as TextBox).Text));
+                else
+                    m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, 0.0f);
         }
     }
 }

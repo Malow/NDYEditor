@@ -664,9 +664,14 @@ void GameEngine::SetBrushAttr( char* info, float size )
 	{
 		zBrushSize = size;
 	}
-	else if(string(info) == "OuterCircle") // sets the outercircle size
+	else if(string(info) == "OuterCircle")
 	{
 		zBrushSizeExtra = size;
+	}
+	else if(string(info) == "InnerAndOuterCircle") // sets the outercircle size
+	{
+		zBrushSize = size;
+		zBrushSizeExtra = 0;
 	}
 	else if(string(info) == "Strength") // sets the strength size
 	{
