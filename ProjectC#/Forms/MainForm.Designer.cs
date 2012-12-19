@@ -75,6 +75,12 @@
             this.RenderAndInfoSplitter = new System.Windows.Forms.SplitContainer();
             this.RenderBox = new System.Windows.Forms.Panel();
             this.InfoSplitter = new System.Windows.Forms.SplitContainer();
+            this.Panel_Tex_Picker = new System.Windows.Forms.Panel();
+            this.GroupBox_DrawTex = new System.Windows.Forms.GroupBox();
+            this.RadioBtn_Tex1 = new System.Windows.Forms.RadioButton();
+            this.RadioBtn_Tex4 = new System.Windows.Forms.RadioButton();
+            this.RadioBtn_Tex2 = new System.Windows.Forms.RadioButton();
+            this.RadioBtn_Tex3 = new System.Windows.Forms.RadioButton();
             this.Panel_Info = new System.Windows.Forms.Panel();
             this.Label_Scale = new System.Windows.Forms.Label();
             this.Label_Rot_Y = new System.Windows.Forms.Label();
@@ -97,21 +103,6 @@
             this.TextBox_Rot_Z = new System.Windows.Forms.TextBox();
             this.Label_Rot_X = new System.Windows.Forms.Label();
             this.TextBox_Rot_Y = new System.Windows.Forms.TextBox();
-            this.Panel_Tex_Picker = new System.Windows.Forms.Panel();
-            this.GroupBox_DrawTex = new System.Windows.Forms.GroupBox();
-            this.RadioBtn_Tex1 = new System.Windows.Forms.RadioButton();
-            this.RadioBtn_Tex4 = new System.Windows.Forms.RadioButton();
-            this.RadioBtn_Tex2 = new System.Windows.Forms.RadioButton();
-            this.RadioBtn_Tex3 = new System.Windows.Forms.RadioButton();
-            this.Panel_Textures = new System.Windows.Forms.Panel();
-            this.ComboBox_Tex4 = new System.Windows.Forms.ComboBox();
-            this.ComboBox_Tex3 = new System.Windows.Forms.ComboBox();
-            this.ComboBox_Tex2 = new System.Windows.Forms.ComboBox();
-            this.ComboBox_Tex1 = new System.Windows.Forms.ComboBox();
-            this.Label_Tex4 = new System.Windows.Forms.Label();
-            this.Label_Tex3 = new System.Windows.Forms.Label();
-            this.Label_Tex2 = new System.Windows.Forms.Label();
-            this.Label_Tex1 = new System.Windows.Forms.Label();
             this.Panel_PlaceBrush = new System.Windows.Forms.Panel();
             this.TextBox_StrengthCircle = new System.Windows.Forms.TextBox();
             this.Label_StrengthCircle = new System.Windows.Forms.Label();
@@ -121,6 +112,8 @@
             this.Label_Model_Brush = new System.Windows.Forms.Label();
             this.ComboBox_Model_Brush = new System.Windows.Forms.ComboBox();
             this.Panel_Lower_Raise_Ground = new System.Windows.Forms.Panel();
+            this.Label_RaiseLower_Strength = new System.Windows.Forms.Label();
+            this.TextBox_Strength_RaiseLower = new System.Windows.Forms.TextBox();
             this.Label_Circle = new System.Windows.Forms.Label();
             this.Label_InnerRing_Size = new System.Windows.Forms.Label();
             this.TextBox_BothCircles_Size = new System.Windows.Forms.TextBox();
@@ -134,7 +127,15 @@
             this.Panel_PlaceObject = new System.Windows.Forms.Panel();
             this.Lable_Model = new System.Windows.Forms.Label();
             this.Combo_Model = new System.Windows.Forms.ComboBox();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.Panel_Textures = new System.Windows.Forms.Panel();
+            this.ComboBox_Tex4 = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Tex3 = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Tex2 = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Tex1 = new System.Windows.Forms.ComboBox();
+            this.Label_Tex4 = new System.Windows.Forms.Label();
+            this.Label_Tex3 = new System.Windows.Forms.Label();
+            this.Label_Tex2 = new System.Windows.Forms.Label();
+            this.Label_Tex1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
             this.TopPanelSplitter.Panel1.SuspendLayout();
@@ -152,14 +153,14 @@
             this.InfoSplitter.Panel1.SuspendLayout();
             this.InfoSplitter.Panel2.SuspendLayout();
             this.InfoSplitter.SuspendLayout();
-            this.Panel_Info.SuspendLayout();
             this.Panel_Tex_Picker.SuspendLayout();
             this.GroupBox_DrawTex.SuspendLayout();
-            this.Panel_Textures.SuspendLayout();
+            this.Panel_Info.SuspendLayout();
             this.Panel_PlaceBrush.SuspendLayout();
             this.Panel_Lower_Raise_Ground.SuspendLayout();
             this.Panel_ObjectInfo.SuspendLayout();
             this.Panel_PlaceObject.SuspendLayout();
+            this.Panel_Textures.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -346,7 +347,6 @@
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
             this.helpToolStripMenuItem1.Size = new System.Drawing.Size(128, 24);
             this.helpToolStripMenuItem1.Text = "Help";
-            this.helpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // toolStripSeparator5
             // 
@@ -624,6 +624,7 @@
             // 
             // InfoSplitter
             // 
+            this.InfoSplitter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.InfoSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.InfoSplitter.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.InfoSplitter.IsSplitterFixed = true;
@@ -639,14 +640,97 @@
             // 
             // InfoSplitter.Panel2
             // 
-            this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceBrush);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Textures);
-            this.InfoSplitter.Size = new System.Drawing.Size(223, 624);
+            this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceBrush);
+            this.InfoSplitter.Size = new System.Drawing.Size(225, 626);
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.TabIndex = 0;
+            // 
+            // Panel_Tex_Picker
+            // 
+            this.Panel_Tex_Picker.Controls.Add(this.GroupBox_DrawTex);
+            this.Panel_Tex_Picker.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_Tex_Picker.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Tex_Picker.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_Tex_Picker.Name = "Panel_Tex_Picker";
+            this.Panel_Tex_Picker.Size = new System.Drawing.Size(223, 248);
+            this.Panel_Tex_Picker.TabIndex = 0;
+            this.Panel_Tex_Picker.Visible = false;
+            // 
+            // GroupBox_DrawTex
+            // 
+            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex1);
+            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex4);
+            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex2);
+            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex3);
+            this.GroupBox_DrawTex.Location = new System.Drawing.Point(16, 14);
+            this.GroupBox_DrawTex.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.GroupBox_DrawTex.Name = "GroupBox_DrawTex";
+            this.GroupBox_DrawTex.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.GroupBox_DrawTex.Size = new System.Drawing.Size(157, 149);
+            this.GroupBox_DrawTex.TabIndex = 4;
+            this.GroupBox_DrawTex.TabStop = false;
+            this.GroupBox_DrawTex.Text = "Texture Draw";
+            // 
+            // RadioBtn_Tex1
+            // 
+            this.RadioBtn_Tex1.AccessibleName = "1";
+            this.RadioBtn_Tex1.AutoSize = true;
+            this.RadioBtn_Tex1.Checked = true;
+            this.RadioBtn_Tex1.Location = new System.Drawing.Point(28, 30);
+            this.RadioBtn_Tex1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RadioBtn_Tex1.Name = "RadioBtn_Tex1";
+            this.RadioBtn_Tex1.Size = new System.Drawing.Size(89, 21);
+            this.RadioBtn_Tex1.TabIndex = 0;
+            this.RadioBtn_Tex1.TabStop = true;
+            this.RadioBtn_Tex1.Text = "Texture 1";
+            this.RadioBtn_Tex1.UseVisualStyleBackColor = true;
+            this.RadioBtn_Tex1.CheckedChanged += new System.EventHandler(this.setDrawTex);
+            // 
+            // RadioBtn_Tex4
+            // 
+            this.RadioBtn_Tex4.AccessibleName = "4";
+            this.RadioBtn_Tex4.AutoSize = true;
+            this.RadioBtn_Tex4.Location = new System.Drawing.Point(28, 108);
+            this.RadioBtn_Tex4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RadioBtn_Tex4.Name = "RadioBtn_Tex4";
+            this.RadioBtn_Tex4.Size = new System.Drawing.Size(89, 21);
+            this.RadioBtn_Tex4.TabIndex = 3;
+            this.RadioBtn_Tex4.TabStop = true;
+            this.RadioBtn_Tex4.Text = "Texture 4";
+            this.RadioBtn_Tex4.UseVisualStyleBackColor = true;
+            this.RadioBtn_Tex4.CheckedChanged += new System.EventHandler(this.setDrawTex);
+            // 
+            // RadioBtn_Tex2
+            // 
+            this.RadioBtn_Tex2.AccessibleName = "2";
+            this.RadioBtn_Tex2.AutoSize = true;
+            this.RadioBtn_Tex2.Location = new System.Drawing.Point(28, 54);
+            this.RadioBtn_Tex2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RadioBtn_Tex2.Name = "RadioBtn_Tex2";
+            this.RadioBtn_Tex2.Size = new System.Drawing.Size(89, 21);
+            this.RadioBtn_Tex2.TabIndex = 1;
+            this.RadioBtn_Tex2.TabStop = true;
+            this.RadioBtn_Tex2.Text = "Texture 2";
+            this.RadioBtn_Tex2.UseVisualStyleBackColor = true;
+            this.RadioBtn_Tex2.CheckedChanged += new System.EventHandler(this.setDrawTex);
+            // 
+            // RadioBtn_Tex3
+            // 
+            this.RadioBtn_Tex3.AccessibleName = "3";
+            this.RadioBtn_Tex3.AutoSize = true;
+            this.RadioBtn_Tex3.Location = new System.Drawing.Point(28, 82);
+            this.RadioBtn_Tex3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RadioBtn_Tex3.Name = "RadioBtn_Tex3";
+            this.RadioBtn_Tex3.Size = new System.Drawing.Size(89, 21);
+            this.RadioBtn_Tex3.TabIndex = 2;
+            this.RadioBtn_Tex3.TabStop = true;
+            this.RadioBtn_Tex3.Text = "Texture 3";
+            this.RadioBtn_Tex3.UseVisualStyleBackColor = true;
+            this.RadioBtn_Tex3.CheckedChanged += new System.EventHandler(this.setDrawTex);
             // 
             // Panel_Info
             // 
@@ -675,7 +759,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
             this.Panel_Info.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(223, 250);
+            this.Panel_Info.Size = new System.Drawing.Size(223, 248);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -708,21 +792,24 @@
             // 
             // TextBox_Pos_X
             // 
+            this.TextBox_Pos_X.AccessibleName = "pos";
             this.TextBox_Pos_X.Location = new System.Drawing.Point(43, 33);
             this.TextBox_Pos_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Pos_X.Name = "TextBox_Pos_X";
             this.TextBox_Pos_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_X.TabIndex = 0;
-            this.TextBox_Pos_X.TextChanged += new System.EventHandler(this.PosTextChanged);
+            this.TextBox_Pos_X.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Pos_X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Scale_Z
             // 
+            this.TextBox_Scale_Z.AccessibleName = "scale";
             this.TextBox_Scale_Z.Location = new System.Drawing.Point(43, 207);
             this.TextBox_Scale_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Scale_Z.Name = "TextBox_Scale_Z";
             this.TextBox_Scale_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_Z.TabIndex = 18;
+            this.TextBox_Scale_Z.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Scale_Z.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Pos_X
@@ -745,21 +832,24 @@
             // 
             // TextBox_Pos_Y
             // 
+            this.TextBox_Pos_Y.AccessibleName = "pos";
             this.TextBox_Pos_Y.Location = new System.Drawing.Point(43, 62);
             this.TextBox_Pos_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Pos_Y.Name = "TextBox_Pos_Y";
             this.TextBox_Pos_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_Y.TabIndex = 2;
-            this.TextBox_Pos_Y.TextChanged += new System.EventHandler(this.PosTextChanged);
+            this.TextBox_Pos_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Pos_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Scale_Y
             // 
+            this.TextBox_Scale_Y.AccessibleName = "scale";
             this.TextBox_Scale_Y.Location = new System.Drawing.Point(43, 181);
             this.TextBox_Scale_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Scale_Y.Name = "TextBox_Scale_Y";
             this.TextBox_Scale_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_Y.TabIndex = 16;
+            this.TextBox_Scale_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Scale_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Pos_Y
@@ -782,22 +872,24 @@
             // 
             // TextBox_Pos_Z
             // 
+            this.TextBox_Pos_Z.AccessibleName = "pos";
             this.TextBox_Pos_Z.Location = new System.Drawing.Point(43, 89);
             this.TextBox_Pos_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Pos_Z.Name = "TextBox_Pos_Z";
             this.TextBox_Pos_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Pos_Z.TabIndex = 4;
-            this.TextBox_Pos_Z.TextChanged += new System.EventHandler(this.PosTextChanged);
+            this.TextBox_Pos_Z.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Pos_Z.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Scale_X
             // 
+            this.TextBox_Scale_X.AccessibleName = "scale";
             this.TextBox_Scale_X.Location = new System.Drawing.Point(43, 153);
             this.TextBox_Scale_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Scale_X.Name = "TextBox_Scale_X";
             this.TextBox_Scale_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Scale_X.TabIndex = 14;
-            this.TextBox_Scale_X.TextChanged += new System.EventHandler(this.ScaleTextChanged);
+            this.TextBox_Scale_X.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Scale_X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Pos_Z
@@ -838,22 +930,24 @@
             // 
             // TextBox_Rot_X
             // 
+            this.TextBox_Rot_X.AccessibleName = "rot";
             this.TextBox_Rot_X.Location = new System.Drawing.Point(161, 33);
             this.TextBox_Rot_X.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Rot_X.Name = "TextBox_Rot_X";
             this.TextBox_Rot_X.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_X.TabIndex = 7;
-            this.TextBox_Rot_X.TextChanged += new System.EventHandler(this.RotTextChanged);
+            this.TextBox_Rot_X.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Rot_X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Rot_Z
             // 
+            this.TextBox_Rot_Z.AccessibleName = "rot";
             this.TextBox_Rot_Z.Location = new System.Drawing.Point(161, 89);
             this.TextBox_Rot_Z.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Rot_Z.Name = "TextBox_Rot_Z";
             this.TextBox_Rot_Z.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Z.TabIndex = 11;
-            this.TextBox_Rot_Z.TextChanged += new System.EventHandler(this.RotTextChanged);
+            this.TextBox_Rot_Z.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Rot_Z.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Rot_X
@@ -867,190 +961,14 @@
             // 
             // TextBox_Rot_Y
             // 
+            this.TextBox_Rot_Y.AccessibleName = "rot";
             this.TextBox_Rot_Y.Location = new System.Drawing.Point(161, 62);
             this.TextBox_Rot_Y.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_Rot_Y.Name = "TextBox_Rot_Y";
             this.TextBox_Rot_Y.Size = new System.Drawing.Size(49, 22);
             this.TextBox_Rot_Y.TabIndex = 9;
-            this.TextBox_Rot_Y.TextChanged += new System.EventHandler(this.RotTextChanged);
+            this.TextBox_Rot_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Rot_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Panel_Tex_Picker
-            // 
-            this.Panel_Tex_Picker.Controls.Add(this.GroupBox_DrawTex);
-            this.Panel_Tex_Picker.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_Tex_Picker.Location = new System.Drawing.Point(0, 0);
-            this.Panel_Tex_Picker.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_Tex_Picker.Name = "Panel_Tex_Picker";
-            this.Panel_Tex_Picker.Size = new System.Drawing.Size(223, 250);
-            this.Panel_Tex_Picker.TabIndex = 0;
-            this.Panel_Tex_Picker.Visible = false;
-            // 
-            // GroupBox_DrawTex
-            // 
-            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex1);
-            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex4);
-            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex2);
-            this.GroupBox_DrawTex.Controls.Add(this.RadioBtn_Tex3);
-            this.GroupBox_DrawTex.Location = new System.Drawing.Point(16, 14);
-            this.GroupBox_DrawTex.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GroupBox_DrawTex.Name = "GroupBox_DrawTex";
-            this.GroupBox_DrawTex.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GroupBox_DrawTex.Size = new System.Drawing.Size(157, 149);
-            this.GroupBox_DrawTex.TabIndex = 4;
-            this.GroupBox_DrawTex.TabStop = false;
-            this.GroupBox_DrawTex.Text = "Texture Draw";
-            // 
-            // RadioBtn_Tex1
-            // 
-            this.RadioBtn_Tex1.AutoSize = true;
-            this.RadioBtn_Tex1.Checked = true;
-            this.RadioBtn_Tex1.Location = new System.Drawing.Point(28, 30);
-            this.RadioBtn_Tex1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RadioBtn_Tex1.Name = "RadioBtn_Tex1";
-            this.RadioBtn_Tex1.Size = new System.Drawing.Size(89, 21);
-            this.RadioBtn_Tex1.TabIndex = 0;
-            this.RadioBtn_Tex1.TabStop = true;
-            this.RadioBtn_Tex1.Text = "Texture 1";
-            this.RadioBtn_Tex1.UseVisualStyleBackColor = true;
-            this.RadioBtn_Tex1.CheckedChanged += new System.EventHandler(this.setDrawTex);
-            // 
-            // RadioBtn_Tex4
-            // 
-            this.RadioBtn_Tex4.AutoSize = true;
-            this.RadioBtn_Tex4.Location = new System.Drawing.Point(28, 108);
-            this.RadioBtn_Tex4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RadioBtn_Tex4.Name = "RadioBtn_Tex4";
-            this.RadioBtn_Tex4.Size = new System.Drawing.Size(89, 21);
-            this.RadioBtn_Tex4.TabIndex = 3;
-            this.RadioBtn_Tex4.TabStop = true;
-            this.RadioBtn_Tex4.Text = "Texture 4";
-            this.RadioBtn_Tex4.UseVisualStyleBackColor = true;
-            this.RadioBtn_Tex4.CheckedChanged += new System.EventHandler(this.setDrawTex);
-            // 
-            // RadioBtn_Tex2
-            // 
-            this.RadioBtn_Tex2.AutoSize = true;
-            this.RadioBtn_Tex2.Location = new System.Drawing.Point(28, 54);
-            this.RadioBtn_Tex2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RadioBtn_Tex2.Name = "RadioBtn_Tex2";
-            this.RadioBtn_Tex2.Size = new System.Drawing.Size(89, 21);
-            this.RadioBtn_Tex2.TabIndex = 1;
-            this.RadioBtn_Tex2.TabStop = true;
-            this.RadioBtn_Tex2.Text = "Texture 2";
-            this.RadioBtn_Tex2.UseVisualStyleBackColor = true;
-            this.RadioBtn_Tex2.CheckedChanged += new System.EventHandler(this.setDrawTex);
-            // 
-            // RadioBtn_Tex3
-            // 
-            this.RadioBtn_Tex3.AutoSize = true;
-            this.RadioBtn_Tex3.Location = new System.Drawing.Point(28, 82);
-            this.RadioBtn_Tex3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.RadioBtn_Tex3.Name = "RadioBtn_Tex3";
-            this.RadioBtn_Tex3.Size = new System.Drawing.Size(89, 21);
-            this.RadioBtn_Tex3.TabIndex = 2;
-            this.RadioBtn_Tex3.TabStop = true;
-            this.RadioBtn_Tex3.Text = "Texture 3";
-            this.RadioBtn_Tex3.UseVisualStyleBackColor = true;
-            this.RadioBtn_Tex3.CheckedChanged += new System.EventHandler(this.setDrawTex);
-            // 
-            // Panel_Textures
-            // 
-            this.Panel_Textures.Controls.Add(this.ComboBox_Tex4);
-            this.Panel_Textures.Controls.Add(this.ComboBox_Tex3);
-            this.Panel_Textures.Controls.Add(this.ComboBox_Tex2);
-            this.Panel_Textures.Controls.Add(this.ComboBox_Tex1);
-            this.Panel_Textures.Controls.Add(this.Label_Tex4);
-            this.Panel_Textures.Controls.Add(this.Label_Tex3);
-            this.Panel_Textures.Controls.Add(this.Label_Tex2);
-            this.Panel_Textures.Controls.Add(this.Label_Tex1);
-            this.Panel_Textures.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_Textures.Location = new System.Drawing.Point(0, 0);
-            this.Panel_Textures.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_Textures.Name = "Panel_Textures";
-            this.Panel_Textures.Size = new System.Drawing.Size(223, 370);
-            this.Panel_Textures.TabIndex = 1;
-            this.Panel_Textures.Visible = false;
-            // 
-            // ComboBox_Tex4
-            // 
-            this.ComboBox_Tex4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Tex4.FormattingEnabled = true;
-            this.ComboBox_Tex4.Location = new System.Drawing.Point(29, 167);
-            this.ComboBox_Tex4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Tex4.Name = "ComboBox_Tex4";
-            this.ComboBox_Tex4.Size = new System.Drawing.Size(121, 24);
-            this.ComboBox_Tex4.TabIndex = 15;
-            this.ComboBox_Tex4.TextChanged += new System.EventHandler(this.ComboBox_Tex4_TextChanged);
-            // 
-            // ComboBox_Tex3
-            // 
-            this.ComboBox_Tex3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Tex3.FormattingEnabled = true;
-            this.ComboBox_Tex3.Location = new System.Drawing.Point(29, 123);
-            this.ComboBox_Tex3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Tex3.Name = "ComboBox_Tex3";
-            this.ComboBox_Tex3.Size = new System.Drawing.Size(121, 24);
-            this.ComboBox_Tex3.TabIndex = 14;
-            this.ComboBox_Tex3.TextChanged += new System.EventHandler(this.ComboBox_Tex3_TextChanged);
-            // 
-            // ComboBox_Tex2
-            // 
-            this.ComboBox_Tex2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Tex2.FormattingEnabled = true;
-            this.ComboBox_Tex2.Location = new System.Drawing.Point(29, 80);
-            this.ComboBox_Tex2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Tex2.Name = "ComboBox_Tex2";
-            this.ComboBox_Tex2.Size = new System.Drawing.Size(121, 24);
-            this.ComboBox_Tex2.TabIndex = 13;
-            this.ComboBox_Tex2.TextChanged += new System.EventHandler(this.ComboBox_Tex2_TextChanged);
-            // 
-            // ComboBox_Tex1
-            // 
-            this.ComboBox_Tex1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Tex1.FormattingEnabled = true;
-            this.ComboBox_Tex1.Location = new System.Drawing.Point(29, 36);
-            this.ComboBox_Tex1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Tex1.Name = "ComboBox_Tex1";
-            this.ComboBox_Tex1.Size = new System.Drawing.Size(121, 24);
-            this.ComboBox_Tex1.TabIndex = 12;
-            this.ComboBox_Tex1.TextChanged += new System.EventHandler(this.ComboBox_Tex1_TextChanged);
-            // 
-            // Label_Tex4
-            // 
-            this.Label_Tex4.AutoSize = true;
-            this.Label_Tex4.Location = new System.Drawing.Point(4, 148);
-            this.Label_Tex4.Name = "Label_Tex4";
-            this.Label_Tex4.Size = new System.Drawing.Size(68, 17);
-            this.Label_Tex4.TabIndex = 11;
-            this.Label_Tex4.Text = "Texture 4";
-            // 
-            // Label_Tex3
-            // 
-            this.Label_Tex3.AutoSize = true;
-            this.Label_Tex3.Location = new System.Drawing.Point(4, 103);
-            this.Label_Tex3.Name = "Label_Tex3";
-            this.Label_Tex3.Size = new System.Drawing.Size(68, 17);
-            this.Label_Tex3.TabIndex = 10;
-            this.Label_Tex3.Text = "Texture 3";
-            // 
-            // Label_Tex2
-            // 
-            this.Label_Tex2.AutoSize = true;
-            this.Label_Tex2.Location = new System.Drawing.Point(4, 60);
-            this.Label_Tex2.Name = "Label_Tex2";
-            this.Label_Tex2.Size = new System.Drawing.Size(68, 17);
-            this.Label_Tex2.TabIndex = 9;
-            this.Label_Tex2.Text = "Texture 2";
-            // 
-            // Label_Tex1
-            // 
-            this.Label_Tex1.AutoSize = true;
-            this.Label_Tex1.Location = new System.Drawing.Point(4, 16);
-            this.Label_Tex1.Name = "Label_Tex1";
-            this.Label_Tex1.Size = new System.Drawing.Size(68, 17);
-            this.Label_Tex1.TabIndex = 8;
-            this.Label_Tex1.Text = "Texture 1";
             // 
             // Panel_PlaceBrush
             // 
@@ -1071,12 +989,13 @@
             // 
             // TextBox_StrengthCircle
             // 
+            this.TextBox_StrengthCircle.AccessibleName = "Strength";
             this.TextBox_StrengthCircle.Location = new System.Drawing.Point(83, 105);
             this.TextBox_StrengthCircle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_StrengthCircle.Name = "TextBox_StrengthCircle";
             this.TextBox_StrengthCircle.Size = new System.Drawing.Size(100, 22);
             this.TextBox_StrengthCircle.TabIndex = 10;
-            this.TextBox_StrengthCircle.TextChanged += new System.EventHandler(this.TextBox_StrengthCircle_TextChanged);
+            this.TextBox_StrengthCircle.TextChanged += new System.EventHandler(this.SetBrushAttr);
             this.TextBox_StrengthCircle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_StrengthCircle
@@ -1108,12 +1027,13 @@
             // 
             // TextBox_BrushPlace_Inner
             // 
+            this.TextBox_BrushPlace_Inner.AccessibleName = "InnerCircle";
             this.TextBox_BrushPlace_Inner.Location = new System.Drawing.Point(83, 78);
             this.TextBox_BrushPlace_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_BrushPlace_Inner.Name = "TextBox_BrushPlace_Inner";
             this.TextBox_BrushPlace_Inner.Size = new System.Drawing.Size(100, 22);
             this.TextBox_BrushPlace_Inner.TabIndex = 4;
-            this.TextBox_BrushPlace_Inner.TextChanged += new System.EventHandler(this.TextBox_BrushPlace_Inner_TextChanged);
+            this.TextBox_BrushPlace_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
             this.TextBox_BrushPlace_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Model_Brush
@@ -1138,6 +1058,8 @@
             // 
             // Panel_Lower_Raise_Ground
             // 
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_RaiseLower_Strength);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_Strength_RaiseLower);
             this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
             this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
             this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
@@ -1148,6 +1070,26 @@
             this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(223, 370);
             this.Panel_Lower_Raise_Ground.TabIndex = 2;
             this.Panel_Lower_Raise_Ground.Visible = false;
+            // 
+            // Label_RaiseLower_Strength
+            // 
+            this.Label_RaiseLower_Strength.AutoSize = true;
+            this.Label_RaiseLower_Strength.Location = new System.Drawing.Point(13, 64);
+            this.Label_RaiseLower_Strength.Name = "Label_RaiseLower_Strength";
+            this.Label_RaiseLower_Strength.Size = new System.Drawing.Size(66, 17);
+            this.Label_RaiseLower_Strength.TabIndex = 6;
+            this.Label_RaiseLower_Strength.Text = "Strength:";
+            // 
+            // TextBox_Strength_RaiseLower
+            // 
+            this.TextBox_Strength_RaiseLower.AccessibleName = "Strength";
+            this.TextBox_Strength_RaiseLower.Location = new System.Drawing.Point(83, 61);
+            this.TextBox_Strength_RaiseLower.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Strength_RaiseLower.Name = "TextBox_Strength_RaiseLower";
+            this.TextBox_Strength_RaiseLower.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_Strength_RaiseLower.TabIndex = 5;
+            this.TextBox_Strength_RaiseLower.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_Strength_RaiseLower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Circle
             // 
@@ -1169,12 +1111,13 @@
             // 
             // TextBox_BothCircles_Size
             // 
-            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(59, 36);
+            this.TextBox_BothCircles_Size.AccessibleName = "InnerAndOuterCircle";
+            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(83, 33);
             this.TextBox_BothCircles_Size.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
             this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(100, 22);
             this.TextBox_BothCircles_Size.TabIndex = 0;
-            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.TextBox_BothCircles_Size_TextChanged);
+            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBrushAttr);
             this.TextBox_BothCircles_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Panel_ObjectInfo
@@ -1285,10 +1228,103 @@
             this.Combo_Model.Sorted = true;
             this.Combo_Model.TabIndex = 0;
             // 
-            // folderBrowserDialog1
+            // Panel_Textures
             // 
-            this.folderBrowserDialog1.Description = "Browse File";
-            this.folderBrowserDialog1.ShowNewFolderButton = false;
+            this.Panel_Textures.Controls.Add(this.ComboBox_Tex4);
+            this.Panel_Textures.Controls.Add(this.ComboBox_Tex3);
+            this.Panel_Textures.Controls.Add(this.ComboBox_Tex2);
+            this.Panel_Textures.Controls.Add(this.ComboBox_Tex1);
+            this.Panel_Textures.Controls.Add(this.Label_Tex4);
+            this.Panel_Textures.Controls.Add(this.Label_Tex3);
+            this.Panel_Textures.Controls.Add(this.Label_Tex2);
+            this.Panel_Textures.Controls.Add(this.Label_Tex1);
+            this.Panel_Textures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_Textures.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Textures.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_Textures.Name = "Panel_Textures";
+            this.Panel_Textures.Size = new System.Drawing.Size(223, 370);
+            this.Panel_Textures.TabIndex = 1;
+            this.Panel_Textures.Visible = false;
+            // 
+            // ComboBox_Tex4
+            // 
+            this.ComboBox_Tex4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Tex4.FormattingEnabled = true;
+            this.ComboBox_Tex4.Location = new System.Drawing.Point(29, 167);
+            this.ComboBox_Tex4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ComboBox_Tex4.Name = "ComboBox_Tex4";
+            this.ComboBox_Tex4.Size = new System.Drawing.Size(121, 24);
+            this.ComboBox_Tex4.TabIndex = 15;
+            this.ComboBox_Tex4.TextChanged += new System.EventHandler(this.ComboBox_Tex4_TextChanged);
+            // 
+            // ComboBox_Tex3
+            // 
+            this.ComboBox_Tex3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Tex3.FormattingEnabled = true;
+            this.ComboBox_Tex3.Location = new System.Drawing.Point(29, 123);
+            this.ComboBox_Tex3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ComboBox_Tex3.Name = "ComboBox_Tex3";
+            this.ComboBox_Tex3.Size = new System.Drawing.Size(121, 24);
+            this.ComboBox_Tex3.TabIndex = 14;
+            this.ComboBox_Tex3.TextChanged += new System.EventHandler(this.ComboBox_Tex3_TextChanged);
+            // 
+            // ComboBox_Tex2
+            // 
+            this.ComboBox_Tex2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Tex2.FormattingEnabled = true;
+            this.ComboBox_Tex2.Location = new System.Drawing.Point(29, 80);
+            this.ComboBox_Tex2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ComboBox_Tex2.Name = "ComboBox_Tex2";
+            this.ComboBox_Tex2.Size = new System.Drawing.Size(121, 24);
+            this.ComboBox_Tex2.TabIndex = 13;
+            this.ComboBox_Tex2.TextChanged += new System.EventHandler(this.ComboBox_Tex2_TextChanged);
+            // 
+            // ComboBox_Tex1
+            // 
+            this.ComboBox_Tex1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Tex1.FormattingEnabled = true;
+            this.ComboBox_Tex1.Location = new System.Drawing.Point(29, 36);
+            this.ComboBox_Tex1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ComboBox_Tex1.Name = "ComboBox_Tex1";
+            this.ComboBox_Tex1.Size = new System.Drawing.Size(121, 24);
+            this.ComboBox_Tex1.TabIndex = 12;
+            this.ComboBox_Tex1.TextChanged += new System.EventHandler(this.ComboBox_Tex1_TextChanged);
+            // 
+            // Label_Tex4
+            // 
+            this.Label_Tex4.AutoSize = true;
+            this.Label_Tex4.Location = new System.Drawing.Point(4, 148);
+            this.Label_Tex4.Name = "Label_Tex4";
+            this.Label_Tex4.Size = new System.Drawing.Size(68, 17);
+            this.Label_Tex4.TabIndex = 11;
+            this.Label_Tex4.Text = "Texture 4";
+            // 
+            // Label_Tex3
+            // 
+            this.Label_Tex3.AutoSize = true;
+            this.Label_Tex3.Location = new System.Drawing.Point(4, 103);
+            this.Label_Tex3.Name = "Label_Tex3";
+            this.Label_Tex3.Size = new System.Drawing.Size(68, 17);
+            this.Label_Tex3.TabIndex = 10;
+            this.Label_Tex3.Text = "Texture 3";
+            // 
+            // Label_Tex2
+            // 
+            this.Label_Tex2.AutoSize = true;
+            this.Label_Tex2.Location = new System.Drawing.Point(4, 60);
+            this.Label_Tex2.Name = "Label_Tex2";
+            this.Label_Tex2.Size = new System.Drawing.Size(68, 17);
+            this.Label_Tex2.TabIndex = 9;
+            this.Label_Tex2.Text = "Texture 2";
+            // 
+            // Label_Tex1
+            // 
+            this.Label_Tex1.AutoSize = true;
+            this.Label_Tex1.Location = new System.Drawing.Point(4, 16);
+            this.Label_Tex1.Name = "Label_Tex1";
+            this.Label_Tex1.Size = new System.Drawing.Size(68, 17);
+            this.Label_Tex1.TabIndex = 8;
+            this.Label_Tex1.Text = "Texture 1";
             // 
             // NDYEditor
             // 
@@ -1327,13 +1363,11 @@
             this.InfoSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.InfoSplitter)).EndInit();
             this.InfoSplitter.ResumeLayout(false);
-            this.Panel_Info.ResumeLayout(false);
-            this.Panel_Info.PerformLayout();
             this.Panel_Tex_Picker.ResumeLayout(false);
             this.GroupBox_DrawTex.ResumeLayout(false);
             this.GroupBox_DrawTex.PerformLayout();
-            this.Panel_Textures.ResumeLayout(false);
-            this.Panel_Textures.PerformLayout();
+            this.Panel_Info.ResumeLayout(false);
+            this.Panel_Info.PerformLayout();
             this.Panel_PlaceBrush.ResumeLayout(false);
             this.Panel_PlaceBrush.PerformLayout();
             this.Panel_Lower_Raise_Ground.ResumeLayout(false);
@@ -1342,6 +1376,8 @@
             this.Panel_ObjectInfo.PerformLayout();
             this.Panel_PlaceObject.ResumeLayout(false);
             this.Panel_PlaceObject.PerformLayout();
+            this.Panel_Textures.ResumeLayout(false);
+            this.Panel_Textures.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1444,7 +1480,6 @@
         private System.Windows.Forms.RadioButton RadioBtn_Tex2;
         private System.Windows.Forms.RadioButton RadioBtn_Tex1;
         private System.Windows.Forms.Panel Panel_Textures;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Label Label_Tex4;
         private System.Windows.Forms.Label Label_Tex3;
         private System.Windows.Forms.Label Label_Tex2;
@@ -1456,6 +1491,8 @@
         private System.Windows.Forms.GroupBox GroupBox_DrawTex;
         private System.Windows.Forms.RadioButton RadioBtn_Tex4;
         private System.Windows.Forms.Button btn_DrawTex;
+        private System.Windows.Forms.Label Label_RaiseLower_Strength;
+        private System.Windows.Forms.TextBox TextBox_Strength_RaiseLower;
     }
 }
 
