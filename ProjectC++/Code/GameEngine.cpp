@@ -149,7 +149,7 @@ void GameEngine::ProcessFrame()
 		}
 	}
 
-	Sleep(0);
+	Sleep(50);
 }
 
 
