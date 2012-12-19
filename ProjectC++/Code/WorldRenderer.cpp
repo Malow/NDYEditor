@@ -85,7 +85,11 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		Vector3 temp = EUE->entity->GetRotation();
 		zEntities[EUE->entity]->SetPosition(EUE->entity->GetPosition());
-		zEntities[EUE->entity]->SetQuaternion(Vector4(temp.x, temp.y, temp.z, 0));
+
+		zEntities[EUE->entity]->SetQuaternion(Vector4(0, 0, 0, 1));
+		zEntities[EUE->entity]->RotateAxis(Vector3(1, 0, 0), EUE->entity->GetRotation().x * (3.1415 / 180));
+		zEntities[EUE->entity]->RotateAxis(Vector3(0, 1, 0), EUE->entity->GetRotation().y * (3.1415 / 180));
+		zEntities[EUE->entity]->RotateAxis(Vector3(0, 0, 1), EUE->entity->GetRotation().z * (3.1415 / 180));
 		if(EUE->entity->GetSelected())
 			zEntities[EUE->entity]->SetSpecialColor(COLOR::RED_COLOR);
 		else
@@ -191,6 +195,8 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	CollisionData cd;
 	std::vector<Entity*> closeEntities;
 	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
+	if( closeEntities.size() == 0)
+		return NULL;
 
 	returnPointer = closeEntities.at(0);
 	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), 

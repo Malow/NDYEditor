@@ -35,14 +35,22 @@ namespace Example
 
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(heightSize.Text) > 0 && Convert.ToInt32(widthSize.Text) > 0)
+            if(heightSize.Text == "" || widthSize.Text == "")
+            {
+                MessageBox.Show("Width or Height is not higher than 0", "Value Error");
+            }
+            else if(Convert.ToInt32(heightSize.Text) > 0 && Convert.ToInt32(widthSize.Text) > 0)
             {
                 this.shouldCreateMap = true;
                 this.Close();
             }
-            else
+        }
+
+        private void NoNumberKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                MessageBox.Show("Width or Height is not higher than 0", "Value Error");
+                e.Handled = true;
             }
         }
     }
