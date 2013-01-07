@@ -1,10 +1,30 @@
 #pragma once
 
+#include <string>
+#include <map>
 #include "Sector.h"
 #include "Observer.h"
 #include "WorldFile.h"
 #include "Entity.h"
-#include <string>
+
+class World;
+
+class WorldAnchor
+{
+private:
+	WorldAnchor() : radius(100)
+	{
+	}
+
+	~WorldAnchor()
+	{
+	}
+public:
+	Vector2 position;
+	float radius;
+
+	friend class World;
+};
 
 
 class World : public Observed, public Observer
@@ -18,6 +38,10 @@ private:
 
 	unsigned int zNrOfSectorsWidth;
 	unsigned int zNrOfSectorsHeight;
+
+	// Anchors
+	std::set< WorldAnchor* > zAnchors;
+
 public:
 	World( Observer* observer, const std::string& fileName="" ) throw(const char*);
 	World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight);
@@ -53,11 +77,19 @@ public:
 	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 
+	// Anchors
+	WorldAnchor* CreateAnchor();
+	void DeleteAnchor( WorldAnchor*& anchor );
+
+	// Logic
+	void Update( float dt );
+
 	// Data Access
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
-	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
+	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
+	unsigned int GetLoadedSectors( std::set<Vector2>& out ) const;
 
 protected:
 	// Engine Events

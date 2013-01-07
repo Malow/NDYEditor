@@ -40,8 +40,6 @@ namespace System { namespace Windows { namespace Interop
 		void KeyDown(int key);
 		void KeyUp(int key);
 
-		String^ ProcessText(String^ text);
-
 		void OnLeftMouseUp( unsigned int x, unsigned int y );
 		void OnLeftMouseDown( unsigned int x, unsigned int y );
 

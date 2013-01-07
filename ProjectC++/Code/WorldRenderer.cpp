@@ -50,6 +50,15 @@ void WorldRenderer::onEvent( Event* e )
 			zTerrain.resize( WLE->world->GetNumSectorsWidth() * WLE->world->GetNumSectorsHeight() );
 		}
 	}
+	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
+	{
+		if ( SUE->world == zWorld )
+		{
+			unsigned int tIndex = SUE->sector.y * SUE->world->GetNumSectorsWidth() + SUE->sector.x;
+			zGraphics->DeleteTerrain(zTerrain[tIndex]);
+			zTerrain[tIndex] = 0;
+		}
+	}
 	else if ( SectorLoadedEvent* SLE = dynamic_cast<SectorLoadedEvent*>(e) )
 	{
 		if ( SLE->world == zWorld )
@@ -117,7 +126,6 @@ void WorldRenderer::onEvent( Event* e )
 
 CollisionData WorldRenderer::GetCollisionDataWithGround()
 {
-	Vector3 position = Vector3(0, 0, 0);
 	unsigned int counter = 0;
 	bool found = false;
 
@@ -129,7 +137,6 @@ CollisionData WorldRenderer::GetCollisionDataWithGround()
 		cd = pe->GetCollisionRayTerrain(cam->GetPosition(), cam->GetForward(), zTerrain[counter]);
 		if(cd.collision)
 		{
-			position = Vector3(cd.posx, cd.posy, cd.posz);
 			found = true;
 		}
 		counter++;
@@ -160,7 +167,6 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
-	Vector3 position = Vector3(0, 0, 0);
 	unsigned int counter = 0;
 	bool found = false;
 
@@ -174,7 +180,6 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 
 		if(cd.collision)
 		{
-			position = Vector3(cd.posx, cd.posy, cd.posz);
 			found = true;
 		}
 		counter++;
@@ -298,8 +303,5 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 
 		// Height Map
 		UpdateSectorHeightMap(x,y);
-
-		// TODO: Remove When FPS camera is implemented, this is just for testing
-		zGraphics->GetCamera()->SetPosition(pos+Vector3(0.0f,10.0f,0.0f));
 	}
 }

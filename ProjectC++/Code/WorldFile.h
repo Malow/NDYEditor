@@ -57,6 +57,15 @@ public:
 	*/
 	bool ReadHeightMap( float* data, unsigned int mapIndex );
 
+	/*
+	Texture names For blend maps
+	*/
+	void WriteBlendFiles( const char* data, unsigned int mapIndex );
+
+	/*
+	Read texture name
+	*/
+	bool ReadBlendFiles( char* data, unsigned int mapIndex );
 
 	/*
 	Writes blend map to file
@@ -81,8 +90,8 @@ public:
 	inline const std::string& GetFileName() const { return zFileName; }
 
 private:
+	unsigned int GetBlendNamesBegin() const;
 	unsigned int GetBlendsBegin() const;
 	unsigned int GetHeightsBegin() const;
 	unsigned int GetSectorsBegin() const;
-	
 };

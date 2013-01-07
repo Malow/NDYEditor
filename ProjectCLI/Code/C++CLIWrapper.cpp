@@ -42,26 +42,6 @@ namespace System { namespace Windows { namespace Interop
 		if ( m_GameEngine ) m_GameEngine->OnResize(width, height);
 	}
 
-	String^ CppCLI::ProcessText(String^ msg)
-	{
-		char* lpText = nullptr;
-		String^ returnText;
-
-		// Konvertera String^ -> char*
-		try
-		{
-			lpText = (char*)Marshal::StringToHGlobalAnsi(msg).ToPointer();
-
-			returnText = gcnew String(m_GameEngine->ProcessText(lpText));
-		}
-		finally
-		{
-			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
-		}
-
-		return returnText;
-	}
-
 	void CppCLI::CreateWorld( int x, int y )
 	{
 		this->m_GameEngine->CreateWorld(x, y);

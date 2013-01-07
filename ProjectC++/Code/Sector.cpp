@@ -27,10 +27,7 @@ void Sector::Reset()
 		zBlendMap[x*4+3] = 0.0f;
 	}
 
-	for( unsigned int x=0; x<4; ++x )
-	{
-		memset(zTextureNames[x], 0, TEXTURE_NAME_LENGTH);
-	}
+	memset(&zTextureNames[0], 0, TEXTURE_NAME_LENGTH*4);
 
 	SetEdited(true);
 }
@@ -103,7 +100,7 @@ std::string Sector::GetTextureName( unsigned int index ) const
 {
 	if ( index > 3 ) throw("Index Out Of Range");
 
-	return std::string(&zTextureNames[index][0]);
+	return std::string(&zTextureNames[index*TEXTURE_NAME_LENGTH]);
 }
 
 void Sector::SetTextureName( unsigned int index, const std::string& name )
@@ -111,6 +108,11 @@ void Sector::SetTextureName( unsigned int index, const std::string& name )
 	if ( index > 3 ) throw("Index Out Of Range!");
 	if ( name.length() >= TEXTURE_NAME_LENGTH ) throw("Texture Name Too Long!");
 
-	memset( &zTextureNames[index][0], 0, TEXTURE_NAME_LENGTH );
-	memcpy( &zTextureNames[index][0], &name[0], name.length() );
+	memset( &zTextureNames[index*TEXTURE_NAME_LENGTH], 0, TEXTURE_NAME_LENGTH );
+	memcpy( &zTextureNames[index*TEXTURE_NAME_LENGTH], &name[0], name.length() );
+}
+
+char* Sector::GetTextureNames()
+{
+	return &zTextureNames[0];
 }

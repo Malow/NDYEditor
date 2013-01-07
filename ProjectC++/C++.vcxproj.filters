@@ -13,9 +13,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\WorldRenderer.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
     <ClInclude Include="Code\WorldFile.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
@@ -49,11 +46,11 @@
     <ClInclude Include="Code\WorldEvents.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="Code\WorldRenderer.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\WorldRenderer.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
     <ClCompile Include="Code\WorldFile.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
@@ -74,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="Code\Entity.cpp">
       <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\WorldRenderer.cpp">
+      <Filter>Source Files\Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

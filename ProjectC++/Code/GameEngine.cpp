@@ -20,7 +20,8 @@ GameEngine::GameEngine() :
 	zMouseInsideFrame(false),
 	zLeftMouseDown(false),
 	zBrushStrength(1),			// 1 unit by default
-	zTexBrushSelectedTex(0)
+	zTexBrushSelectedTex(0),
+	zAnchor(0)
 {
 }
 
@@ -28,6 +29,7 @@ GameEngine::GameEngine() :
 GameEngine::~GameEngine()
 {
 	if ( zWorldRenderer ) delete zWorldRenderer;
+	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld;
 	
 	FreeGraphics();
@@ -67,11 +69,16 @@ void GameEngine::Shutdown()
 
 void GameEngine::ProcessFrame()
 {
-	if ( !GetGraphics() )
+	GraphicsEngine* ge;
+	if ( !(ge = GetGraphics()) )
 		return;
 
+	iCamera *camera = ge->GetCamera();
+
 	float dt = GetGraphics()->Update();
-	GraphicsEngine* ge = GetGraphics();
+	if ( zAnchor ) zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
+	if ( zWorld ) zWorld->Update(dt);
+
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
 		CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
@@ -90,7 +97,6 @@ void GameEngine::ProcessFrame()
 			}
 		}
 	}
-
 
 	if((ge->GetCamera()->GetCameraType() == CameraType::FPS) && zLockMouseToCamera)
 	{
@@ -158,12 +164,6 @@ void GameEngine::OnResize(int width, int height)
 	zScreenWidth = width;
 	zScreenHeight = height;
 	GetGraphics()->ResizeGraphicsEngine(zScreenWidth, zScreenHeight);
-}
-
-
-char* GameEngine::ProcessText(char* msg)
-{
-	return msg;
 }
 
 
@@ -333,7 +333,6 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 				zBrushLastPos = Vector2(cd.posx, cd.posz);
 				zLeftMouseDown = true;
 			}
-
 		}
 	}
 }
@@ -342,12 +341,10 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 void GameEngine::CreateWorld( int x, int y )
 {
 	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer=0;
+	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, x, y);
 	this->zWorldRenderer = new WorldRenderer(zWorld,GetGraphics());
-	
-	// TODO: Fix With Anchors, Load All Sectors for now
-	zWorld->LoadAllSectors();
 }
 
 
@@ -396,12 +393,10 @@ void GameEngine::SaveWorldAs( char* msg )
 void GameEngine::OpenWorld( char* msg )
 {
 	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
+	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
-
-	// TODO: Fix With Anchors, Load All Sectors for now
-	zWorld->LoadAllSectors();
 }
 
 
@@ -555,7 +550,8 @@ void GameEngine::onEvent( Event* e )
 {
 	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
 	{
-		
+		zAnchor = WLE->world->CreateAnchor();
+		GetGraphics()->GetCamera()->SetPosition( Vector3(0.0f,10.0f,0.0f) );
 	}
 }
 

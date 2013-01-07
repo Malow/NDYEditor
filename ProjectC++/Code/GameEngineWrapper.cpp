@@ -43,12 +43,6 @@ void GameEngineWrapper::OnResize(int width, int height)
 }
 
 
-char* GameEngineWrapper::ProcessText(char* msg)
-{
-	return m_GameEngine->ProcessText(msg);
-}
-
-
 void GameEngineWrapper::CreateWorld( int x, int y )
 {
 	this->m_GameEngine->CreateWorld(x, y);

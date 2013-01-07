@@ -25,6 +25,7 @@ private:
 
 	World* zWorld;
 	WorldRenderer *zWorldRenderer;
+	WorldAnchor* zAnchor;
 
 	MODE zMode;
 	CameraType zCameraType;
@@ -63,8 +64,6 @@ public:
 
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
-
-	char* ProcessText(char* msg);
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);

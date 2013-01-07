@@ -18,6 +18,11 @@ struct BlendMap
 	float blend[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 };
 
+struct BlendMapFiles
+{
+	char textureNames[TEXTURE_NAME_LENGTH*4];
+};
+
 
 WorldFile::WorldFile( Observer* observer, const std::string& fileName, WORLDFILE_OPENMODE mode ) :
 	Observed(observer),
@@ -57,6 +62,27 @@ void WorldFile::WriteBlendMap( const float* const data, unsigned int mapIndex )
 }
 
 
+void WorldFile::WriteBlendFiles( const char* data, unsigned int mapIndex )
+{
+	if ( !zFile ) Open();
+	if ( zMode != OPEN_LOAD )
+	{
+		zFile->seekp( GetBlendNamesBegin() + mapIndex * sizeof(BlendMapFiles), std::ios::beg );
+		zFile->write((const char*)data,sizeof(BlendMapFiles));
+	}
+}
+
+
+bool WorldFile::ReadBlendFiles( char* data, unsigned int mapIndex )
+{
+	if ( !zFile ) Open();
+	zFile->seekg( GetBlendNamesBegin() + mapIndex * sizeof(BlendMapFiles), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	zFile->read((char*)data,sizeof(BlendMapFiles));
+	return true;
+}
+
+
 bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
 {
 	if ( !zFile ) Open();
@@ -93,6 +119,13 @@ unsigned int WorldFile::GetBlendsBegin() const
 {
 	return GetHeightsBegin() + sizeof( HeightMap ) * zNumSectors;
 }
+
+
+unsigned int WorldFile::GetBlendNamesBegin() const
+{
+	return GetBlendsBegin() + sizeof( BlendMap ) * zNumSectors;
+}
+
 
 
 void WorldFile::Open()

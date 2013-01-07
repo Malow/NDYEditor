@@ -18,7 +18,7 @@ private:
 	bool zEditedFlag;
 
 	// Texture Names
-	char zTextureNames[TEXTURE_NAME_LENGTH][4];
+	char zTextureNames[TEXTURE_NAME_LENGTH*4];
 
 public:
 	/*Default functions.*/
@@ -61,4 +61,5 @@ public:
 	inline int GetSectorLength() { return SECTOR_LENGTH; }
 	inline void SetEdited( bool state ) { zEditedFlag = state; }
 	inline bool IsEdited() const { return zEditedFlag; }
+	char* GetTextureNames();
 };
