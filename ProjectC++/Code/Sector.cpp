@@ -27,7 +27,10 @@ void Sector::Reset()
 		zBlendMap[x*4+3] = 0.0f;
 	}
 
-	memset(&zTextureNames[0], 0, TEXTURE_NAME_LENGTH*4);
+	SetTextureName(0,"Media/TerrainTexture.png");
+	SetTextureName(1,"Media/Green.png");
+	SetTextureName(2,"Media/Blue.png");
+	SetTextureName(3,"Media/Red.png");
 
 	SetEdited(true);
 }

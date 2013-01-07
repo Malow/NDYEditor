@@ -1,26 +1,28 @@
 #include "WorldFile.h"
 #include "MaloW.h"
 
-struct SectorHeader
-{
-	char textureOne[100];
-	char textureTwo[100];
-	char textureThree[100];
-};
 
 struct HeightMap
 {
 	float height[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
 };
 
+
 struct BlendMap
 {
 	float blend[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 };
 
-struct BlendMapFiles
+
+struct SectorHeader
 {
-	char textureNames[TEXTURE_NAME_LENGTH*4];
+	bool generated;
+};
+
+
+struct TextureNamesStruct
+{
+	char data[TEXTURE_NAME_LENGTH*4];
 };
 
 
@@ -40,11 +42,38 @@ WorldFile::~WorldFile()
 }
 
 
-void WorldFile::WriteHeightMap( const float* const data, unsigned int mapIndex )
+void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
 {
-	if ( !zFile ) Open();
 	if ( zMode != OPEN_LOAD )
 	{
+		if ( !zFile ) Open();
+		SectorHeader header;
+		header.generated = true;
+		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+		zFile->write((const char*)&header,sizeof(SectorHeader));
+	}
+}
+
+
+bool WorldFile::ReadSectorHeader( unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+	if ( zFile->eof() ) return false;
+
+	SectorHeader header;
+	zFile->read((char*)&header,sizeof(SectorHeader));
+	if ( !header.generated ) return false;
+
+	return true;
+}
+
+
+void WorldFile::WriteHeightMap( const float* const data, unsigned int mapIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
 		zFile->seekp( GetHeightsBegin() + mapIndex * sizeof(HeightMap), std::ios::beg );
 		zFile->write((const char*)data,sizeof(HeightMap));
 	}
@@ -53,33 +82,12 @@ void WorldFile::WriteHeightMap( const float* const data, unsigned int mapIndex )
 
 void WorldFile::WriteBlendMap( const float* const data, unsigned int mapIndex )
 {
-	if ( !zFile ) Open();
 	if ( zMode != OPEN_LOAD )
 	{
+		if ( !zFile ) Open();
 		zFile->seekp( GetBlendsBegin() + mapIndex * sizeof(BlendMap), std::ios::beg );
 		zFile->write((const char*)data,sizeof(BlendMap));
 	}
-}
-
-
-void WorldFile::WriteBlendFiles( const char* data, unsigned int mapIndex )
-{
-	if ( !zFile ) Open();
-	if ( zMode != OPEN_LOAD )
-	{
-		zFile->seekp( GetBlendNamesBegin() + mapIndex * sizeof(BlendMapFiles), std::ios::beg );
-		zFile->write((const char*)data,sizeof(BlendMapFiles));
-	}
-}
-
-
-bool WorldFile::ReadBlendFiles( char* data, unsigned int mapIndex )
-{
-	if ( !zFile ) Open();
-	zFile->seekg( GetBlendNamesBegin() + mapIndex * sizeof(BlendMapFiles), std::ios::beg );
-	if ( zFile->eof() ) return false;
-	zFile->read((char*)data,sizeof(BlendMapFiles));
-	return true;
 }
 
 
@@ -109,9 +117,15 @@ unsigned int WorldFile::GetSectorsBegin() const
 }
 
 
+unsigned int WorldFile::GetSectorHeadersBegin() const
+{
+	return GetSectorsBegin() + zNumSectors * sizeof( SectorHeader );
+}
+
+
 unsigned int WorldFile::GetHeightsBegin() const
 {
-	return GetSectorsBegin() + zNumSectors * sizeof(SectorHeader);
+	return GetSectorHeadersBegin() + zNumSectors * sizeof( TextureNamesStruct );
 }
 
 
@@ -119,13 +133,6 @@ unsigned int WorldFile::GetBlendsBegin() const
 {
 	return GetHeightsBegin() + sizeof( HeightMap ) * zNumSectors;
 }
-
-
-unsigned int WorldFile::GetBlendNamesBegin() const
-{
-	return GetBlendsBegin() + sizeof( BlendMap ) * zNumSectors;
-}
-
 
 
 void WorldFile::Open()
@@ -194,4 +201,25 @@ void WorldFile::Open()
 void WorldFile::ReadHeader()
 {
 	if( !zFile ) Open();
+}
+
+
+void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( zMode != OPEN_LOAD )
+	{
+		zFile->seekp( GetSectorsBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+		zFile->write((const char*)data,sizeof(TextureNamesStruct));
+	}
+}
+
+
+bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	zFile->seekg( GetSectorsBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	zFile->read((char*)data,sizeof(TextureNamesStruct));
+	return true;
 }

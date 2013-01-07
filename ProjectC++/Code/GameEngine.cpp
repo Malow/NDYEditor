@@ -21,7 +21,8 @@ GameEngine::GameEngine() :
 	zLeftMouseDown(false),
 	zBrushStrength(1),			// 1 unit by default
 	zTexBrushSelectedTex(0),
-	zAnchor(0)
+	zAnchor(0),
+	zBrushLastPos(0.0f,0.0f)
 {
 }
 
@@ -61,12 +62,6 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 }
 
 
-void GameEngine::Shutdown()
-{
-	
-}
-
-
 void GameEngine::ProcessFrame()
 {
 	GraphicsEngine* ge;
@@ -76,7 +71,11 @@ void GameEngine::ProcessFrame()
 	iCamera *camera = ge->GetCamera();
 
 	float dt = GetGraphics()->Update();
-	if ( zAnchor ) zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
+	if ( zAnchor ) 
+	{
+		zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
+		zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+	}
 	if ( zWorld ) zWorld->Update(dt);
 
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())

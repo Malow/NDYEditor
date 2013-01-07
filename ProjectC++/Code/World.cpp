@@ -149,7 +149,8 @@ void World::SaveFile()
 				{
 					zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y * zNrOfSectorsWidth + x);
 					zFile->WriteBlendMap(this->zSectors[x][y]->GetBlendMap(), y * zNrOfSectorsWidth + x);
-					zFile->WriteBlendFiles(this->zSectors[x][y]->GetTextureNames(), y * zNrOfSectorsWidth + x);
+					zFile->WriteTextureNames(this->zSectors[x][y]->GetTextureNames(), y * zNrOfSectorsWidth + x);
+					zFile->WriteSectorHeader(y * zNrOfSectorsWidth + x);
 					this->zSectors[x][y]->SetEdited(false);
 				}
 			}
@@ -211,17 +212,19 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 		if ( zFile )
 		{
 			// Load From File
-			if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
+			if ( !zFile->ReadSectorHeader(y * GetNumSectorsWidth() + x) )
 			{
 				s->Reset();
 			}
-
-			if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x ) )
+			else if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
 			{
 				s->Reset();
 			}
-
-			if ( !zFile->ReadBlendFiles(s->GetTextureNames(), y * GetNumSectorsWidth() + x ) )
+			else if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x ) )
+			{
+				s->Reset();
+			}
+			else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x ) )
 			{
 				s->Reset();
 			}
@@ -299,10 +302,16 @@ unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, st
 unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2>& out ) const
 {
 	unsigned int counter=0;
+	
+	unsigned int xMin = ( ( center.x - radius ) < 0 ? 0 : center.x - radius  ) / SECTOR_WORLD_SIZE;
+	unsigned int xMax = ( ( center.x + radius ) > zNrOfSectorsWidth*SECTOR_WORLD_SIZE? zNrOfSectorsWidth*SECTOR_WORLD_SIZE : ( center.x + radius ) ) / SECTOR_WORLD_SIZE;
 
-	for( unsigned int x=0; x<zNrOfSectorsWidth; ++x )
+	unsigned int yMin = ( ( center.y - radius ) < 0 ? 0 : center.y - radius ) / SECTOR_WORLD_SIZE;
+	unsigned int yMax = ( ( center.y + radius ) > zNrOfSectorsHeight*SECTOR_WORLD_SIZE? zNrOfSectorsHeight*SECTOR_WORLD_SIZE : ( center.y + radius ) ) / SECTOR_WORLD_SIZE; 
+
+	for( unsigned int x=xMin; x<xMax; ++x )
 	{
-		for( unsigned int y=0; y<zNrOfSectorsHeight; ++y )
+		for( unsigned int y=yMin; y<yMax; ++y )
 		{
 			Rect sectorRect( Vector2(x * SECTOR_WORLD_SIZE, y * SECTOR_WORLD_SIZE ), Vector2(32,32) );
 			if ( DoesIntersect(sectorRect, Circle(center,radius)) )

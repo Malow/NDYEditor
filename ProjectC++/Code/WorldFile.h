@@ -57,15 +57,14 @@ public:
 	*/
 	bool ReadHeightMap( float* data, unsigned int mapIndex );
 
-	/*
-	Texture names For blend maps
-	*/
-	void WriteBlendFiles( const char* data, unsigned int mapIndex );
 
-	/*
-	Read texture name
-	*/
-	bool ReadBlendFiles( char* data, unsigned int mapIndex );
+	// Sector Header
+	void WriteSectorHeader( unsigned int mapIndex );
+	bool ReadSectorHeader( unsigned int sectorIndex );
+	
+	// Texture Names
+	void WriteTextureNames( const char* data, unsigned int x );
+	bool ReadTextureNames( char* data, unsigned int sectorIndex );
 
 	/*
 	Writes blend map to file
@@ -94,4 +93,5 @@ private:
 	unsigned int GetBlendsBegin() const;
 	unsigned int GetHeightsBegin() const;
 	unsigned int GetSectorsBegin() const;
+	unsigned int GetSectorHeadersBegin() const;
 };

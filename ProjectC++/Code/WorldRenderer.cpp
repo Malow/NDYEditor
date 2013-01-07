@@ -21,6 +21,7 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 
 WorldRenderer::~WorldRenderer()
 {
+	// Stop Observing
 	zWorld->RemoveObserver(this);
 
 	// Clean Terrain
@@ -28,7 +29,9 @@ WorldRenderer::~WorldRenderer()
 	{
 		zGraphics->DeleteTerrain(zTerrain[x]);
 	}
+	zTerrain.clear();
 
+	// Clean Entities
 	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
 	{
 		zGraphics->DeleteMesh( i->second );
@@ -167,25 +170,29 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
-	unsigned int counter = 0;
-	bool found = false;
+	// Get Applicable Sectors
+	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().y );
+	std::set< Vector2 > sectors;
+	zWorld->GetSectorsInCicle( camPos, 100.0f, sectors );
 
-	CollisionData cd;
-	while(counter < zTerrain.size() && !found)
+	// Check For Collision
+	for( auto i = sectors.begin(); i != sectors.end(); ++i )
 	{
-		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(
+		unsigned int sectorIndex = i->y * zWorld->GetNumSectorsWidth() + i->x;
+
+		CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(
 			GetGraphics()->GetCamera()->GetPosition(), 
 			GetGraphics()->GetCamera()->Get3DPickingRay(), 
-			zTerrain[counter]);
+			zTerrain[sectorIndex]);
 
 		if(cd.collision)
 		{
-			found = true;
+			return cd;
 		}
-		counter++;
 	}
 
-	return cd;
+	// Return default collision
+	return CollisionData();
 }
 
 
@@ -291,10 +298,11 @@ void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
 		{
 			// Blend Maps
 			const char* terrainTextures[4];
-			terrainTextures[0] = "Media/TerrainTexture.png";
-			terrainTextures[1] = "Media/BallTexture.png";
-			terrainTextures[2] = "Media/TerrainTexture.png";
-			terrainTextures[3] = "Media/TerrainTexture.png";
+			terrainTextures[0] = &zWorld->GetSector(x,y)->GetTextureNames()[0];
+			terrainTextures[1] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH];
+			terrainTextures[2] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH*2];
+			terrainTextures[3] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH*3];
+
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
 

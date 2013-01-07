@@ -8,18 +8,16 @@ static const unsigned int SECTOR_WORLD_SIZE = 32;
 static const unsigned int SECTOR_LENGTH = 32;
 static const unsigned int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
 static const unsigned int SECTOR_HEIGHT_SIZE = SECTOR_LENGTH+1;
-static const unsigned int TEXTURE_NAME_LENGTH = 100;
+static const unsigned int TEXTURE_NAME_LENGTH = 60;
 
 class Sector
 {
 private:
 	float zHeightMap[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
-	bool zEditedFlag;
-
-	// Texture Names
 	char zTextureNames[TEXTURE_NAME_LENGTH*4];
 
+	bool zEditedFlag;
 public:
 	/*Default functions.*/
 	Sector();

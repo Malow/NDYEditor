@@ -24,7 +24,6 @@ void GameEngineWrapper::Shutdown()
 {
 	if ( m_GameEngine ) 
 	{
-		m_GameEngine->Shutdown(); 
 		delete m_GameEngine;
 		m_GameEngine = 0;
 	}

@@ -52,7 +52,6 @@ public:
 	~GameEngine();
 
 	unsigned int Init(unsigned int hWnd, int width, int height);
-	void Shutdown();
 
 	void ProcessFrame();
 	void OnResize(int width, int height);
