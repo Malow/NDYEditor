@@ -75,10 +75,10 @@ namespace Example
                 //Run();
                 Application.DoEvents();
                 this.m_GameEngine.Update();
-                /*if (m_mode == MODE.MOVE)
+                if (m_mode == MODE.MOVE)
                 {
                     GetAllSelectedInfo();
-                }*/
+                }
             }
         }
 
@@ -184,6 +184,9 @@ namespace Example
 
         private void RenderBox_LeftMouseDown(object sender, MouseEventArgs e)
         {
+            if (this.m_mode != MODE.SELECT || this.m_mode == MODE.NONE)
+                this.toolStripStatusLabel1.Text = "Not Saved!";
+
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
             {
                 this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.Text);
@@ -237,9 +240,14 @@ namespace Example
         }
         void GetAllSelectedInfo()
         {
+            TextBox_Pos_X.Enabled = false;
+            TextBox_Pos_Y.Enabled = false;
+            TextBox_Pos_Z.Enabled = false;
+
             float x = 0;
             float y = 0;
             float z = 0;
+
             m_GameEngine.GetSelectedInfo("pos", out x, out y, out z);
             TextBox_Pos_X.Text = x.ToString();
             TextBox_Pos_Y.Text = y.ToString();
@@ -254,6 +262,10 @@ namespace Example
             TextBox_Scale_X.Text = x.ToString();
             TextBox_Scale_Y.Text = y.ToString();
             TextBox_Scale_Z.Text = z.ToString();
+
+            TextBox_Pos_X.Enabled = true;
+            TextBox_Pos_Y.Enabled = true;
+            TextBox_Pos_Z.Enabled = true;
         }
 
         private void MoveTool_Click(object sender, EventArgs e)
@@ -482,6 +494,16 @@ namespace Example
 
                 this.Panel_Tex_Picker.Show();
                 this.Panel_Tex_Picker.BringToFront();
+
+                float temp;
+                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
+                textBox_InnerCircle_Terrain.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("OuterCircle", out temp);
+                textBox_OuterCircle_Terrain.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("Strength", out temp);
+                TextBox_Terrain_Strength.Text = temp.ToString();
             }
         }
         private void setDrawTex(object sender, EventArgs e)
@@ -552,6 +574,34 @@ namespace Example
 
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (this.toolStripStatusLabel1.Text == "Not Saved!")
+            {
+                ExitForm form = new ExitForm();
+                form.ShowDialog();
+
+                string temp = form.GetText();
+                if (temp == "Close")
+                {
+                    e.Cancel = true;
+                }
+                else if (temp == "DontSave")
+                {
+                    this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
+                }
+                else if (temp == "Save")
+                {
+                    this.toolStripStatusLabel1.Text = "Saving!";
+                    if (!this.filePathKnown)
+                    {
+                        this.saveAsToolStripMenuItem_Click(sender, e);
+                    }
+                    else
+                    {
+                        m_GameEngine.SaveWorld();
+                    }
+                    this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
+                }
+            }
         }
 
         private void NDYEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -582,26 +632,29 @@ namespace Example
 
         private void SetSelecetedObjectInfo(object sender, EventArgs e)
         {
-            string info = (sender as TextBox).AccessibleName;
+            if ((sender as TextBox).Enabled == true)
+            {
+                string info = (sender as TextBox).AccessibleName;
 
-            if (info == "pos")
-                if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
-                        float.Parse(TextBox_Pos_Z.Text));
-            if (info == "rot")
-                if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
-                           float.Parse(TextBox_Rot_Z.Text));
-            if (info == "scale")
-                if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
-                    m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
-                           float.Parse(TextBox_Scale_Z.Text));
+                if (info == "pos")
+                    if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
+                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
+                            float.Parse(TextBox_Pos_Z.Text));
+                if (info == "rot")
+                    if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
+                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
+                               float.Parse(TextBox_Rot_Z.Text));
+                if (info == "scale")
+                    if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
+                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
+                               float.Parse(TextBox_Scale_Z.Text));
+            }
         }
 
         private void SetBrushAttr(object sender, EventArgs e)
         {
             if(sender is TextBox)
-                if((sender as TextBox).Text != "")
+                if ((sender as TextBox).Text != "")
                     m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, float.Parse((sender as TextBox).Text));
                 else
                     m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, 0.0f);
