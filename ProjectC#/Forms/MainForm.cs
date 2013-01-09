@@ -506,6 +506,9 @@ namespace Example
 
                 m_GameEngine.GetBrushAttr("OuterCircle", out temp);
                 textBox_OuterCircle_Terrain.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("Strength", out temp);
+                TextBox_Terrain_Strength.Text = temp.ToString();
             }
         }
         private void setDrawTex(object sender, EventArgs e)
