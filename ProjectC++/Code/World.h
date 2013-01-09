@@ -74,15 +74,18 @@ public:
 
 	// Sector Functions
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
-	Sector* GetSectorAtWorldPos( const Vector2& pos ) throw(const char*);
+	Sector* GetSectorAtWorldPos( const Vector2& worldPos );
+	Vector2 WorldPosToSector( const Vector2& worldPos );
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
+	void SetSectorTexture( unsigned int x, unsigned int y, const std::string& texture, unsigned int index );
+	const char* const GetSectorTexture( unsigned int x, unsigned int y, unsigned int index );
 
 	// Anchors
 	WorldAnchor* CreateAnchor();
 	void DeleteAnchor( WorldAnchor*& anchor );
 
 	// Logic
-	void Update( float dt );
+	void Update();
 
 	// Data Access
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;

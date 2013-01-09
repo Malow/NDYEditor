@@ -42,8 +42,7 @@ namespace Example
             m_GameEngine = new CppCLI();
             m_GameEngine.Init(RenderBox.Handle, RenderBox.Width, RenderBox.Height);
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
-            this.Resize += new EventHandler(form1_Resize);
-
+            
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
             this.KeyUp += new KeyEventHandler(ListenerKeyUp);
@@ -90,21 +89,6 @@ namespace Example
             {
                 //Run the GameEngine for one frame
                 m_GameEngine.ProcessFrame();
-            }
-        }
-
-        void form1_Resize(object sender, EventArgs e)
-        {
-            //Hantera när maximize knappen trycks
-            if (this.WindowState == FormWindowState.Maximized)
-            {
-                m_GameEngine.OnResize(RenderBox.Width, RenderBox.Height);
-            }
-
-            //När man återgår till "normal" state igen så hantera de också
-            else if (this.WindowState == FormWindowState.Normal)
-            {
-                m_GameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             }
         }
 
@@ -230,17 +214,25 @@ namespace Example
             if (this.m_mode == MODE.DRAWTEX)
             {
                 string temp;
-                m_GameEngine.GetBrushAttr("Tex1", out temp);
+                m_GameEngine.GetBrushAttr("Tex0", out temp);
+                this.ComboBox_Tex1.Enabled = false;
                 this.ComboBox_Tex1.Text = temp;
+                this.ComboBox_Tex1.Enabled = true;
+
+                m_GameEngine.GetBrushAttr("Tex1", out temp);
+                this.ComboBox_Tex2.Enabled = false;
+                this.ComboBox_Tex2.Text = temp;
+                this.ComboBox_Tex2.Enabled = true;
 
                 m_GameEngine.GetBrushAttr("Tex2", out temp);
-                this.ComboBox_Tex2.Text = temp;
+                this.ComboBox_Tex3.Enabled = false;
+                this.ComboBox_Tex3.Text = temp;
+                this.ComboBox_Tex3.Enabled = true;
 
                 m_GameEngine.GetBrushAttr("Tex3", out temp);
-                this.ComboBox_Tex3.Text = temp;
-
-                m_GameEngine.GetBrushAttr("Tex4", out temp);
+                this.ComboBox_Tex4.Enabled = false;
                 this.ComboBox_Tex4.Text = temp;
+                this.ComboBox_Tex4.Enabled = true;
 
                 this.Panel_Textures.Show();
                 this.Panel_Textures.BringToFront();
@@ -350,6 +342,12 @@ namespace Example
         {
             DirectoryInfo di = new DirectoryInfo("Media/Textures/");
             FileInfo[] files = di.GetFiles();
+
+            this.ComboBox_Tex1.Enabled = false;
+            this.ComboBox_Tex2.Enabled = false;
+            this.ComboBox_Tex3.Enabled = false;
+            this.ComboBox_Tex4.Enabled = false;
+
             for (int i = 0; i < files.Length; i++)
             {
                 //if(files[i].ToString() != "scale.obj")
@@ -358,10 +356,11 @@ namespace Example
                 this.ComboBox_Tex3.Items.Add(files[i].ToString());
                 this.ComboBox_Tex4.Items.Add(files[i].ToString());
             }
-            this.ComboBox_Tex1.Text = files[0].ToString();
-            this.ComboBox_Tex2.Text = files[0].ToString();
-            this.ComboBox_Tex3.Text = files[0].ToString();
-            this.ComboBox_Tex4.Text = files[0].ToString();
+
+            this.ComboBox_Tex1.Enabled = true;
+            this.ComboBox_Tex2.Enabled = true;
+            this.ComboBox_Tex3.Enabled = true;
+            this.ComboBox_Tex4.Enabled = true;
         }
 
         private void btnPlaceObject_Click(object sender, EventArgs e)
@@ -566,26 +565,6 @@ namespace Example
             m_GameEngine.ChangeMode((int)m_mode);
         }
 
-        private void ComboBox_Tex1_TextChanged(object sender, EventArgs e)
-        {
-            m_GameEngine.SetBrushAttr("Tex1", this.ComboBox_Tex1.Text);
-        }
-
-        private void ComboBox_Tex2_TextChanged(object sender, EventArgs e)
-        {
-            m_GameEngine.SetBrushAttr("Tex2", this.ComboBox_Tex2.Text);
-        }
-
-        private void ComboBox_Tex3_TextChanged(object sender, EventArgs e)
-        {
-            m_GameEngine.SetBrushAttr("Tex3", this.ComboBox_Tex3.Text);
-        }
-
-        private void ComboBox_Tex4_TextChanged(object sender, EventArgs e)
-        {
-            m_GameEngine.SetBrushAttr("Tex4", this.ComboBox_Tex4.Text);
-        }
-
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
         }
@@ -641,6 +620,20 @@ namespace Example
                     m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, float.Parse((sender as TextBox).Text));
                 else
                     m_GameEngine.SetBrushAttr((sender as TextBox).AccessibleName, 0.0f);
+        }
+
+        private void combobox_Texture_changed(object sender, EventArgs e)
+        {
+            if ((sender as ComboBox).Enabled == true)
+            {
+                m_GameEngine.SetBrushAttr("Tex" + (sender as ComboBox).AccessibleName, (sender as ComboBox).Text);
+                RenderBox.Focus();
+            }
+        }
+
+        private void combobox_textures_ignore(object sender, EventArgs e)
+        {
+            RenderBox.Focus();
         }
     }
 }

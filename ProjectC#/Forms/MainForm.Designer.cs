@@ -104,22 +104,6 @@
             this.TextBox_Rot_Z = new System.Windows.Forms.TextBox();
             this.Label_Rot_X = new System.Windows.Forms.Label();
             this.TextBox_Rot_Y = new System.Windows.Forms.TextBox();
-            this.Panel_Lower_Raise_Ground = new System.Windows.Forms.Panel();
-            this.Label_RaiseLower_Strength = new System.Windows.Forms.Label();
-            this.TextBox_Strength_RaiseLower = new System.Windows.Forms.TextBox();
-            this.Label_Circle = new System.Windows.Forms.Label();
-            this.Label_InnerRing_Size = new System.Windows.Forms.Label();
-            this.TextBox_BothCircles_Size = new System.Windows.Forms.TextBox();
-            this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
-            this.Label_Anim = new System.Windows.Forms.Label();
-            this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
-            this.ComboBox_Animation = new System.Windows.Forms.ComboBox();
-            this.ComboBox_Model = new System.Windows.Forms.ComboBox();
-            this.Label_Tex = new System.Windows.Forms.Label();
-            this.Label_Model = new System.Windows.Forms.Label();
-            this.Panel_PlaceObject = new System.Windows.Forms.Panel();
-            this.Lable_Model = new System.Windows.Forms.Label();
-            this.Combo_Model = new System.Windows.Forms.ComboBox();
             this.Panel_Textures = new System.Windows.Forms.Panel();
             this.ComboBox_Tex4 = new System.Windows.Forms.ComboBox();
             this.ComboBox_Tex3 = new System.Windows.Forms.ComboBox();
@@ -137,6 +121,22 @@
             this.TextBox_BrushPlace_Inner = new System.Windows.Forms.TextBox();
             this.Label_Model_Brush = new System.Windows.Forms.Label();
             this.ComboBox_Model_Brush = new System.Windows.Forms.ComboBox();
+            this.Panel_Lower_Raise_Ground = new System.Windows.Forms.Panel();
+            this.Label_RaiseLower_Strength = new System.Windows.Forms.Label();
+            this.TextBox_Strength_RaiseLower = new System.Windows.Forms.TextBox();
+            this.Label_Circle = new System.Windows.Forms.Label();
+            this.Label_InnerRing_Size = new System.Windows.Forms.Label();
+            this.TextBox_BothCircles_Size = new System.Windows.Forms.TextBox();
+            this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
+            this.Label_Anim = new System.Windows.Forms.Label();
+            this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Animation = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Model = new System.Windows.Forms.ComboBox();
+            this.Label_Tex = new System.Windows.Forms.Label();
+            this.Label_Model = new System.Windows.Forms.Label();
+            this.Panel_PlaceObject = new System.Windows.Forms.Panel();
+            this.Lable_Model = new System.Windows.Forms.Label();
+            this.Combo_Model = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
@@ -158,11 +158,11 @@
             this.Panel_Tex_Picker.SuspendLayout();
             this.GroupBox_DrawTex.SuspendLayout();
             this.Panel_Info.SuspendLayout();
+            this.Panel_Textures.SuspendLayout();
+            this.Panel_PlaceBrush.SuspendLayout();
             this.Panel_Lower_Raise_Ground.SuspendLayout();
             this.Panel_ObjectInfo.SuspendLayout();
             this.Panel_PlaceObject.SuspendLayout();
-            this.Panel_Textures.SuspendLayout();
-            this.Panel_PlaceBrush.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -614,7 +614,7 @@
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
             this.RenderAndInfoSplitter.Size = new System.Drawing.Size(734, 495);
-            this.RenderAndInfoSplitter.SplitterDistance = 508;
+            this.RenderAndInfoSplitter.SplitterDistance = 510;
             this.RenderAndInfoSplitter.SplitterWidth = 3;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -624,7 +624,7 @@
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(506, 493);
+            this.RenderBox.Size = new System.Drawing.Size(508, 493);
             this.RenderBox.TabIndex = 3;
             this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
@@ -651,12 +651,12 @@
             // 
             // InfoSplitter.Panel2
             // 
+            this.InfoSplitter.Panel2.Controls.Add(this.Panel_Textures);
+            this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceBrush);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
-            this.InfoSplitter.Panel2.Controls.Add(this.Panel_Textures);
-            this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceBrush);
-            this.InfoSplitter.Size = new System.Drawing.Size(223, 495);
+            this.InfoSplitter.Size = new System.Drawing.Size(221, 495);
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.SplitterWidth = 3;
             this.InfoSplitter.TabIndex = 0;
@@ -668,7 +668,7 @@
             this.Panel_Tex_Picker.Location = new System.Drawing.Point(0, 0);
             this.Panel_Tex_Picker.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Tex_Picker.Name = "Panel_Tex_Picker";
-            this.Panel_Tex_Picker.Size = new System.Drawing.Size(221, 248);
+            this.Panel_Tex_Picker.Size = new System.Drawing.Size(219, 248);
             this.Panel_Tex_Picker.TabIndex = 0;
             this.Panel_Tex_Picker.Visible = false;
             // 
@@ -771,7 +771,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
             this.Panel_Info.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(221, 248);
+            this.Panel_Info.Size = new System.Drawing.Size(219, 248);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -994,185 +994,6 @@
             this.TextBox_Rot_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
             this.TextBox_Rot_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
-            // Panel_Lower_Raise_Ground
-            // 
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_RaiseLower_Strength);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_Strength_RaiseLower);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
-            this.Panel_Lower_Raise_Ground.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
-            this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(2);
-            this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
-            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(221, 240);
-            this.Panel_Lower_Raise_Ground.TabIndex = 2;
-            this.Panel_Lower_Raise_Ground.Visible = false;
-            // 
-            // Label_RaiseLower_Strength
-            // 
-            this.Label_RaiseLower_Strength.AutoSize = true;
-            this.Label_RaiseLower_Strength.Location = new System.Drawing.Point(10, 52);
-            this.Label_RaiseLower_Strength.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_RaiseLower_Strength.Name = "Label_RaiseLower_Strength";
-            this.Label_RaiseLower_Strength.Size = new System.Drawing.Size(50, 13);
-            this.Label_RaiseLower_Strength.TabIndex = 6;
-            this.Label_RaiseLower_Strength.Text = "Strength:";
-            // 
-            // TextBox_Strength_RaiseLower
-            // 
-            this.TextBox_Strength_RaiseLower.AccessibleName = "Strength";
-            this.TextBox_Strength_RaiseLower.Location = new System.Drawing.Point(62, 50);
-            this.TextBox_Strength_RaiseLower.Margin = new System.Windows.Forms.Padding(2);
-            this.TextBox_Strength_RaiseLower.Name = "TextBox_Strength_RaiseLower";
-            this.TextBox_Strength_RaiseLower.Size = new System.Drawing.Size(76, 20);
-            this.TextBox_Strength_RaiseLower.TabIndex = 5;
-            this.TextBox_Strength_RaiseLower.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_Strength_RaiseLower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_Circle
-            // 
-            this.Label_Circle.AutoSize = true;
-            this.Label_Circle.Location = new System.Drawing.Point(10, 11);
-            this.Label_Circle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_Circle.Name = "Label_Circle";
-            this.Label_Circle.Size = new System.Drawing.Size(36, 13);
-            this.Label_Circle.TabIndex = 4;
-            this.Label_Circle.Text = "Circle:";
-            // 
-            // Label_InnerRing_Size
-            // 
-            this.Label_InnerRing_Size.AutoSize = true;
-            this.Label_InnerRing_Size.Location = new System.Drawing.Point(10, 29);
-            this.Label_InnerRing_Size.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_InnerRing_Size.Name = "Label_InnerRing_Size";
-            this.Label_InnerRing_Size.Size = new System.Drawing.Size(30, 13);
-            this.Label_InnerRing_Size.TabIndex = 1;
-            this.Label_InnerRing_Size.Text = "Size:";
-            // 
-            // TextBox_BothCircles_Size
-            // 
-            this.TextBox_BothCircles_Size.AccessibleName = "InnerAndOuterCircle";
-            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(62, 27);
-            this.TextBox_BothCircles_Size.Margin = new System.Windows.Forms.Padding(2);
-            this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
-            this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(76, 20);
-            this.TextBox_BothCircles_Size.TabIndex = 0;
-            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_BothCircles_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Panel_ObjectInfo
-            // 
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Texture);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Animation);
-            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Model);
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Tex);
-            this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
-            this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
-            this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2);
-            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(221, 240);
-            this.Panel_ObjectInfo.TabIndex = 6;
-            this.Panel_ObjectInfo.Visible = false;
-            // 
-            // Label_Anim
-            // 
-            this.Label_Anim.AutoSize = true;
-            this.Label_Anim.Location = new System.Drawing.Point(10, 63);
-            this.Label_Anim.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_Anim.Name = "Label_Anim";
-            this.Label_Anim.Size = new System.Drawing.Size(56, 13);
-            this.Label_Anim.TabIndex = 5;
-            this.Label_Anim.Text = "Animation:";
-            // 
-            // ComboBox_Texture
-            // 
-            this.ComboBox_Texture.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Texture.FormattingEnabled = true;
-            this.ComboBox_Texture.Location = new System.Drawing.Point(72, 36);
-            this.ComboBox_Texture.Margin = new System.Windows.Forms.Padding(2);
-            this.ComboBox_Texture.Name = "ComboBox_Texture";
-            this.ComboBox_Texture.Size = new System.Drawing.Size(84, 21);
-            this.ComboBox_Texture.Sorted = true;
-            this.ComboBox_Texture.TabIndex = 2;
-            // 
-            // ComboBox_Animation
-            // 
-            this.ComboBox_Animation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Animation.FormattingEnabled = true;
-            this.ComboBox_Animation.Location = new System.Drawing.Point(72, 60);
-            this.ComboBox_Animation.Margin = new System.Windows.Forms.Padding(2);
-            this.ComboBox_Animation.Name = "ComboBox_Animation";
-            this.ComboBox_Animation.Size = new System.Drawing.Size(84, 21);
-            this.ComboBox_Animation.Sorted = true;
-            this.ComboBox_Animation.TabIndex = 4;
-            // 
-            // ComboBox_Model
-            // 
-            this.ComboBox_Model.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Model.FormattingEnabled = true;
-            this.ComboBox_Model.Location = new System.Drawing.Point(72, 11);
-            this.ComboBox_Model.Margin = new System.Windows.Forms.Padding(2);
-            this.ComboBox_Model.Name = "ComboBox_Model";
-            this.ComboBox_Model.Size = new System.Drawing.Size(84, 21);
-            this.ComboBox_Model.Sorted = true;
-            this.ComboBox_Model.TabIndex = 0;
-            // 
-            // Label_Tex
-            // 
-            this.Label_Tex.AutoSize = true;
-            this.Label_Tex.Location = new System.Drawing.Point(10, 38);
-            this.Label_Tex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_Tex.Name = "Label_Tex";
-            this.Label_Tex.Size = new System.Drawing.Size(46, 13);
-            this.Label_Tex.TabIndex = 3;
-            this.Label_Tex.Text = "Texture:";
-            // 
-            // Label_Model
-            // 
-            this.Label_Model.AutoSize = true;
-            this.Label_Model.Location = new System.Drawing.Point(10, 14);
-            this.Label_Model.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label_Model.Name = "Label_Model";
-            this.Label_Model.Size = new System.Drawing.Size(39, 13);
-            this.Label_Model.TabIndex = 1;
-            this.Label_Model.Text = "Model:";
-            // 
-            // Panel_PlaceObject
-            // 
-            this.Panel_PlaceObject.Controls.Add(this.Lable_Model);
-            this.Panel_PlaceObject.Controls.Add(this.Combo_Model);
-            this.Panel_PlaceObject.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
-            this.Panel_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
-            this.Panel_PlaceObject.Name = "Panel_PlaceObject";
-            this.Panel_PlaceObject.Size = new System.Drawing.Size(221, 240);
-            this.Panel_PlaceObject.TabIndex = 21;
-            this.Panel_PlaceObject.Visible = false;
-            // 
-            // Lable_Model
-            // 
-            this.Lable_Model.AutoSize = true;
-            this.Lable_Model.Location = new System.Drawing.Point(11, 18);
-            this.Lable_Model.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Lable_Model.Name = "Lable_Model";
-            this.Lable_Model.Size = new System.Drawing.Size(39, 13);
-            this.Lable_Model.TabIndex = 1;
-            this.Lable_Model.Text = "Model:";
-            // 
-            // Combo_Model
-            // 
-            this.Combo_Model.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Combo_Model.FormattingEnabled = true;
-            this.Combo_Model.Location = new System.Drawing.Point(53, 15);
-            this.Combo_Model.Margin = new System.Windows.Forms.Padding(2);
-            this.Combo_Model.Name = "Combo_Model";
-            this.Combo_Model.Size = new System.Drawing.Size(92, 21);
-            this.Combo_Model.Sorted = true;
-            this.Combo_Model.TabIndex = 0;
-            // 
             // Panel_Textures
             // 
             this.Panel_Textures.Controls.Add(this.ComboBox_Tex4);
@@ -1187,12 +1008,13 @@
             this.Panel_Textures.Location = new System.Drawing.Point(0, 0);
             this.Panel_Textures.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Textures.Name = "Panel_Textures";
-            this.Panel_Textures.Size = new System.Drawing.Size(221, 240);
+            this.Panel_Textures.Size = new System.Drawing.Size(219, 240);
             this.Panel_Textures.TabIndex = 1;
             this.Panel_Textures.Visible = false;
             // 
             // ComboBox_Tex4
             // 
+            this.ComboBox_Tex4.AccessibleName = "3";
             this.ComboBox_Tex4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_Tex4.FormattingEnabled = true;
             this.ComboBox_Tex4.Location = new System.Drawing.Point(22, 136);
@@ -1200,10 +1022,12 @@
             this.ComboBox_Tex4.Name = "ComboBox_Tex4";
             this.ComboBox_Tex4.Size = new System.Drawing.Size(92, 21);
             this.ComboBox_Tex4.TabIndex = 15;
-            this.ComboBox_Tex4.TextChanged += new System.EventHandler(this.ComboBox_Tex4_TextChanged);
+            this.ComboBox_Tex4.SelectionChangeCommitted += new System.EventHandler(this.combobox_Texture_changed);
+            this.ComboBox_Tex4.DropDownClosed += new System.EventHandler(this.combobox_textures_ignore);
             // 
             // ComboBox_Tex3
             // 
+            this.ComboBox_Tex3.AccessibleName = "2";
             this.ComboBox_Tex3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_Tex3.FormattingEnabled = true;
             this.ComboBox_Tex3.Location = new System.Drawing.Point(22, 100);
@@ -1211,10 +1035,12 @@
             this.ComboBox_Tex3.Name = "ComboBox_Tex3";
             this.ComboBox_Tex3.Size = new System.Drawing.Size(92, 21);
             this.ComboBox_Tex3.TabIndex = 14;
-            this.ComboBox_Tex3.TextChanged += new System.EventHandler(this.ComboBox_Tex3_TextChanged);
+            this.ComboBox_Tex3.SelectionChangeCommitted += new System.EventHandler(this.combobox_Texture_changed);
+            this.ComboBox_Tex3.DropDownClosed += new System.EventHandler(this.combobox_textures_ignore);
             // 
             // ComboBox_Tex2
             // 
+            this.ComboBox_Tex2.AccessibleName = "1";
             this.ComboBox_Tex2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_Tex2.FormattingEnabled = true;
             this.ComboBox_Tex2.Location = new System.Drawing.Point(22, 65);
@@ -1222,10 +1048,12 @@
             this.ComboBox_Tex2.Name = "ComboBox_Tex2";
             this.ComboBox_Tex2.Size = new System.Drawing.Size(92, 21);
             this.ComboBox_Tex2.TabIndex = 13;
-            this.ComboBox_Tex2.TextChanged += new System.EventHandler(this.ComboBox_Tex2_TextChanged);
+            this.ComboBox_Tex2.SelectionChangeCommitted += new System.EventHandler(this.combobox_Texture_changed);
+            this.ComboBox_Tex2.DropDownClosed += new System.EventHandler(this.combobox_textures_ignore);
             // 
             // ComboBox_Tex1
             // 
+            this.ComboBox_Tex1.AccessibleName = "0";
             this.ComboBox_Tex1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_Tex1.FormattingEnabled = true;
             this.ComboBox_Tex1.Location = new System.Drawing.Point(22, 29);
@@ -1233,7 +1061,8 @@
             this.ComboBox_Tex1.Name = "ComboBox_Tex1";
             this.ComboBox_Tex1.Size = new System.Drawing.Size(92, 21);
             this.ComboBox_Tex1.TabIndex = 12;
-            this.ComboBox_Tex1.TextChanged += new System.EventHandler(this.ComboBox_Tex1_TextChanged);
+            this.ComboBox_Tex1.SelectionChangeCommitted += new System.EventHandler(this.combobox_Texture_changed);
+            this.ComboBox_Tex1.DropDownClosed += new System.EventHandler(this.combobox_textures_ignore);
             // 
             // Label_Tex4
             // 
@@ -1288,7 +1117,7 @@
             this.Panel_PlaceBrush.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceBrush.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceBrush.Name = "Panel_PlaceBrush";
-            this.Panel_PlaceBrush.Size = new System.Drawing.Size(221, 240);
+            this.Panel_PlaceBrush.Size = new System.Drawing.Size(219, 240);
             this.Panel_PlaceBrush.TabIndex = 0;
             this.Panel_PlaceBrush.Visible = false;
             // 
@@ -1365,6 +1194,185 @@
             this.ComboBox_Model_Brush.Sorted = true;
             this.ComboBox_Model_Brush.TabIndex = 2;
             // 
+            // Panel_Lower_Raise_Ground
+            // 
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_RaiseLower_Strength);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_Strength_RaiseLower);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
+            this.Panel_Lower_Raise_Ground.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(2);
+            this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
+            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(219, 240);
+            this.Panel_Lower_Raise_Ground.TabIndex = 2;
+            this.Panel_Lower_Raise_Ground.Visible = false;
+            // 
+            // Label_RaiseLower_Strength
+            // 
+            this.Label_RaiseLower_Strength.AutoSize = true;
+            this.Label_RaiseLower_Strength.Location = new System.Drawing.Point(10, 52);
+            this.Label_RaiseLower_Strength.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_RaiseLower_Strength.Name = "Label_RaiseLower_Strength";
+            this.Label_RaiseLower_Strength.Size = new System.Drawing.Size(50, 13);
+            this.Label_RaiseLower_Strength.TabIndex = 6;
+            this.Label_RaiseLower_Strength.Text = "Strength:";
+            // 
+            // TextBox_Strength_RaiseLower
+            // 
+            this.TextBox_Strength_RaiseLower.AccessibleName = "Strength";
+            this.TextBox_Strength_RaiseLower.Location = new System.Drawing.Point(62, 50);
+            this.TextBox_Strength_RaiseLower.Margin = new System.Windows.Forms.Padding(2);
+            this.TextBox_Strength_RaiseLower.Name = "TextBox_Strength_RaiseLower";
+            this.TextBox_Strength_RaiseLower.Size = new System.Drawing.Size(76, 20);
+            this.TextBox_Strength_RaiseLower.TabIndex = 5;
+            this.TextBox_Strength_RaiseLower.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_Strength_RaiseLower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_Circle
+            // 
+            this.Label_Circle.AutoSize = true;
+            this.Label_Circle.Location = new System.Drawing.Point(10, 11);
+            this.Label_Circle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_Circle.Name = "Label_Circle";
+            this.Label_Circle.Size = new System.Drawing.Size(36, 13);
+            this.Label_Circle.TabIndex = 4;
+            this.Label_Circle.Text = "Circle:";
+            // 
+            // Label_InnerRing_Size
+            // 
+            this.Label_InnerRing_Size.AutoSize = true;
+            this.Label_InnerRing_Size.Location = new System.Drawing.Point(10, 29);
+            this.Label_InnerRing_Size.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_InnerRing_Size.Name = "Label_InnerRing_Size";
+            this.Label_InnerRing_Size.Size = new System.Drawing.Size(30, 13);
+            this.Label_InnerRing_Size.TabIndex = 1;
+            this.Label_InnerRing_Size.Text = "Size:";
+            // 
+            // TextBox_BothCircles_Size
+            // 
+            this.TextBox_BothCircles_Size.AccessibleName = "InnerAndOuterCircle";
+            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(62, 27);
+            this.TextBox_BothCircles_Size.Margin = new System.Windows.Forms.Padding(2);
+            this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
+            this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(76, 20);
+            this.TextBox_BothCircles_Size.TabIndex = 0;
+            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_BothCircles_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Panel_ObjectInfo
+            // 
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Texture);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Animation);
+            this.Panel_ObjectInfo.Controls.Add(this.ComboBox_Model);
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Tex);
+            this.Panel_ObjectInfo.Controls.Add(this.Label_Model);
+            this.Panel_ObjectInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
+            this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2);
+            this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(219, 240);
+            this.Panel_ObjectInfo.TabIndex = 6;
+            this.Panel_ObjectInfo.Visible = false;
+            // 
+            // Label_Anim
+            // 
+            this.Label_Anim.AutoSize = true;
+            this.Label_Anim.Location = new System.Drawing.Point(10, 63);
+            this.Label_Anim.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_Anim.Name = "Label_Anim";
+            this.Label_Anim.Size = new System.Drawing.Size(56, 13);
+            this.Label_Anim.TabIndex = 5;
+            this.Label_Anim.Text = "Animation:";
+            // 
+            // ComboBox_Texture
+            // 
+            this.ComboBox_Texture.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Texture.FormattingEnabled = true;
+            this.ComboBox_Texture.Location = new System.Drawing.Point(72, 36);
+            this.ComboBox_Texture.Margin = new System.Windows.Forms.Padding(2);
+            this.ComboBox_Texture.Name = "ComboBox_Texture";
+            this.ComboBox_Texture.Size = new System.Drawing.Size(84, 21);
+            this.ComboBox_Texture.Sorted = true;
+            this.ComboBox_Texture.TabIndex = 2;
+            // 
+            // ComboBox_Animation
+            // 
+            this.ComboBox_Animation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Animation.FormattingEnabled = true;
+            this.ComboBox_Animation.Location = new System.Drawing.Point(72, 60);
+            this.ComboBox_Animation.Margin = new System.Windows.Forms.Padding(2);
+            this.ComboBox_Animation.Name = "ComboBox_Animation";
+            this.ComboBox_Animation.Size = new System.Drawing.Size(84, 21);
+            this.ComboBox_Animation.Sorted = true;
+            this.ComboBox_Animation.TabIndex = 4;
+            // 
+            // ComboBox_Model
+            // 
+            this.ComboBox_Model.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Model.FormattingEnabled = true;
+            this.ComboBox_Model.Location = new System.Drawing.Point(72, 11);
+            this.ComboBox_Model.Margin = new System.Windows.Forms.Padding(2);
+            this.ComboBox_Model.Name = "ComboBox_Model";
+            this.ComboBox_Model.Size = new System.Drawing.Size(84, 21);
+            this.ComboBox_Model.Sorted = true;
+            this.ComboBox_Model.TabIndex = 0;
+            // 
+            // Label_Tex
+            // 
+            this.Label_Tex.AutoSize = true;
+            this.Label_Tex.Location = new System.Drawing.Point(10, 38);
+            this.Label_Tex.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_Tex.Name = "Label_Tex";
+            this.Label_Tex.Size = new System.Drawing.Size(46, 13);
+            this.Label_Tex.TabIndex = 3;
+            this.Label_Tex.Text = "Texture:";
+            // 
+            // Label_Model
+            // 
+            this.Label_Model.AutoSize = true;
+            this.Label_Model.Location = new System.Drawing.Point(10, 14);
+            this.Label_Model.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label_Model.Name = "Label_Model";
+            this.Label_Model.Size = new System.Drawing.Size(39, 13);
+            this.Label_Model.TabIndex = 1;
+            this.Label_Model.Text = "Model:";
+            // 
+            // Panel_PlaceObject
+            // 
+            this.Panel_PlaceObject.Controls.Add(this.Lable_Model);
+            this.Panel_PlaceObject.Controls.Add(this.Combo_Model);
+            this.Panel_PlaceObject.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
+            this.Panel_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
+            this.Panel_PlaceObject.Name = "Panel_PlaceObject";
+            this.Panel_PlaceObject.Size = new System.Drawing.Size(219, 240);
+            this.Panel_PlaceObject.TabIndex = 21;
+            this.Panel_PlaceObject.Visible = false;
+            // 
+            // Lable_Model
+            // 
+            this.Lable_Model.AutoSize = true;
+            this.Lable_Model.Location = new System.Drawing.Point(11, 18);
+            this.Lable_Model.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Lable_Model.Name = "Lable_Model";
+            this.Lable_Model.Size = new System.Drawing.Size(39, 13);
+            this.Lable_Model.TabIndex = 1;
+            this.Lable_Model.Text = "Model:";
+            // 
+            // Combo_Model
+            // 
+            this.Combo_Model.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Combo_Model.FormattingEnabled = true;
+            this.Combo_Model.Location = new System.Drawing.Point(53, 15);
+            this.Combo_Model.Margin = new System.Windows.Forms.Padding(2);
+            this.Combo_Model.Name = "Combo_Model";
+            this.Combo_Model.Size = new System.Drawing.Size(92, 21);
+            this.Combo_Model.Sorted = true;
+            this.Combo_Model.TabIndex = 0;
+            // 
             // NDYEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1408,16 +1416,16 @@
             this.GroupBox_DrawTex.PerformLayout();
             this.Panel_Info.ResumeLayout(false);
             this.Panel_Info.PerformLayout();
+            this.Panel_Textures.ResumeLayout(false);
+            this.Panel_Textures.PerformLayout();
+            this.Panel_PlaceBrush.ResumeLayout(false);
+            this.Panel_PlaceBrush.PerformLayout();
             this.Panel_Lower_Raise_Ground.ResumeLayout(false);
             this.Panel_Lower_Raise_Ground.PerformLayout();
             this.Panel_ObjectInfo.ResumeLayout(false);
             this.Panel_ObjectInfo.PerformLayout();
             this.Panel_PlaceObject.ResumeLayout(false);
             this.Panel_PlaceObject.PerformLayout();
-            this.Panel_Textures.ResumeLayout(false);
-            this.Panel_Textures.PerformLayout();
-            this.Panel_PlaceBrush.ResumeLayout(false);
-            this.Panel_PlaceBrush.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

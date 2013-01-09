@@ -47,6 +47,7 @@ private:
 	Vector2 zBrushLastPos;
 
 	unsigned int zTexBrushSelectedTex;
+	unsigned int zSelectedSectorX, zSelectedSectorY;
 public:
 	GameEngine();
 	~GameEngine();

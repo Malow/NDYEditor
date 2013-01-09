@@ -57,7 +57,7 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SUE->world == zWorld )
 		{
-			unsigned int tIndex = SUE->sector.y * SUE->world->GetNumSectorsWidth() + SUE->sector.x;
+			unsigned int tIndex = SUE->sectorY * SUE->world->GetNumSectorsWidth() + SUE->sectorX;
 			zGraphics->DeleteTerrain(zTerrain[tIndex]);
 			zTerrain[tIndex] = 0;
 		}
@@ -102,6 +102,7 @@ void WorldRenderer::onEvent( Event* e )
 		zEntities[EUE->entity]->RotateAxis(Vector3(1.0f, 0.0f, 0.0f), EUE->entity->GetRotation().x * (3.1415f / 180.0f));
 		zEntities[EUE->entity]->RotateAxis(Vector3(0.0f, 1.0f, 0.0f), EUE->entity->GetRotation().y * (3.1415f / 180.0f));
 		zEntities[EUE->entity]->RotateAxis(Vector3(0.0f, 0.0f, 1.0f), EUE->entity->GetRotation().z * (3.1415f / 180.0f));
+		
 		if(EUE->entity->GetSelected())
 			zEntities[EUE->entity]->SetSpecialColor(COLOR::RED_COLOR);
 		else
@@ -124,30 +125,13 @@ void WorldRenderer::onEvent( Event* e )
 			UpdateSectorBlendMap( SHMC->sectorx, SHMC->sectory );
 		}
 	}
-}
-
-
-CollisionData WorldRenderer::GetCollisionDataWithGround()
-{
-	unsigned int counter = 0;
-	bool found = false;
-
-	iCamera* cam = GetGraphics()->GetCamera();
-	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
-	CollisionData cd;
-	while(counter < zTerrain.size() && !found)
+	else if ( SectorBlendTexturesChanged* SBTC = dynamic_cast<SectorBlendTexturesChanged*>(e) )
 	{
-		cd = pe->GetCollisionRayTerrain(cam->GetPosition(), cam->GetForward(), zTerrain[counter]);
-		if(cd.collision)
+		if ( SBTC->world == zWorld )
 		{
-			found = true;
+			UpdateSectorTextures(SBTC->sectorX,SBTC->sectorY);
 		}
-		counter++;
 	}
-	cam = NULL;
-	pe = NULL;
-
-	return cd;
 }
 
 
@@ -171,7 +155,7 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
-	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().y );
+	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().z );
 	std::set< Vector2 > sectors;
 	zWorld->GetSectorsInCicle( camPos, 100.0f, sectors );
 
@@ -272,44 +256,57 @@ void WorldRenderer::UpdateSectorBlendMap( unsigned int x, unsigned int y )
 }
 
 
-void WorldRenderer::UpdateSector( unsigned int x, unsigned int y )
+void WorldRenderer::UpdateSector( unsigned int sectorX, unsigned int sectorY )
 {
-	if ( zWorld->IsSectorLoaded(x,y) )
+	if ( zWorld->IsSectorLoaded(sectorX,sectorY) )
 	{
-		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
-		Vector3 pos(x * 32.0f + 16.0f, 0.0f, y * 32.0f + 16.0f);
+		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
+		Vector3 pos(sectorX * 32.0f + 16.0f, 0.0f, sectorY * 32.0f + 16.0f);
 
 		zTerrain[tIndex] = zGraphics->CreateTerrain(pos,
 			Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE),
 			SECTOR_HEIGHT_SIZE);
 
+		// Update Textures
+		UpdateSectorTextures(sectorX,sectorY);
+
+		// Update Blend Map
+		UpdateSectorBlendMap(sectorX,sectorY);
+
+		// Update Height Map
+		UpdateSectorHeightMap(sectorX,sectorY);
+	}
+}
+
+
+void WorldRenderer::UpdateSectorTextures( unsigned int sectorX, unsigned int sectorY )
+{
+	if ( zWorld->IsSectorLoaded(sectorX,sectorY) )
+	{
+		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
+
+		const char* terrainTextures[4];
+
 		// Special Sector Textures for 0,0
-		if ( x == 0 && y == 0 )
+		if ( sectorX == 0 && sectorY == 0 )
 		{
-			// Blend Maps
-			const char* terrainTextures[4];
-			terrainTextures[0] = "Media/Red.png";
-			terrainTextures[1] = "Media/Green.png";
-			terrainTextures[2] = "Media/Blue.png";
-			terrainTextures[3] = "Media/BallTexture.png";
+			terrainTextures[0] = "Media/Textures/Red.png";
+			terrainTextures[1] = "Media/Textures/Green.png";
+			terrainTextures[2] = "Media/Textures/Blue.png";
+			terrainTextures[3] = "Media/Textures/BallTexture.png";
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
 		else
 		{
-			// Blend Maps
-			const char* terrainTextures[4];
-			terrainTextures[0] = &zWorld->GetSector(x,y)->GetTextureNames()[0];
-			terrainTextures[1] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH];
-			terrainTextures[2] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH*2];
-			terrainTextures[3] = &zWorld->GetSector(x,y)->GetTextureNames()[TEXTURE_NAME_LENGTH*3];
-
+			std::string files[4];
+			for( unsigned int x=0; x<4; ++x )
+			{
+				files[x] = "Media/Textures/";
+				files[x] += &zWorld->GetSector(sectorX,sectorY)->GetTextureNames()[TEXTURE_NAME_LENGTH*x];
+				terrainTextures[x] = &files[x][0];
+			}
 			zTerrain[tIndex]->SetTextures(terrainTextures);
 		}
-
-		// Update Blend Map
-		UpdateSectorBlendMap(x,y);
-
-		// Height Map
-		UpdateSectorHeightMap(x,y);
+		
 	}
 }

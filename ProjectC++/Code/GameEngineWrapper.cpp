@@ -137,30 +137,36 @@ void GameEngineWrapper::GetSelectedInfo( char* info, float& x, float& y, float& 
 	}
 }
 
+
 void GameEngineWrapper::SetSelectedObjectInfo( char* info, float x, float y, float z )
 {
 	m_GameEngine->SetSelectedObjectInfo(info, x, y, z);
 }
+
 
 void GameEngineWrapper::GetBrushAttr( char* info, float& size )
 {
 	m_GameEngine->GetBrushAttr(info, size);
 }
 
+
 void GameEngineWrapper::GetBrushAttr( char* info, char* tempString)
 {
 	m_GameEngine->GetBrushAttr(info, tempString);
 }
+
 
 void GameEngineWrapper::RemoveSelectedEntities()
 {
 	m_GameEngine->RemoveSelectedEntities();
 }
 
+
 void GameEngineWrapper::GetNrOfSelectedEntities( int& x )
 {
 	m_GameEngine->GetNrOfSelectedEntities(x);
 }
+
 
 void GameEngineWrapper::MouseInsideFrame( bool flag )
 {
@@ -173,10 +179,12 @@ void GameEngineWrapper::MouseMove( int x, int y )
 	m_GameEngine->MouseMove(x,y);
 }
 
+
 void GameEngineWrapper::SetBrushAttr( char* info, float size )
 {
 	m_GameEngine->SetBrushAttr(info, size);
 }
+
 
 void GameEngineWrapper::SetBrushAttr( char* info, char* stringValue )
 {

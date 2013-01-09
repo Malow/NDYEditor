@@ -53,10 +53,10 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
-	GetGraphics()->SetFPSMax(30);
+	GetGraphics()->SetFPSMax(60);
 	GetGraphics()->StartRendering();
 
-	srand( time(NULL) );
+	srand( (unsigned int)time(NULL) );
 
 	return 0;
 }
@@ -76,7 +76,7 @@ void GameEngine::ProcessFrame()
 		zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
 		zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
 	}
-	if ( zWorld ) zWorld->Update(dt);
+	if ( zWorld ) zWorld->Update();
 
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
@@ -166,13 +166,13 @@ void GameEngine::OnResize(int width, int height)
 }
 
 
-void GameEngine::OnLeftMouseUp( unsigned int x, unsigned int y )
+void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
 	zLeftMouseDown = false;
 }
 
 
-void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
+void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 {
 	if(zWorld != NULL)
 	{
@@ -313,16 +313,15 @@ void GameEngine::OnLeftMouseDown( unsigned int x, unsigned int y )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				float length;
-				float theta;
-				float x;
-				float z;
-				int temp = zBrushSize * 1000;
+				double length;
+				double theta;
+				double x;
+				double z;
 				vector<Entity*> insideCircle;
 				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle) < zBrushStrength )
 				{
-					theta = (rand() / (float)RAND_MAX) * M_PI * 2;
-					length = (rand() / (float)RAND_MAX) * zBrushSize;
+					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
+					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
 					x = (cos(theta) * length);
 					z = (sin(theta) * length);
 
@@ -477,8 +476,8 @@ void GameEngine::LockMouseToCamera()
 		if(GetGraphics()->GetCamera()->GetCameraType() == CameraType::FPS)
 		{
 			GetGraphics()->GetKeyListener()->SetMousePosition(
-				Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2, 
-				GetGraphics()->GetEngineParameters()->windowHeight / 2));
+				Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2.0f, 
+				GetGraphics()->GetEngineParameters()->windowHeight / 2.0f));
 
 			GetGraphics()->GetCamera()->SetUpdateCamera(true);
 			GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
@@ -568,48 +567,25 @@ void GameEngine::GetBrushAttr( char* info, float& size )
 void GameEngine::GetBrushAttr( char* info, char* SChar )
 {
 	std::string tempString = "";
-	if(std::string(info) == "Tex1")
+	if( strlen(info) == 4 && info[0] == 'T' && info[1] == 'e' && info[2] == 'x')
 	{
-		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
+		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 		if(cd.collision)
 		{
-			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
+			Vector2 worldPos( cd.posx, cd.posz );
+			zSelectedSectorX = zWorld->WorldPosToSector( worldPos ).x;
+			zSelectedSectorY = zWorld->WorldPosToSector( worldPos ).y;
 
-			tempString = "sallad.jpg"; // Only 100 long
+			unsigned int texID = info[3] - 48;
+			tempString = zWorld->GetSectorTexture(zSelectedSectorX, zSelectedSectorY, texID);
 		}
 	}
-	else if(std::string(info) == "Tex2")
-	{
-		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
-		if(cd.collision)
-		{
-			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
 
-			tempString = "Derp Herp_1.jpg"; // Only 100 long
-		}
-	}
-	else if(std::string(info) == "Tex3")
-	{
-		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
-		if(cd.collision)
-		{
-			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
-
-			tempString = "Omnomnom.jpg"; // Only 100 long
-		}
-	}
-	else if(std::string(info) == "Tex4")
-	{
-		CollisionData cd = zWorldRenderer->GetCollisionDataWithGround();
-		if(cd.collision)
-		{
-			Sector* temp = zWorld->GetSectorAtWorldPos(Vector2(cd.posx, cd.posz)); // RETURN THE SECOTRS TEXTURE
-
-			tempString = "huehuehue.jpg"; // Only 100 long
-		}
-	}
-	for(int i = 0; i < tempString.length(); i++)
+	// Fill Output String
+	for(unsigned int i = 0; i < tempString.length(); i++)
 		SChar[i] = tempString[i];
+
+	// Null Terminate
 	SChar[tempString.length()] = 0;
 }
 
@@ -686,16 +662,9 @@ void GameEngine::SetBrushAttr( char* info, float size )
 
 void GameEngine::SetBrushAttr( char* info, char* stringValue )
 {
-	if(string(info) == "Tex1")
+	if( strlen(info) == 4 && info[0] == 'T' && info[1] == 'e' && info[2] == 'x' )
 	{
-	}
-	else if(string(info) == "Tex2")
-	{
-	}
-	else if(string(info) == "Tex3")
-	{
-	}
-	else if(string(info) == "Tex4")
-	{
+		unsigned int texID = info[3] - 48;
+		zWorld->SetSectorTexture(zSelectedSectorX, zSelectedSectorY, stringValue, texID);
 	}
 }

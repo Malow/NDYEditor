@@ -234,8 +234,6 @@ namespace System { namespace Windows { namespace Interop
 		try
 		{
 			lpText1 = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
-
-
 			m_GameEngine->GetBrushAttr(lpText1, lpText2);
 		}
 		finally

@@ -190,9 +190,16 @@ void World::SaveFileAs( const std::string& fileName )
 }
 
 
-Sector* World::GetSectorAtWorldPos( const Vector2& pos ) throw(const char*)
+Sector* World::GetSectorAtWorldPos( const Vector2& pos )
 {
-	return GetSector( (unsigned int)(pos.x / (float)SECTOR_WORLD_SIZE), (unsigned int)(pos.y / (float)SECTOR_WORLD_SIZE) );
+	Vector2 sectorPos = WorldPosToSector(pos);
+	return GetSector( (unsigned int)sectorPos.x, (unsigned int)sectorPos.y );
+}
+
+
+Vector2 World::WorldPosToSector( const Vector2& pos )
+{
+	return Vector2(floor(pos.x / (float)SECTOR_WORLD_SIZE), floor(pos.y / (float)SECTOR_WORLD_SIZE));
 }
 
 
@@ -474,7 +481,7 @@ void World::DeleteAnchor( WorldAnchor*& anchor )
 }
 
 
-void World::Update( float dt )
+void World::Update()
 {
 	// Anchored sectors
 	std::set< Vector2 > anchoredSectors;
@@ -496,7 +503,7 @@ void World::Update( float dt )
 			Sector *sector = GetSector( (unsigned int)i->x, (unsigned int)i->y );
 			if ( !sector->IsEdited() )
 			{
-				NotifyObservers(&SectorUnloadedEvent(this,*i));
+				NotifyObservers(&SectorUnloadedEvent(this,i->x,i->y));
 				delete zSectors[(unsigned int)i->x][(unsigned int)i->y];
 				zSectors[(unsigned int)i->x][(unsigned int)i->y] = 0;
 			}
@@ -532,3 +539,21 @@ unsigned int World::GetLoadedSectors( std::set<Vector2>& out ) const
 
 	return counter;
 }
+
+
+void World::SetSectorTexture( unsigned int x, unsigned int y, const std::string& texture, unsigned int index )
+{
+	Sector* s = GetSector(x,y);
+	s->SetTextureName(index, texture);
+	NotifyObservers( &SectorBlendTexturesChanged(this,x,y) );
+}
+
+
+const char* const World::GetSectorTexture( unsigned int x, unsigned int y, unsigned int index )
+{
+	Sector *s = GetSector(x,y);
+	return s->GetTextureName(index);
+}
+
+
+

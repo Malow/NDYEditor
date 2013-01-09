@@ -5,11 +5,13 @@
 
 // Edit 2012-11-18 by Alexivan - Removed DX dependencies
 // Edit 2012-11-23 by Alexivan - Added DX Conversions
-// EDIT 2012-12-17 by Tillman - Added GetD3DXVECTORX and Union & []-operator overloading.
+// EDIT 2012-12-17 by Tillman  - Added GetD3DXVECTORX and Union & []-operator overloading.
 // EDIT 2012-12-18 by Alexivan - Warning Ignore for nameless struct in union
 // EDIT 2012-12-18 by Alexivan - GetLength function made constant
 // EDIT 2012-12-19 by Alexivan - Added Less Than Comparison, Removed Destructors
 // EDIT 2012-12-19 by Alexivan - Removed Destructors, Fixed GetRotated, Normalize with big N, Made some functions constant
+// EDIT 2013-01-07 by Tillman  - Optimized Constructors.
+// EDIT 2013-01-09 by Alexivan - GetXY, GetXZ, GetZY for Vector3
 
 #pragma warning ( push ) 
 #pragma warning ( disable : 4201 ) // nonstandard extension used : nameless struct/union
@@ -29,7 +31,7 @@ public:
 		};
 	};
 
-	Vector2(float x=0.0f, float y=0.0f) : x(x), y(y)
+	Vector2(float _x = 0.0f, float _y = 0.0f) : x(_x), y(_y)
 	{
 		
 	}
@@ -245,6 +247,21 @@ public:
 			throw("index out of bounds");
 		}
 		return values[i];
+	}
+
+	inline Vector2 GetXY() const
+	{
+		return Vector2(x,y);
+	}
+
+	inline Vector2 GetXZ() const
+	{
+		return Vector2(x,z);
+	}
+
+	inline Vector2 GetYZ() const
+	{
+		return Vector2(y,z);
 	}
 
 #ifdef D3DVECTOR_DEFINED

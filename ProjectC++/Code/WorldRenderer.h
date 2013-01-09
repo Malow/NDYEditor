@@ -25,6 +25,7 @@ public:
 	virtual void onEvent( Event* e );
 
 protected:
+	void UpdateSectorTextures( unsigned int x, unsigned int y );
 	void UpdateSectorHeightMap( unsigned int x, unsigned int y );
 	void UpdateSector( unsigned int x, unsigned int y );
 	void UpdateSectorBlendMap( unsigned int x, unsigned int y );

@@ -81,12 +81,29 @@ public:
 	}
 };
 
+class SectorBlendTexturesChanged : public Event
+{
+public:
+	World* world;
+	unsigned int sectorX, sectorY;
+	SectorBlendTexturesChanged( World* world, unsigned int sectorX, unsigned int sectorY ) :
+		world(world),
+		sectorX(sectorX),
+		sectorY(sectorY)
+	{
+	}
+};
+
 class SectorUnloadedEvent : public Event
 {
 public:
 	World* world;
-	Vector2 sector;
-	SectorUnloadedEvent( World* world, const Vector2& pos ) : world(world), sector(pos) {}
+	unsigned int sectorX, sectorY;
+	SectorUnloadedEvent( World* world, unsigned int sectorX, unsigned int sectorY ) : 
+		world(world), 
+		sectorX(sectorX),
+		sectorY(sectorY)
+	{}
 };
 
 class EntityLoadedEvent : public Event
