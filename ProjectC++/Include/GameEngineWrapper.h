@@ -16,7 +16,7 @@ public:
 	GameEngineWrapper();
 	~GameEngineWrapper();
 
-	unsigned int Init(unsigned int hWnd, int width, int height);
+	unsigned int Init(unsigned int hWnd);
 	void Shutdown();
 
 	void ProcessFrame();
@@ -34,7 +34,6 @@ public:
 	void SaveWorldAs(char* msg);
 	void SaveWorld();
 	void OpenWorld(char* msg);
-	void MouseInsideFrame(bool flag);
 	void MouseMove(int x, int y);
 
 	void RemoveSelectedEntities();

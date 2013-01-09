@@ -14,9 +14,9 @@ GameEngineWrapper::~GameEngineWrapper()
 }
 
 
-unsigned int GameEngineWrapper::Init(unsigned int hWnd, int width, int height)	
+unsigned int GameEngineWrapper::Init(unsigned int hWnd)	
 {
-	return m_GameEngine->Init(hWnd, width, height);
+	return m_GameEngine->Init(hWnd);
 }
 
 
@@ -165,12 +165,6 @@ void GameEngineWrapper::RemoveSelectedEntities()
 void GameEngineWrapper::GetNrOfSelectedEntities( int& x )
 {
 	m_GameEngine->GetNrOfSelectedEntities(x);
-}
-
-
-void GameEngineWrapper::MouseInsideFrame( bool flag )
-{
-	m_GameEngine->MouseInsideFrame(flag);
 }
 
 

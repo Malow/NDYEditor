@@ -8,8 +8,6 @@
 
 
 GameEngine::GameEngine() :
-	zScreenWidth(0),
-	zScreenHeight(0),
 	zMode(MODE::NONE),
 	zWorld(0),
 	zWorldRenderer(0),
@@ -17,12 +15,12 @@ GameEngine::GameEngine() :
 	zBrushSize(1.0f),			// 3 Meters Brush By Default
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
-	zMouseInsideFrame(false),
 	zLeftMouseDown(false),
 	zBrushStrength(1),			// 1 unit by default
 	zTexBrushSelectedTex(0),
 	zAnchor(0),
-	zBrushLastPos(0.0f,0.0f)
+	zBrushLastPos(0.0f,0.0f),
+	zMouseMoved(false)
 {
 }
 
@@ -37,25 +35,25 @@ GameEngine::~GameEngine()
 }
 
 
-unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
+unsigned int GameEngine::Init(unsigned int hWnd)
 {
 	MaloW::ClearDebug();
 
-	zScreenWidth = width;
-	zScreenHeight = height;
-
 	InitGraphics(hWnd);
 
-	zCreateModelPath = "";
-
+	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
 	GetGraphics()->SetFPSMax(60);
 	GetGraphics()->StartRendering();
 
+	// Start Camera
+	ChangeCameraMode("FPS");
+	LockMouseToCamera();
+
+	// Random
 	srand( (unsigned int)time(NULL) );
 
 	return 0;
@@ -65,12 +63,13 @@ unsigned int GameEngine::Init(unsigned int hWnd, int width, int height)
 void GameEngine::ProcessFrame()
 {
 	GraphicsEngine* ge;
-	if ( !(ge = GetGraphics()) )
+	ge = GetGraphics();
+	if ( !ge )
 		return;
 
 	iCamera *camera = ge->GetCamera();
-
 	float dt = GetGraphics()->Update();
+
 	if ( zAnchor ) 
 	{
 		zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
@@ -97,23 +96,26 @@ void GameEngine::ProcessFrame()
 		}
 	}
 
-	if((ge->GetCamera()->GetCameraType() == CameraType::FPS) && zLockMouseToCamera)
+	if( ge->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
-		if(ge->GetKeyListener()->IsPressed('W'))
+		if ( zLockMouseToCamera )
 		{
-			ge->GetCamera()->MoveForward(dt);
-		}
-		if(ge->GetKeyListener()->IsPressed('S'))
-		{
-			ge->GetCamera()->MoveBackward(dt);
-		}
-		if(ge->GetKeyListener()->IsPressed('A'))
-		{
-			ge->GetCamera()->MoveLeft(dt);
-		}
-		if(ge->GetKeyListener()->IsPressed('D'))
-		{
-			ge->GetCamera()->MoveRight(dt);
+			if(ge->GetKeyListener()->IsPressed('W'))
+			{
+				ge->GetCamera()->MoveForward(dt);
+			}
+			if(ge->GetKeyListener()->IsPressed('S'))
+			{
+				ge->GetCamera()->MoveBackward(dt);
+			}
+			if(ge->GetKeyListener()->IsPressed('A'))
+			{
+				ge->GetCamera()->MoveLeft(dt);
+			}
+			if(ge->GetKeyListener()->IsPressed('D'))
+			{
+				ge->GetCamera()->MoveRight(dt);
+			}
 		}
 	}
 	else if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
@@ -135,9 +137,9 @@ void GameEngine::ProcessFrame()
 			ge->GetCamera()->MoveRight(dt);
 		}
 
-		Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
 		if ( zWorldRenderer )
 		{
+			Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
 			try
 			{
 				float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
@@ -154,15 +156,39 @@ void GameEngine::ProcessFrame()
 		}
 	}
 
-	Sleep(50);
+	if ( zWorldRenderer && zDrawBrush )
+	{
+		if ( zMouseMoved )
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
+
+				// Brush Drawing
+				if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
+				{
+					this->OnLeftMouseDown(0,0);
+					zBrushLastPos = Vector2(cd.posx, cd.posz);
+				}
+			}
+			else
+			{
+				GetGraphics()->SetSpecialCircle(-1,0,Vector2(0,0));
+			}
+			zMouseMoved = false;
+		}
+	}
+	else
+	{
+		GetGraphics()->SetSpecialCircle(-1,0,Vector2(0,0));
+	}
 }
 
 
 void GameEngine::OnResize(int width, int height)
 {
-	zScreenWidth = width;
-	zScreenHeight = height;
-	GetGraphics()->ResizeGraphicsEngine(zScreenWidth, zScreenHeight);
+	GetGraphics()->ResizeGraphicsEngine(width, height);
 }
 
 
@@ -370,7 +396,7 @@ void GameEngine::ChangeMode( int mode )
 	}
 
 	// Brush Control
-	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH)
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH || zMode == MODE::DRAWTEX )
 	{
 		zDrawBrush = true;
 	}
@@ -398,19 +424,17 @@ void GameEngine::OpenWorld( char* msg )
 }
 
 
-void GameEngine::SetWindowFocused( bool value )
+void GameEngine::SetWindowFocused( bool flag )
 {
 	if ( GetGraphics() )
-		GetGraphics()->GetCamera()->SetActiveWindowDisabling(value);
+		GetGraphics()->GetCamera()->SetActiveWindowDisabling(flag);
 }
 
 
 void GameEngine::SaveWorld()
 {
-	if ( !zWorld )
-		throw("World Does Not Exist!");
-
-	zWorld->SaveFile();
+	if ( zWorld )
+		zWorld->SaveFile();
 }
 
 
@@ -425,10 +449,7 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 	string temp = std::string(cameraMode);
 	GraphicsEngine* ge = GetGraphics();
 
-	zLockMouseToCamera = false;
-	GetGraphics()->GetCamera()->SetUpdateCamera(false);
-
-	if(temp == "FPS" && ge->GetCamera()->GetCameraType() != CameraType::FPS)
+	if( temp == "FPS" )
 	{
 		Vector3 oldPos = GetGraphics()->GetCamera()->GetPosition();
 		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
@@ -440,19 +461,20 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 		ge->GetCamera()->SetForward(oldForward);
 		ge->GetCamera()->SetUpVector(oldUp);
 
+		zLockMouseToCamera = true;
 
-		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+		GetGraphics()->GetCamera()->SetUpdateCamera(true);
+		GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 	}
-	if(temp == "RTS" && ge->GetCamera()->GetCameraType() != CameraType::RTS)
+
+	if( temp == "RTS" )
 	{
 		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
 		ge->GetCamera()->SetPosition(Vector3(ge->GetCamera()->GetPosition().x, 20, ge->GetCamera()->GetPosition().z));
-
 		ge->ChangeCamera(CameraType::RTS);
-
 		ge->GetCamera()->SetForward(oldForward);
+		GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	}
-	ge = NULL;
 }
 
 
@@ -470,23 +492,19 @@ void GameEngine::KeyDown( int key )
 
 void GameEngine::LockMouseToCamera()
 {
-	zLockMouseToCamera = !zLockMouseToCamera;
-	if(zLockMouseToCamera)
+	if( GetGraphics()->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
-		if(GetGraphics()->GetCamera()->GetCameraType() == CameraType::FPS)
+		zLockMouseToCamera = !zLockMouseToCamera;
+		if ( zLockMouseToCamera )
 		{
-			GetGraphics()->GetKeyListener()->SetMousePosition(
-				Vector2(GetGraphics()->GetEngineParameters()->windowWidth / 2.0f, 
-				GetGraphics()->GetEngineParameters()->windowHeight / 2.0f));
-
 			GetGraphics()->GetCamera()->SetUpdateCamera(true);
 			GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
 		}
-	}
-	else
-	{
-		GetGraphics()->GetCamera()->SetUpdateCamera(false);
-		GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+		else
+		{
+			GetGraphics()->GetCamera()->SetUpdateCamera(false);
+			GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+		}
 	}
 }
 
@@ -607,33 +625,9 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 
 void GameEngine::MouseMove( int x, int y )
 {
-	bool checkCollision = false;
-
-	if ( zDrawBrush ) checkCollision = true;
-	if ( zMode == RAISE || zMode == LOWER || zMode == PLACEBRUSH || zMode == DRAWTEX ) checkCollision = true;
-
-	if ( checkCollision && zWorldRenderer )
-	{
-		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
-		if(cd.collision)
-		{
-			GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
-			
-			// Brush Drawing
-			if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2 )
-			{
-				this->OnLeftMouseDown(x,y);
-				zBrushLastPos = Vector2(cd.posx, cd.posz);
-			}
-		}
-	}
+	zMouseMoved = true;
 }
 
-
-void GameEngine::MouseInsideFrame( bool flag )
-{
-	zMouseInsideFrame = flag;
-}
 
 void GameEngine::SetBrushAttr( char* info, float size )
 {

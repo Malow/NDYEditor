@@ -40,7 +40,7 @@ namespace Example
             InitializeComponent();
 
             m_GameEngine = new CppCLI();
-            m_GameEngine.Init(RenderBox.Handle, RenderBox.Width, RenderBox.Height);
+            m_GameEngine.Init(RenderBox.Handle);
             this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             
             this.KeyPreview = true;
@@ -170,12 +170,6 @@ namespace Example
             this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
         }
 
-        
-        private void RenderBox_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -187,6 +181,7 @@ namespace Example
                 this.RenderBox_RightMouseDown(sender, e);
             }
         }
+
         private void RenderBox_LeftMouseDown(object sender, MouseEventArgs e)
         {
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
@@ -519,16 +514,6 @@ namespace Example
             this.m_mode = MODE.LOWER;
             switchMode();
             m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-
-		private void RenderBox_MouseLeave(object sender, EventArgs e)
-        {
-            m_GameEngine.MouseInsideFrame(false);
-        }
-
-        private void RenderBox_MouseEnter(object sender, EventArgs e)
-        {
-            m_GameEngine.MouseInsideFrame(true);
         }
 
         private void RenderBox_MouseMove(object sender, MouseEventArgs e)

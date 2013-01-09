@@ -439,10 +439,11 @@
             // 
             // btnRTS
             // 
-            this.btnRTS.Location = new System.Drawing.Point(116, 4);
+            this.btnRTS.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnRTS.Location = new System.Drawing.Point(50, 0);
             this.btnRTS.Margin = new System.Windows.Forms.Padding(2);
             this.btnRTS.Name = "btnRTS";
-            this.btnRTS.Size = new System.Drawing.Size(34, 28);
+            this.btnRTS.Size = new System.Drawing.Size(50, 43);
             this.btnRTS.TabIndex = 1;
             this.btnRTS.Text = "RTS";
             this.btnRTS.UseVisualStyleBackColor = true;
@@ -450,10 +451,11 @@
             // 
             // btnFPS
             // 
-            this.btnFPS.Location = new System.Drawing.Point(79, 4);
+            this.btnFPS.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnFPS.Location = new System.Drawing.Point(0, 0);
             this.btnFPS.Margin = new System.Windows.Forms.Padding(2);
             this.btnFPS.Name = "btnFPS";
-            this.btnFPS.Size = new System.Drawing.Size(34, 28);
+            this.btnFPS.Size = new System.Drawing.Size(50, 43);
             this.btnFPS.TabIndex = 0;
             this.btnFPS.Text = "FPS";
             this.btnFPS.UseVisualStyleBackColor = true;
@@ -491,10 +493,11 @@
             // 
             // btn_DrawTex
             // 
-            this.btn_DrawTex.Location = new System.Drawing.Point(4, 171);
+            this.btn_DrawTex.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_DrawTex.Location = new System.Drawing.Point(0, 160);
             this.btn_DrawTex.Margin = new System.Windows.Forms.Padding(2);
             this.btn_DrawTex.Name = "btn_DrawTex";
-            this.btn_DrawTex.Size = new System.Drawing.Size(68, 20);
+            this.btn_DrawTex.Size = new System.Drawing.Size(98, 20);
             this.btn_DrawTex.TabIndex = 8;
             this.btn_DrawTex.Text = "Texture";
             this.btn_DrawTex.UseVisualStyleBackColor = true;
@@ -502,11 +505,11 @@
             // 
             // btn_PlaceBrush
             // 
-            this.btn_PlaceBrush.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_PlaceBrush.Location = new System.Drawing.Point(15, 44);
+            this.btn_PlaceBrush.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_PlaceBrush.Location = new System.Drawing.Point(0, 140);
             this.btn_PlaceBrush.Margin = new System.Windows.Forms.Padding(2);
             this.btn_PlaceBrush.Name = "btn_PlaceBrush";
-            this.btn_PlaceBrush.Size = new System.Drawing.Size(68, 20);
+            this.btn_PlaceBrush.Size = new System.Drawing.Size(98, 20);
             this.btn_PlaceBrush.TabIndex = 7;
             this.btn_PlaceBrush.Text = "BPlace";
             this.btn_PlaceBrush.UseVisualStyleBackColor = true;
@@ -514,10 +517,11 @@
             // 
             // bnt_None
             // 
-            this.bnt_None.Location = new System.Drawing.Point(4, 4);
+            this.bnt_None.Dock = System.Windows.Forms.DockStyle.Top;
+            this.bnt_None.Location = new System.Drawing.Point(0, 120);
             this.bnt_None.Margin = new System.Windows.Forms.Padding(2);
             this.bnt_None.Name = "bnt_None";
-            this.bnt_None.Size = new System.Drawing.Size(68, 20);
+            this.bnt_None.Size = new System.Drawing.Size(98, 20);
             this.bnt_None.TabIndex = 6;
             this.bnt_None.Text = "Nothing";
             this.bnt_None.UseVisualStyleBackColor = true;
@@ -525,11 +529,11 @@
             // 
             // btn_LowerGround
             // 
-            this.btn_LowerGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_LowerGround.Location = new System.Drawing.Point(15, 149);
+            this.btn_LowerGround.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_LowerGround.Location = new System.Drawing.Point(0, 100);
             this.btn_LowerGround.Margin = new System.Windows.Forms.Padding(2);
             this.btn_LowerGround.Name = "btn_LowerGround";
-            this.btn_LowerGround.Size = new System.Drawing.Size(68, 20);
+            this.btn_LowerGround.Size = new System.Drawing.Size(98, 20);
             this.btn_LowerGround.TabIndex = 5;
             this.btn_LowerGround.Text = "Lower Ground";
             this.btn_LowerGround.UseVisualStyleBackColor = true;
@@ -537,11 +541,11 @@
             // 
             // btn_RaiseGround
             // 
-            this.btn_RaiseGround.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_RaiseGround.Location = new System.Drawing.Point(15, 128);
+            this.btn_RaiseGround.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_RaiseGround.Location = new System.Drawing.Point(0, 80);
             this.btn_RaiseGround.Margin = new System.Windows.Forms.Padding(2);
             this.btn_RaiseGround.Name = "btn_RaiseGround";
-            this.btn_RaiseGround.Size = new System.Drawing.Size(68, 20);
+            this.btn_RaiseGround.Size = new System.Drawing.Size(98, 20);
             this.btn_RaiseGround.TabIndex = 4;
             this.btn_RaiseGround.Text = "Raise Ground";
             this.btn_RaiseGround.UseVisualStyleBackColor = true;
@@ -549,11 +553,11 @@
             // 
             // btn_PlaceObject
             // 
-            this.btn_PlaceObject.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_PlaceObject.Location = new System.Drawing.Point(15, 24);
+            this.btn_PlaceObject.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_PlaceObject.Location = new System.Drawing.Point(0, 60);
             this.btn_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
             this.btn_PlaceObject.Name = "btn_PlaceObject";
-            this.btn_PlaceObject.Size = new System.Drawing.Size(68, 20);
+            this.btn_PlaceObject.Size = new System.Drawing.Size(98, 20);
             this.btn_PlaceObject.TabIndex = 3;
             this.btn_PlaceObject.Text = "Place";
             this.btn_PlaceObject.UseVisualStyleBackColor = true;
@@ -561,11 +565,11 @@
             // 
             // btn_Rotate
             // 
-            this.btn_Rotate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Rotate.Location = new System.Drawing.Point(15, 108);
+            this.btn_Rotate.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_Rotate.Location = new System.Drawing.Point(0, 40);
             this.btn_Rotate.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Rotate.Name = "btn_Rotate";
-            this.btn_Rotate.Size = new System.Drawing.Size(68, 20);
+            this.btn_Rotate.Size = new System.Drawing.Size(98, 20);
             this.btn_Rotate.TabIndex = 2;
             this.btn_Rotate.Text = "Rotate";
             this.btn_Rotate.UseVisualStyleBackColor = true;
@@ -573,11 +577,11 @@
             // 
             // btn_Move
             // 
-            this.btn_Move.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Move.Location = new System.Drawing.Point(15, 88);
+            this.btn_Move.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_Move.Location = new System.Drawing.Point(0, 20);
             this.btn_Move.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Move.Name = "btn_Move";
-            this.btn_Move.Size = new System.Drawing.Size(68, 20);
+            this.btn_Move.Size = new System.Drawing.Size(98, 20);
             this.btn_Move.TabIndex = 1;
             this.btn_Move.Text = "Move";
             this.btn_Move.UseVisualStyleBackColor = true;
@@ -585,11 +589,11 @@
             // 
             // btn_Select
             // 
-            this.btn_Select.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_Select.Location = new System.Drawing.Point(15, 67);
+            this.btn_Select.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_Select.Location = new System.Drawing.Point(0, 0);
             this.btn_Select.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Select.Name = "btn_Select";
-            this.btn_Select.Size = new System.Drawing.Size(68, 20);
+            this.btn_Select.Size = new System.Drawing.Size(98, 20);
             this.btn_Select.TabIndex = 0;
             this.btn_Select.Text = "Select";
             this.btn_Select.UseVisualStyleBackColor = true;
@@ -614,7 +618,7 @@
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
             this.RenderAndInfoSplitter.Size = new System.Drawing.Size(734, 495);
-            this.RenderAndInfoSplitter.SplitterDistance = 510;
+            this.RenderAndInfoSplitter.SplitterDistance = 511;
             this.RenderAndInfoSplitter.SplitterWidth = 3;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -624,12 +628,9 @@
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(508, 493);
+            this.RenderBox.Size = new System.Drawing.Size(509, 493);
             this.RenderBox.TabIndex = 3;
-            this.RenderBox.Paint += new System.Windows.Forms.PaintEventHandler(this.RenderBox_Paint);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
-            this.RenderBox.MouseEnter += new System.EventHandler(this.RenderBox_MouseEnter);
-            this.RenderBox.MouseLeave += new System.EventHandler(this.RenderBox_MouseLeave);
             this.RenderBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseMove);
             this.RenderBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseUp);
             // 
@@ -656,7 +657,7 @@
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
-            this.InfoSplitter.Size = new System.Drawing.Size(221, 495);
+            this.InfoSplitter.Size = new System.Drawing.Size(220, 495);
             this.InfoSplitter.SplitterDistance = 250;
             this.InfoSplitter.SplitterWidth = 3;
             this.InfoSplitter.TabIndex = 0;
@@ -668,7 +669,7 @@
             this.Panel_Tex_Picker.Location = new System.Drawing.Point(0, 0);
             this.Panel_Tex_Picker.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Tex_Picker.Name = "Panel_Tex_Picker";
-            this.Panel_Tex_Picker.Size = new System.Drawing.Size(219, 248);
+            this.Panel_Tex_Picker.Size = new System.Drawing.Size(218, 248);
             this.Panel_Tex_Picker.TabIndex = 0;
             this.Panel_Tex_Picker.Visible = false;
             // 
@@ -771,7 +772,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
             this.Panel_Info.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(219, 248);
+            this.Panel_Info.Size = new System.Drawing.Size(218, 248);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -1008,7 +1009,7 @@
             this.Panel_Textures.Location = new System.Drawing.Point(0, 0);
             this.Panel_Textures.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Textures.Name = "Panel_Textures";
-            this.Panel_Textures.Size = new System.Drawing.Size(219, 240);
+            this.Panel_Textures.Size = new System.Drawing.Size(218, 240);
             this.Panel_Textures.TabIndex = 1;
             this.Panel_Textures.Visible = false;
             // 
@@ -1117,7 +1118,7 @@
             this.Panel_PlaceBrush.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceBrush.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceBrush.Name = "Panel_PlaceBrush";
-            this.Panel_PlaceBrush.Size = new System.Drawing.Size(219, 240);
+            this.Panel_PlaceBrush.Size = new System.Drawing.Size(218, 240);
             this.Panel_PlaceBrush.TabIndex = 0;
             this.Panel_PlaceBrush.Visible = false;
             // 
@@ -1205,7 +1206,7 @@
             this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
             this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
-            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(219, 240);
+            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(218, 240);
             this.Panel_Lower_Raise_Ground.TabIndex = 2;
             this.Panel_Lower_Raise_Ground.Visible = false;
             // 
@@ -1273,7 +1274,7 @@
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
             this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(219, 240);
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(218, 240);
             this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 
@@ -1348,7 +1349,7 @@
             this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceObject.Name = "Panel_PlaceObject";
-            this.Panel_PlaceObject.Size = new System.Drawing.Size(219, 240);
+            this.Panel_PlaceObject.Size = new System.Drawing.Size(218, 240);
             this.Panel_PlaceObject.TabIndex = 21;
             this.Panel_PlaceObject.Visible = false;
             // 

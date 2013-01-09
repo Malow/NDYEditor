@@ -29,7 +29,7 @@ namespace System { namespace Windows { namespace Interop
 		CppCLI();
 		~CppCLI();
 
-		HRESULT Init(IntPtr hWnd, int width, int height);
+		HRESULT Init(IntPtr hWnd);
 		void Shutdown();
 
 		void ProcessFrame();
@@ -54,7 +54,6 @@ namespace System { namespace Windows { namespace Interop
 
 		void RemoveSelectedEntities();
 
-		void MouseInsideFrame(bool flag);
 		void MouseMove(int x, int y);
 
 		void ChangeMode(int mode);

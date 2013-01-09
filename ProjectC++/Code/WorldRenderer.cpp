@@ -27,7 +27,8 @@ WorldRenderer::~WorldRenderer()
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
 	{
-		zGraphics->DeleteTerrain(zTerrain[x]);
+		if ( zTerrain[x] )
+			zGraphics->DeleteTerrain(zTerrain[x]);
 	}
 	zTerrain.clear();
 
@@ -157,7 +158,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	// Get Applicable Sectors
 	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().z );
 	std::set< Vector2 > sectors;
-	zWorld->GetSectorsInCicle( camPos, 100.0f, sectors );
+	zWorld->GetSectorsInCicle( camPos, 50.0f, sectors );
 
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )

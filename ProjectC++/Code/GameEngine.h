@@ -20,39 +20,42 @@ enum MODE
 class GameEngine : public Observer
 {
 private:
-	int zScreenWidth;
-	int zScreenHeight;
-
+	// Data
 	World* zWorld;
 	WorldRenderer *zWorldRenderer;
 	WorldAnchor* zAnchor;
 
-	MODE zMode;
-	CameraType zCameraType;
-
-	std::string zCreateModelPath;
+	// Camera
 	bool zLockMouseToCamera;
 
+	// Current Tool
+	MODE zMode;
+	float zBrushSize;
+	float zBrushSizeExtra;
+	float zBrushStrength;
+
+	// Entity Place Brush
+	std::string zCreateModelPath;
+
+	// Entity Select Brush
 	std::set<Entity*> zTargetedEntities;
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
 
-	float zBrushSize;
-	float zBrushSizeExtra;
-	float zBrushStrength;
-	bool zMouseInsideFrame;
+	// Brush
 	bool zDrawBrush;
-
+	bool zMouseMoved;
 	bool zLeftMouseDown;
 	Vector2 zBrushLastPos;
 
+	// Texture Brush
 	unsigned int zTexBrushSelectedTex;
 	unsigned int zSelectedSectorX, zSelectedSectorY;
 public:
 	GameEngine();
 	~GameEngine();
 
-	unsigned int Init(unsigned int hWnd, int width, int height);
+	unsigned int Init(unsigned int hWnd);
 
 	void ProcessFrame();
 	void OnResize(int width, int height);

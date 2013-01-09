@@ -17,9 +17,9 @@ namespace System { namespace Windows { namespace Interop
 		//DumpMemoryLeaks();
 	}
 
-	HRESULT CppCLI::Init(IntPtr hWnd, int width, int height)
+	HRESULT CppCLI::Init(IntPtr hWnd)
 	{
-		return (HRESULT)m_GameEngine->Init(*(unsigned int*)&hWnd, width, height);
+		return (HRESULT)m_GameEngine->Init(*(unsigned int*)&hWnd);
 	}
 
 	void CppCLI::Shutdown()
@@ -255,11 +255,6 @@ namespace System { namespace Windows { namespace Interop
 		int tempx;
 		m_GameEngine->GetNrOfSelectedEntities(tempx);
 		x = tempx;
-	}
-
-	void CppCLI::MouseInsideFrame( bool flag )
-	{
-		m_GameEngine->MouseInsideFrame(flag);
 	}
 
 	void CppCLI::MouseMove( int x, int y )
