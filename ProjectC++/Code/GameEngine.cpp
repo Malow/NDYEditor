@@ -558,7 +558,7 @@ void GameEngine::GetBrushAttr( char* info, float& size )
 	if(string(info) == "InnerCircle") // Returns the inner circle size
 		size = zBrushSize;
 	if(string(info) == "OuterCircle") // Returns the outer circle size
-		size = zBrushSize + zBrushSizeExtra;
+		size = zBrushSizeExtra;
 	if(string(info) == "Strength") // Returns the strength size
 		size = zBrushStrength;
 

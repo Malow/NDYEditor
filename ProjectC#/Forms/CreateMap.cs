@@ -48,6 +48,14 @@ namespace Example
 
         private void NoNumberKeyPress(object sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == (char)27)
+            {
+                CloseButton_Click(sender, e);
+            }
+            if (e.KeyChar == (char)13)
+            {
+                CreateButton_Click(sender, e);
+            }
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
