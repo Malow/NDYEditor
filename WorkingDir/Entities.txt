@@ -5,3 +5,23 @@ Model:Media/Scale.obj
 Number:2
 Name:Scale Again
 Model:Media/Scale.obj
+
+Number:3
+Name:Bush
+Model:Media/Models/Bush_01_v04_r.obj
+
+Number:4
+Name:Fern r
+Model:Media/Models/Fern_02_v01_r.obj
+
+Number:5
+Name:Fern
+Model:Media/Models/Fern_02_v01.obj
+
+Number:6
+Name:Tree
+Model:Media/Models/Tree_02_v02_r.obj
+
+Number:7
+Name:Stone
+Model:Media/Models/Stone_01_v02.obj

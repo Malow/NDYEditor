@@ -260,9 +260,7 @@ void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, un
 	{
 		if ( !zFile ) Open();
 		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
-		std::streampos targetPos = GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256;
 		zFile->seekp( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
-		std::streampos pos = zFile->tellp();
 		zFile->write(reinterpret_cast<const char*>(entities.data()), sizeof(EntityStruct) * 256);
 	}
 }
@@ -274,7 +272,6 @@ bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct,
 	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
 	zFile->seekg( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
 	if ( zFile->eof() ) return false;
-	std::streampos pos = zFile->tellg();
 	if ( !zFile->read(reinterpret_cast<char*>(out.data()), sizeof(EntityStruct) * 256) ) return false;
 	return true;
 }
