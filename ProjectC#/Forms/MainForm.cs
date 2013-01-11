@@ -225,9 +225,8 @@ namespace Example
                 this.Panel_Textures.Show();
                 this.Panel_Textures.BringToFront();
             }
-
-
         }
+
         void GetAllSelectedInfo()
         {
             TextBox_Pos_X.Enabled = false;

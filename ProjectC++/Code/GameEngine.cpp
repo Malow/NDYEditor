@@ -265,16 +265,20 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			if(cd.collision)
 			{
 				std::set<Vector2> nodes;
-				if ( zWorld->GetTextureNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
+				if ( zWorld->GetTextureNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
 				{
 					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
-						float distanceFactor = zBrushSize - Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( distanceFactor < 0 ) continue;
-						distanceFactor /= zBrushSize;
+						float factor = 1.0f;
+						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
+						if ( distance >= zBrushSize )
+						{
+							factor = zBrushSizeExtra - ( distance - zBrushSize );
+							factor /= zBrushSizeExtra;
+						}
 
 						Vector4 drawColor(0.0f,0.0f,0.0f,0.0f);
-						drawColor[zTexBrushSelectedTex] = 1.0f;
+						drawColor[zTexBrushSelectedTex] = zBrushStrength * factor;
 
 						try 
 						{
