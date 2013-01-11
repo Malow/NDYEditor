@@ -73,10 +73,6 @@ namespace Example
                 //Run();
                 Application.DoEvents();
                 this.m_GameEngine.Update();
-                if (m_mode == MODE.MOVE)
-                {
-                    GetAllSelectedInfo();
-                }
             }
         }
 
@@ -177,7 +173,7 @@ namespace Example
 
         private void RenderBox_LeftMouseDown(object sender, MouseEventArgs e)
         {
-            if (this.m_mode != MODE.SELECT || this.m_mode == MODE.NONE)
+            if (this.m_mode != MODE.SELECT && this.m_mode != MODE.NONE)
                 this.toolStripStatusLabel1.Text = "Not Saved!";
 
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
@@ -198,6 +194,7 @@ namespace Example
                 this.m_mode = MODE.SELECT;
                 switchMode();
                 m_GameEngine.ChangeMode((int)m_mode);
+                GetAllSelectedInfo();
             }
         }
         private void RenderBox_RightMouseDown(object sender, MouseEventArgs e)
@@ -535,10 +532,12 @@ namespace Example
         {
             m_GameEngine.MouseMove(e.X, e.Y);
         }
+
 		private void RenderBox_MouseUp(object sender, MouseEventArgs e)
         {
             m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
         }
+
         private void GetNrOfSelectedEntities()
         {
             m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );

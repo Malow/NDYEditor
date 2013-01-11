@@ -36,15 +36,17 @@ private:
 
 	// Sectors
 	Sector*** zSectors;
-	std::set< Vector2 > zLoadedSectors;
+	std::set<Vector2UINT> zLoadedSectors;
+	std::map< Sector*, unsigned int > zLoadedEntityCount;
 
-	std::vector <Entity*> zEntities;
+	std::vector<Entity*> zEntities;
+	
 
 	unsigned int zNrOfSectorsWidth;
 	unsigned int zNrOfSectorsHeight;
 
 	// Anchors
-	std::set< WorldAnchor* > zAnchors;
+	std::set<WorldAnchor*> zAnchors;
 
 public:
 	World( Observer* observer, const std::string& fileName="" ) throw(const char*);
@@ -75,7 +77,7 @@ public:
 	// Sector Functions
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& worldPos );
-	Vector2 WorldPosToSector( const Vector2& worldPos ) const;
+	Vector2UINT WorldPosToSector( const Vector2& worldPos ) const;
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 	void SetSectorTexture( unsigned int x, unsigned int y, const std::string& texture, unsigned int index );
 	const char* const GetSectorTexture( unsigned int x, unsigned int y, unsigned int index );
@@ -90,10 +92,10 @@ public:
 	// Data Access
 	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
-	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
+	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const;
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
-	const std::set< Vector2 >& GetLoadedSectors() const { return zLoadedSectors; }
+	const std::set< Vector2UINT >& GetLoadedSectors() const { return zLoadedSectors; }
 	unsigned int GetNumSectorsWidth() const;
 	unsigned int GetNumSectorsHeight() const;
 

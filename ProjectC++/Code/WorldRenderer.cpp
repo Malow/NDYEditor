@@ -148,7 +148,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
 	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().z );
-	std::set< Vector2 > sectors;
+	std::set< Vector2UINT > sectors;
 	zWorld->GetSectorsInCicle( camPos, 50.0f, sectors );
 
 	// Check For Collision
@@ -182,35 +182,38 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	iCamera* cam = GetGraphics()->GetCamera();
 	Vector3 camPos = cam->GetPosition();
 	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
-	CollisionData cd;
+	
 	std::vector<Entity*> closeEntities;
 	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
-	if( closeEntities.size() == 0)
+	if( closeEntities.size() == 0 )
 		return NULL;
 
-	returnPointer = closeEntities.at(0);
-	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), 
-		cam->Get3DPickingRay(), 
-		zEntities[closeEntities.at(0)]);
+	float curDistance = 100000.0f;
+	returnPointer = closeEntities[0];
 
+	CollisionData cd;
+	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), zEntities[closeEntities[0]]);
 	if(cd.collision)
 	{
 		found = true;
+		curDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
 	}
 
-	while(counter < zEntities.size() && !found)
+	while(counter < zEntities.size())
 	{
 		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(
 			cam->GetPosition(), 
 			cam->Get3DPickingRay(), 
-			zEntities[closeEntities.at(counter)]);
+			zEntities[closeEntities[counter]]);
 
 		if(cd.collision)
 		{
 			found = true;
-			if((returnPointer->GetPosition() - camPos).GetLength() > (closeEntities.at(counter)->GetPosition() - camPos).GetLength())
+			float thisDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
+			if(thisDistance < curDistance)
 			{
-				returnPointer = closeEntities.at(counter);
+				returnPointer = closeEntities[counter];
+				curDistance = thisDistance;
 			}
 		}
 		counter++;

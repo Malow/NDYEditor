@@ -357,7 +357,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					z = cd.posz + (sin(theta) * length);
 					if ( x > 0 && z > 0 )
 					{
-						Vector2 sp = zWorld->WorldPosToSector(Vector2(x,z));
+						Vector2UINT sp = zWorld->WorldPosToSector(Vector2(x,z));
 						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
 						{
 							Entity* ent = zWorld->CreateEntity(1);

@@ -54,10 +54,10 @@ public:
 	// Returns The Texture Name (0<=index<4)
 	const char* const GetTextureName( unsigned int index ) const;
 	void SetTextureName( unsigned int index, const std::string& name );
+	char* GetTextureNames();
 
 	// Inline Functions
 	inline int GetSectorLength() { return SECTOR_LENGTH; }
 	inline void SetEdited( bool state ) { zEditedFlag = state; }
-	inline bool IsEdited() const { return zEditedFlag; }
-	char* GetTextureNames();
+	inline bool IsEdited() const { return zEditedFlag; }	
 };
