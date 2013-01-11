@@ -271,7 +271,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					{
 						float factor = 1.0f;
 						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( zBrushSizeExtra != 0 && distance >= zBrushSize )
+						if ( zBrushSizeExtra > 0.0f && distance >= zBrushSize )
 						{
 							factor = zBrushSizeExtra - ( distance - zBrushSize );
 							factor /= zBrushSizeExtra;
