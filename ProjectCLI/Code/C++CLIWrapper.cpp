@@ -110,23 +110,6 @@ namespace System { namespace Windows { namespace Interop
 		if ( m_GameEngine ) this->m_GameEngine->SaveWorld();
 	}
 
-	void CppCLI::SetCreateModelPath( String^ filePath )
-	{
-		char* lpText = nullptr;
-
-		// Konvertera String^ -> char*
-		try
-		{
-			lpText = (char*)Marshal::StringToHGlobalAnsi(filePath).ToPointer();
-
-			m_GameEngine->SetCreateModelPath(lpText);
-		}
-		finally
-		{
-			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
-		}
-	}
-
 	void CppCLI::ChangeCameraMode( String^ cameraMode )
 	{
 		char* lpText = nullptr;
@@ -295,6 +278,11 @@ namespace System { namespace Windows { namespace Interop
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText1)); // Free memory
 		}
+	}
+
+	void CppCLI::SetEntityType( int value )
+	{
+		m_GameEngine->SetEntityType(value);
 	}
 
 }}}

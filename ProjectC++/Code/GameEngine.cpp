@@ -21,7 +21,8 @@ GameEngine::GameEngine() :
 	zTexBrushSelectedTex(0),
 	zAnchor(0),
 	zBrushLastPos(0.0f,0.0f),
-	zMouseMoved(false)
+	zMouseMoved(false),
+	zCreateEntityType(0)
 {
 }
 
@@ -228,7 +229,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				Entity* ent = zWorld->CreateEntity(1);
+				Entity* ent = zWorld->CreateEntity(this->zCreateEntityType);
 				ent->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
 			}
 		}
@@ -365,7 +366,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						Vector2UINT sp = zWorld->WorldPosToSector(Vector2(x,z));
 						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
 						{
-							Entity* ent = zWorld->CreateEntity(1);
+							Entity* ent = zWorld->CreateEntity(this->zCreateEntityType);
 							ent->SetPosition( Vector3(x, zWorldRenderer->GetYPosFromHeightMap(x, z), z) );
 						}
 					}		
@@ -451,12 +452,6 @@ void GameEngine::SaveWorld()
 {
 	if ( zWorld )
 		zWorld->SaveFile();
-}
-
-
-void GameEngine::SetCreateModelPath( char* filePath )
-{
-	zCreateModelPath = std::string(filePath);
 }
 
 
@@ -683,4 +678,9 @@ void GameEngine::SetBrushAttr( char* info, char* stringValue )
 		unsigned int texID = info[3] - 48;
 		zWorld->SetSectorTexture(zSelectedSectorX, zSelectedSectorY, stringValue, texID);
 	}
+}
+
+void GameEngine::SetEntityType( int value )
+{
+	this->zCreateEntityType = value;
 }

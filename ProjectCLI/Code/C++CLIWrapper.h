@@ -57,11 +57,11 @@ namespace System { namespace Windows { namespace Interop
 		void MouseMove(int x, int y);
 
 		void ChangeMode(int mode);
-		void SetCreateModelPath( String^ filePath);
 		void ChangeCameraMode( String^ cameraMode);
 		void LockMouseToCamera();
 		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void SetSelectedObjectInfo( String^ info, float x, float y, float z );
 		void GetNrOfSelectedEntities([Out] int% x);
+		void SetEntityType(int value);
 	};
 }}}

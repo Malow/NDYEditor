@@ -95,13 +95,6 @@ void GameEngineWrapper::SaveWorld()
 	this->m_GameEngine->SaveWorld();
 }
 
-
-void GameEngineWrapper::SetCreateModelPath( char* filePath )
-{
-	this->m_GameEngine->SetCreateModelPath(filePath);
-}
-
-
 void GameEngineWrapper::ChangeCameraMode( char* cameraMode )
 {
 	this->m_GameEngine->ChangeCameraMode(cameraMode);
@@ -183,5 +176,10 @@ void GameEngineWrapper::SetBrushAttr( char* info, float size )
 void GameEngineWrapper::SetBrushAttr( char* info, char* stringValue )
 {
 	m_GameEngine->SetBrushAttr(info, stringValue);
+}
+
+void GameEngineWrapper::SetEntityType( int value )
+{
+	m_GameEngine->SetEntityType(value);
 }
 

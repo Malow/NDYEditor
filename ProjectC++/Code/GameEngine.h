@@ -35,7 +35,7 @@ private:
 	float zBrushStrength;
 
 	// Entity Place Brush
-	std::string zCreateModelPath;
+	unsigned int zCreateEntityType;
 
 	// Entity Select Brush
 	std::set<Entity*> zTargetedEntities;
@@ -82,13 +82,13 @@ public:
 	void MouseInsideFrame(bool flag);
 	void MouseMove(int x, int y);
 	void ChangeMode(int mode);
-	void SetCreateModelPath(char* filePath);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
 	
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
 	void GetNrOfSelectedEntities(int& x);
+	void SetEntityType(int value);
 protected:
 	virtual void onEvent( Event* e );
 };

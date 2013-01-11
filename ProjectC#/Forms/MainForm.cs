@@ -178,11 +178,11 @@ namespace Example
 
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
             {
-                this.m_GameEngine.SetCreateModelPath("Media/" + this.Combo_Model.Text);
+                this.m_GameEngine.SetEntityType(int.Parse(this.Combo_Model.Text.Split(':')[0]));
             }
             if (this.m_mode == MODE.PLACEBRUSH) // This has to be in front of OnLeftMouseDown
             {
-                this.m_GameEngine.SetCreateModelPath("Media/" + this.ComboBox_Model_Brush.Text);
+                this.m_GameEngine.SetEntityType(int.Parse(this.ComboBox_Model_Brush.Text.Split(':')[0]));
             }
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
             if (this.m_mode == MODE.SELECT)
@@ -322,6 +322,27 @@ namespace Example
 
         private void Load_Models()
         {
+            StreamReader sr = new StreamReader("Entities.txt");
+            String line = "";
+            String nr = "";
+            while (!sr.EndOfStream)
+            {
+                line = sr.ReadLine();
+                if (line.StartsWith("Number"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    nr = lineSplit[lineSplit.Length - 1];
+                }
+                if (line.StartsWith("Name"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    this.Combo_Model.Items.Add(nr + ": " + lineSplit[lineSplit.Length-1].ToString());
+                    this.ComboBox_Model_Brush.Items.Add(nr + ": " + lineSplit[lineSplit.Length - 1].ToString());
+                }
+            }
+            this.Combo_Model.SelectedIndex = 0;
+            this.ComboBox_Model_Brush.SelectedIndex = 0;
+/* 
             DirectoryInfo di = new DirectoryInfo("Media/");
             FileInfo[] files = di.GetFiles("*obj");
 
@@ -332,7 +353,7 @@ namespace Example
                 this.Combo_Model.Text = files[i].ToString();
                 this.ComboBox_Model_Brush.Items.Add(files[i].ToString());
                 this.ComboBox_Model_Brush.Text = files[i].ToString();
-            }
+            }*/
         }
         private void Load_Textures()
         {
