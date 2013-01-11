@@ -10,6 +10,7 @@
 /*
 File Order:
 WorldHeader
+SectorHeaders
 TextureNames
 HeightMaps
 BlendMaps
@@ -90,4 +91,5 @@ private:
 	unsigned int GetSectorHeadersBegin() const;
 	unsigned int GetSectorTexturesBegin() const;
 	unsigned int GetEntitiesBegin() const;
+	unsigned int GetEnding() const;
 };

@@ -92,7 +92,7 @@ void GameEngine::ProcessFrame()
 			float tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z);
 			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet + Vector3(0,tempY,0));
 
-			for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
+			for ( auto it=zTargetedEntities.begin(); it != zTargetedEntities.end(); it++ )
 			{
 				tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0,tempY,0));
@@ -361,7 +361,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
 					x = cd.posx + (cos(theta) * length);
 					z = cd.posz + (sin(theta) * length);
-					if ( x > 0 && z > 0 )
+					if ( x > 0.0 && z > 0.0 )
 					{
 						Vector2UINT sp = zWorld->WorldPosToSector(Vector2(x,z));
 						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
@@ -379,13 +379,20 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 }
 
 
-void GameEngine::CreateWorld( int x, int y )
+void GameEngine::CreateWorld( int width, int height )
 {
 	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer=0;
 	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld=0;
-	this->zWorld = new World(this, x, y);
+	this->zWorld = new World(this, width, height);
 	this->zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+
+	// Position camera in center
+	Vector3 centerPos;
+	centerPos.x = width*SECTOR_WORLD_SIZE/2;
+	centerPos.z = height*SECTOR_WORLD_SIZE/2;
+	centerPos.y = 10.0f;
+	GetGraphics()->GetCamera()->SetPosition( centerPos );
 }
 
 
@@ -438,6 +445,13 @@ void GameEngine::OpenWorld( char* msg )
 	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+
+	// Position camera in center
+	Vector3 centerPos;
+	centerPos.x = zWorld->GetNumSectorsWidth()*SECTOR_WORLD_SIZE/2;
+	centerPos.z = zWorld->GetNumSectorsHeight()*SECTOR_WORLD_SIZE/2;
+	centerPos.y = 10.0f;
+	GetGraphics()->GetCamera()->SetPosition( centerPos );
 }
 
 
@@ -626,8 +640,10 @@ void GameEngine::GetBrushAttr( char* info, char* SChar )
 
 void GameEngine::RemoveSelectedEntities()
 {
-	for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
-		zWorld->RemoveEntity((*it));
+	while(!zTargetedEntities.empty())
+	{
+		zWorld->RemoveEntity(*zTargetedEntities.begin());
+	}
 
 	zTargetedEntities.clear();
 	zPrevPosOfSelected.clear();

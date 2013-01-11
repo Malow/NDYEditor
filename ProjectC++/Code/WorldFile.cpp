@@ -42,105 +42,6 @@ WorldFile::~WorldFile()
 }
 
 
-void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
-{
-	if ( zMode != OPEN_LOAD )
-	{
-		if ( !zFile ) Open();
-		SectorHeader header;
-		header.generated = true;
-		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
-		zFile->write((const char*)&header,sizeof(SectorHeader));
-	}
-}
-
-
-bool WorldFile::ReadSectorHeader( unsigned int sectorIndex )
-{
-	if ( !zFile ) Open();
-	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
-	if ( zFile->eof() ) return false;
-
-	SectorHeader header;
-	zFile->read((char*)&header, sizeof(SectorHeader));
-	if ( !header.generated ) return false;
-
-	return true;
-}
-
-
-void WorldFile::WriteHeightMap( const float* const data, unsigned int mapIndex )
-{
-	if ( zMode != OPEN_LOAD )
-	{
-		if ( !zFile ) Open();
-		zFile->seekp( GetHeightsBegin() + mapIndex * sizeof(HeightMap), std::ios::beg );
-		zFile->write((const char*)data,sizeof(HeightMap));
-	}
-}
-
-
-void WorldFile::WriteBlendMap( const float* const data, unsigned int mapIndex )
-{
-	if ( zMode != OPEN_LOAD )
-	{
-		if ( !zFile ) Open();
-		zFile->seekp( GetBlendsBegin() + mapIndex * sizeof(BlendMap), std::ios::beg );
-		zFile->write((const char*)data,sizeof(BlendMap));
-	}
-}
-
-
-bool WorldFile::ReadBlendMap( float* data, unsigned int mapIndex )
-{
-	if ( !zFile ) Open();
-	zFile->seekg( GetBlendsBegin() + mapIndex * sizeof(BlendMap), std::ios::beg );
-	if ( zFile->eof() ) return false;
-	if ( !zFile->read((char*)data, sizeof(BlendMap)) ) return false;;
-	return true;
-}
-
-
-bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
-{
-	if ( !zFile ) Open();
-	zFile->seekg( GetHeightsBegin() + mapIndex * sizeof(HeightMap), std::ios::beg );
-	if ( zFile->eof() ) return false;
-	if ( !zFile->read((char*)data, sizeof(HeightMap)) ) return false;
-	return true;
-}
-
-
-unsigned int WorldFile::GetSectorHeadersBegin() const
-{
-	return sizeof(WorldFileHeader);
-}
-
-
-unsigned int WorldFile::GetSectorTexturesBegin() const
-{
-	return GetSectorHeadersBegin() + zNumSectors * sizeof(SectorHeader);
-}
-
-
-unsigned int WorldFile::GetHeightsBegin() const
-{
-	return GetSectorTexturesBegin() + zNumSectors * sizeof(TextureNamesStruct);
-}
-
-
-unsigned int WorldFile::GetBlendsBegin() const
-{
-	return GetHeightsBegin() + zNumSectors * sizeof(HeightMap);
-}
-
-
-unsigned int WorldFile::GetEntitiesBegin() const
-{
-	return GetBlendsBegin() + zNumSectors * sizeof(BlendMap);
-}
-
-
 void WorldFile::Open()
 {
 	if ( zFile ) return;
@@ -172,12 +73,23 @@ void WorldFile::Open()
 		// New header
 		NotifyObservers(&WorldHeaderCreateEvent(this,zHeader));
 
-		// Save header
-		zFile->seekp(0, std::ios::beg);
-		zFile->write( reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
-
 		// Save number of sectors
 		zNumSectors = zHeader.width * zHeader.height;
+
+		// Expand File
+		zFile->seekp(0, std::ios::end);
+		unsigned int fileSize = zFile->tellp();
+		if ( fileSize < GetEnding() )
+		{
+			unsigned int missingSpace = GetEnding() - fileSize;
+			std::vector<unsigned char> v;
+			v.resize(missingSpace);
+			zFile->write(reinterpret_cast<char*>(&v[0]), missingSpace);
+		}
+
+		// Save header
+		zFile->seekp(0, std::ios::beg);
+		zFile->write(reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
 	}
 	else if ( zMode == OPEN_EDIT )
 	{
@@ -210,12 +122,54 @@ void WorldFile::ReadHeader()
 }
 
 
+unsigned int WorldFile::GetSectorHeadersBegin() const
+{
+	return sizeof(WorldFileHeader);
+}
+
+
+void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		SectorHeader header;
+		header.generated = true;
+		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+		zFile->write((const char*)&header, sizeof(SectorHeader));
+	}
+}
+
+
+bool WorldFile::ReadSectorHeader( unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+	if ( zFile->eof() ) return false;
+
+	SectorHeader header;
+	if ( !zFile->read((char*)&header, sizeof(SectorHeader)) ) return false;
+	if ( !header.generated ) return false;
+
+	return true;
+}
+
+
+unsigned int WorldFile::GetSectorTexturesBegin() const
+{
+	return GetSectorHeadersBegin() + zNumSectors * sizeof(SectorHeader);
+}
+
+
 void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 {
 	if ( zMode != OPEN_LOAD )
 	{
 		if ( !zFile ) Open();
-		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetSectorTexturesBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
 		zFile->write(data, sizeof(TextureNamesStruct));
 	}
 }
@@ -224,10 +178,79 @@ void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
-	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetSectorTexturesBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
 	if ( zFile->eof() ) return false;
 	if ( !zFile->read(data, sizeof(TextureNamesStruct)) ) return false;
+	if ( std::string(data) != "TerrainTexture.png")
+	{
+		int i = 0;
+	}
 	return true;
+}
+
+
+unsigned int WorldFile::GetHeightsBegin() const
+{
+	return GetSectorTexturesBegin() + zNumSectors * sizeof(TextureNamesStruct);
+}
+
+
+void WorldFile::WriteHeightMap( const float* const data, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetHeightsBegin() + sectorIndex * sizeof(HeightMap), std::ios::beg );
+		zFile->write((const char*)data,sizeof(HeightMap));
+	}
+}
+
+
+bool WorldFile::ReadHeightMap( float* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetHeightsBegin() + sectorIndex * sizeof(HeightMap), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read((char*)data, sizeof(HeightMap)) ) return false;
+	return true;
+}
+
+
+unsigned int WorldFile::GetBlendsBegin() const
+{
+	return GetHeightsBegin() + zNumSectors * sizeof(HeightMap);
+}
+
+
+void WorldFile::WriteBlendMap( const float* const data, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetBlendsBegin() + sectorIndex * sizeof(BlendMap), std::ios::beg );
+		zFile->write((const char*)data, sizeof(BlendMap));
+	}
+}
+
+
+bool WorldFile::ReadBlendMap( float* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetBlendsBegin() + sectorIndex * sizeof(BlendMap), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read((char*)data, sizeof(BlendMap)) ) return false;;
+	return true;
+}
+
+
+unsigned int WorldFile::GetEntitiesBegin() const
+{
+	return GetBlendsBegin() + zNumSectors * sizeof(BlendMap);
 }
 
 
@@ -236,8 +259,11 @@ void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, un
 	if ( zMode != OPEN_LOAD )
 	{
 		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		std::streampos targetPos = GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256;
 		zFile->seekp( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
-		zFile->write((const char*)&entities[0], sizeof(EntityStruct) * 256);
+		std::streampos pos = zFile->tellp();
+		zFile->write(reinterpret_cast<const char*>(entities.data()), sizeof(EntityStruct) * 256);
 	}
 }
 
@@ -245,8 +271,16 @@ void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, un
 bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct, 256>& out )
 {
 	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
 	zFile->seekg( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
 	if ( zFile->eof() ) return false;
-	if ( !zFile->read((char*)&out[0], sizeof(EntityStruct) * 256) ) return false;
+	std::streampos pos = zFile->tellg();
+	if ( !zFile->read(reinterpret_cast<char*>(out.data()), sizeof(EntityStruct) * 256) ) return false;
 	return true;
+}
+
+
+unsigned int WorldFile::GetEnding() const
+{
+	return GetEntitiesBegin() + zNumSectors * sizeof(EntityStruct) * 256;
 }

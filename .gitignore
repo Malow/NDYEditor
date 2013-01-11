@@ -34,3 +34,4 @@
 /ProjectC#/Editor GUI.csproj.user
 /Bin/x86/Editor.exe
 /Bin/x86/Editor.pdb
+/WorkingDir/*.map

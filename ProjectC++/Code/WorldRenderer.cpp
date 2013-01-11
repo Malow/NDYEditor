@@ -100,7 +100,7 @@ void WorldRenderer::onEvent( Event* e )
 		else
 			zEntities[EUE->entity]->SetSpecialColor(COLOR::NULL_COLOR);
 
-		//zEntities[EUE->entity]->Scale(EUE->entity->GetScale());
+		zEntities[EUE->entity]->SetScale(EUE->entity->GetScale()*0.05f);
 	}
 	else if ( EntityRemovedEvent* ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{

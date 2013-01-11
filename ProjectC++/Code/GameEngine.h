@@ -14,7 +14,8 @@ enum MODE
 	RAISE,
 	LOWER,
 	PLACEBRUSH,
-	DRAWTEX
+	DRAWTEX,
+	SMOOTH
 };
 
 class GameEngine : public Observer

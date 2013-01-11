@@ -84,6 +84,7 @@ Entity* World::CreateEntity( unsigned int entityType )
 	Entity* temp = new Entity(entityType);
 	zEntities.push_back(temp);
 	NotifyObservers( &EntityLoadedEvent(this, temp) );
+	temp->SetEdited(true);
 	return temp;
 }
 
@@ -157,20 +158,26 @@ void World::SaveFile()
 					std::set< Entity* > entitiesInArea;
 					bool save = false;
 
+					// Find Regional Entities
 					if ( GetEntitiesInRect(sectorRect, entitiesInArea) != zLoadedEntityCount[zSectors[x][y]] )
 					{
 						save = true;
 					}
 
+					// Go Through List
 					std::array<EntityStruct,256> eArray;
-					memset(&eArray[0], 0, sizeof(EntityStruct)*256);
+					for( unsigned int x=0; x<256; ++x )
+					{
+						eArray[x].type = 0;
+					}
+
 					unsigned int cur = 0;
 					for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
 					{
 						if( (*e)->IsEdited() )
 						{
-							save = true;
 							(*e)->SetEdited(false);
+							save = true;
 						}
 
 						// Position
@@ -199,7 +206,7 @@ void World::SaveFile()
 
 					if ( save )
 					{
-						zFile->WriteEntities(eArray, y * zNrOfSectorsWidth + x);
+						zFile->WriteEntities(eArray, y * GetNumSectorsWidth() + x);
 						zLoadedEntityCount[zSectors[x][y]] = cur;
 					}
 				}
@@ -291,21 +298,18 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 			if ( zFile->ReadEntities(y * GetNumSectorsWidth() + x, eArray) )
 			{
 				unsigned int counter=0;
-				for( auto e = eArray.cbegin(); e != eArray.cend(); ++e )
+				for( auto e = eArray.cbegin(); e != eArray.cend() && e->type != 0; ++e )
 				{
-					unsigned int eType = e->type;
-					if ( eType != 0 )
-					{
-						Vector3 pos(e->pos[0]+(x*SECTOR_WORLD_SIZE), e->pos[1], e->pos[2]+(y*SECTOR_WORLD_SIZE));
-						Vector3 rot(e->rot[0], e->rot[1], e->rot[2]);
-						Vector3 scale(e->scale[0], e->scale[1], e->scale[2]);
+					Vector3 pos(e->pos[0]+(x*SECTOR_WORLD_SIZE), e->pos[1], e->pos[2]+(y*SECTOR_WORLD_SIZE));
+					Vector3 rot(e->rot[0], e->rot[1], e->rot[2]);
+					Vector3 scale(e->scale[0], e->scale[1], e->scale[2]);
 
-						Entity* ent = new Entity(eType, pos, rot, scale);
-						ent->SetEdited(false);
-						zEntities.push_back(ent);
-						NotifyObservers( &EntityLoadedEvent(this,ent) );
-						counter++;
-					}
+					Entity* ent = new Entity(e->type, pos, rot, scale);
+					ent->SetEdited(false);
+					zEntities.push_back(ent);
+					NotifyObservers( &EntityLoadedEvent(this,ent) );
+					NotifyObservers( &EntityUpdatedEvent(ent) );
+					counter++;
 				}
 				zLoadedEntityCount[zSectors[x][y]] = counter;
 			}
@@ -587,13 +591,15 @@ void World::Update()
 			{
 				unsavedEntities = true;
 			}
-
-			for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+			else
 			{
-				if ( (*e)->IsEdited() )
+				for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
 				{
-					unsavedEntities = true;
-					break;
+					if ( (*e)->IsEdited() )
+					{
+						unsavedEntities = true;
+						break;
+					}
 				}
 			}
 
