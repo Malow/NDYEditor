@@ -114,7 +114,7 @@ namespace Example
             OpenFileDialog fdlg = new OpenFileDialog();
             fdlg.Title = "Open File";
             fdlg.DefaultExt = "*.map";
-            fdlg.InitialDirectory = Application.StartupPath;
+            fdlg.InitialDirectory = Directory.GetCurrentDirectory();
             fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;
@@ -132,7 +132,7 @@ namespace Example
             SaveFileDialog fdlg = new SaveFileDialog();
             fdlg.DefaultExt = "*.map";
             fdlg.Title = "Save File";
-            fdlg.InitialDirectory = Application.StartupPath;
+            fdlg.InitialDirectory = Directory.GetCurrentDirectory();
             fdlg.Filter = "All files (*.*)|*.*|BOOM! Editor files (*.map)|*.map";
             fdlg.FilterIndex = 2;
             fdlg.RestoreDirectory = true;

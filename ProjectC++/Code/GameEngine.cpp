@@ -271,10 +271,11 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					{
 						float factor = 1.0f;
 						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( distance >= zBrushSize )
+						if ( zBrushSizeExtra != 0 && distance >= zBrushSize )
 						{
 							factor = zBrushSizeExtra - ( distance - zBrushSize );
 							factor /= zBrushSizeExtra;
+							if ( factor <= 0.0 ) factor = 0;
 						}
 
 						Vector4 drawColor(0.0f,0.0f,0.0f,0.0f);
