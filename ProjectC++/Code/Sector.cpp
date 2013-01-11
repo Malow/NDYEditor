@@ -67,9 +67,14 @@ void Sector::SetBlendingAt( float x, float y, const Vector4& val )
 	float scaledX = (snapX / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
 	float scaledY = (snapY / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
 
+	// Normalize Val
+	Vector4 normalizedVal = val;
+	normalizedVal.Normalize();
+
+	// Set Values
 	for( unsigned int i=0; i<4; ++i )
 	{
-		zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ] = val[i];
+		zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ] = normalizedVal[i];
 	}
 
 	SetEdited(true);

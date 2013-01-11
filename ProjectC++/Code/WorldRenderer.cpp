@@ -258,9 +258,7 @@ void WorldRenderer::UpdateSector( unsigned int sectorX, unsigned int sectorY )
 		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
 		Vector3 pos(sectorX * 32.0f + 16.0f, 0.0f, sectorY * 32.0f + 16.0f);
 
-		zTerrain[tIndex] = zGraphics->CreateTerrain(pos,
-			Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE),
-			SECTOR_HEIGHT_SIZE);
+		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
 
 		// Update Textures
 		UpdateSectorTextures(sectorX,sectorY);
@@ -276,32 +274,18 @@ void WorldRenderer::UpdateSector( unsigned int sectorX, unsigned int sectorY )
 
 void WorldRenderer::UpdateSectorTextures( unsigned int sectorX, unsigned int sectorY )
 {
-	if ( zWorld->IsSectorLoaded(sectorX,sectorY) )
+	if ( zWorld->IsSectorLoaded(sectorX, sectorY) )
 	{
 		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
 
 		const char* terrainTextures[4];
-
-		// Special Sector Textures for 0,0
-		if ( sectorX == 0 && sectorY == 0 )
+		std::string files[4];
+		for( unsigned int x=0; x<4; ++x )
 		{
-			terrainTextures[0] = "Media/Textures/Red.png";
-			terrainTextures[1] = "Media/Textures/Green.png";
-			terrainTextures[2] = "Media/Textures/Blue.png";
-			terrainTextures[3] = "Media/Textures/BallTexture.png";
-			zTerrain[tIndex]->SetTextures(terrainTextures);
+			files[x] = "Media/Textures/";
+			files[x] += zWorld->GetSector(sectorX, sectorY)->GetTextureName(x);
+			terrainTextures[x] = &files[x][0];
 		}
-		else
-		{
-			std::string files[4];
-			for( unsigned int x=0; x<4; ++x )
-			{
-				files[x] = "Media/Textures/";
-				files[x] += &zWorld->GetSector(sectorX,sectorY)->GetTextureNames()[TEXTURE_NAME_LENGTH*x];
-				terrainTextures[x] = &files[x][0];
-			}
-			zTerrain[tIndex]->SetTextures(terrainTextures);
-		}
-		
+		zTerrain[tIndex]->SetTextures(terrainTextures);		
 	}
 }

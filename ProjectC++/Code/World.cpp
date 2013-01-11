@@ -288,25 +288,31 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 
 			// Load Entities
 			std::array<EntityStruct,256> eArray;
-			zFile->ReadEntities(y * GetNumSectorsWidth() + x, eArray);
-			unsigned int counter=0;
-			for( auto e = eArray.cbegin(); e != eArray.cend(); ++e )
+			if ( zFile->ReadEntities(y * GetNumSectorsWidth() + x, eArray) )
 			{
-				unsigned int eType = e->type;
-				if ( eType != 0 )
+				unsigned int counter=0;
+				for( auto e = eArray.cbegin(); e != eArray.cend(); ++e )
 				{
-					Vector3 pos(e->pos[0]+(x*SECTOR_WORLD_SIZE), e->pos[1], e->pos[2]+(y*SECTOR_WORLD_SIZE));
-					Vector3 rot(e->rot[0], e->rot[1], e->rot[2]);
-					Vector3 scale(e->scale[0], e->scale[1], e->scale[2]);
+					unsigned int eType = e->type;
+					if ( eType != 0 )
+					{
+						Vector3 pos(e->pos[0]+(x*SECTOR_WORLD_SIZE), e->pos[1], e->pos[2]+(y*SECTOR_WORLD_SIZE));
+						Vector3 rot(e->rot[0], e->rot[1], e->rot[2]);
+						Vector3 scale(e->scale[0], e->scale[1], e->scale[2]);
 
-					Entity* ent = new Entity(eType, pos, rot, scale);
-					ent->SetEdited(false);
-					zEntities.push_back(ent);
-					NotifyObservers( &EntityLoadedEvent(this,ent) );
-					counter++;
+						Entity* ent = new Entity(eType, pos, rot, scale);
+						ent->SetEdited(false);
+						zEntities.push_back(ent);
+						NotifyObservers( &EntityLoadedEvent(this,ent) );
+						counter++;
+					}
 				}
+				zLoadedEntityCount[zSectors[x][y]] = counter;
 			}
-			zLoadedEntityCount[zSectors[x][y]] = counter;
+			else
+			{
+				zLoadedEntityCount[zSectors[x][y]] = 0;
+			}
 		}
 		else
 		{
