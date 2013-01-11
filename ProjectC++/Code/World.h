@@ -6,6 +6,8 @@
 #include "Observer.h"
 #include "WorldFile.h"
 #include "Entity.h"
+#include "CircleAndRect.h"
+
 
 class World;
 
@@ -32,7 +34,9 @@ class World : public Observed, public Observer
 private:
 	WorldFile* zFile;
 
+	// Sectors
 	Sector*** zSectors;
+	std::set< Vector2 > zLoadedSectors;
 
 	std::vector <Entity*> zEntities;
 
@@ -65,17 +69,13 @@ public:
 	void SetBlendingAt( float x, float y, const Vector4& val );
 
 	// Entity Functions
-	bool CreateEntity(Vector3 pos, ENTITYTYPE entityType, std::string filePath);
+	Entity* CreateEntity(unsigned int entityType);
 	void RemoveEntity(Entity* entity);
-
-	// Inline Functions
-	unsigned int GetNumSectorsWidth() const;
-	unsigned int GetNumSectorsHeight() const;
 
 	// Sector Functions
 	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
 	Sector* GetSectorAtWorldPos( const Vector2& worldPos );
-	Vector2 WorldPosToSector( const Vector2& worldPos );
+	Vector2 WorldPosToSector( const Vector2& worldPos ) const;
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;
 	void SetSectorTexture( unsigned int x, unsigned int y, const std::string& texture, unsigned int index );
 	const char* const GetSectorTexture( unsigned int x, unsigned int y, unsigned int index );
@@ -88,11 +88,14 @@ public:
 	void Update();
 
 	// Data Access
+	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
 	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
-	unsigned int GetLoadedSectors( std::set<Vector2>& out ) const;
+	const std::set< Vector2 >& GetLoadedSectors() const { return zLoadedSectors; }
+	unsigned int GetNumSectorsWidth() const;
+	unsigned int GetNumSectorsHeight() const;
 
 protected:
 	// Engine Events

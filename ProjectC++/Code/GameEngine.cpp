@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "Graphics.h"
 #include "MaloWFileDebug.h"
+#include "EntityList.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -40,7 +41,6 @@ unsigned int GameEngine::Init(unsigned int hWnd)
 	MaloW::ClearDebug();
 
 	InitGraphics(hWnd);
-
 	GetGraphics()->GetCamera()->SetUpdateCamera(false);
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
@@ -48,6 +48,9 @@ unsigned int GameEngine::Init(unsigned int hWnd)
 	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
 	GetGraphics()->SetFPSMax(60);
 	GetGraphics()->StartRendering();
+
+	// Entities
+	LoadEntList("Entities.txt");
 
 	// Start Camera
 	ChangeCameraMode("FPS");
@@ -225,8 +228,8 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				zWorld->CreateEntity(Vector3(cd.posx, cd.posy, cd.posz),
-				ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+				Entity* ent = zWorld->CreateEntity(1);
+				ent->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
 			}
 		}
 		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
@@ -303,6 +306,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					{
 						for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 							(*it)->SetSelected(false);
+
 						zPrevPosOfSelected.clear();
 						zTargetedEntities.clear();
 
@@ -314,10 +318,10 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					{
 						for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 							(*it)->SetSelected(false);
+
 						zPrevPosOfSelected.clear();
 						zTargetedEntities.clear();
 					}
-					
 				}
 				else
 				{
@@ -330,6 +334,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			{
 				for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 					(*it)->SetSelected(false);
+
 				zPrevPosOfSelected.clear();
 				zTargetedEntities.clear();
 			}
@@ -348,11 +353,17 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				{
 					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
-					x = (cos(theta) * length);
-					z = (sin(theta) * length);
-
-					zWorld->CreateEntity(Vector3(cd.posx+x, cd.posy, cd.posz+z),
-						ENTITYTYPE::TREE/*This is not used yet*/, zCreateModelPath);
+					x = cd.posx + (cos(theta) * length);
+					z = cd.posz + (sin(theta) * length);
+					if ( x > 0 && z > 0 )
+					{
+						Vector2 sp = zWorld->WorldPosToSector(Vector2(x,z));
+						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
+						{
+							Entity* ent = zWorld->CreateEntity(1);
+							ent->SetPosition( Vector3(x, zWorldRenderer->GetYPosFromHeightMap(x, z), z) );
+						}
+					}		
 				}
 				zBrushLastPos = Vector2(cd.posx, cd.posz);
 				zLeftMouseDown = true;
@@ -368,7 +379,7 @@ void GameEngine::CreateWorld( int x, int y )
 	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, x, y);
-	this->zWorldRenderer = new WorldRenderer(zWorld,GetGraphics());
+	this->zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
 }
 
 
@@ -542,7 +553,9 @@ void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z
 {
 	if(zTargetedEntities.empty())
 		return;
-		//throw("No selected entity");
+
+	//throw("No selected entity");
+
 	string compareString = string(info);
 	auto i = zTargetedEntities.begin();
 
@@ -569,6 +582,10 @@ void GameEngine::onEvent( Event* e )
 		zAnchor = WLE->world->CreateAnchor();
 		GetGraphics()->GetCamera()->SetPosition( Vector3(0.0f,10.0f,0.0f) );
 	}
+	else if ( EntityRemovedEvent *ERE = dynamic_cast<EntityRemovedEvent*>(e) )
+	{
+		zTargetedEntities.erase(ERE->entity);
+	}
 }
 
 void GameEngine::GetBrushAttr( char* info, float& size )
@@ -579,7 +596,6 @@ void GameEngine::GetBrushAttr( char* info, float& size )
 		size = zBrushSizeExtra;
 	if(string(info) == "Strength") // Returns the strength size
 		size = zBrushStrength;
-
 }
 
 void GameEngine::GetBrushAttr( char* info, char* SChar )
@@ -612,6 +628,7 @@ void GameEngine::RemoveSelectedEntities()
 {
 	for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 		zWorld->RemoveEntity((*it));
+
 	zTargetedEntities.clear();
 	zPrevPosOfSelected.clear();
 }
@@ -623,7 +640,7 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 }
 
 
-void GameEngine::MouseMove( int x, int y )
+void GameEngine::MouseMove( int, int )
 {
 	zMouseMoved = true;
 }

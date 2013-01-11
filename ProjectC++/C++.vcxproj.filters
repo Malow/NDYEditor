@@ -49,6 +49,9 @@
     <ClInclude Include="Code\WorldRenderer.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\EntityList.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">
@@ -73,6 +76,9 @@
       <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="Code\WorldRenderer.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\EntityList.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
   </ItemGroup>

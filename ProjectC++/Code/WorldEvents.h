@@ -111,8 +111,7 @@ class EntityLoadedEvent : public Event
 public:
 	World* world;
 	Entity* entity;
-	std::string fileName;
-	EntityLoadedEvent( World* world, Entity* entity, const std::string fileName) : world(world), entity(entity), fileName(fileName){}
+	EntityLoadedEvent(World* world, Entity* entity) : world(world), entity(entity) {}
 };
 
 class EntityRemovedEvent : public Event

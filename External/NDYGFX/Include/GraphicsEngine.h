@@ -81,6 +81,8 @@ extern "C"
 		virtual Vector3 GetSceneAmbientLight() const = 0;
 
 		virtual void ResizeGraphicsEngine(unsigned int width, unsigned int height) = 0;
+
+		virtual void DebugDummyFunction(Vector3* arr) = 0;
 	};
 
 	/*

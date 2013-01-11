@@ -74,21 +74,17 @@ void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
 {
 	if ( value != 0.0f )
 	{
-		SetHeightAt(x,y,GetHeightAt(x,y)+value);
+		SetHeightAt(x, y, GetHeightAt(x,y)+value);
 	}
 }
 
 
-bool World::CreateEntity( Vector3 pos, ENTITYTYPE entityType, std::string filePath)
+Entity* World::CreateEntity( unsigned int entityType )
 {
-	if(entityType == ENTITYTYPE::TREE)
-	{
-		Entity* temp = new Entity(pos);
-		zEntities.push_back(temp);
-		NotifyObservers( &EntityLoadedEvent(this, temp, filePath) );
-		return true;
-	}
-	return false;
+	Entity* temp = new Entity(entityType);
+	zEntities.push_back(temp);
+	NotifyObservers( &EntityLoadedEvent(this, temp) );
+	return temp;
 }
 
 
@@ -153,6 +149,50 @@ void World::SaveFile()
 					zFile->WriteSectorHeader(y * zNrOfSectorsWidth + x);
 					this->zSectors[x][y]->SetEdited(false);
 				}
+
+				// Save Entities
+				Rect sectorRect(Vector2(x * SECTOR_WORLD_SIZE, y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+				std::set< Entity* > entitiesInArea;
+				if ( GetEntitiesInRect(sectorRect, entitiesInArea) )
+				{
+					bool save = false;
+					std::array<EntityStruct,256> eArray;
+					memset(&eArray[0], 0, sizeof(EntityStruct)*256);
+					unsigned int cur = 0;
+					for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+					{
+						if( (*e)->IsEdited() )
+							save = true;
+
+						// Position
+						Vector3 pos = (*e)->GetPosition();
+						eArray[cur].pos[0] = pos.x - sectorRect.topLeft.x;
+						eArray[cur].pos[1] = pos.y;
+						eArray[cur].pos[2] = pos.z - sectorRect.topLeft.y;
+
+						// Rotation
+						Vector3 rot = (*e)->GetRotation();
+						eArray[cur].rot[0] = rot.x;
+						eArray[cur].rot[1] = rot.y;
+						eArray[cur].rot[2] = rot.z;
+
+						// Scale
+						Vector3 scale = (*e)->GetScale();
+						eArray[cur].scale[0] = scale.x;
+						eArray[cur].scale[1] = scale.y;
+						eArray[cur].scale[2] = scale.z;
+
+						// Type
+						eArray[cur].type = (*e)->GetType();
+
+						cur++;
+					}
+
+					if ( save )
+					{
+						zFile->WriteEntities(eArray, y * zNrOfSectorsWidth + x);
+					}
+				}
 			}
 		}
 	}
@@ -197,7 +237,7 @@ Sector* World::GetSectorAtWorldPos( const Vector2& pos )
 }
 
 
-Vector2 World::WorldPosToSector( const Vector2& pos )
+Vector2 World::WorldPosToSector( const Vector2& pos ) const
 {
 	return Vector2(floor(pos.x / (float)SECTOR_WORLD_SIZE), floor(pos.y / (float)SECTOR_WORLD_SIZE));
 }
@@ -235,12 +275,32 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 			{
 				s->Reset();
 			}
+
+			// Load Entities
+			std::array<EntityStruct,256> eArray;
+			zFile->ReadEntities(y * GetNumSectorsWidth() + x, eArray);
+			for( auto e = eArray.cbegin(); e != eArray.cend(); ++e )
+			{
+				unsigned int eType = e->type;
+				if ( eType != 0 )
+				{
+					Vector3 pos(e->pos[0]+(x*SECTOR_WORLD_SIZE), e->pos[1], e->pos[2]+(y*SECTOR_WORLD_SIZE));
+					Vector3 rot(e->rot[0], e->rot[1], e->rot[2]);
+					Vector3 scale(e->scale[0], e->scale[1], e->scale[2]);
+
+					Entity* ent = new Entity(eType, pos, rot, scale);
+					ent->SetEdited(false);
+					zEntities.push_back(ent);
+					NotifyObservers( &EntityLoadedEvent(this,ent) );
+				}
+			}
 		}
 		else
 		{
 			s->Reset();
 		}
 
+		zLoadedSectors.insert( Vector2(x, y) );
 		NotifyObservers( &SectorLoadedEvent(this,x,y) );
 	}
 
@@ -370,8 +430,8 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 
 bool World::IsSectorLoaded( unsigned int x, unsigned int y ) const
 {
-	if ( x > zNrOfSectorsWidth ) return false;
-	if ( y > zNrOfSectorsHeight ) return false;
+	if ( x >= zNrOfSectorsWidth ) return false;
+	if ( y >= zNrOfSectorsHeight ) return false;
 	return zSectors[x][y] != 0;
 }
 
@@ -437,8 +497,9 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 
 Vector4 World::GetBlendingAt( float x, float y )
 {
-	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
-	return sector->GetBlendingAt(fmod(x,SECTOR_WORLD_SIZE),fmod(y,SECTOR_WORLD_SIZE));
+	float fSize = (float)SECTOR_WORLD_SIZE;
+	Sector* sector = GetSector(x/fSize,y/fSize);
+	return sector->GetBlendingAt(fmod(x,fSize),fmod(y,fSize));
 }
 
 
@@ -491,8 +552,7 @@ void World::Update()
 	}
 
 	// Loaded sectors
-	std::set< Vector2 > loadedSectors;
-	GetLoadedSectors(loadedSectors);
+	std::set< Vector2 > loadedSectors = GetLoadedSectors();
 
 	// Unload sectors
 	std::set< Vector2 > sectorsToUnload;
@@ -501,9 +561,26 @@ void World::Update()
 		if ( !anchoredSectors.count(*i) )
 		{
 			Sector *sector = GetSector( (unsigned int)i->x, (unsigned int)i->y );
-			if ( !sector->IsEdited() )
+			
+			Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+			std::set< Entity* > entitiesInArea;
+			bool unsavedEntities = false;
+			if ( GetEntitiesInRect(sectorRect, entitiesInArea) )
+			{
+				for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+				{
+					if ( (*e)->IsEdited() )
+					{
+						unsavedEntities = true;
+						break;
+					}
+				}
+			}
+			
+			if ( !unsavedEntities && !sector->IsEdited() )
 			{
 				NotifyObservers(&SectorUnloadedEvent(this,i->x,i->y));
+				zLoadedSectors.erase( Vector2(i->x, i->y) );
 				delete zSectors[(unsigned int)i->x][(unsigned int)i->y];
 				zSectors[(unsigned int)i->x][(unsigned int)i->y] = 0;
 			}
@@ -515,29 +592,6 @@ void World::Update()
 	{
 		GetSector( i->x, i->y );
 	}
-}
-
-
-unsigned int World::GetLoadedSectors( std::set<Vector2>& out ) const
-{
-	unsigned int counter = 0;
-	
-	if ( zSectors )
-	{
-		for( unsigned int x=0; x<zNrOfSectorsWidth; ++x )
-		{
-			for( unsigned int y=0; y<zNrOfSectorsHeight; ++y )
-			{
-				if ( zSectors[x][y] != 0 )
-				{
-					counter++;
-					out.insert( Vector2(x,y) );
-				}
-			}
-		}
-	}
-
-	return counter;
 }
 
 
@@ -553,6 +607,23 @@ const char* const World::GetSectorTexture( unsigned int x, unsigned int y, unsig
 {
 	Sector *s = GetSector(x,y);
 	return s->GetTextureName(index);
+}
+
+
+unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const
+{
+	unsigned int counter=0;
+
+	for( auto i = zEntities.begin(); i != zEntities.end(); ++i )
+	{
+		if ( rect.IsInside( (*i)->GetPosition().GetXZ() ) )
+		{
+			out.insert(*i);
+			counter++;
+		}
+	}
+
+	return counter;
 }
 
 

@@ -1,41 +1,37 @@
 #include "Entity.h"
 
 
-Entity::Entity()
+
+Entity::Entity( unsigned int type, const Vector3& pos, const Vector3& rot, const Vector3& scale ) :
+	zType(type),
+	zPosition(pos),
+	zRotation(rot),
+	zScale(scale),
+	zSelected(false)
 {
-	zPosition = Vector3(0, 0, 0);
-	zRotation = Vector3(0, 0, 0);
-	zScale = Vector3(0.05f, 0.05f, 0.05f);
 }
-
-
-Entity::Entity( Vector3 pos )
-{
-	zPosition = pos;
-	zRotation = Vector3(0, 0, 0);
-	zScale = Vector3(0.05f, 0.05f, 0.05f);
-}
-
 
 Entity::~Entity()
 {
-
 }
 
-void Entity::SetPosition( Vector3 pos )
+void Entity::SetPosition( const Vector3& pos )
 {
+	SetEdited(true);
 	zPosition = pos;
 	NotifyObservers( &EntityUpdatedEvent(this) );
 }
 
-void Entity::SetRotation( Vector3 rot )
+void Entity::SetRotation( const Vector3& rot )
 {
+	SetEdited(true);
 	zRotation = rot;
 	NotifyObservers(&EntityUpdatedEvent(this));
 }
 
-void Entity::SetScale( Vector3 scale )
+void Entity::SetScale( const Vector3& scale )
 {
+	SetEdited(true);
 	zScale = scale;
 	NotifyObservers(&EntityUpdatedEvent(this));
 }

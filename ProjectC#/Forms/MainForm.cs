@@ -41,7 +41,6 @@ namespace Example
 
             m_GameEngine = new CppCLI();
             m_GameEngine.Init(RenderBox.Handle);
-            this.ResizeEnd += new EventHandler(form1_ResizeEnd);
             
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
@@ -69,7 +68,6 @@ namespace Example
         }
         public void GameLoop()
         {
-            m_GameEngine.OnResize(RenderBox.Width, RenderBox.Height);
             while (this.Created)
             {
                 //Run();
@@ -90,11 +88,6 @@ namespace Example
                 //Run the GameEngine for one frame
                 m_GameEngine.ProcessFrame();
             }
-        }
-
-        void form1_ResizeEnd(object sender, EventArgs e)
-        {
-            m_GameEngine.OnResize(RenderBox.Width, RenderBox.Height);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -672,6 +665,17 @@ namespace Example
         private void combobox_textures_ignore(object sender, EventArgs e)
         {
             RenderBox.Focus();
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RenderBox_Resize(object sender, EventArgs e)
+        {
+            if (m_GameEngine != null)
+                m_GameEngine.OnResize(RenderBox.Size.Width, RenderBox.Size.Height);
         }
     }
 }

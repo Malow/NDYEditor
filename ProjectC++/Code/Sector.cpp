@@ -18,7 +18,6 @@ void Sector::Reset()
 		zHeightMap[x] = 0.0f;
 	}
 
-
 	for( unsigned int x=0; x<SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE; ++x )
 	{
 		zBlendMap[x*4] = 1.0f;

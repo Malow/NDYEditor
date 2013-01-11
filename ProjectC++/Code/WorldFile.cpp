@@ -49,7 +49,7 @@ void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
 		if ( !zFile ) Open();
 		SectorHeader header;
 		header.generated = true;
-		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+		zFile->seekp( GetSectorTexturesBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
 		zFile->write((const char*)&header,sizeof(SectorHeader));
 	}
 }
@@ -58,7 +58,7 @@ void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
 bool WorldFile::ReadSectorHeader( unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
-	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+	zFile->seekg( GetSectorTexturesBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
 	if ( zFile->eof() ) return false;
 
 	SectorHeader header;
@@ -91,16 +91,6 @@ void WorldFile::WriteBlendMap( const float* const data, unsigned int mapIndex )
 }
 
 
-bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
-{
-	if ( !zFile ) Open();
-	zFile->seekg( GetHeightsBegin() + mapIndex * sizeof(HeightMap), std::ios::beg );
-	if ( zFile->eof() ) return false;
-	zFile->read((char*)data,sizeof(HeightMap));
-	return true;
-}
-
-
 bool WorldFile::ReadBlendMap( float* data, unsigned int mapIndex )
 {
 	if ( !zFile ) Open();
@@ -111,27 +101,43 @@ bool WorldFile::ReadBlendMap( float* data, unsigned int mapIndex )
 }
 
 
-unsigned int WorldFile::GetSectorsBegin() const
+bool WorldFile::ReadHeightMap( float* data, unsigned int mapIndex )
 {
-	return sizeof(WorldFileHeader);
+	if ( !zFile ) Open();
+	zFile->seekg( GetHeightsBegin() + mapIndex * sizeof(HeightMap), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	zFile->read((char*)data,sizeof(HeightMap));
+	return true;
 }
 
 
 unsigned int WorldFile::GetSectorHeadersBegin() const
 {
-	return GetSectorsBegin() + zNumSectors * sizeof( SectorHeader );
+	return sizeof(WorldFileHeader);
+}
+
+
+unsigned int WorldFile::GetSectorTexturesBegin() const
+{
+	return GetSectorHeadersBegin() + zNumSectors * sizeof(SectorHeader);
 }
 
 
 unsigned int WorldFile::GetHeightsBegin() const
 {
-	return GetSectorHeadersBegin() + zNumSectors * sizeof( TextureNamesStruct );
+	return GetSectorTexturesBegin() + zNumSectors * sizeof(TextureNamesStruct);
 }
 
 
 unsigned int WorldFile::GetBlendsBegin() const
 {
-	return GetHeightsBegin() + sizeof( HeightMap ) * zNumSectors;
+	return GetHeightsBegin() + zNumSectors * sizeof(HeightMap);
+}
+
+
+unsigned int WorldFile::GetEntitiesBegin() const
+{
+	return GetBlendsBegin() + zNumSectors * sizeof(BlendMap);
 }
 
 
@@ -206,10 +212,10 @@ void WorldFile::ReadHeader()
 
 void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 {
-	if ( !zFile ) Open();
 	if ( zMode != OPEN_LOAD )
 	{
-		zFile->seekp( GetSectorsBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+		if ( !zFile ) Open();
+		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
 		zFile->write((const char*)data,sizeof(TextureNamesStruct));
 	}
 }
@@ -218,8 +224,29 @@ void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
-	zFile->seekg( GetSectorsBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
 	if ( zFile->eof() ) return false;
 	zFile->read((char*)data,sizeof(TextureNamesStruct));
+	return true;
+}
+
+
+void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		zFile->seekp( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
+		zFile->write((const char*)&entities[0], sizeof(EntityStruct) * 256);
+	}
+}
+
+
+bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct, 256>& out )
+{
+	if ( !zFile ) Open();
+	zFile->seekg( GetEntitiesBegin() + sectorIndex * sizeof(EntityStruct) * 256, std::ios::beg );
+	if ( zFile->eof() ) return false;
+	zFile->read((char*)&out[0], sizeof(EntityStruct) * 256);
 	return true;
 }

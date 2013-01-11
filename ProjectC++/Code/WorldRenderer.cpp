@@ -1,4 +1,6 @@
 #include "WorldRenderer.h"
+#include "EntityList.h"
+
 
 
 WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) : 
@@ -79,18 +81,7 @@ void WorldRenderer::onEvent( Event* e )
 	}
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
-		std::ifstream file;
-		file.open(ELE->fileName);
-		if(!file)
-		{
-			zEntities[ELE->entity] = GetGraphics()->CreateMesh("Media/scale.obj", ELE->entity->GetPosition());
-			zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
-			ELE->entity->AddObserver(this);
-			return;
-		}
-		file.close();
-
-		zEntities[ELE->entity] = GetGraphics()->CreateMesh(ELE->fileName.c_str(), ELE->entity->GetPosition());
+		zEntities[ELE->entity] = GetGraphics()->CreateMesh(GetEntModel(ELE->entity->GetType()).c_str(), ELE->entity->GetPosition());
 		zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
 		ELE->entity->AddObserver(this);
 	}
