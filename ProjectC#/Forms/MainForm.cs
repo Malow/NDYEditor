@@ -23,7 +23,8 @@ namespace Example
         RAISE,
         LOWER,
         PLACEBRUSH,
-        DRAWTEX
+        DRAWTEX,
+        SMOOTH
     }
     public partial class NDYEditor : Form
     {
@@ -342,18 +343,6 @@ namespace Example
             }
             this.Combo_Model.SelectedIndex = 0;
             this.ComboBox_Model_Brush.SelectedIndex = 0;
-/* 
-            DirectoryInfo di = new DirectoryInfo("Media/");
-            FileInfo[] files = di.GetFiles("*obj");
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                //if(files[i].ToString() != "scale.obj")
-                this.Combo_Model.Items.Add(files[i].ToString());
-                this.Combo_Model.Text = files[i].ToString();
-                this.ComboBox_Model_Brush.Items.Add(files[i].ToString());
-                this.ComboBox_Model_Brush.Text = files[i].ToString();
-            }*/
         }
         private void Load_Textures()
         {
@@ -396,6 +385,7 @@ namespace Example
             this.Panel_Tex_Picker.Hide();
             this.Panel_Textures.Hide();
             this.Panel_PlaceBrush.Hide();
+            this.Panel_SmoothTool.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
@@ -403,6 +393,7 @@ namespace Example
             this.Panel_Tex_Picker.SendToBack();
             this.Panel_Textures.SendToBack();
             this.Panel_PlaceBrush.SendToBack();
+            this.Panel_SmoothTool.SendToBack();
         }
 
         private void switchMode()
@@ -417,10 +408,10 @@ namespace Example
                 this.hideAll();
 
                 this.Panel_Info.Show();
-                this.Panel_ObjectInfo.Show();
+                //this.Panel_ObjectInfo.Show();
 
                 this.Panel_Info.BringToFront();
-                this.Panel_ObjectInfo.BringToFront();
+                //this.Panel_ObjectInfo.BringToFront();
             }
             else if (this.m_mode == MODE.ROT)
             {
@@ -428,10 +419,10 @@ namespace Example
                 this.hideAll();
 
                 this.Panel_Info.Show();
-                this.Panel_ObjectInfo.Show();
+                //this.Panel_ObjectInfo.Show();
 
                 this.Panel_Info.BringToFront();
-                this.Panel_ObjectInfo.BringToFront();
+                //this.Panel_ObjectInfo.BringToFront();
             }
             else if (m_mode == MODE.MOVE)
             {
@@ -439,10 +430,10 @@ namespace Example
                 this.hideAll();
 
                 this.Panel_Info.Show();
-                this.Panel_ObjectInfo.Show();
+                //this.Panel_ObjectInfo.Show();
 
                 this.Panel_Info.BringToFront();
-                this.Panel_ObjectInfo.BringToFront();
+                //this.Panel_ObjectInfo.BringToFront();
             }
             else if (this.m_mode == MODE.PLACE)
             {
@@ -514,6 +505,24 @@ namespace Example
 
                 m_GameEngine.GetBrushAttr("Strength", out temp);
                 TextBox_Terrain_Strength.Text = temp.ToString();
+            }
+            else if (this.m_mode == MODE.SMOOTH)
+            {
+                this.btn_Smooth.Focus();
+                this.hideAll();
+
+                this.Panel_SmoothTool.Show();
+                this.Panel_SmoothTool.BringToFront();
+
+                float temp;
+                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
+                TextBox_InnerCircle_Smooth.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("OuterCircle", out temp);
+                TextBox_OuterCircle_Smooth.Text = temp.ToString();
+
+                m_GameEngine.GetBrushAttr("Strength", out temp);
+                TextBox_Strength_Smooth.Text = temp.ToString();
             }
         }
         private void setDrawTex(object sender, EventArgs e)
@@ -695,6 +704,13 @@ namespace Example
         {
             if (m_GameEngine != null)
                 m_GameEngine.OnResize(RenderBox.Size.Width, RenderBox.Size.Height);
+        }
+
+        private void btn_Smooth_Click(object sender, EventArgs e)
+        {
+            this.m_mode = MODE.SMOOTH;
+            switchMode();
+            m_GameEngine.ChangeMode((int)m_mode);
         }
     }
 }
