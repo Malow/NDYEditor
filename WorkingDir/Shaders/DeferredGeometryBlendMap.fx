@@ -79,10 +79,10 @@ PSSceneIn VSScene(VSIn input)
 
 	PSSceneIn output = (PSSceneIn)0;
 	output.pos = mul(float4(input.pos, 1.0f), WVP);
-	output.posW = mul(float4(input.pos, 1.0f), worldMatrix);
 	output.tex = input.tex;
-	output.norm = -normalize(mul(input.norm, (float3x3)worldMatrixInverseTranspose)); //**OBS! invert because of how normals are generated**
+	output.norm = normalize(mul(input.norm, (float3x3)worldMatrixInverseTranspose));
 	output.color = input.color;
+	output.posW = mul(float4(input.pos, 1.0f), worldMatrix);
 
 	return output;
 }
@@ -139,7 +139,7 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 	output.Texture.w = -1.0f;
 
 	//NormalAndDepth RT
-	output.NormalAndDepth = float4(input.norm.xyz, input.pos.z / input.pos.w);	
+	output.NormalAndDepth = float4(input.norm, input.pos.z / input.pos.w);	
 	float depth = length(CameraPosition.xyz - input.posW.xyz) / 200.0f;		// Haxfix
 	output.NormalAndDepth.w = depth;
 

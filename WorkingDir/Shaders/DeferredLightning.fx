@@ -338,7 +338,6 @@ float4 PSScene(PSSceneIn input) : SV_Target
 	//}
 
 	
-
 	return saturate(finalColor);
 }
 
