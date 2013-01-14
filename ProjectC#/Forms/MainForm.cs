@@ -280,22 +280,6 @@ namespace Example
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void btnRotate_Click(object sender, EventArgs e)
-        {
-            if (this.m_NrSelectedObject != -1)
-            {
-                this.m_mode = MODE.ROT;
-                switchMode();
-                m_GameEngine.ChangeMode((int)this.m_mode);
-            }
-            else
-            {
-                this.m_mode = MODE.SELECT;
-                switchMode();
-                m_GameEngine.ChangeMode((int)this.m_mode);
-            }
-        }
-
         private void NDYEditor_Activated(object sender, EventArgs e)
         {
             this.m_GameEngine.SetWindowFocused(false);
