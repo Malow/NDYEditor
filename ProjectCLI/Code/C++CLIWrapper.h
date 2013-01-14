@@ -34,7 +34,6 @@ namespace System { namespace Windows { namespace Interop
 
 		void ProcessFrame();
 		void OnResize(int width, int height);
-		void Update();
 		void SetWindowFocused(bool value);
 
 		void KeyDown(int key);
@@ -60,8 +59,10 @@ namespace System { namespace Windows { namespace Interop
 		void ChangeCameraMode( String^ cameraMode);
 		void LockMouseToCamera();
 		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
+		void GetCameraInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void SetSelectedObjectInfo( String^ info, float x, float y, float z );
 		void GetNrOfSelectedEntities([Out] int% x);
 		void SetEntityType(int value);
+
 	};
 }}}

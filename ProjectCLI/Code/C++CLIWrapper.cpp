@@ -95,11 +95,6 @@ namespace System { namespace Windows { namespace Interop
 		if ( m_GameEngine ) this->m_GameEngine->ChangeMode(mode);
 	}
 
-	void CppCLI::Update()
-	{
-		if ( m_GameEngine ) this->m_GameEngine->Update();
-	}
-
 	void CppCLI::SetWindowFocused( bool value )
 	{
 		if ( m_GameEngine ) this->m_GameEngine->SetWindowFocused(value);
@@ -271,4 +266,24 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->SetEntityType(value);
 	}
 
+	void CppCLI::GetCameraInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z )
+	{
+		char* lpText = nullptr;
+		float tempx, tempy, tempz;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->GetCameraInfo(lpText, tempx, tempy, tempz);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+
+		x = tempx;
+		y = tempy;
+		z = tempz;	
+	}
 }}}

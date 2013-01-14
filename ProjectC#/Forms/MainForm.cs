@@ -38,9 +38,9 @@ namespace Example
         public NDYEditor()
         {
             InitializeComponent();
-
             m_GameEngine = new CppCLI();
             m_GameEngine.Init(RenderBox.Handle);
+            m_APILoaded = true;
             
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
@@ -65,14 +65,16 @@ namespace Example
         {
             e.Handled = true;
             m_GameEngine.KeyUp((int)e.KeyCode);
+            float x = 0, y = 0, z = 0;
+            m_GameEngine.GetCameraInfo("Position", out x, out y, out z);
+            this.Text = "BOOM! Editor | Camera Position: (" + x + ", " + y + ", " + z + ")";
         }
         public void GameLoop()
         {
             while (this.Created)
             {
-                //Run();
+                Run();
                 Application.DoEvents();
-                this.m_GameEngine.Update();
             }
         }
 
@@ -453,7 +455,7 @@ namespace Example
                 this.Panel_PlaceBrush.Show();
                 this.Panel_PlaceBrush.BringToFront();
 
-                float temp;
+                float temp = 0;
                 m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 this.TextBox_BrushPlace_Inner.Text = temp.ToString();
 
@@ -468,7 +470,7 @@ namespace Example
                 this.Panel_Tex_Picker.Show();
                 this.Panel_Tex_Picker.BringToFront();
 
-                float temp;
+                float temp = 0;
                 m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 textBox_InnerCircle_Terrain.Text = temp.ToString();
 
@@ -486,7 +488,7 @@ namespace Example
                 this.Panel_SmoothTool.Show();
                 this.Panel_SmoothTool.BringToFront();
 
-                float temp;
+                float temp = 0;
                 m_GameEngine.GetBrushAttr("InnerCircle", out temp);
                 TextBox_InnerCircle_Smooth.Text = temp.ToString();
 

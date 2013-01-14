@@ -21,7 +21,6 @@ public:
 
 	void ProcessFrame();
 	void OnResize(int width, int height);
-	void Update();
 	void SetWindowFocused(bool value);
 
 	void KeyDown(int key);
@@ -49,4 +48,5 @@ public:
 	void SetSelectedObjectInfo( char* info, float x, float y, float z );
 	void GetNrOfSelectedEntities(int& x);
 	void SetEntityType(int value);
+	void GetCameraInfo(char* info, float& x, float& y, float& z);
 };

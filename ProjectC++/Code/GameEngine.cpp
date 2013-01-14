@@ -23,7 +23,9 @@ GameEngine::GameEngine() :
 	zBrushLastPos(0.0f,0.0f),
 	zMouseMoved(false),
 	zCreateEntityType(0),
-	zFPSLockToGround(false)
+	zFPSLockToGround(false),
+	zMovementMulti(1),
+	zMaxSpeed(20)
 {
 }
 
@@ -74,8 +76,15 @@ void GameEngine::ProcessFrame()
 
 	if ( zAnchor ) 
 	{
-		zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
-		zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+		try
+		{
+			zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
+			zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+		}
+		catch(...)
+		{
+
+		}
 	}
 	if ( zWorld ) zWorld->Update();
 
@@ -104,19 +113,19 @@ void GameEngine::ProcessFrame()
 		{
 			if(ge->GetKeyListener()->IsPressed('W'))
 			{
-				ge->GetCamera()->MoveForward(dt);
+				ge->GetCamera()->MoveForward(dt * zMovementMulti);
 			}
 			if(ge->GetKeyListener()->IsPressed('S'))
 			{
-				ge->GetCamera()->MoveBackward(dt);
+				ge->GetCamera()->MoveBackward(dt * zMovementMulti);
 			}
 			if(ge->GetKeyListener()->IsPressed('A'))
 			{
-				ge->GetCamera()->MoveLeft(dt);
+				ge->GetCamera()->MoveLeft(dt * zMovementMulti);
 			}
 			if(ge->GetKeyListener()->IsPressed('D'))
 			{
-				ge->GetCamera()->MoveRight(dt);
+				ge->GetCamera()->MoveRight(dt * zMovementMulti);
 			}
 		}
 
@@ -142,19 +151,19 @@ void GameEngine::ProcessFrame()
 	{
 		if(ge->GetKeyListener()->IsPressed('W'))
 		{
-			ge->GetCamera()->MoveForward(dt);
+			ge->GetCamera()->MoveForward(dt * zMovementMulti);
 		}
 		if(ge->GetKeyListener()->IsPressed('S'))
 		{
-			ge->GetCamera()->MoveBackward(dt);
+			ge->GetCamera()->MoveBackward(dt * zMovementMulti);
 		}
 		if(ge->GetKeyListener()->IsPressed('A'))
 		{
-			ge->GetCamera()->MoveLeft(dt);
+			ge->GetCamera()->MoveLeft(dt * zMovementMulti);
 		}
 		if(ge->GetKeyListener()->IsPressed('D'))
 		{
-			ge->GetCamera()->MoveRight(dt);
+			ge->GetCamera()->MoveRight(dt * zMovementMulti);
 		}
 
 		if ( zWorldRenderer )
@@ -532,7 +541,7 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 	if( temp == "RTS" )
 	{
 		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
-		ge->GetCamera()->SetPosition(Vector3(ge->GetCamera()->GetPosition().x, 20, ge->GetCamera()->GetPosition().z));
+		//ge->GetCamera()->SetPosition(Vector3(ge->GetCamera()->GetPosition().x, 20, ge->GetCamera()->GetPosition().z)); // Klover ville att den skulle behålla höjd och pos
 		ge->ChangeCamera(CameraType::RTS);
 		ge->GetCamera()->SetForward(oldForward);
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
@@ -546,6 +555,28 @@ void GameEngine::KeyUp( int key )
 	if ( key == 32 )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
+	}
+	else if( key == VK_SUBTRACT)
+	{
+		if((zMovementMulti / 2) >= 1)
+			zMovementMulti/=2;
+	}
+	else if( key == VK_ADD)
+	{
+		if((zMovementMulti * 2) < zMaxSpeed)
+			zMovementMulti*=2;
+	}
+	else if( key == 220)
+	{
+		this->MoveObjectToSurface();
+	}
+	else if( key == (int)'C')
+	{
+		this->ChangeCameraMode("FPS");
+	}
+	else if( key == (int)'V')
+	{
+		this->ChangeCameraMode("RTS");
 	}
 }
 
@@ -750,4 +781,30 @@ void GameEngine::SetBrushAttr( char* info, char* stringValue )
 void GameEngine::SetEntityType( int value )
 {
 	this->zCreateEntityType = value;
+}
+
+void GameEngine::GetCameraInfo( char* info, float& x, float& y, float& z )
+{
+	if(string(info) == "Position") // Returns the camera pos
+	{
+		Vector3 cameraPos = GetGraphics()->GetCamera()->GetPosition();
+		x = cameraPos.x;
+		y = cameraPos.y;
+		z = cameraPos.z;
+	}
+}
+
+void GameEngine::MoveObjectToSurface()
+{
+	if( zTargetedEntities.size() > 0 )
+	{
+		float tempY;
+		Vector3 tempPos;
+		for ( auto it=zTargetedEntities.begin(); it != zTargetedEntities.end(); it++ )
+		{
+			tempPos = (*it)->GetPosition();
+			tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
+			(*it)->SetPosition(Vector3(tempPos.x, tempY, tempPos.z));
+		}
+	}
 }
