@@ -18,7 +18,6 @@ namespace Example
         NONE,
         SELECT,
         MOVE,
-        ROT,
         PLACE,
         RAISE,
         LOWER,
@@ -389,17 +388,6 @@ namespace Example
             else if (this.m_mode == MODE.SELECT)
             {
                 btn_Select.Focus();
-                this.hideAll();
-
-                this.Panel_Info.Show();
-                //this.Panel_ObjectInfo.Show();
-
-                this.Panel_Info.BringToFront();
-                //this.Panel_ObjectInfo.BringToFront();
-            }
-            else if (this.m_mode == MODE.ROT)
-            {
-                btn_Rotate.Focus();
                 this.hideAll();
 
                 this.Panel_Info.Show();

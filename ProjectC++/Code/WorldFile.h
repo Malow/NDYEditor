@@ -27,10 +27,11 @@ enum WORLDFILE_OPENMODE
 class WorldFileHeader
 {
 public:
+	unsigned int versionNr;
 	unsigned int width;
 	unsigned int height;
 
-	WorldFileHeader() : width(10), height(10) {}
+	WorldFileHeader() : versionNr(0), width(10), height(10) {}
 };
 
 struct EntityStruct

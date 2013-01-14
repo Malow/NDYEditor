@@ -22,7 +22,8 @@ GameEngine::GameEngine() :
 	zAnchor(0),
 	zBrushLastPos(0.0f,0.0f),
 	zMouseMoved(false),
-	zCreateEntityType(0)
+	zCreateEntityType(0),
+	zFPSLockToGround(false)
 {
 }
 
