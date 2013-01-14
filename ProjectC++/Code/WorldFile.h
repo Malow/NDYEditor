@@ -31,8 +31,54 @@ public:
 	unsigned int width;
 	unsigned int height;
 
-	WorldFileHeader() : versionNr(0), width(10), height(10) {}
+	// Global Ambient Light
+	float ambientLight[3];
+
+	// Sun Settings
+	float sunDirection[3];
+	float sunColor[3];
+	float sunIntensity;
+
+	// Camera Position
+	float camPos[3];
+	float camRot[3];
+
+	WorldFileHeader() :
+		versionNr(0),
+		width(10),
+		height(10)
+	{
+		ambientLight[0] = 0.4f;
+		ambientLight[1] = 0.4f;
+		ambientLight[2] = 0.4f;
+
+		sunDirection[0] = 0.5f;
+		sunDirection[1] = -1.0f;
+		sunDirection[2] = 0.0f;
+
+		sunColor[0] = 1.0f;
+		sunColor[1] = 1.0f;
+		sunColor[2] = 1.0f;
+
+		sunIntensity = 1.0f;
+
+		camPos[0] = 0.0f;
+		camPos[1] = 0.0f;
+		camPos[2] = 0.0f;
+
+		camRot[0] = 0.0f;
+		camRot[1] = 0.0f;
+		camRot[2] = 0.0f;
+	}
 };
+
+
+struct WorldFileSectorHeader
+{
+	bool generated;
+	float ambientColor[3];
+};
+
 
 struct EntityStruct
 {
@@ -66,8 +112,8 @@ public:
 	bool ReadHeightMap( float* data, unsigned int mapIndex );
 
 	// Sector header
-	void WriteSectorHeader( unsigned int mapIndex );
-	bool ReadSectorHeader( unsigned int sectorIndex );
+	void WriteSectorHeader( const WorldFileSectorHeader& header, unsigned int sectorIndex );
+	bool ReadSectorHeader( WorldFileSectorHeader& headerOut, unsigned int sectorIndex );
 	
 	// Texture names
 	void WriteTextureNames( const char* data, unsigned int x );
@@ -80,8 +126,14 @@ public:
 	// Read the world header
 	void ReadHeader();
 
-	// Returns World Header
-	const WorldFileHeader& GetHeader() const { return zHeader; }
+	// World Header
+	const WorldFileHeader& GetWorldHeader() const { return zHeader; }
+	void SetStartCamera( const Vector3& pos, const Vector3& rot );
+	void SetSunDir( const Vector3& dir );
+	void SetWorldAmbient( const Vector3& ambient );
+	Vector3 GetStartCamPos();
+	Vector3 GetStartCamRot();
+	Vector3 GetWorldAmbient();
 
 	inline const std::string& GetFileName() const { return zFileName; }
 

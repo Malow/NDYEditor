@@ -1,5 +1,6 @@
 #include "WorldFile.h"
-#include "MaloW.h"
+#include <fstream>
+
 
 
 struct HeightMap
@@ -11,12 +12,6 @@ struct HeightMap
 struct BlendMap
 {
 	float blend[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
-};
-
-
-struct SectorHeader
-{
-	bool generated;
 };
 
 
@@ -51,7 +46,7 @@ void WorldFile::Open()
 	if ( zMode == OPEN_SAVE ) format = format | std::ios::out | std::ios::trunc;
 
 	// Open File
-	zFile = new fstream(zFileName, format);
+	zFile = new std::fstream(zFileName, format);
 
 	// Did it fail?
 	if ( !zFile->is_open() )
@@ -90,6 +85,9 @@ void WorldFile::Open()
 		// Save header
 		zFile->seekp(0, std::ios::beg);
 		zFile->write(reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
+
+		// Switch Directly To Edit Move
+		zMode = OPEN_EDIT;
 	}
 	else if ( zMode == OPEN_EDIT )
 	{
@@ -128,38 +126,32 @@ unsigned int WorldFile::GetSectorHeadersBegin() const
 }
 
 
-void WorldFile::WriteSectorHeader( unsigned int sectorIndex )
+void WorldFile::WriteSectorHeader( const WorldFileSectorHeader& header, unsigned int sectorIndex )
 {
 	if ( zMode != OPEN_LOAD )
 	{
 		if ( !zFile ) Open();
 		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
-		SectorHeader header;
-		header.generated = true;
-		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
-		zFile->write((const char*)&header, sizeof(SectorHeader));
+		zFile->seekp( GetSectorHeadersBegin() + sectorIndex * sizeof(WorldFileSectorHeader), std::ios::beg );
+		zFile->write((const char*)&header, sizeof(WorldFileSectorHeader));
 	}
 }
 
 
-bool WorldFile::ReadSectorHeader( unsigned int sectorIndex )
+bool WorldFile::ReadSectorHeader( WorldFileSectorHeader& headerOut, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
 	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
-	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(SectorHeader), std::ios::beg );
+	zFile->seekg( GetSectorHeadersBegin() + sectorIndex * sizeof(WorldFileSectorHeader), std::ios::beg );
 	if ( zFile->eof() ) return false;
-
-	SectorHeader header;
-	if ( !zFile->read((char*)&header, sizeof(SectorHeader)) ) return false;
-	if ( !header.generated ) return false;
-
+	if ( !zFile->read((char*)&headerOut, sizeof(WorldFileSectorHeader)) ) return false;
 	return true;
 }
 
 
 unsigned int WorldFile::GetSectorTexturesBegin() const
 {
-	return GetSectorHeadersBegin() + zNumSectors * sizeof(SectorHeader);
+	return GetSectorHeadersBegin() + zNumSectors * sizeof(WorldFileSectorHeader);
 }
 
 
@@ -182,10 +174,6 @@ bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
 	zFile->seekg( GetSectorTexturesBegin() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
 	if ( zFile->eof() ) return false;
 	if ( !zFile->read(data, sizeof(TextureNamesStruct)) ) return false;
-	if ( std::string(data) != "TerrainTexture.png")
-	{
-		int i = 0;
-	}
 	return true;
 }
 
@@ -280,4 +268,60 @@ bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct,
 unsigned int WorldFile::GetEnding() const
 {
 	return GetEntitiesBegin() + zNumSectors * sizeof(EntityStruct) * 256;
+}
+
+
+void WorldFile::SetStartCamera( const Vector3& pos, const Vector3& rot )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+
+		for( unsigned int x=0; x<3; ++x )
+		{
+			zHeader.camPos[x] = pos[x];
+			zHeader.camRot[x] = rot[x];
+		}
+	
+		zFile->seekp(0, std::ios::beg);
+		zFile->write(reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
+	}
+}
+
+
+void WorldFile::SetWorldAmbient( const Vector3& ambient )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+
+		for( unsigned int x=0; x<3; ++x )
+		{
+			zHeader.ambientLight[x] = ambient[x];
+		}
+
+		zFile->seekp(0, std::ios::beg);
+		zFile->write(reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
+	}
+}
+
+
+Vector3 WorldFile::GetStartCamPos()
+{
+	ReadHeader();
+	return Vector3(zHeader.camPos[0], zHeader.camPos[1], zHeader.camPos[2] );
+}
+
+
+Vector3 WorldFile::GetStartCamRot()
+{
+	ReadHeader();
+	return Vector3(zHeader.camRot[0], zHeader.camRot[1], zHeader.camRot[2] );
+}
+
+
+Vector3 WorldFile::GetWorldAmbient()
+{
+	ReadHeader();
+	return Vector3(zHeader.ambientLight[0], zHeader.ambientLight[1], zHeader.ambientLight[2] );
 }

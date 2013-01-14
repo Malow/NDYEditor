@@ -16,8 +16,10 @@ private:
 	float zHeightMap[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	char zTextureNames[TEXTURE_NAME_LENGTH*4];
+	float zAmbient[3];
 
 	bool zEditedFlag;
+
 public:
 	/*Default functions.*/
 	Sector();
@@ -38,6 +40,10 @@ public:
 	// Returns the texture blending at point
 	Vector4 GetBlendingAt( float x, float y ) const;
 
+	// Ambient
+	inline Vector3 GetAmbient() const { return Vector3(zAmbient[0], zAmbient[1], zAmbient[2]); }
+	void SetAmbient( const Vector3& ambient );
+
 	/*
 	Get the value at point
 	Throws when out of bounds 
@@ -54,7 +60,7 @@ public:
 	// Returns The Texture Name (0<=index<4)
 	const char* const GetTextureName( unsigned int index ) const;
 	void SetTextureName( unsigned int index, const std::string& name );
-	char* GetTextureNames();
+	inline char* GetTextureNames() { return &zTextureNames[0]; }
 
 	// Inline Functions
 	inline int GetSectorLength() { return SECTOR_LENGTH; }

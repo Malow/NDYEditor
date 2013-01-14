@@ -26,10 +26,14 @@ void Sector::Reset()
 		zBlendMap[x*4+3] = 0.0f;
 	}
 
-	SetTextureName(0,"TerrainTexture.png");
-	SetTextureName(1,"Green.png");
-	SetTextureName(2,"Blue.png");
-	SetTextureName(3,"Red.png");
+	SetTextureName(0, "TerrainTexture.png");
+	SetTextureName(1, "Green.png");
+	SetTextureName(2, "Blue.png");
+	SetTextureName(3, "Red.png");
+
+	zAmbient[0] = 0.0;
+	zAmbient[1] = 0.0;
+	zAmbient[2] = 0.0;
 
 	SetEdited(true);
 }
@@ -103,12 +107,14 @@ Vector4 Sector::GetBlendingAt( float x, float y ) const
 	return vec;
 }
 
+
 const char* const Sector::GetTextureName( unsigned int index ) const
 {
 	if ( index > 3 ) throw("Index Out Of Range");
 
 	return &zTextureNames[index*TEXTURE_NAME_LENGTH];
 }
+
 
 void Sector::SetTextureName( unsigned int index, const std::string& name )
 {
@@ -119,7 +125,15 @@ void Sector::SetTextureName( unsigned int index, const std::string& name )
 	memcpy( &zTextureNames[index*TEXTURE_NAME_LENGTH], &name[0], name.length() );
 }
 
-char* Sector::GetTextureNames()
+
+void Sector::SetAmbient( const Vector3& ambient )
 {
-	return &zTextureNames[0];
+	for( unsigned int i=0; i != 3; ++i )
+	{
+		if ( zAmbient[i] != ambient[i] )
+		{
+			zAmbient[i] = ambient[i];
+			SetEdited(true);
+		}
+	}
 }

@@ -41,9 +41,12 @@ private:
 
 	std::vector<Entity*> zEntities;
 	
-
+	// World Settings
 	unsigned int zNrOfSectorsWidth;
 	unsigned int zNrOfSectorsHeight;
+	Vector3 zStartCamPos;
+	Vector3 zStartCamRot;
+	Vector3 zAmbient;
 
 	// Anchors
 	std::set<WorldAnchor*> zAnchors;
@@ -57,9 +60,21 @@ public:
 	void SaveFile();
 	void SaveFileAs( const std::string& fileName );
 
+	// World Settings
+	unsigned int GetNumSectorsWidth() const;
+	unsigned int GetNumSectorsHeight() const;
+
+	// World Start Camera
+	void SetStartCamera( const Vector3& pos, const Vector3& rot );
+	const Vector3& GetStartCamPos() const;
+	const Vector3& GetStartCamRot() const;
+
 	// Load All Sectors
 	void LoadAllSectors();
 
+	// Get Ambient At World Position
+	Vector3 GetAmbientAtWorldPos( const Vector2& worldPos );
+	
 	// Modify Height Functions
 	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
 	float GetHeightAt( unsigned int x, unsigned int y );
@@ -97,11 +112,8 @@ public:
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	const std::set< Vector2UINT >& GetLoadedSectors() const { return zLoadedSectors; }
-	unsigned int GetNumSectorsWidth() const;
-	unsigned int GetNumSectorsHeight() const;
 
 protected:
 	// Engine Events
 	virtual void onEvent( Event* e );
-
 };

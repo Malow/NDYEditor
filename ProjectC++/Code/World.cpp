@@ -3,6 +3,7 @@
 #include "CircleAndRect.h"
 
 
+
 World::World( Observer* observer, const std::string& fileName) throw(const char*) : 
 	Observed(observer),
 	zSectors(NULL), 
@@ -28,6 +29,18 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 			this->zSectors[i][o] = NULL;
 		}
 	}
+
+	zStartCamPos.x = zNrOfSectorsWidth*SECTOR_WORLD_SIZE/2;
+	zStartCamPos.z = zNrOfSectorsHeight*SECTOR_WORLD_SIZE/2;
+	zStartCamPos.y = 1.8f;
+	
+	zStartCamRot.x = 1.0;
+	zStartCamRot.y = 0.0;
+	zStartCamRot.z = 0.0;
+
+	zAmbient.x = 0.0;
+	zAmbient.y = 0.0;
+	zAmbient.z = 0.0;
 
 	NotifyObservers( &WorldLoadedEvent(this) );
 }
@@ -139,78 +152,97 @@ float World::GetHeightAt( unsigned int x, unsigned int y )
 
 void World::SaveFile()
 {
-	if ( zFile && this->zSectors )
+	if ( zFile )
 	{
-		for(unsigned int x=0; x<GetNumSectorsWidth(); ++x)
+		zFile->SetStartCamera(zStartCamPos, zStartCamRot);
+		zFile->SetWorldAmbient(zAmbient);
+
+		if ( zSectors )
 		{
-			for(unsigned int y=0; y<GetNumSectorsHeight(); ++y)
+			for(unsigned int x=0; x<GetNumSectorsWidth(); ++x)
 			{
-				if ( this->zSectors[x][y] )
+				for(unsigned int y=0; y<GetNumSectorsHeight(); ++y)
 				{
-					if ( this->zSectors[x][y]->IsEdited() )
+					if ( this->zSectors[x][y] )
 					{
-						zFile->WriteHeightMap(this->zSectors[x][y]->GetHeightMap(), y * zNrOfSectorsWidth + x);
-						zFile->WriteBlendMap(this->zSectors[x][y]->GetBlendMap(), y * zNrOfSectorsWidth + x);
-						zFile->WriteTextureNames(this->zSectors[x][y]->GetTextureNames(), y * zNrOfSectorsWidth + x);
-						zFile->WriteSectorHeader(y * zNrOfSectorsWidth + x);
-						this->zSectors[x][y]->SetEdited(false);
-					}
+						// Optimization because it was used a lot
+						unsigned int sectorIndex = y * zNrOfSectorsWidth + x;
 
-					// Save Entities
-					Rect sectorRect(Vector2(x * SECTOR_WORLD_SIZE, y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
-					std::set< Entity* > entitiesInArea;
-					bool save = false;
-
-					// Find Regional Entities
-					if ( GetEntitiesInRect(sectorRect, entitiesInArea) != zLoadedEntityCount[zSectors[x][y]] )
-					{
-						save = true;
-					}
-
-					// Go Through List
-					std::array<EntityStruct,256> eArray;
-					for( unsigned int x=0; x<256; ++x )
-					{
-						eArray[x].type = 0;
-					}
-
-					unsigned int cur = 0;
-					for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
-					{
-						if( (*e)->IsEdited() )
+						if ( this->zSectors[x][y]->IsEdited() )
 						{
-							(*e)->SetEdited(false);
+							// Write Sector Data
+							zFile->WriteHeightMap(zSectors[x][y]->GetHeightMap(), sectorIndex);
+							zFile->WriteBlendMap(zSectors[x][y]->GetBlendMap(), sectorIndex);
+							zFile->WriteTextureNames(zSectors[x][y]->GetTextureNames(), sectorIndex);
+							
+							// Write Sector Header
+							WorldFileSectorHeader header;
+							header.generated = true;
+							for( unsigned int i = 0; i < 3; ++i )
+							{
+								header.ambientColor[i] = zSectors[x][y]->GetAmbient()[i];
+							}
+							
+							zFile->WriteSectorHeader(header, sectorIndex);
+							zSectors[x][y]->SetEdited(false);
+						}
+
+						// Save Entities
+						Rect sectorRect(Vector2(x * SECTOR_WORLD_SIZE, y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+						std::set< Entity* > entitiesInArea;
+						bool save = false;
+
+						// Find Regional Entities
+						if ( GetEntitiesInRect(sectorRect, entitiesInArea) != zLoadedEntityCount[zSectors[x][y]] )
+						{
 							save = true;
 						}
 
-						// Position
-						Vector3 pos = (*e)->GetPosition();
-						eArray[cur].pos[0] = pos.x - sectorRect.topLeft.x;
-						eArray[cur].pos[1] = pos.y;
-						eArray[cur].pos[2] = pos.z - sectorRect.topLeft.y;
+						// Go Through List
+						std::array<EntityStruct,256> eArray;
+						for( unsigned int i=0; i<256; ++i )
+						{
+							eArray[i].type = 0;
+						}
 
-						// Rotation
-						Vector3 rot = (*e)->GetRotation();
-						eArray[cur].rot[0] = rot.x;
-						eArray[cur].rot[1] = rot.y;
-						eArray[cur].rot[2] = rot.z;
+						unsigned int cur = 0;
+						for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+						{
+							if( (*e)->IsEdited() )
+							{
+								(*e)->SetEdited(false);
+								save = true;
+							}
 
-						// Scale
-						Vector3 scale = (*e)->GetScale();
-						eArray[cur].scale[0] = scale.x;
-						eArray[cur].scale[1] = scale.y;
-						eArray[cur].scale[2] = scale.z;
+							// Position
+							Vector3 pos = (*e)->GetPosition();
+							eArray[cur].pos[0] = pos.x - sectorRect.topLeft.x;
+							eArray[cur].pos[1] = pos.y;
+							eArray[cur].pos[2] = pos.z - sectorRect.topLeft.y;
 
-						// Type
-						eArray[cur].type = (*e)->GetType();
+							// Rotation
+							Vector3 rot = (*e)->GetRotation();
+							eArray[cur].rot[0] = rot.x;
+							eArray[cur].rot[1] = rot.y;
+							eArray[cur].rot[2] = rot.z;
 
-						cur++;
-					}
+							// Scale
+							Vector3 scale = (*e)->GetScale();
+							eArray[cur].scale[0] = scale.x;
+							eArray[cur].scale[1] = scale.y;
+							eArray[cur].scale[2] = scale.z;
 
-					if ( save )
-					{
-						zFile->WriteEntities(eArray, y * GetNumSectorsWidth() + x);
-						zLoadedEntityCount[zSectors[x][y]] = cur;
+							// Type
+							eArray[cur].type = (*e)->GetType();
+
+							cur++;
+						}
+
+						if ( save )
+						{
+							zFile->WriteEntities(eArray, y * GetNumSectorsWidth() + x);
+							zLoadedEntityCount[zSectors[x][y]] = cur;
+						}
 					}
 				}
 			}
@@ -278,23 +310,31 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 
 		if ( zFile )
 		{
-			// Load From File
-			if ( !zFile->ReadSectorHeader(y * GetNumSectorsWidth() + x) )
+			// Read Header
+			WorldFileSectorHeader header;
+			if ( zFile->ReadSectorHeader(header, y * GetNumSectorsWidth() + x) && header.generated )
+			{
+				// Set Header
+				s->SetAmbient(Vector3(header.ambientColor[0], header.ambientColor[1], header.ambientColor[2]));
+
+				if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
+				{
+					s->Reset();
+				}
+				else if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x) )
+				{
+					s->Reset();
+				}
+				else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x) )
+				{
+					s->Reset();
+				}
+			}
+			else
 			{
 				s->Reset();
 			}
-			else if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
-			{
-				s->Reset();
-			}
-			else if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x ) )
-			{
-				s->Reset();
-			}
-			else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x ) )
-			{
-				s->Reset();
-			}
+
 
 			// Load Entities
 			std::array<EntityStruct,256> eArray;
@@ -350,6 +390,10 @@ void World::onEvent( Event* e )
 				this->zSectors[i][o] = NULL;
 			}
 		}
+
+		zStartCamPos = zFile->GetStartCamPos();
+		zStartCamRot = zFile->GetStartCamRot();
+		zAmbient = zFile->GetWorldAmbient();
 
 		// World Has Been Loaded
 		NotifyObservers( &WorldLoadedEvent(this) );
@@ -486,7 +530,6 @@ void World::RemoveEntity( Entity* entity )
 }
 
 
-// TODO: Make it work correctly, Alexivan
 unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
 {
 	unsigned int counter=0;
@@ -555,9 +598,7 @@ void World::SetBlendingAt( float x, float y, const Vector4& val )
 WorldAnchor* World::CreateAnchor()
 {
 	WorldAnchor* newAnchor = new WorldAnchor();
-
 	zAnchors.insert(newAnchor);
-
 	return newAnchor;
 }
 
@@ -668,6 +709,32 @@ float World::GetHeightAtWorldPos( float posx, float posz )
 		sum += GetHeightAt(i->x, i->y);
 	}
 	return sum / nodes.size();
+}
+
+
+const Vector3& World::GetStartCamPos() const
+{
+	return zStartCamPos;
+}
+
+
+const Vector3& World::GetStartCamRot() const
+{
+	return zStartCamRot;
+}
+
+
+void World::SetStartCamera( const Vector3& pos, const Vector3& rot )
+{
+	zStartCamPos = pos;
+	zStartCamRot = rot;
+}
+
+
+Vector3 World::GetAmbientAtWorldPos( const Vector2& worldPos )
+{
+	Sector* s = GetSectorAtWorldPos(worldPos);
+	return zAmbient + s->GetAmbient();
 }
 
 

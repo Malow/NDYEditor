@@ -9,7 +9,6 @@ enum MODE
 	NONE,
 	SELECT,
 	MOVE,
-	ROT,
 	PLACE,
 	RAISE,
 	LOWER,

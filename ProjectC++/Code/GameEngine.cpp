@@ -72,12 +72,18 @@ void GameEngine::ProcessFrame()
 	iCamera *camera = ge->GetCamera();
 	float dt = GetGraphics()->Update();
 
-	if ( zAnchor ) 
+	if ( zWorld ) 
 	{
-		zAnchor->position = Vector2(camera->GetPosition().x, camera->GetPosition().z);
-		zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+		if (zAnchor)
+		{
+			zAnchor->position = camera->GetPosition().GetXZ();
+			zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+		}
+
+		zWorld->Update();
+
+		GetGraphics()->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
 	}
-	if ( zWorld ) zWorld->Update();
 
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
@@ -502,7 +508,10 @@ void GameEngine::SetWindowFocused( bool flag )
 void GameEngine::SaveWorld()
 {
 	if ( zWorld )
+	{
+		zWorld->SetStartCamera( GetGraphics()->GetCamera()->GetPosition(), GetGraphics()->GetCamera()->GetForward() );
 		zWorld->SaveFile();
+	}
 }
 
 
@@ -633,13 +642,8 @@ void GameEngine::onEvent( Event* e )
 	{
 		// Create Anchor
 		zAnchor = WLE->world->CreateAnchor();
-
-		// Position camera in center
-		Vector3 centerPos;
-		centerPos.x = WLE->world->GetNumSectorsWidth()*SECTOR_WORLD_SIZE/2;
-		centerPos.z = WLE->world->GetNumSectorsHeight()*SECTOR_WORLD_SIZE/2;
-		centerPos.y = 10.0f;
-		GetGraphics()->GetCamera()->SetPosition( centerPos );
+		GetGraphics()->GetCamera()->SetPosition( WLE->world->GetStartCamPos() );
+		GetGraphics()->GetCamera()->SetForward( WLE->world->GetStartCamRot() );
 	}
 	else if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
 	{
@@ -653,6 +657,7 @@ void GameEngine::onEvent( Event* e )
 	}
 }
 
+
 void GameEngine::GetBrushAttr( char* info, float& size )
 {
 	if(string(info) == "InnerCircle") // Returns the inner circle size
@@ -662,6 +667,7 @@ void GameEngine::GetBrushAttr( char* info, float& size )
 	if(string(info) == "Strength") // Returns the strength size
 		size = zBrushStrength;
 }
+
 
 void GameEngine::GetBrushAttr( char* info, char* SChar )
 {
