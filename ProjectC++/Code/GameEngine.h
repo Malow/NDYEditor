@@ -28,6 +28,8 @@ private:
 	// Camera
 	bool zLockMouseToCamera;
 	bool zFPSLockToGround;
+	int zMovementMulti;
+	const int zMaxSpeed;
 
 	// Current Tool
 	MODE zMode;
@@ -42,6 +44,8 @@ private:
 	std::set<Entity*> zTargetedEntities;
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
+
+	void MoveObjectToSurface();
 
 	// Brush
 	bool zDrawBrush;
@@ -90,6 +94,7 @@ public:
 	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
 	void GetNrOfSelectedEntities(int& x);
 	void SetEntityType(int value);
+	void GetCameraInfo(char* info, float& x, float& y, float& z);
 protected:
 	virtual void onEvent( Event* e );
 };

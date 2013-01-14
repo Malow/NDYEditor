@@ -78,12 +78,6 @@ void GameEngineWrapper::ChangeMode( int mode )
 }
 
 
-void GameEngineWrapper::Update()
-{
-	this->m_GameEngine->ProcessFrame();
-}
-
-
 void GameEngineWrapper::SetWindowFocused( bool value )
 {
 	this->m_GameEngine->SetWindowFocused(value);
@@ -181,5 +175,16 @@ void GameEngineWrapper::SetBrushAttr( char* info, char* stringValue )
 void GameEngineWrapper::SetEntityType( int value )
 {
 	m_GameEngine->SetEntityType(value);
+}
+
+void GameEngineWrapper::GetCameraInfo( char* info, float& x, float& y, float& z )
+{
+	try
+	{
+		m_GameEngine->GetCameraInfo(info, x, y, z);
+	}
+	catch(...)
+	{
+	}
 }
 
