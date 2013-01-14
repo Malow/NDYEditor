@@ -29,10 +29,7 @@ GameEngine::GameEngine() :
 
 GameEngine::~GameEngine()
 {
-	if ( zWorldRenderer ) delete zWorldRenderer;
-	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld;
-	
 	FreeGraphics();
 }
 
@@ -119,6 +116,24 @@ void GameEngine::ProcessFrame()
 			if(ge->GetKeyListener()->IsPressed('D'))
 			{
 				ge->GetCamera()->MoveRight(dt);
+			}
+		}
+
+		if ( zFPSLockToGround && zWorldRenderer )
+		{
+			Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+			try
+			{
+				float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
+
+				if(yPos == std::numeric_limits<float>::infinity())
+				{
+					yPos = GetGraphics()->GetCamera()->GetPosition().y;
+				}
+				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos+1.8f, temp.z));
+			}
+			catch(...)
+			{
 			}
 		}
 	}
@@ -238,18 +253,18 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				std::vector<Vector2> nodes;
+				std::set<Vector2> nodes;
 				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
 				{
-					for( unsigned int x=0; x<nodes.size(); ++x )
+					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
-						float distanceFactor = zBrushSize - Vector2(cd.posx - nodes[x].x, cd.posz - nodes[x].y).GetLength();
+						float distanceFactor = zBrushSize - Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
 						if ( distanceFactor < 0 ) continue;
 						distanceFactor /= zBrushSize;
 
 						try 
 						{
-							zWorld->ModifyHeightAt(nodes[x].x,nodes[x].y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
+							zWorld->ModifyHeightAt(i->x,i->y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
 						}
 						catch(...)
 						{
@@ -298,15 +313,16 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		else if(this->zMode == MODE::SELECT)
 		{
 			Entity* returnEntity = zWorldRenderer->Get3DRayCollisionWithMesh();
-			if(returnEntity != NULL)
+			if( returnEntity != NULL )
 			{
+				// Add To Selection
 				if(!zTargetedEntities.count(returnEntity) && GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
 				{
 					zTargetedEntities.insert(returnEntity);
 					zPrevPosOfSelected[returnEntity] = returnEntity->GetPosition();
 					returnEntity->SetSelected(true);
 				}
-				else if(!GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
+				else if(!GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))	// Set Selection
 				{
 					if(!zTargetedEntities.count(returnEntity))
 					{
@@ -328,8 +344,8 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						zPrevPosOfSelected.clear();
 						zTargetedEntities.clear();
 					}
-				}
-				else
+				}	
+				else  // Unselect
 				{
 					zTargetedEntities.erase(returnEntity);
 					returnEntity->SetSelected(false);
@@ -345,10 +361,10 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				zTargetedEntities.clear();
 			}
 		}
-		else if(this->zMode == MODE::PLACEBRUSH)
+		else if ( zMode == MODE::PLACEBRUSH )
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
-			if(cd.collision)
+			if( cd.collision )
 			{
 				double length;
 				double theta;
@@ -375,24 +391,53 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				zLeftMouseDown = true;
 			}
 		}
+		else if ( zMode == MODE::SMOOTH )
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if( cd.collision )
+			{
+				std::set<Vector2> nodes;
+				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
+				{
+					// Target = center
+					float targetHeight = zWorld->GetHeightAtWorldPos( cd.posx, cd.posz );
+
+					for( auto i = nodes.begin(); i != nodes.end(); ++i )
+					{
+						float factor = 1.0f;
+						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
+						if ( zBrushSizeExtra > 0.0f && distance >= zBrushSize )
+						{
+							factor = zBrushSizeExtra - ( distance - zBrushSize );
+							factor /= zBrushSizeExtra;
+							if ( factor <= 0.0 ) factor = 0;
+						}
+
+						float curHeight = zWorld->GetHeightAt( i->x, i->y );
+						float dif = targetHeight - curHeight;
+
+						try
+						{
+							zWorld->SetHeightAt( i->x, i->y, curHeight + dif * zBrushStrength * factor );
+						}
+						catch(...)
+						{
+						}
+					}
+				}
+			}
+			zBrushLastPos = Vector2(cd.posx, cd.posz);
+			zLeftMouseDown = true;
+		}
 	}
 }
 
 
 void GameEngine::CreateWorld( int width, int height )
 {
-	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer=0;
-	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, width, height);
 	this->zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
-
-	// Position camera in center
-	Vector3 centerPos;
-	centerPos.x = width*SECTOR_WORLD_SIZE/2;
-	centerPos.z = height*SECTOR_WORLD_SIZE/2;
-	centerPos.y = 10.0f;
-	GetGraphics()->GetCamera()->SetPosition( centerPos );
 }
 
 
@@ -420,7 +465,7 @@ void GameEngine::ChangeMode( int mode )
 	}
 
 	// Brush Control
-	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH || zMode == MODE::DRAWTEX )
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH || zMode == MODE::DRAWTEX || zMode == MODE::SMOOTH )
 	{
 		zDrawBrush = true;
 	}
@@ -440,18 +485,9 @@ void GameEngine::SaveWorldAs( char* msg )
 
 void GameEngine::OpenWorld( char* msg )
 {
-	if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
-	if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
-
-	// Position camera in center
-	Vector3 centerPos;
-	centerPos.x = zWorld->GetNumSectorsWidth()*SECTOR_WORLD_SIZE/2;
-	centerPos.z = zWorld->GetNumSectorsHeight()*SECTOR_WORLD_SIZE/2;
-	centerPos.y = 10.0f;
-	GetGraphics()->GetCamera()->SetPosition( centerPos );
 }
 
 
@@ -506,6 +542,10 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 void GameEngine::KeyUp( int key )
 {
 	GetGraphics()->GetKeyListener()->KeyUp(key);
+	if ( key == 32 )
+	{
+		zFPSLockToGround = !zFPSLockToGround;
+	}
 }
 
 
@@ -538,23 +578,22 @@ void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
 {
 	if(zTargetedEntities.empty())
 		return;
-		//throw("No selected entity");
 
 	auto i = zTargetedEntities.begin();
 
-	if(std::string(info) == "pos")
+	if( std::string(info) == "pos" )
 	{
 		x = (*i)->GetPosition().x;
 		y = (*i)->GetPosition().y;
 		z = (*i)->GetPosition().z;
 	}
-	else if(std::string(info) == "rot")
+	else if( std::string(info) == "rot" )
 	{
 		x = (*i)->GetRotation().x;
 		y = (*i)->GetRotation().y;
 		z = (*i)->GetRotation().z;
 	}
-	else if(std::string(info) == "scale")
+	else if( std::string(info) == "scale" )
 	{
 		x = (*i)->GetScale().x;
 		y = (*i)->GetScale().y;
@@ -568,9 +607,7 @@ void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z
 	if(zTargetedEntities.empty())
 		return;
 
-	//throw("No selected entity");
-
-	string compareString = string(info);
+	string compareString(info);
 	auto i = zTargetedEntities.begin();
 
 	if(compareString == "pos")
@@ -593,8 +630,21 @@ void GameEngine::onEvent( Event* e )
 {
 	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
 	{
+		// Create Anchor
 		zAnchor = WLE->world->CreateAnchor();
-		GetGraphics()->GetCamera()->SetPosition( Vector3(0.0f,10.0f,0.0f) );
+
+		// Position camera in center
+		Vector3 centerPos;
+		centerPos.x = WLE->world->GetNumSectorsWidth()*SECTOR_WORLD_SIZE/2;
+		centerPos.z = WLE->world->GetNumSectorsHeight()*SECTOR_WORLD_SIZE/2;
+		centerPos.y = 10.0f;
+		GetGraphics()->GetCamera()->SetPosition( centerPos );
+	}
+	else if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
+	{
+		if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
+		if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
+		if ( zWorld ) zWorld = 0;
 	}
 	else if ( EntityRemovedEvent *ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{

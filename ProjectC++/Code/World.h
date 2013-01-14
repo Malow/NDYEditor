@@ -63,6 +63,7 @@ public:
 	// Modify Height Functions
 	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
 	float GetHeightAt( unsigned int x, unsigned int y );
+	float GetHeightAtWorldPos( float posx, float posz );
 	void SetHeightAt( unsigned int x, unsigned int y, float value );
 
 	// Modify Blend Functions
@@ -93,7 +94,7 @@ public:
 	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
 	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const;
-	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const;
+	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	const std::set< Vector2UINT >& GetLoadedSectors() const { return zLoadedSectors; }
 	unsigned int GetNumSectorsWidth() const;
@@ -102,5 +103,5 @@ public:
 protected:
 	// Engine Events
 	virtual void onEvent( Event* e );
-	
+
 };

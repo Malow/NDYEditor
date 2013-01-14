@@ -28,6 +28,7 @@ private:
 
 	// Camera
 	bool zLockMouseToCamera;
+	bool zFPSLockToGround;
 
 	// Current Tool
 	MODE zMode;

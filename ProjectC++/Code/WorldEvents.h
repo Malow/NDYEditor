@@ -43,6 +43,13 @@ public:
 	WorldLoadedEvent( World* world ) : world(world) {}
 };
 
+class WorldDeletedEvent : public Event
+{
+public:
+	World* world;
+	WorldDeletedEvent( World* world ) : world(world) {}
+};
+
 class SectorLoadedEvent : public Event
 {
 public:

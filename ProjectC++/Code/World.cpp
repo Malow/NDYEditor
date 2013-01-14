@@ -35,6 +35,9 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 
 World::~World()
 {
+	// Notify Observers
+	NotifyObservers( &WorldDeletedEvent(this) );
+
 	// Close File
 	if ( zFile ) delete zFile, zFile=0;
 
@@ -416,7 +419,7 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 }
 
 
-unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius, std::vector<Vector2>& out ) const
+unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
 {
 	unsigned int counter=0;
 
@@ -426,22 +429,23 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	// Snap Center To Closest Position
 	float centerSnapX = floor( center.x / density ) * density;
 	float centerSnapY = floor( center.y / density ) * density;
+	Vector2 snappedCircle(centerSnapX, centerSnapY);
 
 	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
 	{
 		// Outside World
-		if ( x < 0 || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		if ( x < 0.0f || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 			continue;
 
 		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
 		{
 			// Outside World
-			if ( y < 0 || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( y < 0.0f || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 				continue;
 
-			if ( Circle(center,radius).IsInside(Vector2(x,y) ) )
+			if ( Circle(snappedCircle,radius).IsInside(Vector2(x,y) ) )
 			{
-				out.push_back( Vector2(x,y) );
+				out.insert( Vector2(x,y) );
 				counter++;
 			}
 		}
@@ -651,6 +655,19 @@ unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out 
 	}
 
 	return counter;
+}
+
+
+float World::GetHeightAtWorldPos( float posx, float posz )
+{
+	std::set<Vector2> nodes;
+	GetHeightNodesInCircle( Vector2(posx,posz), 1, nodes );
+	float sum = 0;
+	for( auto i = nodes.begin(); i != nodes.end(); ++i )
+	{
+		sum += GetHeightAt(i->x, i->y);
+	}
+	return sum / nodes.size();
 }
 
 
