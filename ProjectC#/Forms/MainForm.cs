@@ -15,15 +15,15 @@ namespace Example
 {
     enum MODE
     {
-        NONE,
-        SELECT,
-        MOVE,
-        PLACE,
-        RAISE,
-        LOWER,
-        PLACEBRUSH,
-        DRAWTEX,
-        SMOOTH
+        NONE = 0,
+        SELECT = 1,
+        MOVE = 2,
+        PLACE = 3,
+        RAISE = 4,
+        LOWER = 5,
+        PLACEBRUSH = 6,
+        DRAWTEX = 7,
+        SMOOTH = 8
     }
     public partial class NDYEditor : Form
     {
@@ -96,8 +96,7 @@ namespace Example
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateMap form = new CreateMap();
-            form.ShowDialog();
-            if (form.GetShouldCreateMap())
+            if (form.ShowDialog() == DialogResult.OK)
             {
                 if (form.GetReturnX() > 0 && form.GetReturnY() > 0)
                 {
@@ -259,28 +258,6 @@ namespace Example
             TextBox_Pos_Z.Enabled = true;
         }
 
-        private void MoveTool_Click(object sender, EventArgs e)
-        {
-            GetNrOfSelectedEntities();
-            if (this.m_NrSelectedObject > 0)
-            {
-                this.m_mode = MODE.MOVE;
-                switchMode();
-                m_GameEngine.ChangeMode((int)this.m_mode);
-            }
-            else
-            {
-                this.SelectTool_Click(sender, e);
-            }
-        }
-
-        private void SelectTool_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.SELECT;
-            switchMode();
-            m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-
         private void NDYEditor_Activated(object sender, EventArgs e)
         {
             this.m_GameEngine.SetWindowFocused(false);
@@ -352,13 +329,6 @@ namespace Example
             this.ComboBox_Tex2.Enabled = true;
             this.ComboBox_Tex3.Enabled = true;
             this.ComboBox_Tex4.Enabled = true;
-        }
-
-        private void btnPlaceObject_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.PLACE;
-            switchMode();
-            this.m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
         private void hideAll()
@@ -517,20 +487,6 @@ namespace Example
             m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void btn_RaiseGround_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.RAISE;
-            switchMode();
-            m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-
-        private void btn_LowerGround_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.LOWER;
-            switchMode();
-            m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-
         private void RenderBox_MouseMove(object sender, MouseEventArgs e)
         {
             m_GameEngine.MouseMove(e.X, e.Y);
@@ -544,27 +500,6 @@ namespace Example
         private void GetNrOfSelectedEntities()
         {
             m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
-        }
-
-        private void bnt_None_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.NONE;
-            switchMode();
-            m_GameEngine.ChangeMode((int)m_mode);
-        }
-
-        private void btn_PlaceBrush_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.PLACEBRUSH;
-            switchMode();
-            m_GameEngine.ChangeMode((int)this.m_mode);
-        }
-
-        private void btn_DrawTex_Click(object sender, EventArgs e)
-        {
-            this.m_mode = MODE.DRAWTEX;
-            switchMode();
-            m_GameEngine.ChangeMode((int)m_mode);
         }
 
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)
@@ -669,22 +604,53 @@ namespace Example
             RenderBox.Focus();
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void RenderBox_Resize(object sender, EventArgs e)
         {
             if (m_GameEngine != null)
                 m_GameEngine.OnResize(RenderBox.Size.Width, RenderBox.Size.Height);
         }
 
-        private void btn_Smooth_Click(object sender, EventArgs e)
+        private void btn_Change_Mode(object sender, EventArgs e)
         {
-            this.m_mode = MODE.SMOOTH;
+            
+            this.m_mode = (MODE)int.Parse((sender as Button).AccessibleName);
+            if (this.m_mode == MODE.MOVE)
+                if (this.m_NrSelectedObject <= 0)
+                    this.m_mode = MODE.SELECT;
+
             switchMode();
-            m_GameEngine.ChangeMode((int)m_mode);
+            this.m_GameEngine.ChangeMode((int)this.m_mode);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ProjectProperties form = new ProjectProperties();
+            form.ShowDialog();
+
+        }
+
+        private void settingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProjectProperties form = new ProjectProperties();
+            float x = 0, y = 0, z = 0;
+            m_GameEngine.GetSunInfo("Dir", out x, out y, out z);
+            form.SetSunDir(x, y, z);
+            m_GameEngine.GetSunInfo("Color", out x, out y, out z);
+            form.SetColorBox((int)Math.Ceiling(x), (int)Math.Ceiling(y), (int)Math.Ceiling(z));
+            m_GameEngine.GetAmbientLight("Color", out x, out y, out z);
+            form.SetAmbientLightColor(x, y, z);
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                ReturnVector3 temp = form.GetSunDir();
+                m_GameEngine.SetSunInfo("Dir", temp.mX, temp.mY, temp.mZ);
+
+                temp = form.GetSunColor();
+                m_GameEngine.SetSunInfo("Color", temp.mX / 255, temp.mY / 255, temp.mZ / 255);
+
+                temp = form.GetAmbientLight();
+                m_GameEngine.SetAmbientLight("Color", temp.mX / 255, temp.mY / 255, temp.mZ / 255);
+            }
         }
     }
 }

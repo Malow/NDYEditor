@@ -286,4 +286,79 @@ namespace System { namespace Windows { namespace Interop
 		y = tempy;
 		z = tempz;	
 	}
+
+	void CppCLI::GetSunInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z )
+	{
+		char* lpText = nullptr;
+		float tempx, tempy, tempz;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->GetSunInfo(lpText, tempx, tempy, tempz);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+
+		x = tempx;
+		y = tempy;
+		z = tempz;	
+	}
+
+	void CppCLI::SetSunInfo( String^ info, float x, float y, float z )
+	{
+		char* lpText = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->SetSunInfo(lpText, x, y, z);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
+	void CppCLI::GetAmbientLight( String^ info, [Out] float% x, [Out] float% y, [Out] float% z )
+	{
+		char* lpText = nullptr;
+		float tempx, tempy, tempz;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->GetAmbientLight(lpText, tempx, tempy, tempz);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+
+		x = tempx;
+		y = tempy;
+		z = tempz;	
+	}
+
+	void CppCLI::SetAmbientLight( String^ info, float x, float y, float z )
+	{
+		char* lpText = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+
+			m_GameEngine->SetAmbientLight(lpText, x, y, z);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
 }}}
