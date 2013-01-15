@@ -5,6 +5,13 @@
 #include <map>
 #include <fstream>
 
+enum UPDATEENUM
+{
+	UPDATE_NOTHING=0,
+	UPDATE_HEIGHTMAP=1,
+	UPDATE_BLENDMAP=2,
+	UPDATE_TEXTURES=4
+};
 
 class WorldRenderer : Observer
 {
@@ -12,6 +19,8 @@ class WorldRenderer : Observer
 	World* zWorld;
 	GraphicsEngine* zGraphics;
 	std::map< Entity*, iMesh* > zEntities;
+
+	std::map< Vector2UINT, UPDATEENUM > zUpdatesRequired;
 
 public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
@@ -21,6 +30,8 @@ public:
 	CollisionData Get3DRayCollisionDataWithGround();
 	Entity* Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);
+
+	void update();
 
 	virtual void onEvent( Event* e );
 

@@ -5,7 +5,7 @@
 
 struct HeightMap
 {
-	float height[(SECTOR_LENGTH+1)*(SECTOR_LENGTH+1)];
+	float height[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 };
 
 
@@ -73,7 +73,7 @@ void WorldFile::Open()
 
 		// Expand File
 		zFile->seekp(0, std::ios::end);
-		unsigned int fileSize = zFile->tellp();
+		unsigned int fileSize = (unsigned int)zFile->tellp();
 		if ( fileSize < GetEnding() )
 		{
 			unsigned int missingSpace = GetEnding() - fileSize;
@@ -324,4 +324,44 @@ Vector3 WorldFile::GetWorldAmbient()
 {
 	ReadHeader();
 	return Vector3(zHeader.ambientLight[0], zHeader.ambientLight[1], zHeader.ambientLight[2] );
+}
+
+
+void WorldFile::SetSunProperties( const Vector3& dir, const Vector3& color, float intensity )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+
+		for( unsigned int x=0; x<3; ++x )
+		{
+			zHeader.sunDirection[x] = dir[x];
+			zHeader.sunColor[x] = color[x];
+		}
+
+		zHeader.sunIntensity = intensity;
+
+		zFile->seekp(0, std::ios::beg);
+		zFile->write(reinterpret_cast<const char*>(&zHeader), sizeof(WorldFileHeader));
+	}
+}
+
+
+Vector3 WorldFile::GetSunDirection()
+{
+	ReadHeader();
+	return Vector3(zHeader.sunDirection[0], zHeader.sunDirection[1], zHeader.sunDirection[2]);
+}
+
+Vector3 WorldFile::GetSunColor()
+{
+	ReadHeader();
+	return Vector3(zHeader.sunColor[0], zHeader.sunColor[1], zHeader.sunColor[2]);
+}
+
+
+float WorldFile::GetSunIntensity()
+{
+	ReadHeader();
+	return zHeader.sunIntensity;
 }

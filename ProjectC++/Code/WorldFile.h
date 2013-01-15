@@ -129,11 +129,15 @@ public:
 	// World Header
 	const WorldFileHeader& GetWorldHeader() const { return zHeader; }
 	void SetStartCamera( const Vector3& pos, const Vector3& rot );
-	void SetSunDir( const Vector3& dir );
+	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );
 	void SetWorldAmbient( const Vector3& ambient );
 	Vector3 GetStartCamPos();
 	Vector3 GetStartCamRot();
 	Vector3 GetWorldAmbient();
+	Vector3 GetSunDirection();
+	Vector3 GetSunColor();
+	float GetSunIntensity();
+
 
 	inline const std::string& GetFileName() const { return zFileName; }
 

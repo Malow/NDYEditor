@@ -8,14 +8,20 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	zGraphics(graphics)
 {
 	zWorld->AddObserver(this);
-	zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
 
-	// Loop Through Loaded Sectors And Create Render Objects
-	for( unsigned int x=0; x<zWorld->GetNumSectorsWidth(); ++x )
+	zGraphics->SetSunLightProperties(
+		zWorld->GetSunDir(),
+		zWorld->GetSunColor(),
+		zWorld->GetSunIntensity() );
+
+	// Render Loaded SEctors
+	auto loadedSectors = zWorld->GetLoadedSectors();
+	if ( !loadedSectors.empty() )
 	{
-		for( unsigned int y=0; y<zWorld->GetNumSectorsHeight(); ++y )
+		zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
+		for( auto i = loadedSectors.cbegin(); i != loadedSectors.cend(); ++i )
 		{
-			UpdateSector(x,y);
+			UpdateSector(i->x, i->y);
 		}
 	}
 }
@@ -50,10 +56,10 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( WLE->world == zWorld )
 		{
-			if ( zTerrain.size() )
-				throw("Terrain Size Already Set");
-	
-			zTerrain.resize( WLE->world->GetNumSectorsWidth() * WLE->world->GetNumSectorsHeight() );
+			zGraphics->SetSunLightProperties(
+				WLE->world->GetSunDir(),
+				WLE->world->GetSunColor(),
+				WLE->world->GetSunIntensity() );
 		}
 	}
 	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
@@ -65,10 +71,21 @@ void WorldRenderer::onEvent( Event* e )
 			zTerrain[tIndex] = 0;
 		}
 	}
+	else if ( WorldSunChanged* WSC = dynamic_cast<WorldSunChanged*>(e) )
+	{
+		zGraphics->SetSunLightProperties(
+			WSC->world->GetSunDir(),
+			WSC->world->GetSunColor(),
+			WSC->world->GetSunIntensity() );
+	}
 	else if ( SectorLoadedEvent* SLE = dynamic_cast<SectorLoadedEvent*>(e) )
 	{
 		if ( SLE->world == zWorld )
 		{
+			if ( !zTerrain.size() )
+			{
+				zTerrain.resize( SLE->world->GetNumSectorsWidth() * SLE->world->GetNumSectorsHeight() );
+			}
 			UpdateSector(SLE->x, SLE->y);
 		}
 	}
@@ -76,7 +93,9 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SHMC->world == zWorld )
 		{
-			UpdateSectorHeightMap(SHMC->sectorx, SHMC->sectory);
+			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
+			u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
+			//UpdateSectorHeightMap(SHMC->sectorx, SHMC->sectory);
 		}
 	}
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
@@ -114,14 +133,18 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( SHMC->world == zWorld )
 		{
-			UpdateSectorBlendMap( SHMC->sectorx, SHMC->sectory );
+			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
+			u = (UPDATEENUM)(u | UPDATE_BLENDMAP);
+			//UpdateSectorBlendMap( SHMC->sectorx, SHMC->sectory );
 		}
 	}
 	else if ( SectorBlendTexturesChanged* SBTC = dynamic_cast<SectorBlendTexturesChanged*>(e) )
 	{
 		if ( SBTC->world == zWorld )
 		{
-			UpdateSectorTextures(SBTC->sectorX,SBTC->sectorY);
+			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
+			u = (UPDATEENUM)(u | UPDATE_TEXTURES);
+			//UpdateSectorTextures(SBTC->sectorX,SBTC->sectorY);
 		}
 	}
 }
@@ -149,7 +172,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	// Get Applicable Sectors
 	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().z );
 	std::set< Vector2UINT > sectors;
-	zWorld->GetSectorsInCicle( camPos, 50.0f, sectors );
+	zWorld->GetSectorsInCicle( camPos, 100.0f, sectors );
 
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )
@@ -255,19 +278,23 @@ void WorldRenderer::UpdateSector( unsigned int sectorX, unsigned int sectorY )
 {
 	if ( zWorld->IsSectorLoaded(sectorX,sectorY) )
 	{
+		// Create if it doesn't exist
 		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
-		Vector3 pos(sectorX * 32.0f + 16.0f, 0.0f, sectorY * 32.0f + 16.0f);
-
-		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
+		if ( !zTerrain[tIndex] )
+		{
+			Vector3 pos(sectorX * SECTOR_WORLD_SIZE + SECTOR_WORLD_SIZE/2, 0.0f, sectorY * SECTOR_WORLD_SIZE + SECTOR_WORLD_SIZE/2);
+			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
+			zTerrain[tIndex]->SetTextureScale(10.0f);
+		}
 
 		// Update Textures
-		UpdateSectorTextures(sectorX,sectorY);
+		UpdateSectorTextures(sectorX, sectorY);
 
 		// Update Blend Map
-		UpdateSectorBlendMap(sectorX,sectorY);
+		UpdateSectorBlendMap(sectorX, sectorY);
 
 		// Update Height Map
-		UpdateSectorHeightMap(sectorX,sectorY);
+		UpdateSectorHeightMap(sectorX, sectorY);
 	}
 }
 
@@ -286,6 +313,26 @@ void WorldRenderer::UpdateSectorTextures( unsigned int sectorX, unsigned int sec
 			files[x] += zWorld->GetSector(sectorX, sectorY)->GetTextureName(x);
 			terrainTextures[x] = &files[x][0];
 		}
-		zTerrain[tIndex]->SetTextures(terrainTextures);		
+		zTerrain[tIndex]->SetTextures(terrainTextures);
+	}
+}
+
+
+void WorldRenderer::update()
+{
+	while ( !zUpdatesRequired.empty() )
+	{
+		auto i = zUpdatesRequired.begin();
+
+		if ( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP )
+			UpdateSectorBlendMap(i->first.x, i->first.y);
+
+		if ( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
+			UpdateSectorHeightMap(i->first.x, i->first.y);
+
+		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
+			UpdateSectorTextures(i->first.x, i->first.y);
+
+		zUpdatesRequired.erase(i);
 	}
 }

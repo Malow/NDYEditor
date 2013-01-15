@@ -4,7 +4,7 @@
 
 
 
-World::World( Observer* observer, const std::string& fileName) throw(const char*) : 
+World::World( Observer* observer, const std::string& fileName) throw(...) : 
 	Observed(observer),
 	zSectors(NULL), 
 	zNrOfSectorsWidth(0), 
@@ -41,6 +41,10 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 	zAmbient.x = 0.0;
 	zAmbient.y = 0.0;
 	zAmbient.z = 0.0;
+
+	zSunDir = Vector3(0.5f, -1.0f, 0.0f);
+	zSunColor = Vector3(1.0f, 1.0f, 1.0f);
+	zSunIntensity = 1.0f;
 
 	NotifyObservers( &WorldLoadedEvent(this) );
 }
@@ -86,11 +90,11 @@ World::~World()
 }
 
 
-void World::ModifyHeightAt( unsigned int x, unsigned int y, float value )
+void World::ModifyHeightAt( float x, float y, float val )
 {
-	if ( value != 0.0f )
+	if ( val != 0.0f )
 	{
-		SetHeightAt(x, y, GetHeightAt(x,y)+value);
+		SetHeightAt(x, y, GetHeightAt(x, y) + val);
 	}
 }
 
@@ -105,48 +109,62 @@ Entity* World::CreateEntity( unsigned int entityType )
 }
 
 
-void World::SetHeightAt( unsigned int x, unsigned int y, float value )
+void World::SetHeightAt( float x, float y, float val )
 {
-	unsigned int sectorx = x / SECTOR_WORLD_SIZE;
-	unsigned int sectory = y / SECTOR_WORLD_SIZE;
+	unsigned int sectorX = (unsigned int)x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)y / SECTOR_WORLD_SIZE;
 
-	// Snap Local Coordinates
-	unsigned int localx = (x % SECTOR_WORLD_SIZE);
-	unsigned int localy = (y % SECTOR_WORLD_SIZE);
+	float localX = fmod(x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
 
-	Sector* sector = GetSector(sectorx, sectory);
-	sector->SetHeightAt(localx, localy, value);
+	// Snap Local Coords
+	float snapX = floor(localX * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+	float snapY = floor(localY * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+
+	GetSector(sectorX, sectorY)->SetHeightAt(snapX, snapY, val);
 
 	// Notify Sector Change
-	NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory, localx, localy) );
-
+	NotifyObservers( &SectorHeightMapChanged(this, sectorX, sectorY, localX, localY) );
+	
 	// Overlap Left
-	if ( sectorx > 0 && localx == 0 )
+	if ( sectorX > 0 && snapX == 0.0f )
 	{
-		GetSector(sectorx-1,sectory)->SetHeightAt(SECTOR_LENGTH,localy,value);
-		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory, SECTOR_LENGTH, localy) );
+		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		GetSector(sectorX-1,sectorY)->SetHeightAt(border, snapY, val);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY, border, snapY) );
 	}
-
+	
 	// Overlap Up
-	if ( sectory > 0 && localy == 0 )
+	if ( sectorY > 0 && snapY == 0.0f )
 	{
-		GetSector(sectorx,sectory-1)->SetHeightAt(localx,SECTOR_LENGTH,value);
-		NotifyObservers( &SectorHeightMapChanged(this, sectorx, sectory-1, localx, SECTOR_LENGTH) );
+		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		GetSector(sectorX,sectorY-1)->SetHeightAt(snapX, border, val);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorX, sectorY-1, snapX, border) );
 	}
 
 	// Overlap Left Up Corner
-	if ( sectorx > 0 && localy == 0 && sectorx > 0 && localx == 0 )
+	if ( sectorY > 0 && snapY == 0.0f && sectorX > 0 && snapX == 0.0f )
 	{
-		GetSector(sectorx-1,sectory-1)->SetHeightAt(SECTOR_LENGTH,SECTOR_LENGTH,value);
-		NotifyObservers( &SectorHeightMapChanged(this, sectorx-1, sectory-1, SECTOR_LENGTH, SECTOR_LENGTH) );
+		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		GetSector(sectorX-1,sectorY-1)->SetHeightAt(border, border, val);
+		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY-1, border, border) );
 	}
 }
 
 
-float World::GetHeightAt( unsigned int x, unsigned int y )
+float World::GetHeightAt( float x, float y )
 {
-	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
-	return sector->GetHeightAt(x%SECTOR_WORLD_SIZE,y%SECTOR_WORLD_SIZE);
+	unsigned int sectorX = (unsigned int)x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)y / SECTOR_WORLD_SIZE;
+
+	float localX = fmod(x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+
+	// Snap Local Coords
+	float snapX = floor(localX * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+	float snapY = floor(localY * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+
+	return GetSector(sectorX, sectorY)->GetHeightAt(snapX, snapY);
 }
 
 
@@ -156,6 +174,7 @@ void World::SaveFile()
 	{
 		zFile->SetStartCamera(zStartCamPos, zStartCamRot);
 		zFile->SetWorldAmbient(zAmbient);
+		zFile->SetSunProperties(zSunDir,zSunColor,zSunIntensity);
 
 		if ( zSectors )
 		{
@@ -295,7 +314,7 @@ Vector2UINT World::WorldPosToSector( const Vector2& pos ) const
 }
 
 
-Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
+Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 {
 	if( x >= this->GetNumSectorsWidth() || y >= this->GetNumSectorsHeight() )
 		throw("Index Out Of Bounds");
@@ -334,7 +353,6 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(const char*)
 			{
 				s->Reset();
 			}
-
 
 			// Load Entities
 			std::array<EntityStruct,256> eArray;
@@ -394,6 +412,9 @@ void World::onEvent( Event* e )
 		zStartCamPos = zFile->GetStartCamPos();
 		zStartCamRot = zFile->GetStartCamRot();
 		zAmbient = zFile->GetWorldAmbient();
+		zSunDir = zFile->GetSunDirection();
+		zSunColor = zFile->GetSunColor();
+		zSunIntensity = zFile->GetSunIntensity();
 
 		// World Has Been Loaded
 		NotifyObservers( &WorldLoadedEvent(this) );
@@ -468,26 +489,34 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	unsigned int counter=0;
 
 	// Calculate Height Node Density
-	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_LENGTH );
+	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_HEIGHT_SIZE );
 
 	// Snap Center To Closest Position
 	float centerSnapX = floor( center.x / density ) * density;
 	float centerSnapY = floor( center.y / density ) * density;
-	Vector2 snappedCircle(centerSnapX, centerSnapY);
 
-	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
+	// Snapped Radius
+	float snapRadius = floor(radius/density)*density;
+
+	if ( snapRadius == 0.0f )
+	{
+		out.insert( Vector2(centerSnapX, centerSnapY) );
+		return 1;
+	}
+
+	for( float x = centerSnapX - snapRadius; x < centerSnapX + snapRadius; x+=density )
 	{
 		// Outside World
-		if ( x < 0.0f || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		if ( x < 0.0f || x >= GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 			continue;
 
-		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
+		for( float y = centerSnapY - snapRadius; y < centerSnapY + snapRadius; y+=density )
 		{
 			// Outside World
-			if ( y < 0.0f || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( y < 0.0f || y >= GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 				continue;
 
-			if ( Circle(snappedCircle,radius).IsInside(Vector2(x,y) ) )
+			if ( Circle(Vector2(centerSnapX, centerSnapY),radius).IsInside(Vector2(x, y) ) )
 			{
 				out.insert( Vector2(x,y) );
 				counter++;
@@ -733,8 +762,23 @@ void World::SetStartCamera( const Vector3& pos, const Vector3& rot )
 
 Vector3 World::GetAmbientAtWorldPos( const Vector2& worldPos )
 {
+	if ( worldPos.x < 0 ) return zAmbient;
+	if ( worldPos.y < 0 ) return zAmbient;
+	if ( worldPos.x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE ) return zAmbient;
+	if ( worldPos.y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE ) return zAmbient;
+
 	Sector* s = GetSectorAtWorldPos(worldPos);
 	return zAmbient + s->GetAmbient();
+}
+
+
+void World::SetSunProperties( const Vector3& dir, const Vector3& color, float intensity )
+{
+	zSunDir = dir;
+	zSunColor = color;
+	zSunIntensity = intensity;
+
+	NotifyObservers( &WorldSunChanged(this) );
 }
 
 

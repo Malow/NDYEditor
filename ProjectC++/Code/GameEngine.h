@@ -3,6 +3,9 @@
 #include "World.h"
 #include "WorldRenderer.h"
 
+#ifdef _DEBUG
+#include <vld.h>
+#endif // _DEBUG
 
 enum MODE
 {

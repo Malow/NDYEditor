@@ -39,21 +39,37 @@ void Sector::Reset()
 }
 
 
-float Sector::GetHeightAt( unsigned int x, unsigned int y ) const throw(const char*)
+float Sector::GetHeightAt( float x, float y ) const throw(...)
 {
-	if ( x >= SECTOR_HEIGHT_SIZE || y >= SECTOR_HEIGHT_SIZE )
+	if ( x < 0.0f || x > 1.0 || y < 0.0f || y > 1.0 )
 		throw("Out Of Bounds!");
 
-	return this->zHeightMap[y*(SECTOR_HEIGHT_SIZE)+x];
+	// Find pixel
+	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+
+	unsigned int scaledX = (unsigned int)(snapX * (float)(SECTOR_HEIGHT_SIZE));
+	unsigned int scaledY = (unsigned int)(snapY * (float)(SECTOR_HEIGHT_SIZE));
+
+	// Set Values
+	return zHeightMap[ scaledY * SECTOR_HEIGHT_SIZE + scaledX ];
 }
 
 
-void Sector::SetHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*)
+void Sector::SetHeightAt( float x, float y, float val ) throw(...)
 {
-	if ( x >= SECTOR_HEIGHT_SIZE || y >= SECTOR_HEIGHT_SIZE )
+	if ( x < 0.0f || x > 1.0 || y < 0.0f || y > 1.0 )
 		throw("Out Of Bounds!");
 
-	this->zHeightMap[y*(SECTOR_HEIGHT_SIZE)+x] = value;
+	// Find pixel
+	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
+
+	unsigned int scaledX = (unsigned int)(snapX * (float)(SECTOR_HEIGHT_SIZE));
+	unsigned int scaledY = (unsigned int)(snapY * (float)(SECTOR_HEIGHT_SIZE));
+
+	// Set Values
+	zHeightMap[ scaledY * SECTOR_HEIGHT_SIZE + scaledX ] = val;
 
 	SetEdited(true);
 }
@@ -61,15 +77,15 @@ void Sector::SetHeightAt( unsigned int x, unsigned int y, float value ) throw(co
 
 void Sector::SetBlendingAt( float x, float y, const Vector4& val )
 {
-	if ( x < 0.0f || x >= (float)SECTOR_BLEND_SIZE || y < 0.0f || y >= (float)SECTOR_BLEND_SIZE )
+	if ( x < 0.0f || x > (float)SECTOR_BLEND_SIZE || y < 0.0f || y > (float)SECTOR_BLEND_SIZE )
 		throw("Out Of Bounds!");
 
 	float density = (float)SECTOR_WORLD_SIZE/(float)SECTOR_BLEND_SIZE;
 	float snapX = floor( x / density ) * density;
 	float snapY = floor( y / density ) * density;
 
-	float scaledX = (snapX / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
-	float scaledY = (snapY / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+	unsigned int scaledX = (unsigned int)((snapX / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
+	unsigned int scaledY = (unsigned int)((snapY / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
 
 	// Normalize Val
 	Vector4 normalizedVal = val;
@@ -78,7 +94,7 @@ void Sector::SetBlendingAt( float x, float y, const Vector4& val )
 	// Set Values
 	for( unsigned int i=0; i<4; ++i )
 	{
-		zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ] = normalizedVal[i];
+		zBlendMap[ (scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i ] = normalizedVal[i];
 	}
 
 	SetEdited(true);
@@ -94,14 +110,14 @@ Vector4 Sector::GetBlendingAt( float x, float y ) const
 	float snapX = floor( x / density ) * density;
 	float snapY = floor( y / density ) * density;
 
-	float scaledX = (snapX / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
-	float scaledY = (snapY / (float)SECTOR_WORLD_SIZE)*SECTOR_BLEND_SIZE;
+	unsigned int scaledX = (unsigned int)((snapX / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
+	unsigned int scaledY = (unsigned int)((snapY / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
 
 	Vector4 vec;
 
 	for( unsigned int i=0; i<4; ++i )
 	{
-		vec[i] = zBlendMap[ (unsigned int)((scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i) ];
+		vec[i] = zBlendMap[ (scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i ];
 	}
 
 	return vec;

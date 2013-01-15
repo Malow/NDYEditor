@@ -5,9 +5,9 @@
 #include <vector>
 
 static const unsigned int SECTOR_WORLD_SIZE = 32;
-static const unsigned int SECTOR_LENGTH = 32;
-static const unsigned int SECTOR_BLEND_SIZE = SECTOR_LENGTH*2;
-static const unsigned int SECTOR_HEIGHT_SIZE = SECTOR_LENGTH+1;
+static const unsigned int SECTOR_LENGTH = 64;
+static const unsigned int SECTOR_BLEND_SIZE = 64;
+static const unsigned int SECTOR_HEIGHT_SIZE = 128;
 static const unsigned int TEXTURE_NAME_LENGTH = 60;
 
 class Sector
@@ -48,14 +48,14 @@ public:
 	Get the value at point
 	Throws when out of bounds 
 	*/
-	float GetHeightAt( unsigned int x, unsigned int y ) const throw(const char*);
+	float GetHeightAt( float x, float y ) const throw(...);
 
 	/*
 	Sets the height at a point local to the sector
 	Sets the edited flag
 	Throws when out of bounds
 	*/
-	void SetHeightAt( unsigned int x, unsigned int y, float value ) throw(const char*);
+	void SetHeightAt( float x, float y, float val ) throw(...);
 
 	// Returns The Texture Name (0<=index<4)
 	const char* const GetTextureName( unsigned int index ) const;

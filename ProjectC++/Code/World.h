@@ -47,12 +47,15 @@ private:
 	Vector3 zStartCamPos;
 	Vector3 zStartCamRot;
 	Vector3 zAmbient;
+	Vector3 zSunDir;
+	Vector3 zSunColor;
+	float zSunIntensity;
 
 	// Anchors
 	std::set<WorldAnchor*> zAnchors;
 
 public:
-	World( Observer* observer, const std::string& fileName="" ) throw(const char*);
+	World( Observer* observer, const std::string& fileName="" ) throw(...);
 	World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight);
 	virtual ~World();
 
@@ -63,6 +66,12 @@ public:
 	// World Settings
 	unsigned int GetNumSectorsWidth() const;
 	unsigned int GetNumSectorsHeight() const;
+
+	// Sun Settings
+	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );
+	const Vector3& GetSunDir() const { return zSunDir; }
+	const Vector3& GetSunColor() const { return zSunColor; }
+	const float& GetSunIntensity() const { return zSunIntensity; }
 
 	// World Start Camera
 	void SetStartCamera( const Vector3& pos, const Vector3& rot );
@@ -76,10 +85,10 @@ public:
 	Vector3 GetAmbientAtWorldPos( const Vector2& worldPos );
 	
 	// Modify Height Functions
-	void ModifyHeightAt( unsigned int x, unsigned int y, float value );
-	float GetHeightAt( unsigned int x, unsigned int y );
+	void ModifyHeightAt( float x, float y, float value );
+	float GetHeightAt( float x, float y );
+	void SetHeightAt( float x, float y, float value );
 	float GetHeightAtWorldPos( float posx, float posz );
-	void SetHeightAt( unsigned int x, unsigned int y, float value );
 
 	// Modify Blend Functions
 	void ModifyBlendingAt( float x, float y, const Vector4& val );
@@ -91,7 +100,7 @@ public:
 	void RemoveEntity(Entity* entity);
 
 	// Sector Functions
-	Sector* GetSector( unsigned int x, unsigned int y ) throw(const char*);
+	Sector* GetSector( unsigned int x, unsigned int y ) throw(...);
 	Sector* GetSectorAtWorldPos( const Vector2& worldPos );
 	Vector2UINT WorldPosToSector( const Vector2& worldPos ) const;
 	bool IsSectorLoaded( unsigned int x, unsigned int y ) const;

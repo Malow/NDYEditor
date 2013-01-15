@@ -50,6 +50,13 @@ public:
 	WorldDeletedEvent( World* world ) : world(world) {}
 };
 
+class WorldSunChanged : public Event
+{
+public:
+	World* world;
+	WorldSunChanged( World* world ) : world(world) {}
+};
+
 class SectorLoadedEvent : public Event
 {
 public:
@@ -62,8 +69,9 @@ class SectorHeightMapChanged : public Event
 {
 public:
 	World* world;
-	unsigned int sectorx, sectory, localx, localy;
-	SectorHeightMapChanged( World* world, unsigned int sectorx, unsigned int sectory, unsigned int localx, unsigned int localy ) :
+	unsigned int sectorx, sectory;
+	float localx, localy;
+	SectorHeightMapChanged( World* world, unsigned int sectorx, unsigned int sectory, float localx, float localy ) :
 		world(world),
 		sectorx(sectorx),
 		sectory(sectory),

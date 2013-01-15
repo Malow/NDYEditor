@@ -46,7 +46,6 @@ unsigned int GameEngine::Init(unsigned int hWnd)
 	GetGraphics()->CreateSkyBox("Media/skymap.dds");
 	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
 	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
-	GetGraphics()->SetSunLightProperties(Vector3(0.5f, -1.0f, 0.0f));
 	GetGraphics()->SetFPSMax(60);
 	GetGraphics()->StartRendering();
 
@@ -80,7 +79,7 @@ void GameEngine::ProcessFrame()
 		{
 			try
 			{
-			zAnchor->position = camera->GetPosition().GetXZ();
+				zAnchor->position = camera->GetPosition().GetXZ();
 			}
 			catch(...)
 			{
@@ -89,6 +88,11 @@ void GameEngine::ProcessFrame()
 		}
 
 		zWorld->Update();
+
+		if ( zWorldRenderer )
+		{
+			zWorldRenderer->update();
+		}
 
 		GetGraphics()->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
 	}
@@ -434,7 +438,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 
 						try
 						{
-							zWorld->SetHeightAt( i->x, i->y, curHeight + dif * zBrushStrength * factor );
+							zWorld->SetHeightAt( i->x, i->y, curHeight + dif * max(min(zBrushStrength,1.0f),0.0f) * factor );
 						}
 						catch(...)
 						{
