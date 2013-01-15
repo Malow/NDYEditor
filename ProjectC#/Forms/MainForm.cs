@@ -632,13 +632,17 @@ namespace Example
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ProjectProperties form = new ProjectProperties();
+
             float x = 0, y = 0, z = 0;
+
             m_GameEngine.GetSunInfo("Dir", out x, out y, out z);
             form.SetSunDir(x, y, z);
+
             m_GameEngine.GetSunInfo("Color", out x, out y, out z);
-            form.SetColorBox((int)Math.Ceiling(x), (int)Math.Ceiling(y), (int)Math.Ceiling(z));
+            form.SetColorBox((int)Math.Ceiling(x*255.0f), (int)Math.Ceiling(y*255.0f), (int)Math.Ceiling(z*255.0f));
+
             m_GameEngine.GetAmbientLight("Color", out x, out y, out z);
-            form.SetAmbientLightColor(x, y, z);
+            form.SetAmbientLightColor(x*255.0f, y*255.0f, z*255.0f);
 
             if (form.ShowDialog() == DialogResult.OK)
             {

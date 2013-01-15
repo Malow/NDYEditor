@@ -23,6 +23,7 @@ namespace Example
         public ProjectProperties()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
         public void SetColorBox(int x, int y, int z)
         {
@@ -80,7 +81,7 @@ namespace Example
 
         private void btn_ok_Click(object sender, EventArgs e)
         {
-            if ((X.Text == "" || Y.Text == "" || Z.Text == ""))
+            if ((X.Text == "" || Z.Text == "" || Y.Text == ""))
             {
                 MessageBox.Show("One of the 3 values isnt defined", "Value Error!");
                 return;
@@ -93,6 +94,11 @@ namespace Example
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

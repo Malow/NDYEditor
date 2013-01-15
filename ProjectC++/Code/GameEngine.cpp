@@ -142,16 +142,17 @@ void GameEngine::ProcessFrame()
 
 		if ( zFPSLockToGround && zWorldRenderer )
 		{
-			Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
 			try
 			{
-				float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
-
-				if(yPos == std::numeric_limits<float>::infinity())
+				Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 				{
-					yPos = GetGraphics()->GetCamera()->GetPosition().y;
+					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+					{
+						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + 1.8f;
+						ge->GetCamera()->SetPosition(temp);
+					}
 				}
-				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos+1.8f, temp.z));
 			}
 			catch(...)
 			{
@@ -179,16 +180,17 @@ void GameEngine::ProcessFrame()
 
 		if ( zWorldRenderer )
 		{
-			Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
 			try
 			{
-				float yPos = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z);
-
-				if(yPos == std::numeric_limits<float>::infinity())
+				Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 				{
-					yPos = GetGraphics()->GetCamera()->GetPosition().y;
+					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+					{
+						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + zRTSHeightFromGround;
+						ge->GetCamera()->SetPosition(temp);
+					}
 				}
-				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos + this->zRTSHeightFromGround, temp.z));
 			}
 			catch(...)
 			{
@@ -555,9 +557,17 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 	if( temp == "RTS" )
 	{
 		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
-		Vector3 tempPos = ge->GetCamera()->GetPosition();
-		float yPos = this->zWorldRenderer->GetYPosFromHeightMap(tempPos.x, tempPos.z);
-		this->zRTSHeightFromGround = tempPos.y - yPos;
+		Vector3 camPos = ge->GetCamera()->GetPosition();
+
+		if ( camPos.x > 0.0f && camPos.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		{
+			if ( camPos.y > 0.0f && camPos.y > zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			{
+				float yPos = this->zWorldRenderer->GetYPosFromHeightMap(camPos.x, camPos.z);
+				this->zRTSHeightFromGround = camPos.y - yPos;
+			}
+		}
+		
 		ge->ChangeCamera(CameraType::RTS);
 		ge->GetCamera()->SetForward(oldForward);
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
@@ -829,32 +839,35 @@ void GameEngine::MoveObjectToSurface()
 
 void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 {
+
+	Vector3 temp(x,y,z);
+
 	if(string(info) == "Dir") // Returns the sunlight dir
 	{
-		Vector3 temp = GetGraphics()->GetSunLightDirection();
-		x = temp.x;
-		y = temp.y;
-		z = temp.z;
+		temp = GetGraphics()->GetSunLightDirection();
+		if ( zWorld ) temp = zWorld->GetSunDir();
+		
 	}
-	if(string(info) == "Color")
+	else if(string(info) == "Color")
 	{
-		Vector3 temp = GetGraphics()->GetSunLightColor();
-		x = temp.x * 255;
-		y = temp.y * 255;
-		z = temp.z * 255;
+		temp = GetGraphics()->GetSunLightColor();
+		if ( zWorld ) temp = zWorld->GetSunColor();
 	}
+
+	x = temp.x;
+	y = temp.y;
+	z = temp.z;
 }
 
 void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 {
 	if(string(info) == "Dir") // Returns the sunlight dir
 	{
-		GetGraphics()->SetSunLightProperties(Vector3(x, y, z));
+		if ( zWorld ) zWorld->SetSunProperties( Vector3(x, y, z), zWorld->GetSunColor(), zWorld->GetSunIntensity() );
 	}
-	if(string(info) == "Color")
+	else if(string(info) == "Color")
 	{
-		Vector3 temp = GetGraphics()->GetSunLightDirection();
-		GetGraphics()->SetSunLightProperties(temp, Vector3(x, y, z));
+		if ( zWorld ) zWorld->SetSunProperties( zWorld->GetSunDir(), Vector3(x, y, z), zWorld->GetSunIntensity() );
 	}
 }
 
@@ -863,9 +876,10 @@ void GameEngine::GetAmbientLight( char* info, float& x, float& y, float& z )
 	if(string(info) == "Color")
 	{
 		Vector3 light = GetGraphics()->GetSceneAmbientLight();
-		x = light.x * 255;
-		x = light.y * 255;
-		x = light.z * 255;
+		if ( zWorld ) light = zWorld->GetWorldAmbient();
+		x = light.x;
+		y = light.y;
+		z = light.z;
 	}
 }
 
@@ -873,6 +887,6 @@ void GameEngine::SetAmbientLight( char* info, float x, float y, float z )
 {
 	if(string(info) == "Color")
 	{
-		GetGraphics()->SetSceneAmbientLight(Vector3(x, y, z));
+		if ( zWorld ) zWorld->SetWorldAmbient(Vector3(x, y, z));
 	}
 }

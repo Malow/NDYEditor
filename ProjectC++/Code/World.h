@@ -78,6 +78,10 @@ public:
 	const Vector3& GetStartCamPos() const;
 	const Vector3& GetStartCamRot() const;
 
+	// Ambient Settings
+	inline const Vector3& GetWorldAmbient() const { return zAmbient; }
+	void SetWorldAmbient( const Vector3& vector );
+
 	// Load All Sectors
 	void LoadAllSectors();
 

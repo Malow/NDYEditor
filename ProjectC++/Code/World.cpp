@@ -778,7 +778,19 @@ void World::SetSunProperties( const Vector3& dir, const Vector3& color, float in
 	zSunColor = color;
 	zSunIntensity = intensity;
 
+	if ( zFile )
+		zFile->SetSunProperties(dir, color, intensity);
+
 	NotifyObservers( &WorldSunChanged(this) );
+}
+
+
+void World::SetWorldAmbient( const Vector3& ambient )
+{
+	zAmbient = ambient;
+
+	if ( zFile )
+		zFile->SetWorldAmbient(ambient);
 }
 
 
