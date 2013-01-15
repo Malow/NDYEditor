@@ -107,6 +107,7 @@
             this.Text = "CreateMap";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.ShowInTaskbar = false;
 
         }
 

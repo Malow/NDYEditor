@@ -60,7 +60,11 @@ namespace System { namespace Windows { namespace Interop
 		void LockMouseToCamera();
 		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void GetCameraInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
+		void GetSunInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void SetSelectedObjectInfo( String^ info, float x, float y, float z );
+		void SetSunInfo( String^ info, float x, float y, float z );
+		void GetAmbientLight( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
+		void SetAmbientLight(  String^ info, float x, float y, float z );
 		void GetNrOfSelectedEntities([Out] int% x);
 		void SetEntityType(int value);
 

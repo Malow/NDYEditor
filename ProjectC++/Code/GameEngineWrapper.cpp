@@ -189,3 +189,35 @@ void GameEngineWrapper::GetCameraInfo( char* info, float& x, float& y, float& z 
 	}
 }
 
+void GameEngineWrapper::GetSunInfo( char* info, float& x, float& y, float& z )
+{
+	try
+	{
+		m_GameEngine->GetSunInfo(info, x, y, z);
+	}
+	catch(...)
+	{
+	}
+}
+
+void GameEngineWrapper::SetSunInfo( char* info, float x, float y, float z )
+{
+	m_GameEngine->SetSunInfo(info, x, y, z);
+}
+
+void GameEngineWrapper::GetAmbientLight( char* info, float& x, float& y, float& z )
+{
+	try
+	{
+		m_GameEngine->GetAmbientLight(info, x, y, z);
+	}
+	catch(...)
+	{
+	}
+}
+
+void GameEngineWrapper::SetAmbientLight( char* info, float x, float y, float z )
+{
+	m_GameEngine->SetAmbientLight(info, x, y, z);
+}
+

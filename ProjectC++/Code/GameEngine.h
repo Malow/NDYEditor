@@ -9,15 +9,15 @@
 
 enum MODE
 {
-	NONE,
-	SELECT,
-	MOVE,
-	PLACE,
-	RAISE,
-	LOWER,
-	PLACEBRUSH,
-	DRAWTEX,
-	SMOOTH
+	NONE = 0,
+	SELECT = 1,
+	MOVE = 2,
+	PLACE = 3,
+	RAISE = 4,
+	LOWER = 5,
+	PLACEBRUSH = 6,
+	DRAWTEX = 7,
+	SMOOTH = 8,
 };
 
 class GameEngine : public Observer
@@ -33,6 +33,7 @@ private:
 	bool zFPSLockToGround;
 	int zMovementMulti;
 	const int zMaxSpeed;
+	float zRTSHeightFromGround;
 
 	// Current Tool
 	MODE zMode;
@@ -95,9 +96,13 @@ public:
 	
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
+	void GetSunInfo(char* info, float& x, float& y, float& z);
 	void GetNrOfSelectedEntities(int& x);
 	void SetEntityType(int value);
 	void GetCameraInfo(char* info, float& x, float& y, float& z);
+	void SetSunInfo(char* info, float x, float y, float z);
+	void GetAmbientLight(char* info, float& x, float& y, float& z);
+	void SetAmbientLight(char* info, float x, float y, float z);
 protected:
 	virtual void onEvent( Event* e );
 };

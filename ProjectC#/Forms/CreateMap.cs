@@ -11,14 +11,9 @@ namespace Example
 {
     public partial class CreateMap : Form
     {
-        public bool shouldCreateMap = false;
         public CreateMap()
         {
             InitializeComponent();
-        }
-        public bool GetShouldCreateMap()
-        {
-            return shouldCreateMap;
         }
         public int GetReturnX()
         {
@@ -30,6 +25,7 @@ namespace Example
         }
         private void CloseButton_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -41,7 +37,7 @@ namespace Example
             }
             else if(Convert.ToInt32(heightSize.Text) > 0 && Convert.ToInt32(widthSize.Text) > 0)
             {
-                this.shouldCreateMap = true;
+                this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }

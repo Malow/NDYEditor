@@ -25,7 +25,8 @@ GameEngine::GameEngine() :
 	zCreateEntityType(0),
 	zFPSLockToGround(false),
 	zMovementMulti(1),
-	zMaxSpeed(20)
+	zMaxSpeed(20),
+	zRTSHeightFromGround(20)
 {
 }
 
@@ -187,7 +188,7 @@ void GameEngine::ProcessFrame()
 				{
 					yPos = GetGraphics()->GetCamera()->GetPosition().y;
 				}
-				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos+10.0f, temp.z));
+				ge->GetCamera()->SetPosition(Vector3(temp.x, yPos + this->zRTSHeightFromGround, temp.z));
 			}
 			catch(...)
 			{
@@ -554,7 +555,9 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 	if( temp == "RTS" )
 	{
 		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
-		//ge->GetCamera()->SetPosition(Vector3(ge->GetCamera()->GetPosition().x, 20, ge->GetCamera()->GetPosition().z)); // Klover ville att den skulle behålla höjd och pos
+		Vector3 tempPos = ge->GetCamera()->GetPosition();
+		float yPos = this->zWorldRenderer->GetYPosFromHeightMap(tempPos.x, tempPos.z);
+		this->zRTSHeightFromGround = tempPos.y - yPos;
 		ge->ChangeCamera(CameraType::RTS);
 		ge->GetCamera()->SetForward(oldForward);
 		GetGraphics()->GetCamera()->SetUpdateCamera(false);
@@ -622,7 +625,12 @@ void GameEngine::LockMouseToCamera()
 void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
 {
 	if(zTargetedEntities.empty())
+	{
+		x = 0;
+		y = 0;
+		z = 0;
 		return;
+	}
 
 	auto i = zTargetedEntities.begin();
 
@@ -816,5 +824,55 @@ void GameEngine::MoveObjectToSurface()
 			tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 			(*it)->SetPosition(Vector3(tempPos.x, tempY, tempPos.z));
 		}
+	}
+}
+
+void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
+{
+	if(string(info) == "Dir") // Returns the sunlight dir
+	{
+		Vector3 temp = GetGraphics()->GetSunLightDirection();
+		x = temp.x;
+		y = temp.y;
+		z = temp.z;
+	}
+	if(string(info) == "Color")
+	{
+		Vector3 temp = GetGraphics()->GetSunLightColor();
+		x = temp.x * 255;
+		y = temp.y * 255;
+		z = temp.z * 255;
+	}
+}
+
+void GameEngine::SetSunInfo( char* info, float x, float y, float z )
+{
+	if(string(info) == "Dir") // Returns the sunlight dir
+	{
+		GetGraphics()->SetSunLightProperties(Vector3(x, y, z));
+	}
+	if(string(info) == "Color")
+	{
+		Vector3 temp = GetGraphics()->GetSunLightDirection();
+		GetGraphics()->SetSunLightProperties(temp, Vector3(x, y, z));
+	}
+}
+
+void GameEngine::GetAmbientLight( char* info, float& x, float& y, float& z )
+{
+	if(string(info) == "Color")
+	{
+		Vector3 light = GetGraphics()->GetSceneAmbientLight();
+		x = light.x * 255;
+		x = light.y * 255;
+		x = light.z * 255;
+	}
+}
+
+void GameEngine::SetAmbientLight( char* info, float x, float y, float z )
+{
+	if(string(info) == "Color")
+	{
+		GetGraphics()->SetSceneAmbientLight(Vector3(x, y, z));
 	}
 }
