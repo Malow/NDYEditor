@@ -76,10 +76,16 @@ void WorldFile::Open()
 		unsigned int fileSize = (unsigned int)zFile->tellp();
 		if ( fileSize < GetEnding() )
 		{
-			unsigned int missingSpace = GetEnding() - fileSize;
 			std::vector<unsigned char> v;
-			v.resize(missingSpace);
-			zFile->write(reinterpret_cast<char*>(&v[0]), missingSpace);
+			v.resize(10*1024*1024);
+			while( fileSize < GetEnding() )
+			{
+				unsigned int missing = GetEnding() - fileSize;
+				unsigned int thisTurn = ( missing > sizeof(v)? sizeof(v) : missing );
+				zFile->write(reinterpret_cast<char*>(&v[0]), thisTurn);
+				zFile->flush();
+				fileSize += thisTurn;
+			}
 		}
 
 		// Save header
