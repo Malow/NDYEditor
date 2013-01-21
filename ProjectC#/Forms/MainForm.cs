@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.IO;
-
+using System.Diagnostics;
 
 namespace Example
 {
@@ -25,6 +25,7 @@ namespace Example
         DRAWTEX = 7,
         SMOOTH = 8
     }
+
     public partial class NDYEditor : Form
     {
 
@@ -32,8 +33,9 @@ namespace Example
         bool m_APILoaded = false;
         MODE m_mode =  MODE.NONE;
         bool filePathKnown = false;
-
-        int m_NrSelectedObject = 1; // 1 just for testing. Should otherwise be init to "-1"
+        bool worldSavedAndNotEdited = true;
+        bool autoSwitchMove = false;
+        Stopwatch autoSaveWatch;
 
         public NDYEditor()
         {
@@ -45,6 +47,9 @@ namespace Example
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
             this.KeyUp += new KeyEventHandler(ListenerKeyUp);
+
+            autoSaveWatch = new Stopwatch();
+            autoSaveWatch.Stop();
         }
 
         void ListenerKeyDown(object sender, KeyEventArgs e)
@@ -61,6 +66,7 @@ namespace Example
                 this.m_GameEngine.RemoveSelectedEntities();
             }
         }
+
         void ListenerKeyUp(object sender, KeyEventArgs e)
         {
             e.Handled = true;
@@ -69,6 +75,7 @@ namespace Example
             m_GameEngine.GetCameraInfo("Position", out x, out y, out z);
             this.Text = "BOOM! Editor | Camera Position: (" + x + ", " + y + ", " + z + ")";
         }
+
         public void GameLoop()
         {
             while (this.Created)
@@ -81,10 +88,30 @@ namespace Example
         //This is our update / Renderloop
         private void Run()
         {
-            if (m_APILoaded)
+            if ( m_APILoaded )
             {
-                //Run the GameEngine for one frame
+                // Run the GameEngine for one frame
                 m_GameEngine.ProcessFrame();
+
+                // Autosave
+                if (filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
+                {
+                    this.toolStripStatusLabel1.Text = "Saving!";
+                    m_GameEngine.SaveWorld();
+                    UpdateSaveStatus();
+
+                    autoSaveWatch.Restart();
+                }
+
+                // Number of entities in current sector
+                int numEntities;
+                m_GameEngine.CountEntitiesInSector(out numEntities);
+
+                // Print Number of Entities
+                string status = "Number of entities: " + numEntities;
+                if (!worldSavedAndNotEdited) status = "Not Saved! " + status;
+                if (worldSavedAndNotEdited) status = "Saved! " + status;
+                this.toolStripStatusLabel1.Text = status;
             }
         }
 
@@ -105,7 +132,7 @@ namespace Example
 
                     this.m_GameEngine.CreateWorld(xPos, yPos);
                     filePathKnown = false;
-                    this.toolStripStatusLabel1.Text = "Not Saved!";
+                    UpdateSaveStatus();
                 }
             }
         }
@@ -122,8 +149,8 @@ namespace Example
             fdlg.AddExtension = true;
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
-                this.toolStripStatusLabel1.Text = "Not Saved!";
                 m_GameEngine.OpenWorld(fdlg.FileName);
+                UpdateSaveStatus();
                 this.filePathKnown = true;
             }
         }
@@ -143,6 +170,7 @@ namespace Example
             {
                 m_GameEngine.SaveWorldAs(fdlg.FileName);
                 this.filePathKnown = true;
+                UpdateSaveStatus();
             }
         }
 
@@ -156,8 +184,8 @@ namespace Example
 			else
             {
                 m_GameEngine.SaveWorld();
+                UpdateSaveStatus();
             }
-            this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
         }
 
         private void RenderBox_MouseDown(object sender, MouseEventArgs e)
@@ -174,8 +202,6 @@ namespace Example
 
         private void RenderBox_LeftMouseDown(object sender, MouseEventArgs e)
         {
-            if (this.m_mode != MODE.SELECT && this.m_mode != MODE.NONE)
-                this.toolStripStatusLabel1.Text = "Not Saved!";
 
             if (this.m_mode == MODE.PLACE) // This has to be in front of OnLeftMouseDown
             {
@@ -185,10 +211,24 @@ namespace Example
             {
                 this.m_GameEngine.SetEntityType(int.Parse(this.ComboBox_Model_Brush.Text.Split(':')[0]));
             }
+
             m_GameEngine.OnLeftMouseDown((uint)e.X, (uint)e.Y);
+            UpdateSaveStatus();
+
             if (this.m_mode == MODE.SELECT)
             {
                 GetAllSelectedInfo();
+
+                // Check if anything has been selected
+                int numSelected;
+                m_GameEngine.GetNrOfSelectedEntities(out numSelected);
+
+                if (numSelected > 0 && autoSwitchMove)
+                {
+                    this.m_mode = MODE.MOVE;
+                    switchMode();
+                    m_GameEngine.ChangeMode((int)m_mode);
+                }
             }
             else if (this.m_mode == MODE.MOVE)
             {
@@ -198,6 +238,7 @@ namespace Example
                 GetAllSelectedInfo();
             }
         }
+
         private void RenderBox_RightMouseDown(object sender, MouseEventArgs e)
         {
             if (this.m_mode == MODE.DRAWTEX)
@@ -226,6 +267,21 @@ namespace Example
                 this.Panel_Textures.Show();
                 this.Panel_Textures.BringToFront();
             }
+        }
+
+        void UpdateSaveStatus()
+        {
+            int temp = 0;
+
+            if (m_GameEngine != null)
+                m_GameEngine.HasWorldBeenSaved(out temp);
+
+            if ( worldSavedAndNotEdited && temp == 0 )
+            {
+                autoSaveWatch.Restart();
+            }
+
+            worldSavedAndNotEdited = temp != 0;
         }
 
         void GetAllSelectedInfo()
@@ -306,6 +362,7 @@ namespace Example
             this.Combo_Model.SelectedIndex = 0;
             this.ComboBox_Model_Brush.SelectedIndex = 0;
         }
+
         private void Load_Textures()
         {
             DirectoryInfo di = new DirectoryInfo("Media/Textures/");
@@ -318,7 +375,6 @@ namespace Example
 
             for (int i = 0; i < files.Length; i++)
             {
-                //if(files[i].ToString() != "scale.obj")
                 this.ComboBox_Tex1.Items.Add(files[i].ToString());
                 this.ComboBox_Tex2.Items.Add(files[i].ToString());
                 this.ComboBox_Tex3.Items.Add(files[i].ToString());
@@ -497,14 +553,9 @@ namespace Example
             m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
         }
 
-        private void GetNrOfSelectedEntities()
-        {
-            m_GameEngine.GetNrOfSelectedEntities( out m_NrSelectedObject );
-        }
-
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.toolStripStatusLabel1.Text == "Not Saved!")
+            if ( !worldSavedAndNotEdited )
             {
                 ExitForm form = new ExitForm();
                 form.ShowDialog();
@@ -570,10 +621,12 @@ namespace Example
                     if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
                         m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
                             float.Parse(TextBox_Pos_Z.Text));
+
                 if (info == "rot")
                     if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
                         m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
                                float.Parse(TextBox_Rot_Z.Text));
+
                 if (info == "scale")
                     if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
                         m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
@@ -597,6 +650,7 @@ namespace Example
                 m_GameEngine.SetBrushAttr("Tex" + (sender as ComboBox).AccessibleName, (sender as ComboBox).Text);
                 RenderBox.Focus();
             }
+            UpdateSaveStatus();
         }
 
         private void combobox_textures_ignore(object sender, EventArgs e)
@@ -615,9 +669,18 @@ namespace Example
             
             this.m_mode = (MODE)int.Parse((sender as Button).AccessibleName);
             if (this.m_mode == MODE.MOVE)
-                if (this.m_NrSelectedObject <= 0)
-                    this.m_mode = MODE.SELECT;
+            {
+                int numSelected = 0;
+                m_GameEngine.GetNrOfSelectedEntities(out numSelected);
+                if ( numSelected <= 0 ) this.m_mode = MODE.SELECT;
+                autoSwitchMove = true;
+            }
+            else
+            {
+                autoSwitchMove = false;
+            }
 
+            
             switchMode();
             this.m_GameEngine.ChangeMode((int)this.m_mode);
         }
@@ -626,7 +689,6 @@ namespace Example
         {
             ProjectProperties form = new ProjectProperties();
             form.ShowDialog();
-
         }
 
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -655,6 +717,8 @@ namespace Example
                 temp = form.GetAmbientLight();
                 m_GameEngine.SetAmbientLight("Color", temp.mX / 255, temp.mY / 255, temp.mZ / 255);
             }
+
+            UpdateSaveStatus();
         }
     }
 }

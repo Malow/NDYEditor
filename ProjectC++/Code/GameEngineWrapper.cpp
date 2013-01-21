@@ -221,3 +221,13 @@ void GameEngineWrapper::SetAmbientLight( char* info, float x, float y, float z )
 	m_GameEngine->SetAmbientLight(info, x, y, z);
 }
 
+void GameEngineWrapper::HasWorldBeenSaved( int& flag )
+{
+	flag = m_GameEngine->HasWorldBeenSaved();
+}
+
+void GameEngineWrapper::CountEntitiesInSector( int& num )
+{
+	num = m_GameEngine->CountEntitiesInSector();
+}
+

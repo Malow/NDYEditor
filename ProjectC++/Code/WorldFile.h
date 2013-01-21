@@ -123,8 +123,10 @@ public:
 	void WriteBlendMap( const float* const data, unsigned int mapIndex );
 	bool ReadBlendMap( float* data, unsigned int mapIndex );
 
+	// AI Grid
+
 	// Read the world header
-	void ReadHeader();
+	void ReadHeader( );
 
 	// World Header
 	const WorldFileHeader& GetWorldHeader() const { return zHeader; }

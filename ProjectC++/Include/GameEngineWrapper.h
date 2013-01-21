@@ -35,6 +35,9 @@ public:
 	void OpenWorld(char* msg);
 	void MouseMove(int x, int y);
 
+	void HasWorldBeenSaved( int& flag );
+	void CountEntitiesInSector( int& num );
+
 	void RemoveSelectedEntities();
 
 	void SetBrushAttr(char* info, float size);

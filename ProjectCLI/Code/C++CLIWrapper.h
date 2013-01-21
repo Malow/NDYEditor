@@ -46,6 +46,8 @@ namespace System { namespace Windows { namespace Interop
 		void SaveWorldAs( String^ filePath );
 		void SaveWorld();
 		void OpenWorld( String^ filePath );
+		void HasWorldBeenSaved( [Out] int% flag );
+		void CountEntitiesInSector( [Out] int% num );
 		void SetBrushAttr(String^ info, float size );
 		void SetBrushAttr(String^ info, String^ size );
 		void GetBrushAttr(String^ info, [Out] float% size);

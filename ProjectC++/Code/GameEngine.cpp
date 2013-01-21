@@ -25,8 +25,9 @@ GameEngine::GameEngine() :
 	zCreateEntityType(0),
 	zFPSLockToGround(false),
 	zMovementMulti(1),
-	zMaxSpeed(20),
-	zRTSHeightFromGround(20)
+	zMaxSpeed(32),
+	zRTSHeightFromGround(20),
+	zWorldSavedFlag(true)
 {
 }
 
@@ -115,6 +116,8 @@ void GameEngine::ProcessFrame()
 				tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0,tempY,0));
 			}
+
+			zWorldSavedFlag = false;
 		}
 	}
 
@@ -259,6 +262,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0, tempY, 0));
 						zPrevPosOfSelected[(*it)] = (*it)->GetPosition();
 					}
+					zWorldSavedFlag = false;
 				}
 			}
 		}
@@ -269,6 +273,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			{
 				Entity* ent = zWorld->CreateEntity(this->zCreateEntityType);
 				ent->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
+				zWorldSavedFlag = false;
 			}
 		}
 		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
@@ -282,18 +287,19 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
 						float distanceFactor = zBrushSize - Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( distanceFactor < 0 ) continue;
+						if ( distanceFactor <= 0 ) continue;
 						distanceFactor /= zBrushSize;
 
 						try 
 						{
-							zWorld->ModifyHeightAt(i->x,i->y,(zMode==MODE::LOWER?-zBrushStrength:zBrushStrength)*distanceFactor);
+							zWorld->ModifyHeightAt(i->x, i->y, (zMode == MODE::LOWER? -zBrushStrength : zBrushStrength) * distanceFactor);
 						}
 						catch(...)
 						{
 						}
 					}
 				}
+				zWorldSavedFlag = false;
 			}
 			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
@@ -329,6 +335,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						}
 					}
 				}
+				zWorldSavedFlag = false;
 			}
 			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
@@ -412,6 +419,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				}
 				zBrushLastPos = Vector2(cd.posx, cd.posz);
 				zLeftMouseDown = true;
+				zWorldSavedFlag = false;
 			}
 		}
 		else if ( zMode == MODE::SMOOTH )
@@ -448,6 +456,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						}
 					}
 				}
+				zWorldSavedFlag = false;
 			}
 			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
@@ -461,6 +470,7 @@ void GameEngine::CreateWorld( int width, int height )
 	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, width, height);
 	this->zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	zWorldSavedFlag = false;
 }
 
 
@@ -502,7 +512,10 @@ void GameEngine::ChangeMode( int mode )
 void GameEngine::SaveWorldAs( char* msg )
 {
 	if ( zWorld )
+	{
 		zWorld->SaveFileAs( std::string(msg) );
+		zWorldSavedFlag = true;
+	}
 }
 
 
@@ -511,6 +524,7 @@ void GameEngine::OpenWorld( char* msg )
 	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
 	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	zWorldSavedFlag = true;
 }
 
 
@@ -527,6 +541,7 @@ void GameEngine::SaveWorld()
 	{
 		zWorld->SetStartCamera( GetGraphics()->GetCamera()->GetPosition(), GetGraphics()->GetCamera()->GetForward() );
 		zWorld->SaveFile();
+		zWorldSavedFlag = true;
 	}
 }
 
@@ -561,7 +576,7 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 
 		if ( camPos.x > 0.0f && camPos.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 		{
-			if ( camPos.y > 0.0f && camPos.y > zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( camPos.y > 0.0f && camPos.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 			{
 				float yPos = this->zWorldRenderer->GetYPosFromHeightMap(camPos.x, camPos.z);
 				this->zRTSHeightFromGround = camPos.y - yPos;
@@ -582,15 +597,19 @@ void GameEngine::KeyUp( int key )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
 	}
+	else if ( key == 96 )	// keypad 0
+	{
+		zMovementMulti = 1.0;
+	}
 	else if( key == VK_SUBTRACT)
 	{
-		if((zMovementMulti / 2) >= 1)
-			zMovementMulti/=2;
+		if (zMovementMulti / 2.0f)
+			zMovementMulti /= 2.0f;
 	}
 	else if( key == VK_ADD)
 	{
-		if((zMovementMulti * 2) < zMaxSpeed)
-			zMovementMulti*=2;
+		if((zMovementMulti * 2.0f) < zMaxSpeed)
+			zMovementMulti *= 2.0f;
 	}
 	else if( key == 220)
 	{
@@ -797,6 +816,7 @@ void GameEngine::SetBrushAttr( char* info, float size )
 	}
 }
 
+
 void GameEngine::SetBrushAttr( char* info, char* stringValue )
 {
 	if( strlen(info) == 4 && info[0] == 'T' && info[1] == 'e' && info[2] == 'x' )
@@ -806,10 +826,12 @@ void GameEngine::SetBrushAttr( char* info, char* stringValue )
 	}
 }
 
+
 void GameEngine::SetEntityType( int value )
 {
 	this->zCreateEntityType = value;
 }
+
 
 void GameEngine::GetCameraInfo( char* info, float& x, float& y, float& z )
 {
@@ -821,6 +843,7 @@ void GameEngine::GetCameraInfo( char* info, float& x, float& y, float& z )
 		z = cameraPos.z;
 	}
 }
+
 
 void GameEngine::MoveObjectToSurface()
 {
@@ -836,6 +859,7 @@ void GameEngine::MoveObjectToSurface()
 		}
 	}
 }
+
 
 void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 {
@@ -859,6 +883,7 @@ void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 	z = temp.z;
 }
 
+
 void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 {
 	if(string(info) == "Dir") // Returns the sunlight dir
@@ -869,7 +894,10 @@ void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 	{
 		if ( zWorld ) zWorld->SetSunProperties( zWorld->GetSunDir(), Vector3(x, y, z), zWorld->GetSunIntensity() );
 	}
+
+	zWorldSavedFlag = false;
 }
+
 
 void GameEngine::GetAmbientLight( char* info, float& x, float& y, float& z )
 {
@@ -883,10 +911,31 @@ void GameEngine::GetAmbientLight( char* info, float& x, float& y, float& z )
 	}
 }
 
+
 void GameEngine::SetAmbientLight( char* info, float x, float y, float z )
 {
 	if(string(info) == "Color")
 	{
 		if ( zWorld ) zWorld->SetWorldAmbient(Vector3(x, y, z));
 	}
+	zWorldSavedFlag = false;
+}
+
+
+int GameEngine::CountEntitiesInSector()
+{
+	if ( !zWorld ) return 0;
+	
+	Vector2UINT cSector = zWorld->WorldPosToSector( GetGraphics()->GetCamera()->GetPosition().GetXZ() );
+
+	std::set<Entity*> entities;
+	Rect r( Vector2(cSector.x * SECTOR_WORLD_SIZE, cSector.y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE) );
+
+	return zWorld->GetEntitiesInRect(r,entities);
+}
+
+
+int GameEngine::HasWorldBeenSaved()
+{
+	return zWorldSavedFlag;
 }

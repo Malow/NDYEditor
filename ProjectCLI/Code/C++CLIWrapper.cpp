@@ -361,4 +361,32 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
+	void CppCLI::CountEntitiesInSector( [Out] int% num )
+	{
+		try
+		{
+			int temp;
+			m_GameEngine->CountEntitiesInSector( temp );
+			num = temp;
+		}
+		catch(...)
+		{
+
+		}		
+	}
+
+	void CppCLI::HasWorldBeenSaved( [Out] int% flag )
+	{
+		try
+		{
+			int temp;
+			m_GameEngine->HasWorldBeenSaved( temp );
+			flag = temp;
+		}
+		catch(...)
+		{
+
+		}
+	}
+
 }}}

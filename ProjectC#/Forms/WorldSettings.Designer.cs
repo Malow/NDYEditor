@@ -101,6 +101,7 @@
             this.X.Size = new System.Drawing.Size(29, 20);
             this.X.TabIndex = 9;
             this.X.Text = "0";
+            this.X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Z
             // 
@@ -110,6 +111,7 @@
             this.Z.Size = new System.Drawing.Size(29, 20);
             this.Z.TabIndex = 10;
             this.Z.Text = "0";
+            this.Z.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Y
             // 
@@ -119,6 +121,7 @@
             this.Y.Size = new System.Drawing.Size(29, 20);
             this.Y.TabIndex = 11;
             this.Y.Text = "0";
+            this.Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // AmbientLightLabel
             // 
@@ -138,6 +141,7 @@
             this.zAmbient.Size = new System.Drawing.Size(29, 20);
             this.zAmbient.TabIndex = 15;
             this.zAmbient.Text = "0";
+            this.zAmbient.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // yAmbient
             // 
@@ -147,6 +151,7 @@
             this.yAmbient.Size = new System.Drawing.Size(29, 20);
             this.yAmbient.TabIndex = 14;
             this.yAmbient.Text = "0";
+            this.yAmbient.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // xAmbient
             // 
@@ -156,6 +161,7 @@
             this.xAmbient.Size = new System.Drawing.Size(29, 20);
             this.xAmbient.TabIndex = 13;
             this.xAmbient.Text = "0";
+            this.xAmbient.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // groupBox1
             // 

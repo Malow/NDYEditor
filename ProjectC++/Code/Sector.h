@@ -1,14 +1,22 @@
 #pragma once
+
 // Created by Johansson Rikard 21/11/12 for project Not Dead Yet at BTH(Blekinges Tekniska Högskola)
 
 #include "Vector.h"
 #include <vector>
+#include <bitset>
 
 static const unsigned int SECTOR_WORLD_SIZE = 32;
 static const unsigned int SECTOR_LENGTH = 64;
 static const unsigned int SECTOR_BLEND_SIZE = 64;
 static const unsigned int SECTOR_HEIGHT_SIZE = 128;
 static const unsigned int TEXTURE_NAME_LENGTH = 60;
+
+// AI Grid
+static const unsigned int SECTOR_AI_GRID_SIZE = SECTOR_WORLD_SIZE * 2;
+typedef std::bitset< SECTOR_AI_GRID_SIZE * SECTOR_AI_GRID_SIZE > AIGrid;
+
+
 
 class Sector
 {
@@ -17,6 +25,7 @@ private:
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	char zTextureNames[TEXTURE_NAME_LENGTH*4];
 	float zAmbient[3];
+	AIGrid zAiGrid;
 
 	bool zEditedFlag;
 
@@ -43,6 +52,11 @@ public:
 	// Ambient
 	inline Vector3 GetAmbient() const { return Vector3(zAmbient[0], zAmbient[1], zAmbient[2]); }
 	void SetAmbient( const Vector3& ambient );
+
+	// AI Grid
+	const AIGrid& GetAIGrid() const { return zAiGrid; }
+	void SetBlocking( const Vector2& pos, bool flag );
+	bool GetBlocking( const Vector2& pos ) const;
 
 	/*
 	Get the value at point

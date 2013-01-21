@@ -27,12 +27,13 @@ private:
 	World* zWorld;
 	WorldRenderer *zWorldRenderer;
 	WorldAnchor* zAnchor;
+	bool zWorldSavedFlag;
 
 	// Camera
 	bool zLockMouseToCamera;
 	bool zFPSLockToGround;
-	int zMovementMulti;
-	const int zMaxSpeed;
+	float zMovementMulti;
+	const float zMaxSpeed;
 	float zRTSHeightFromGround;
 
 	// Current Tool
@@ -48,8 +49,6 @@ private:
 	std::set<Entity*> zTargetedEntities;
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
-
-	void MoveObjectToSurface();
 
 	// Brush
 	bool zDrawBrush;
@@ -93,6 +92,7 @@ public:
 	void ChangeMode(int mode);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
+	void MoveObjectToSurface();
 	
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
@@ -103,6 +103,10 @@ public:
 	void SetSunInfo(char* info, float x, float y, float z);
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
+
+	// Returns Number of entities in currect sector
+	int CountEntitiesInSector();
+	int HasWorldBeenSaved();
 protected:
 	virtual void onEvent( Event* e );
 };
