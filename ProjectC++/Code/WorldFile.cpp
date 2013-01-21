@@ -83,7 +83,6 @@ void WorldFile::Open()
 				unsigned int missing = GetEnding() - fileSize;
 				unsigned int thisTurn = ( missing > sizeof(v)? sizeof(v) : missing );
 				zFile->write(reinterpret_cast<char*>(&v[0]), thisTurn);
-				zFile->flush();
 				fileSize += thisTurn;
 			}
 		}
