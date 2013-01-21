@@ -351,7 +351,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 				}
 				else if ( !zFile->ReadAIGrid(s->GetAIGrid(), y * GetNumSectorsWidth() + x) )
 				{
-					s->Reset();
+					//s->Reset();
 				}
 			}
 			else

@@ -288,8 +288,8 @@ bool WorldFile::ReadAIGrid( AIGrid& grid, unsigned int sectorIndex )
 	if ( !zFile ) Open();
 	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
 	zFile->seekg( GetAIGridBegin() + sectorIndex * sizeof(AIGrid), std::ios::beg );
-	if ( zFile->eof() ) return false;
-	if ( !zFile->read(reinterpret_cast<char*>(&grid), sizeof(AIGrid)) ) return false;
+	if ( zFile->eof() ) { zFile->clear(); return false; }
+	if ( !zFile->read(reinterpret_cast<char*>(&grid), sizeof(AIGrid)) ) { zFile->clear(); return false; }
 	return true;
 }
 

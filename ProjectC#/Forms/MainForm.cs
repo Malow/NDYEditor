@@ -28,7 +28,6 @@ namespace Example
 
     public partial class NDYEditor : Form
     {
-
         CppCLI m_GameEngine = null;
         bool m_APILoaded = false;
         MODE m_mode =  MODE.NONE;
@@ -80,7 +79,7 @@ namespace Example
         {
             while (this.Created)
             {
-                Run();
+                Run();                
                 Application.DoEvents();
             }
         }
@@ -207,7 +206,7 @@ namespace Example
             {
                 this.m_GameEngine.SetEntityType(int.Parse(this.Combo_Model.Text.Split(':')[0]));
             }
-            if (this.m_mode == MODE.PLACEBRUSH) // This has to be in front of OnLeftMouseDown
+            else if (this.m_mode == MODE.PLACEBRUSH) // This has to be in front of OnLeftMouseDown
             {
                 this.m_GameEngine.SetEntityType(int.Parse(this.ComboBox_Model_Brush.Text.Split(':')[0]));
             }
@@ -290,6 +289,14 @@ namespace Example
             TextBox_Pos_Y.Enabled = false;
             TextBox_Pos_Z.Enabled = false;
 
+            TextBox_Rot_X.Enabled = false;
+            TextBox_Rot_Y.Enabled = false;
+            TextBox_Rot_Z.Enabled = false;
+
+            TextBox_Scale_X.Enabled = false;
+            TextBox_Scale_Y.Enabled = false;
+            TextBox_Scale_Z.Enabled = false;
+
             float x = 0;
             float y = 0;
             float z = 0;
@@ -312,6 +319,14 @@ namespace Example
             TextBox_Pos_X.Enabled = true;
             TextBox_Pos_Y.Enabled = true;
             TextBox_Pos_Z.Enabled = true;
+
+            TextBox_Rot_X.Enabled = true;
+            TextBox_Rot_Y.Enabled = true;
+            TextBox_Rot_Z.Enabled = true;
+
+            TextBox_Scale_X.Enabled = true;
+            TextBox_Scale_Y.Enabled = true;
+            TextBox_Scale_Z.Enabled = true;
         }
 
         private void NDYEditor_Activated(object sender, EventArgs e)
@@ -719,6 +734,10 @@ namespace Example
             }
 
             UpdateSaveStatus();
+        }
+
+        private void btnRTS_MouseEnter(object sender, EventArgs e)
+        {
         }
     }
 }
