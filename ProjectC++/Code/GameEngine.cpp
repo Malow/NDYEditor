@@ -33,7 +33,6 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zGraphics->CreateSkyBox("Media/skymap.dds");
 	zGraphics->GetKeyListener()->SetCursorVisibility(true);
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
-	zGraphics->SetFPSMax(20);
 	zGraphics->StartRendering();
 
 	// Entities
