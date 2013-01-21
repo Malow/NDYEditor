@@ -41,3 +41,7 @@ Model:Media/Models/Veins_01_v03_r.obj
 Number:11
 Name:Flag
 Model:Media/Models/Flag/FlagBlue.ani
+
+Number:12
+Name:Spawn
+Model:Media/Models/SPAWN.obj
