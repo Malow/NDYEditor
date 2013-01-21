@@ -5,46 +5,29 @@
 
 namespace System { namespace Windows { namespace Interop
 {
-	CppCLI::CppCLI()
+	CppCLI::CppCLI(IntPtr deviceContext)
 	{
-		//myInitMemoryCheck();
-		m_GameEngine = new GameEngineWrapper();
+		m_GameEngine = new GameEngineWrapper(*(unsigned int*)&deviceContext);
 	}
 
-	CppCLI::~CppCLI()
+	CppCLI::!CppCLI()
 	{
-		if ( m_GameEngine ) delete m_GameEngine, m_GameEngine = 0;
-		//DumpMemoryLeaks();
-	}
-
-	HRESULT CppCLI::Init(IntPtr hWnd)
-	{
-		return (HRESULT)m_GameEngine->Init(*(unsigned int*)&hWnd);
-	}
-
-	void CppCLI::Shutdown()
-	{
-		if ( m_GameEngine ) 
-		{
-			m_GameEngine->Shutdown(); 
-			delete m_GameEngine;
-			m_GameEngine = 0;
-		}
+		delete m_GameEngine;
 	}
 
 	void CppCLI::ProcessFrame()
 	{
-		if ( m_GameEngine ) m_GameEngine->ProcessFrame();
+		m_GameEngine->ProcessFrame();
 	}
 
 	void CppCLI::OnResize(int width, int height)
 	{
-		if ( m_GameEngine ) m_GameEngine->OnResize(width, height);
+		m_GameEngine->OnResize(width, height);
 	}
 
 	void CppCLI::CreateWorld( int x, int y )
 	{
-		this->m_GameEngine->CreateWorld(x, y);
+		m_GameEngine->CreateWorld(x, y);
 	}
 
 	void CppCLI::SaveWorldAs(String^ filePath)

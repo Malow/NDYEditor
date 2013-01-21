@@ -1,33 +1,28 @@
-#include <GameEngineWrapper.h>
+#include "GameEngineWrapper.h"
 #include "GameEngine.h"
+#include "Graphics.h"
+#include "MaloWFileDebug.h"
 
 
 
-GameEngineWrapper::GameEngineWrapper()
+GameEngineWrapper::GameEngineWrapper(unsigned int hWnd) :
+	m_GameEngine(0)
 {
-	m_GameEngine = new GameEngine();
+	// Clear Previous Debug
+	MaloW::ClearDebug();
+
+	// Initialize Graphics
+	InitGraphics(hWnd);
+
+	// Initialize Engine
+	m_GameEngine = new GameEngine(GetGraphics());
 }
 
 
 GameEngineWrapper::~GameEngineWrapper()
 {
-	if ( m_GameEngine ) delete m_GameEngine, m_GameEngine = 0;
-}
-
-
-unsigned int GameEngineWrapper::Init(unsigned int hWnd)	
-{
-	return m_GameEngine->Init(hWnd);
-}
-
-
-void GameEngineWrapper::Shutdown()
-{
-	if ( m_GameEngine ) 
-	{
-		delete m_GameEngine;
-		m_GameEngine = 0;
-	}
+	delete m_GameEngine;
+	FreeGraphics();
 }
 
 
@@ -75,24 +70,24 @@ void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
 
 void GameEngineWrapper::ChangeMode( int mode )
 {
-	this->m_GameEngine->ChangeMode(mode);
+	m_GameEngine->ChangeMode(mode);
 }
 
 
 void GameEngineWrapper::SetWindowFocused( bool value )
 {
-	this->m_GameEngine->SetWindowFocused(value);
+	m_GameEngine->SetWindowFocused(value);
 }
 
 
 void GameEngineWrapper::SaveWorld()
 {
-	this->m_GameEngine->SaveWorld();
+	m_GameEngine->SaveWorld();
 }
 
 void GameEngineWrapper::ChangeCameraMode( char* cameraMode )
 {
-	this->m_GameEngine->ChangeCameraMode(cameraMode);
+	m_GameEngine->ChangeCameraMode(cameraMode);
 }
 
 
@@ -110,7 +105,7 @@ void GameEngineWrapper::KeyDown( int key )
 
 void GameEngineWrapper::LockMouseToCamera()
 {
-	this->m_GameEngine->LockMouseToCamera();
+	m_GameEngine->LockMouseToCamera();
 }
 
 

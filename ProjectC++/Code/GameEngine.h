@@ -59,11 +59,12 @@ private:
 	// Texture Brush
 	unsigned int zTexBrushSelectedTex;
 	unsigned int zSelectedSectorX, zSelectedSectorY;
-public:
-	GameEngine();
-	~GameEngine();
 
-	unsigned int Init(unsigned int hWnd);
+	// Graphics Engine
+	GraphicsEngine* zGraphics;
+public:
+	GameEngine( GraphicsEngine* GE );
+	virtual ~GameEngine();
 
 	void ProcessFrame();
 	void OnResize(int width, int height);

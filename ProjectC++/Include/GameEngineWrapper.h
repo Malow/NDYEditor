@@ -13,11 +13,8 @@ class DLL_USAGE GameEngineWrapper
 private:
 	GameEngine* m_GameEngine;
 public:
-	GameEngineWrapper();
+	GameEngineWrapper(unsigned int hWnd);
 	~GameEngineWrapper();
-
-	unsigned int Init(unsigned int hWnd);
-	void Shutdown();
 
 	void ProcessFrame();
 	void OnResize(int width, int height);

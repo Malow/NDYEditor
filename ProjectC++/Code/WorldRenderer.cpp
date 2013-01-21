@@ -103,11 +103,11 @@ void WorldRenderer::onEvent( Event* e )
 
 		if ( model.substr(model.size()-4,4) == ".ani" )
 		{
-			zEntities[ELE->entity] = GetGraphics()->CreateAnimatedMesh(model.c_str(), ELE->entity->GetPosition());
+			zEntities[ELE->entity] = zGraphics->CreateAnimatedMesh(model.c_str(), ELE->entity->GetPosition());
 		}
 		else
 		{
-			zEntities[ELE->entity] = GetGraphics()->CreateMesh(model.c_str(), ELE->entity->GetPosition());
+			zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
 		}
 
 		zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
@@ -134,7 +134,7 @@ void WorldRenderer::onEvent( Event* e )
 	{
 		if ( ERE->world == zWorld )
 		{
-			GetGraphics()->DeleteMesh(zEntities[ERE->entity]);
+			zGraphics->DeleteMesh(zEntities[ERE->entity]);
 			zEntities.erase(ERE->entity);
 		}
 	}
@@ -176,18 +176,17 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
-	Vector2 camPos( GetGraphics()->GetCamera()->GetPosition().x, GetGraphics()->GetCamera()->GetPosition().z );
 	std::set< Vector2UINT > sectors;
-	zWorld->GetSectorsInCicle( camPos, 100.0f, sectors );
+	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), 100.0f, sectors );
 
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )
 	{
 		unsigned int sectorIndex = i->y * zWorld->GetNumSectorsWidth() + i->x;
 
-		CollisionData cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayTerrain(
-			GetGraphics()->GetCamera()->GetPosition(), 
-			GetGraphics()->GetCamera()->Get3DPickingRay(), 
+		CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayTerrain(
+			zGraphics->GetCamera()->GetPosition(), 
+			zGraphics->GetCamera()->Get3DPickingRay(), 
 			zTerrain[sectorIndex]);
 
 		if(cd.collision)
@@ -208,9 +207,9 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 
 	Entity* returnPointer = NULL;
 
-	iCamera* cam = GetGraphics()->GetCamera();
+	iCamera* cam = zGraphics->GetCamera();
 	Vector3 camPos = cam->GetPosition();
-	iPhysicsEngine* pe = GetGraphics()->GetPhysicsEngine();
+	iPhysicsEngine* pe = zGraphics->GetPhysicsEngine();
 	
 	std::vector<Entity*> closeEntities;
 	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
@@ -221,7 +220,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	returnPointer = closeEntities[0];
 
 	CollisionData cd;
-	cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), zEntities[closeEntities[0]]);
+	cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(cam->GetPosition(), cam->Get3DPickingRay(), zEntities[closeEntities[0]]);
 	if(cd.collision)
 	{
 		found = true;
@@ -230,7 +229,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 
 	while(counter < zEntities.size())
 	{
-		cd = GetGraphics()->GetPhysicsEngine()->GetCollisionRayMesh(
+		cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
 			cam->GetPosition(), 
 			cam->Get3DPickingRay(), 
 			zEntities[closeEntities[counter]]);

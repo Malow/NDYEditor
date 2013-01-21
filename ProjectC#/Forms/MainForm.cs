@@ -29,7 +29,6 @@ namespace Example
     public partial class NDYEditor : Form
     {
         CppCLI m_GameEngine = null;
-        bool m_APILoaded = false;
         MODE m_mode =  MODE.NONE;
         bool filePathKnown = false;
         bool worldSavedAndNotEdited = true;
@@ -39,9 +38,7 @@ namespace Example
         public NDYEditor()
         {
             InitializeComponent();
-            m_GameEngine = new CppCLI();
-            m_GameEngine.Init(RenderBox.Handle);
-            m_APILoaded = true;
+            m_GameEngine = new CppCLI(RenderBox.Handle);
             
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(ListenerKeyDown);
@@ -79,7 +76,7 @@ namespace Example
         {
             while (this.Created)
             {
-                Run();                
+                Run();
                 Application.DoEvents();
             }
         }
@@ -87,31 +84,28 @@ namespace Example
         //This is our update / Renderloop
         private void Run()
         {
-            if ( m_APILoaded )
+            // Run the GameEngine for one frame
+            m_GameEngine.ProcessFrame();
+
+            // Autosave
+            if (filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
             {
-                // Run the GameEngine for one frame
-                m_GameEngine.ProcessFrame();
+                this.toolStripStatusLabel1.Text = "Saving!";
+                m_GameEngine.SaveWorld();
+                UpdateSaveStatus();
 
-                // Autosave
-                if (filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
-                {
-                    this.toolStripStatusLabel1.Text = "Saving!";
-                    m_GameEngine.SaveWorld();
-                    UpdateSaveStatus();
-
-                    autoSaveWatch.Restart();
-                }
-
-                // Number of entities in current sector
-                int numEntities;
-                m_GameEngine.CountEntitiesInSector(out numEntities);
-
-                // Print Number of Entities
-                string status = "Number of entities: " + numEntities;
-                if (!worldSavedAndNotEdited) status = "Not Saved! " + status;
-                if (worldSavedAndNotEdited) status = "Saved! " + status;
-                this.toolStripStatusLabel1.Text = status;
+                autoSaveWatch.Restart();
             }
+
+            // Number of entities in current sector
+            int numEntities;
+            m_GameEngine.CountEntitiesInSector(out numEntities);
+
+            // Print Number of Entities
+            string status = "Number of entities: " + numEntities;
+            if (!worldSavedAndNotEdited) status = "Not Saved! " + status;
+            if (worldSavedAndNotEdited) status = "Saved! " + status;
+            this.toolStripStatusLabel1.Text = status;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -271,9 +265,7 @@ namespace Example
         void UpdateSaveStatus()
         {
             int temp = 0;
-
-            if (m_GameEngine != null)
-                m_GameEngine.HasWorldBeenSaved(out temp);
+            m_GameEngine.HasWorldBeenSaved(out temp);
 
             if ( worldSavedAndNotEdited && temp == 0 )
             {
@@ -432,29 +424,20 @@ namespace Example
             {
                 btn_Select.Focus();
                 this.hideAll();
-
                 this.Panel_Info.Show();
-                //this.Panel_ObjectInfo.Show();
-
                 this.Panel_Info.BringToFront();
-                //this.Panel_ObjectInfo.BringToFront();
             }
             else if (m_mode == MODE.MOVE)
             {
                 btn_Move.Focus();
                 this.hideAll();
-
                 this.Panel_Info.Show();
-                //this.Panel_ObjectInfo.Show();
-
                 this.Panel_Info.BringToFront();
-                //this.Panel_ObjectInfo.BringToFront();
             }
             else if (this.m_mode == MODE.PLACE)
             {
                 btn_PlaceObject.Focus();
                 this.hideAll();
-
                 this.Panel_PlaceObject.Show();
                 this.Panel_PlaceObject.BringToFront();
             }
@@ -462,7 +445,6 @@ namespace Example
             {
                 btn_LowerGround.Focus();
                 this.hideAll();
-
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
@@ -602,10 +584,8 @@ namespace Example
 
         private void NDYEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (m_GameEngine != null)
-            {
-                m_GameEngine.Shutdown();
-            }
+            m_GameEngine = null;
+            GC.WaitForFullGCComplete();
         }
 
         private void NoNumberKeyPress(object sender, KeyPressEventArgs e)

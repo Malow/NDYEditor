@@ -1,23 +1,23 @@
 #include "GameEngine.h"
-#include "Graphics.h"
 #include "MaloWFileDebug.h"
 #include "EntityList.h"
-
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <time.h>
 
+const float M_PI = 3.141592f;
 
-GameEngine::GameEngine() :
+
+GameEngine::GameEngine( GraphicsEngine* GE ) :
+	zGraphics(GE),
 	zMode(MODE::NONE),
 	zWorld(0),
 	zWorldRenderer(0),
 	zLockMouseToCamera(0),
-	zBrushSize(1.0f),			// 3 Meters Brush By Default
+	zBrushSize(1.0f),
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
 	zLeftMouseDown(false),
-	zBrushStrength(1),			// 1 unit by default
+	zBrushStrength(1),
 	zTexBrushSelectedTex(0),
 	zAnchor(0),
 	zBrushLastPos(0.0f,0.0f),
@@ -29,27 +29,12 @@ GameEngine::GameEngine() :
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true)
 {
-}
-
-
-GameEngine::~GameEngine()
-{
-	if ( zWorld ) delete zWorld;
-	FreeGraphics();
-}
-
-
-unsigned int GameEngine::Init(unsigned int hWnd)
-{
-	MaloW::ClearDebug();
-
-	InitGraphics(hWnd);
-	GetGraphics()->GetCamera()->SetUpdateCamera(false);
-	GetGraphics()->CreateSkyBox("Media/skymap.dds");
-	GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
-	GetGraphics()->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
-	GetGraphics()->SetFPSMax(60);
-	GetGraphics()->StartRendering();
+	zGraphics->GetCamera()->SetUpdateCamera(false);
+	zGraphics->CreateSkyBox("Media/skymap.dds");
+	zGraphics->GetKeyListener()->SetCursorVisibility(true);
+	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
+	zGraphics->SetFPSMax(20);
+	zGraphics->StartRendering();
 
 	// Entities
 	LoadEntList("Entities.txt");
@@ -60,20 +45,19 @@ unsigned int GameEngine::Init(unsigned int hWnd)
 
 	// Random
 	srand( (unsigned int)time(NULL) );
+}
 
-	return 0;
+
+GameEngine::~GameEngine()
+{
+	if ( zWorld ) delete zWorld;
 }
 
 
 void GameEngine::ProcessFrame()
 {
-	GraphicsEngine* ge;
-	ge = GetGraphics();
-	if ( !ge )
-		return;
-
-	iCamera *camera = ge->GetCamera();
-	float dt = GetGraphics()->Update();
+	iCamera *camera = zGraphics->GetCamera();
+	float dt = zGraphics->Update();
 
 	if ( zWorld ) 
 	{
@@ -86,7 +70,7 @@ void GameEngine::ProcessFrame()
 			catch(...)
 			{
 			}
-			zAnchor->radius = GetGraphics()->GetEngineParameters()->FarClip;
+			zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
 		}
 
 		zWorld->Update();
@@ -96,7 +80,7 @@ void GameEngine::ProcessFrame()
 			zWorldRenderer->update();
 		}
 
-		GetGraphics()->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
+		zGraphics->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
 	}
 	
 
@@ -121,39 +105,34 @@ void GameEngine::ProcessFrame()
 		}
 	}
 
-	if( ge->GetCamera()->GetCameraType() == CameraType::FPS )
+	if( zGraphics->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
 		if ( zLockMouseToCamera )
 		{
-			if(ge->GetKeyListener()->IsPressed('W'))
-			{
-				ge->GetCamera()->MoveForward(dt * zMovementMulti);
-			}
-			if(ge->GetKeyListener()->IsPressed('S'))
-			{
-				ge->GetCamera()->MoveBackward(dt * zMovementMulti);
-			}
-			if(ge->GetKeyListener()->IsPressed('A'))
-			{
-				ge->GetCamera()->MoveLeft(dt * zMovementMulti);
-			}
-			if(ge->GetKeyListener()->IsPressed('D'))
-			{
-				ge->GetCamera()->MoveRight(dt * zMovementMulti);
-			}
+			if(zGraphics->GetKeyListener()->IsPressed('W'))
+				zGraphics->GetCamera()->MoveForward(dt * zMovementMulti);
+
+			if(zGraphics->GetKeyListener()->IsPressed('S'))
+				zGraphics->GetCamera()->MoveBackward(dt * zMovementMulti);
+
+			if(zGraphics->GetKeyListener()->IsPressed('A'))
+				zGraphics->GetCamera()->MoveLeft(dt * zMovementMulti);
+
+			if(zGraphics->GetKeyListener()->IsPressed('D'))
+				zGraphics->GetCamera()->MoveRight(dt * zMovementMulti);
 		}
 
 		if ( zFPSLockToGround && zWorldRenderer )
 		{
 			try
 			{
-				Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+				Vector3 temp = zGraphics->GetCamera()->GetPosition();
 				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 				{
 					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 					{
 						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + 1.8f;
-						ge->GetCamera()->SetPosition(temp);
+						zGraphics->GetCamera()->SetPosition(temp);
 					}
 				}
 			}
@@ -162,36 +141,36 @@ void GameEngine::ProcessFrame()
 			}
 		}
 	}
-	else if(ge->GetCamera()->GetCameraType() == CameraType::RTS)
+	else if(zGraphics->GetCamera()->GetCameraType() == CameraType::RTS)
 	{
-		if(ge->GetKeyListener()->IsPressed('W'))
+		if(zGraphics->GetKeyListener()->IsPressed('W'))
 		{
-			ge->GetCamera()->MoveForward(dt * zMovementMulti);
+			zGraphics->GetCamera()->MoveForward(dt * zMovementMulti);
 		}
-		if(ge->GetKeyListener()->IsPressed('S'))
+		if(zGraphics->GetKeyListener()->IsPressed('S'))
 		{
-			ge->GetCamera()->MoveBackward(dt * zMovementMulti);
+			zGraphics->GetCamera()->MoveBackward(dt * zMovementMulti);
 		}
-		if(ge->GetKeyListener()->IsPressed('A'))
+		if(zGraphics->GetKeyListener()->IsPressed('A'))
 		{
-			ge->GetCamera()->MoveLeft(dt * zMovementMulti);
+			zGraphics->GetCamera()->MoveLeft(dt * zMovementMulti);
 		}
-		if(ge->GetKeyListener()->IsPressed('D'))
+		if(zGraphics->GetKeyListener()->IsPressed('D'))
 		{
-			ge->GetCamera()->MoveRight(dt * zMovementMulti);
+			zGraphics->GetCamera()->MoveRight(dt * zMovementMulti);
 		}
 
 		if ( zWorldRenderer )
 		{
 			try
 			{
-				Vector3 temp = GetGraphics()->GetCamera()->GetPosition();
+				Vector3 temp = zGraphics->GetCamera()->GetPosition();
 				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 				{
 					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 					{
 						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + zRTSHeightFromGround;
-						ge->GetCamera()->SetPosition(temp);
+						zGraphics->GetCamera()->SetPosition(temp);
 					}
 				}
 			}
@@ -208,7 +187,7 @@ void GameEngine::ProcessFrame()
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				GetGraphics()->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
+				zGraphics->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
 
 				// Brush Drawing
 				if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
@@ -219,21 +198,21 @@ void GameEngine::ProcessFrame()
 			}
 			else
 			{
-				GetGraphics()->SetSpecialCircle(-1,0,Vector2(0,0));
+				zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
 			}
 			zMouseMoved = false;
 		}
 	}
 	else
 	{
-		GetGraphics()->SetSpecialCircle(-1,0,Vector2(0,0));
+		zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
 	}
 }
 
 
 void GameEngine::OnResize(int width, int height)
 {
-	GetGraphics()->ResizeGraphicsEngine(width, height);
+	zGraphics->ResizeGraphicsEngine(width, height);
 }
 
 
@@ -346,13 +325,13 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			if( returnEntity != NULL )
 			{
 				// Add To Selection
-				if(!zTargetedEntities.count(returnEntity) && GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))
+				if(!zTargetedEntities.count(returnEntity) && zGraphics->GetKeyListener()->IsPressed(VK_SHIFT))
 				{
 					zTargetedEntities.insert(returnEntity);
 					zPrevPosOfSelected[returnEntity] = returnEntity->GetPosition();
 					returnEntity->SetSelected(true);
 				}
-				else if(!GetGraphics()->GetKeyListener()->IsPressed(VK_SHIFT))	// Set Selection
+				else if(!zGraphics->GetKeyListener()->IsPressed(VK_SHIFT))	// Set Selection
 				{
 					if(!zTargetedEntities.count(returnEntity))
 					{
@@ -469,7 +448,7 @@ void GameEngine::CreateWorld( int width, int height )
 {
 	if ( zWorld ) delete zWorld, zWorld=0;
 	this->zWorld = new World(this, width, height);
-	this->zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	this->zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
 	zWorldSavedFlag = false;
 }
 
@@ -523,15 +502,14 @@ void GameEngine::OpenWorld( char* msg )
 {
 	if ( zWorld ) delete zWorld, zWorld = 0;
 	zWorld = new World(this, msg);
-	zWorldRenderer = new WorldRenderer(zWorld, GetGraphics());
+	zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
 	zWorldSavedFlag = true;
 }
 
 
 void GameEngine::SetWindowFocused( bool flag )
 {
-	if ( GetGraphics() )
-		GetGraphics()->GetCamera()->SetActiveWindowDisabling(flag);
+	zGraphics->GetCamera()->SetActiveWindowDisabling(flag);
 }
 
 
@@ -539,7 +517,7 @@ void GameEngine::SaveWorld()
 {
 	if ( zWorld )
 	{
-		zWorld->SetStartCamera( GetGraphics()->GetCamera()->GetPosition(), GetGraphics()->GetCamera()->GetForward() );
+		zWorld->SetStartCamera( zGraphics->GetCamera()->GetPosition(), zGraphics->GetCamera()->GetForward() );
 		zWorld->SaveFile();
 		zWorldSavedFlag = true;
 	}
@@ -549,30 +527,29 @@ void GameEngine::SaveWorld()
 void GameEngine::ChangeCameraMode( char* cameraMode )
 {
 	string temp = std::string(cameraMode);
-	GraphicsEngine* ge = GetGraphics();
 
 	if( temp == "FPS" )
 	{
-		Vector3 oldPos = GetGraphics()->GetCamera()->GetPosition();
-		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
-		Vector3 oldUp = GetGraphics()->GetCamera()->GetUpVector();
+		Vector3 oldPos = zGraphics->GetCamera()->GetPosition();
+		Vector3 oldForward = zGraphics->GetCamera()->GetForward();
+		Vector3 oldUp = zGraphics->GetCamera()->GetUpVector();
 
-		ge->ChangeCamera(CameraType::FPS);
+		zGraphics->ChangeCamera(CameraType::FPS);
 
-		ge->GetCamera()->SetPosition(oldPos);
-		ge->GetCamera()->SetForward(oldForward);
-		ge->GetCamera()->SetUpVector(oldUp);
+		zGraphics->GetCamera()->SetPosition(oldPos);
+		zGraphics->GetCamera()->SetForward(oldForward);
+		zGraphics->GetCamera()->SetUpVector(oldUp);
 
 		zLockMouseToCamera = true;
 
-		GetGraphics()->GetCamera()->SetUpdateCamera(true);
-		GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
+		zGraphics->GetCamera()->SetUpdateCamera(true);
+		zGraphics->GetKeyListener()->SetCursorVisibility(false);
 	}
 
 	if( temp == "RTS" )
 	{
-		Vector3 oldForward = GetGraphics()->GetCamera()->GetForward();
-		Vector3 camPos = ge->GetCamera()->GetPosition();
+		Vector3 oldForward = zGraphics->GetCamera()->GetForward();
+		Vector3 camPos = zGraphics->GetCamera()->GetPosition();
 
 		if ( camPos.x > 0.0f && camPos.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 		{
@@ -583,16 +560,17 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 			}
 		}
 		
-		ge->ChangeCamera(CameraType::RTS);
-		ge->GetCamera()->SetForward(oldForward);
-		GetGraphics()->GetCamera()->SetUpdateCamera(false);
+		zGraphics->ChangeCamera(CameraType::RTS);
+		zGraphics->GetCamera()->SetForward(oldForward);
+		zGraphics->GetCamera()->SetUpdateCamera(false);
 	}
 }
 
 
 void GameEngine::KeyUp( int key )
 {
-	GetGraphics()->GetKeyListener()->KeyUp(key);
+	zGraphics->GetKeyListener()->KeyUp(key);
+
 	if ( key == 32 )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
@@ -628,24 +606,24 @@ void GameEngine::KeyUp( int key )
 
 void GameEngine::KeyDown( int key )
 {
-	GetGraphics()->GetKeyListener()->KeyDown(key);
+	zGraphics->GetKeyListener()->KeyDown(key);
 }
 
 
 void GameEngine::LockMouseToCamera()
 {
-	if( GetGraphics()->GetCamera()->GetCameraType() == CameraType::FPS )
+	if( zGraphics->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
 		zLockMouseToCamera = !zLockMouseToCamera;
 		if ( zLockMouseToCamera )
 		{
-			GetGraphics()->GetCamera()->SetUpdateCamera(true);
-			GetGraphics()->GetKeyListener()->SetCursorVisibility(false);
+			zGraphics->GetCamera()->SetUpdateCamera(true);
+			zGraphics->GetKeyListener()->SetCursorVisibility(false);
 		}
 		else
 		{
-			GetGraphics()->GetCamera()->SetUpdateCamera(false);
-			GetGraphics()->GetKeyListener()->SetCursorVisibility(true);
+			zGraphics->GetCamera()->SetUpdateCamera(false);
+			zGraphics->GetKeyListener()->SetCursorVisibility(true);
 		}
 	}
 }
@@ -653,7 +631,7 @@ void GameEngine::LockMouseToCamera()
 
 void GameEngine::GetSelectedInfo( char* info, float& x, float& y, float& z)
 {
-	if(zTargetedEntities.empty())
+	if( zTargetedEntities.empty() )
 	{
 		x = 0;
 		y = 0;
@@ -714,8 +692,8 @@ void GameEngine::onEvent( Event* e )
 	{
 		// Create Anchor
 		zAnchor = WLE->world->CreateAnchor();
-		GetGraphics()->GetCamera()->SetPosition( WLE->world->GetStartCamPos() );
-		GetGraphics()->GetCamera()->SetForward( WLE->world->GetStartCamRot() );
+		zGraphics->GetCamera()->SetPosition( WLE->world->GetStartCamPos() );
+		zGraphics->GetCamera()->SetForward( WLE->world->GetStartCamRot() );
 	}
 	else if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
 	{
@@ -837,7 +815,7 @@ void GameEngine::GetCameraInfo( char* info, float& x, float& y, float& z )
 {
 	if(string(info) == "Position") // Returns the camera pos
 	{
-		Vector3 cameraPos = GetGraphics()->GetCamera()->GetPosition();
+		Vector3 cameraPos = zGraphics->GetCamera()->GetPosition();
 		x = cameraPos.x;
 		y = cameraPos.y;
 		z = cameraPos.z;
@@ -868,14 +846,17 @@ void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 
 	if(string(info) == "Dir") // Returns the sunlight dir
 	{
-		temp = GetGraphics()->GetSunLightDirection();
-		if ( zWorld ) temp = zWorld->GetSunDir();
-		
+		if ( zWorld ) 
+			temp = zWorld->GetSunDir();
+		else
+			temp = zGraphics->GetSunLightDirection();
 	}
 	else if(string(info) == "Color")
 	{
-		temp = GetGraphics()->GetSunLightColor();
-		if ( zWorld ) temp = zWorld->GetSunColor();
+		if ( zWorld ) 
+			temp = zWorld->GetSunColor();
+		else
+			temp = zGraphics->GetSunLightColor();
 	}
 
 	x = temp.x;
@@ -886,11 +867,11 @@ void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 
 void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 {
-	if(string(info) == "Dir") // Returns the sunlight dir
+	if( string(info) == "Dir" ) // Returns the sunlight dir
 	{
 		if ( zWorld ) zWorld->SetSunProperties( Vector3(x, y, z), zWorld->GetSunColor(), zWorld->GetSunIntensity() );
 	}
-	else if(string(info) == "Color")
+	else if( string(info) == "Color" )
 	{
 		if ( zWorld ) zWorld->SetSunProperties( zWorld->GetSunDir(), Vector3(x, y, z), zWorld->GetSunIntensity() );
 	}
@@ -901,14 +882,19 @@ void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 
 void GameEngine::GetAmbientLight( char* info, float& x, float& y, float& z )
 {
-	if(string(info) == "Color")
+	Vector3 light(x,y,z);
+
+	if( string(info) == "Color" )
 	{
-		Vector3 light = GetGraphics()->GetSceneAmbientLight();
-		if ( zWorld ) light = zWorld->GetWorldAmbient();
-		x = light.x;
-		y = light.y;
-		z = light.z;
+		if ( zWorld ) 
+			light = zWorld->GetWorldAmbient();
+		else
+			light = zGraphics->GetSceneAmbientLight();
 	}
+
+	x = light.x;
+	y = light.y;
+	z = light.z;
 }
 
 
@@ -926,10 +912,10 @@ int GameEngine::CountEntitiesInSector()
 {
 	if ( !zWorld ) return 0;
 	
-	Vector2UINT cSector = zWorld->WorldPosToSector( GetGraphics()->GetCamera()->GetPosition().GetXZ() );
+	Vector2UINT cSector = zWorld->WorldPosToSector( zGraphics->GetCamera()->GetPosition().GetXZ() );
 
 	std::set<Entity*> entities;
-	Rect r( Vector2(cSector.x * SECTOR_WORLD_SIZE, cSector.y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE) );
+	Rect r( Vector2(cSector.x * (float)SECTOR_WORLD_SIZE, cSector.y * (float)SECTOR_WORLD_SIZE), Vector2((float)SECTOR_WORLD_SIZE, (float)SECTOR_WORLD_SIZE) );
 
 	return zWorld->GetEntitiesInRect(r,entities);
 }
