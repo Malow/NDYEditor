@@ -265,9 +265,38 @@ bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct,
 }
 
 
-unsigned int WorldFile::GetEnding() const
+unsigned int WorldFile::GetAIGridBegin() const
 {
 	return GetEntitiesBegin() + zNumSectors * sizeof(EntityStruct) * 256;
+}
+
+
+void WorldFile::WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetAIGridBegin() + sectorIndex * sizeof(AIGrid), std::ios::beg );
+		zFile->write(reinterpret_cast<const char*>(&grid), sizeof(AIGrid) );
+	}
+}
+
+
+bool WorldFile::ReadAIGrid( AIGrid& grid, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetAIGridBegin() + sectorIndex * sizeof(AIGrid), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read(reinterpret_cast<char*>(&grid), sizeof(AIGrid)) ) return false;
+	return true;
+}
+
+
+unsigned int WorldFile::GetEnding() const
+{
+	return GetAIGridBegin() + zNumSectors * sizeof(AIGrid);
 }
 
 
@@ -352,6 +381,7 @@ Vector3 WorldFile::GetSunDirection()
 	ReadHeader();
 	return Vector3(zHeader.sunDirection[0], zHeader.sunDirection[1], zHeader.sunDirection[2]);
 }
+
 
 Vector3 WorldFile::GetSunColor()
 {

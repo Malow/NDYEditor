@@ -108,8 +108,8 @@ public:
 	void Open();
 
 	// Writes height map to file
-	void WriteHeightMap( const float* const data, unsigned int mapIndex );
-	bool ReadHeightMap( float* data, unsigned int mapIndex );
+	void WriteHeightMap( const float* const data, unsigned int sectorIndex );
+	bool ReadHeightMap( float* data, unsigned int sectorIndex );
 
 	// Sector header
 	void WriteSectorHeader( const WorldFileSectorHeader& header, unsigned int sectorIndex );
@@ -120,10 +120,12 @@ public:
 	bool ReadTextureNames( char* data, unsigned int sectorIndex );
 
 	// Writes blend map to file
-	void WriteBlendMap( const float* const data, unsigned int mapIndex );
-	bool ReadBlendMap( float* data, unsigned int mapIndex );
+	void WriteBlendMap( const float* const data, unsigned int sectorIndex );
+	bool ReadBlendMap( float* data, unsigned int sectorIndex );
 
 	// AI Grid
+	void WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex );
+	bool ReadAIGrid( AIGrid& grid, unsigned int sectorIndex );
 
 	// Read the world header
 	void ReadHeader( );
@@ -150,5 +152,6 @@ private:
 	unsigned int GetSectorHeadersBegin() const;
 	unsigned int GetSectorTexturesBegin() const;
 	unsigned int GetEntitiesBegin() const;
+	unsigned int GetAIGridBegin() const;
 	unsigned int GetEnding() const;
 };

@@ -54,7 +54,7 @@ public:
 	void SetAmbient( const Vector3& ambient );
 
 	// AI Grid
-	const AIGrid& GetAIGrid() const { return zAiGrid; }
+	AIGrid& GetAIGrid() { return zAiGrid; }
 	void SetBlocking( const Vector2& pos, bool flag );
 	bool GetBlocking( const Vector2& pos ) const;
 

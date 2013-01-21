@@ -30,17 +30,17 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 		}
 	}
 
-	zStartCamPos.x = zNrOfSectorsWidth*SECTOR_WORLD_SIZE/2;
-	zStartCamPos.z = zNrOfSectorsHeight*SECTOR_WORLD_SIZE/2;
+	zStartCamPos.x = zNrOfSectorsWidth * SECTOR_WORLD_SIZE * 0.5f;
+	zStartCamPos.z = zNrOfSectorsHeight * SECTOR_WORLD_SIZE * 0.5f;
 	zStartCamPos.y = 1.8f;
 	
-	zStartCamRot.x = 1.0;
-	zStartCamRot.y = 0.0;
-	zStartCamRot.z = 0.0;
+	zStartCamRot.x = 1.0f;
+	zStartCamRot.y = 0.0f;
+	zStartCamRot.z = 0.0f;
 
-	zAmbient.x = 0.0;
-	zAmbient.y = 0.0;
-	zAmbient.z = 0.0;
+	zAmbient.x = 0.0f;
+	zAmbient.y = 0.0f;
+	zAmbient.z = 0.0f;
 
 	zSunDir = Vector3(0.5f, -1.0f, 0.0f);
 	zSunColor = Vector3(1.0f, 1.0f, 1.0f);
@@ -193,7 +193,8 @@ void World::SaveFile()
 							zFile->WriteHeightMap(zSectors[x][y]->GetHeightMap(), sectorIndex);
 							zFile->WriteBlendMap(zSectors[x][y]->GetBlendMap(), sectorIndex);
 							zFile->WriteTextureNames(zSectors[x][y]->GetTextureNames(), sectorIndex);
-							
+							zFile->WriteAIGrid(zSectors[x][y]->GetAIGrid(), sectorIndex);
+
 							// Write Sector Header
 							WorldFileSectorHeader header;
 							header.generated = true;
@@ -345,6 +346,10 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 					s->Reset();
 				}
 				else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x) )
+				{
+					s->Reset();
+				}
+				else if ( !zFile->ReadAIGrid(s->GetAIGrid(), y * GetNumSectorsWidth() + x) )
 				{
 					s->Reset();
 				}
@@ -791,6 +796,17 @@ void World::SetWorldAmbient( const Vector3& ambient )
 
 	if ( zFile )
 		zFile->SetWorldAmbient(ambient);
+}
+
+
+bool World::IsBlockingAt( const Vector2& pos )
+{
+	unsigned int sectorX = (unsigned int)pos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)pos.y / SECTOR_WORLD_SIZE;
+	float localX = fmod(pos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	float localY = fmod(pos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	return GetSector(sectorX, sectorY)->GetBlocking( Vector2(localX, localY) );
 }
 
 

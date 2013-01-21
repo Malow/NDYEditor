@@ -37,3 +37,7 @@ Model:Media/Models/PocketKnife_v02.obj
 Number:10
 Name:Veins
 Model:Media/Models/Veins_01_v03_r.obj
+
+Number:11
+Name:Flag
+Model:Media/Models/Flag/FlagBlue.ani

@@ -157,7 +157,21 @@ void Sector::SetAmbient( const Vector3& ambient )
 
 void Sector::SetBlocking( const Vector2& pos, bool flag )
 {
+	if ( pos.x < 0.0f || pos.x >= 1.0f || pos.y < 0.0f || pos.y >= 1.0f )
+		throw("Out Of Bounds!");
 
+	// Find pixel
+	float snapX = floor(pos.x * (float)SECTOR_AI_GRID_SIZE) / (float)SECTOR_AI_GRID_SIZE;
+	float snapY = floor(pos.y * (float)SECTOR_AI_GRID_SIZE) / (float)SECTOR_AI_GRID_SIZE;
+
+	unsigned int scaledX = (unsigned int)(snapX * (float)(SECTOR_AI_GRID_SIZE));
+	unsigned int scaledY = (unsigned int)(snapY * (float)(SECTOR_AI_GRID_SIZE));
+
+	// Set Values
+	zAiGrid[ scaledY * SECTOR_AI_GRID_SIZE + scaledX ] = flag;
+
+	// Changed
+	SetEdited(true);
 }
 
 

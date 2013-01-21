@@ -118,6 +118,9 @@ public:
 	// Logic
 	void Update();
 
+	// AI Grid
+	bool IsBlockingAt( const Vector2& pos );
+
 	// Data Access
 	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
 	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
