@@ -686,6 +686,12 @@ void World::Update()
 			{
 				NotifyObservers(&SectorUnloadedEvent(this,i->x,i->y));
 				zLoadedSectors.erase( Vector2UINT(i->x, i->y) );
+
+				for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+				{
+					RemoveEntity(*e);
+				}
+
 				zLoadedEntityCount.erase(zSectors[i->x][i->y]);
 				delete zSectors[i->x][i->y];
 				zSectors[i->x][i->y] = 0;
