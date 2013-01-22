@@ -44,6 +44,9 @@ float Sector::GetHeightAt( float x, float y ) const throw(...)
 	if ( x < 0.0f || x >= 1.0f || y < 0.0f || y >= 1.0f )
 		throw("Out Of Bounds!");
 
+	// Interpolating
+
+
 	// Find pixel
 	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
@@ -189,4 +192,33 @@ bool Sector::GetBlocking( const Vector2& pos ) const
 
 	// Set Values
 	return zAiGrid[ scaledY * SECTOR_AI_GRID_SIZE + scaledX ];
+}
+
+
+Vector3 Sector::GetNormalAt( float x, float y ) throw(...)
+{
+	float minX = floor(x * SECTOR_HEIGHT_SIZE);
+	float minY = floor(y * SECTOR_HEIGHT_SIZE);
+
+	float maxX = minX + 1.0f;
+	float maxY = minY + 1.0f;
+
+	minX = minX / SECTOR_HEIGHT_SIZE;
+	minY = minY / SECTOR_HEIGHT_SIZE;
+	maxX = maxX / SECTOR_HEIGHT_SIZE;
+	maxY = maxY / SECTOR_HEIGHT_SIZE;
+	
+	Vector3 a(minX, GetHeightAt(minX, minY), minY);
+	Vector3 b(minX, GetHeightAt(minY, maxY), maxY);
+	Vector3 c(maxX, GetHeightAt(maxY, minY), minY);
+	Vector3 d(maxX, GetHeightAt(maxY, maxY), maxY);
+
+	//a.Normalize();
+	//b.Normalize();
+	//c.Normalize();
+	//d.Normalize();
+
+	Vector3 normal = (d-a).GetCrossProduct(c-b);
+	normal.Normalize();
+	return normal;
 }

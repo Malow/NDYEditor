@@ -32,15 +32,15 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 
 	zStartCamPos.x = zNrOfSectorsWidth * SECTOR_WORLD_SIZE * 0.5f;
 	zStartCamPos.z = zNrOfSectorsHeight * SECTOR_WORLD_SIZE * 0.5f;
-	zStartCamPos.y = 1.8f;
+	zStartCamPos.y = 1.7f;
 	
 	zStartCamRot.x = 1.0f;
 	zStartCamRot.y = 0.0f;
 	zStartCamRot.z = 0.0f;
 
-	zAmbient.x = 0.0f;
-	zAmbient.y = 0.0f;
-	zAmbient.z = 0.0f;
+	zAmbient.x = 0.1f;
+	zAmbient.y = 0.1f;
+	zAmbient.z = 0.1f;
 
 	zSunDir = Vector3(0.5f, -1.0f, 0.0f);
 	zSunColor = Vector3(1.0f, 1.0f, 1.0f);
@@ -494,34 +494,21 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	unsigned int counter=0;
 
 	// Calculate Height Node Density
-	float density = (float)SECTOR_WORLD_SIZE / (float)SECTOR_HEIGHT_SIZE;
+	float density = (float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1);
 
-	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x / density ) * density;
-	float centerSnapY = floor( center.y / density ) * density;
-
-	// Snapped Radius
-	float snapRadius = floor(radius/density)*density;
-
-	if ( snapRadius == 0.0f )
-	{
-		out.insert( Vector2(centerSnapX, centerSnapY) );
-		return 1;
-	}
-
-	for( float x = centerSnapX - snapRadius; x < centerSnapX + snapRadius; x+=density )
+	for( float x = center.x - radius; x < center.x + radius; x+=density )
 	{
 		// Outside World
 		if ( x < 0.0f || x >= GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 			continue;
 
-		for( float y = centerSnapY - snapRadius; y < centerSnapY + snapRadius; y+=density )
+		for( float y = center.y - radius; y < center.y + radius; y+=density )
 		{
 			// Outside World
 			if ( y < 0.0f || y >= GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 				continue;
 
-			if ( Circle(Vector2(centerSnapX, centerSnapY), radius).IsInside(Vector2(x, y) ) )
+			if ( Circle(Vector2(center.x, center.y), radius).IsInside(Vector2(x, y) ) )
 			{
 				out.insert( Vector2(x,y) );
 				counter++;
@@ -559,8 +546,8 @@ void World::RemoveEntity( Entity* entity )
 {
 	NotifyObservers( &EntityRemovedEvent(this,entity));
 	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
-	delete *i;
 	zEntities.erase(i);
+	delete entity;
 }
 
 
@@ -813,6 +800,17 @@ bool World::IsBlockingAt( const Vector2& pos )
 	float localY = fmod(pos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 
 	return GetSector(sectorX, sectorY)->GetBlocking( Vector2(localX, localY) );
+}
+
+
+Vector3 World::GetNormalAt( const Vector2& worldPos )
+{
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+	float localX = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	float localY = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	return GetSector(sectorX, sectorY)->GetNormalAt(localX, localY);
 }
 
 

@@ -71,6 +71,9 @@ public:
 	*/
 	void SetHeightAt( float x, float y, float val ) throw(...);
 
+	// Returns the normal at point
+	Vector3 GetNormalAt( float localx, float localy ) throw(...);
+
 	// Returns The Texture Name (0<=index<4)
 	const char* const GetTextureName( unsigned int index ) const;
 	void SetTextureName( unsigned int index, const std::string& name );

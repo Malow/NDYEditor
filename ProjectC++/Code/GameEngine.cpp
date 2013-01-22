@@ -58,20 +58,10 @@ void GameEngine::ProcessFrame()
 	iCamera *camera = zGraphics->GetCamera();
 	float dt = zGraphics->Update();
 
-
 	if ( zWorld ) 
 	{
-		if (zAnchor)
-		{
-			try
-			{
-				zAnchor->position = camera->GetPosition().GetXZ();
-			}
-			catch(...)
-			{
-			}
-			zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
-		}
+		zAnchor->position = camera->GetPosition().GetXZ();
+		zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
 
 		zWorld->Update();
 
@@ -107,7 +97,39 @@ void GameEngine::ProcessFrame()
 
 	if( zGraphics->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
-		if ( zLockMouseToCamera )
+		if ( zFPSLockToGround && zWorld )
+		{
+			Vector2 pos = zGraphics->GetCamera()->GetPosition().GetXZ();
+			Vector2 forward = zGraphics->GetCamera()->GetForward().GetXZ();
+			forward.Normalize();
+			Vector2 sideways = zGraphics->GetCamera()->GetRightVector().GetXZ();
+			sideways.Normalize();
+
+			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.01f * zMovementMulti;
+			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.01f * zMovementMulti;
+
+			// Check Normal
+
+			Vector3 temp(pos.x, 0.0f, pos.y);
+			if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			{
+				if ( temp.z > 0.0f && temp.z < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+				{
+					temp.y = zWorld->GetHeightAt(temp.x, temp.z) + 1.7f;
+				}
+				else
+				{
+					temp.y = zGraphics->GetCamera()->GetPosition().y;
+				}
+			}
+			else
+			{
+				temp.y = zGraphics->GetCamera()->GetPosition().y;
+			}
+
+			zGraphics->GetCamera()->SetPosition(temp);
+		}
+		else if ( zLockMouseToCamera )
 		{
 			if(zGraphics->GetKeyListener()->IsPressed('W'))
 				zGraphics->GetCamera()->MoveForward(dt * zMovementMulti);
@@ -120,25 +142,6 @@ void GameEngine::ProcessFrame()
 
 			if(zGraphics->GetKeyListener()->IsPressed('D'))
 				zGraphics->GetCamera()->MoveRight(dt * zMovementMulti);
-		}
-
-		if ( zFPSLockToGround && zWorldRenderer )
-		{
-			try
-			{
-				Vector3 temp = zGraphics->GetCamera()->GetPosition();
-				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
-				{
-					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
-					{
-						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + 1.8f;
-						zGraphics->GetCamera()->SetPosition(temp);
-					}
-				}
-			}
-			catch(...)
-			{
-			}
 		}
 	}
 	else if(zGraphics->GetCamera()->GetCameraType() == CameraType::RTS)
@@ -167,9 +170,9 @@ void GameEngine::ProcessFrame()
 				Vector3 temp = zGraphics->GetCamera()->GetPosition();
 				if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 				{
-					if ( temp.y > 0.0f && temp.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+					if ( temp.z > 0.0f && temp.z < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 					{
-						temp.y = zWorldRenderer->GetYPosFromHeightMap(temp.x, temp.z) + zRTSHeightFromGround;
+						temp.y = zWorld->GetHeightAt(temp.x, temp.z) + zRTSHeightFromGround;
 						zGraphics->GetCamera()->SetPosition(temp);
 					}
 				}
@@ -545,15 +548,14 @@ void GameEngine::ChangeCameraMode( char* cameraMode )
 		zGraphics->GetCamera()->SetUpdateCamera(true);
 		zGraphics->GetKeyListener()->SetCursorVisibility(false);
 	}
-
-	if( temp == "RTS" )
+	else if( temp == "RTS" )
 	{
 		Vector3 oldForward = zGraphics->GetCamera()->GetForward();
 		Vector3 camPos = zGraphics->GetCamera()->GetPosition();
 
 		if ( camPos.x > 0.0f && camPos.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
 		{
-			if ( camPos.y > 0.0f && camPos.y < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( camPos.z > 0.0f && camPos.z < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 			{
 				float yPos = this->zWorldRenderer->GetYPosFromHeightMap(camPos.x, camPos.z);
 				this->zRTSHeightFromGround = camPos.y - yPos;
@@ -579,6 +581,17 @@ void GameEngine::KeyUp( int key )
 	{
 		zMovementMulti = 1.0;
 	}
+	else if ( key == 110 )
+	{
+		if ( zWorld )
+		{
+			Vector3 startPos;
+			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5;
+			startPos.z = zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE * 0.5;
+			startPos.y = zWorld->GetHeightAt(startPos.x, startPos.y) + 1.7f; 
+			zGraphics->GetCamera()->SetPosition(startPos);
+		}
+	}
 	else if( key == VK_SUBTRACT)
 	{
 		if (zMovementMulti / 2.0f)
@@ -603,7 +616,7 @@ void GameEngine::KeyUp( int key )
 	}
 	else if( key == (int)'R')
 	{
-		this->zMovementMulti = 2.95f * 0.1f; // m/s
+		this->zMovementMulti = 2.95f; // m/s
 	}
 }
 

@@ -94,6 +94,9 @@ public:
 	void SetHeightAt( float x, float y, float value );
 	float GetHeightAtWorldPos( float posx, float posz );
 
+	// Normals
+	Vector3 GetNormalAt( const Vector2& worldPos );
+
 	// Modify Blend Functions
 	void ModifyBlendingAt( float x, float y, const Vector4& val );
 	Vector4 GetBlendingAt( float x, float y );
