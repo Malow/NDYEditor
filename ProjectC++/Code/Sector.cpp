@@ -31,11 +31,11 @@ void Sector::Reset()
 	SetTextureName(2, "Blue.png");
 	SetTextureName(3, "Red.png");
 
-	zAmbient[0] = 0.0;
-	zAmbient[1] = 0.0;
-	zAmbient[2] = 0.0;
+	zAmbient[0] = 0.0f;
+	zAmbient[1] = 0.0f;
+	zAmbient[2] = 0.0f;
 
-	SetEdited(true);
+	SetEdited(false);
 }
 
 

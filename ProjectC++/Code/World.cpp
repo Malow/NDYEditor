@@ -1,6 +1,6 @@
 #include "World.h"
-#include <windows.h>
 #include "CircleAndRect.h"
+#include <windows.h>
 
 
 
@@ -326,7 +326,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 	{
 		s = new Sector();
 
-		this->zSectors[x][y] = s;
+		zSectors[x][y] = s;
 
 		if ( zFile )
 		{
@@ -660,7 +660,7 @@ void World::Update()
 	std::set< Vector2UINT > sectorsToUnload;
 	for( auto i = loadedSectors.begin(); i != loadedSectors.end(); ++i )
 	{
-		if ( !anchoredSectors.count(*i) )
+		if ( anchoredSectors.find(*i) == anchoredSectors.end() )
 		{
 			Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
 			std::set< Entity* > entitiesInArea;

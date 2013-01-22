@@ -162,8 +162,11 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	if(zWorld == NULL)
 		return std::numeric_limits<float>::infinity();
 
-	unsigned int tIndex = (unsigned int)(y/SECTOR_WORLD_SIZE) * zWorld->GetNumSectorsWidth() + (unsigned int)(x/SECTOR_WORLD_SIZE);
+	unsigned int tIndex = (unsigned int)(y/(float)SECTOR_WORLD_SIZE) * zWorld->GetNumSectorsWidth() + (unsigned int)(x/(float)SECTOR_WORLD_SIZE);
 	
+	if ( tIndex > zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() )
+		return std::numeric_limits<float>::infinity();
+
 	if ( zTerrain[tIndex] )
 	{
 		return zTerrain[tIndex]->GetYPositionAt(fmod(x, (float)SECTOR_WORLD_SIZE), fmod(y, (float)SECTOR_WORLD_SIZE));
