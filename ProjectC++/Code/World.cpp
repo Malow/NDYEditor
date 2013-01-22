@@ -118,28 +118,26 @@ void World::SetHeightAt( float x, float y, float val )
 	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
-	float snapX = floor(localX * (float)SECTOR_HEIGHT_SIZE) / (float)SECTOR_HEIGHT_SIZE;
-	float snapY = floor(localY * (float)SECTOR_HEIGHT_SIZE) / (float)SECTOR_HEIGHT_SIZE;
+	float snapX = floor(localX * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
+	float snapY = floor(localY * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
 
 	GetSector(sectorX, sectorY)->SetHeightAt(snapX, snapY, val);
 
 	// Notify Sector Change
 	NotifyObservers( &SectorHeightMapChanged(this, sectorX, sectorY, localX, localY) );
-	
+
 	// Overlap Left
 	if ( sectorX > 0 && snapX == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
-		border = 1.0f;
 		GetSector(sectorX-1, sectorY)->SetHeightAt(border, snapY, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY, border, snapY) );
 	}
-	
+
 	// Overlap Up
 	if ( sectorY > 0 && snapY == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
-		border = 1.0f;
 		GetSector(sectorX, sectorY-1)->SetHeightAt(snapX, border, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX, sectorY-1, snapX, border) );
 	}
@@ -148,7 +146,6 @@ void World::SetHeightAt( float x, float y, float val )
 	if ( sectorY > 0 && snapY == 0.0f && sectorX > 0 && snapX == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
-		border = 1.0f;
 		GetSector(sectorX-1, sectorY-1)->SetHeightAt(border, border, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY-1, border, border) );
 	}
@@ -164,8 +161,8 @@ float World::GetHeightAt( float x, float y )
 	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
 
 	// Snap Local Coords
-	float snapX = floor(localX * (float)SECTOR_HEIGHT_SIZE) / (float)SECTOR_HEIGHT_SIZE;
-	float snapY = floor(localY * (float)SECTOR_HEIGHT_SIZE) / (float)SECTOR_HEIGHT_SIZE;
+	float snapX = floor(localX * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
+	float snapY = floor(localY * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
 
 	return GetSector(sectorX, sectorY)->GetHeightAt(snapX, snapY);
 }
@@ -222,7 +219,7 @@ void World::SaveFile()
 						}
 
 						// Go Through List
-						std::array<EntityStruct,256> eArray;
+						std::array<EntityStruct, 256> eArray;
 						for( unsigned int i=0; i<256; ++i )
 						{
 							eArray[i].type = 0;
@@ -497,7 +494,7 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	unsigned int counter=0;
 
 	// Calculate Height Node Density
-	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_HEIGHT_SIZE );
+	float density = (float)SECTOR_WORLD_SIZE / (float)SECTOR_HEIGHT_SIZE;
 
 	// Snap Center To Closest Position
 	float centerSnapX = floor( center.x / density ) * density;
