@@ -88,7 +88,7 @@ namespace Example
             m_GameEngine.ProcessFrame();
 
             // Autosave
-            if (false && filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
+            if (filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
             {
                 this.toolStripStatusLabel1.Text = "Saving!";
                 m_GameEngine.SaveWorld();

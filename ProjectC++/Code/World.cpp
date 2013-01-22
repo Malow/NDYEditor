@@ -130,6 +130,7 @@ void World::SetHeightAt( float x, float y, float val )
 	if ( sectorX > 0 && snapX == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		border = 1.0f;
 		GetSector(sectorX-1, sectorY)->SetHeightAt(border, snapY, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY, border, snapY) );
 	}
@@ -138,6 +139,7 @@ void World::SetHeightAt( float x, float y, float val )
 	if ( sectorY > 0 && snapY == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		border = 1.0f;
 		GetSector(sectorX, sectorY-1)->SetHeightAt(snapX, border, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX, sectorY-1, snapX, border) );
 	}
@@ -146,6 +148,7 @@ void World::SetHeightAt( float x, float y, float val )
 	if ( sectorY > 0 && snapY == 0.0f && sectorX > 0 && snapX == 0.0f )
 	{
 		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		border = 1.0f;
 		GetSector(sectorX-1, sectorY-1)->SetHeightAt(border, border, val);
 		NotifyObservers( &SectorHeightMapChanged(this, sectorX-1, sectorY-1, border, border) );
 	}

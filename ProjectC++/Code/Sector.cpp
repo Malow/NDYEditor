@@ -48,8 +48,8 @@ float Sector::GetHeightAt( float x, float y ) const throw(...)
 	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 
-	unsigned int scaledX = (unsigned int)(snapX * (float)(SECTOR_HEIGHT_SIZE));
-	unsigned int scaledY = (unsigned int)(snapY * (float)(SECTOR_HEIGHT_SIZE));
+	unsigned int scaledX = (unsigned int)(snapX * SECTOR_HEIGHT_SIZE);
+	unsigned int scaledY = (unsigned int)(snapY * SECTOR_HEIGHT_SIZE);
 
 	// Set Values
 	return zHeightMap[ scaledY * SECTOR_HEIGHT_SIZE + scaledX ];
@@ -65,8 +65,8 @@ void Sector::SetHeightAt( float x, float y, float val ) throw(...)
 	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 
-	unsigned int scaledX = (unsigned int)(snapX * (float)(SECTOR_HEIGHT_SIZE));
-	unsigned int scaledY = (unsigned int)(snapY * (float)(SECTOR_HEIGHT_SIZE));
+	unsigned int scaledX = (unsigned int)(snapX * SECTOR_HEIGHT_SIZE);
+	unsigned int scaledY = (unsigned int)(snapY * SECTOR_HEIGHT_SIZE);
 
 	// Set Values
 	zHeightMap[ scaledY * SECTOR_HEIGHT_SIZE + scaledX ] = val;
