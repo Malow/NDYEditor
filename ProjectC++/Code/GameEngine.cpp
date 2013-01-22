@@ -58,6 +58,7 @@ void GameEngine::ProcessFrame()
 	iCamera *camera = zGraphics->GetCamera();
 	float dt = zGraphics->Update();
 
+
 	if ( zWorld ) 
 	{
 		if (zAnchor)
@@ -599,6 +600,10 @@ void GameEngine::KeyUp( int key )
 	else if( key == (int)'V')
 	{
 		this->ChangeCameraMode("RTS");
+	}
+	else if( key == (int)'R')
+	{
+		this->zMovementMulti = 2.95f * 0.1f; // m/s
 	}
 }
 
