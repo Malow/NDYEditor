@@ -70,6 +70,12 @@ namespace Example
             float x = 0, y = 0, z = 0;
             m_GameEngine.GetCameraInfo("Position", out x, out y, out z);
             this.Text = "BOOM! Editor | Camera Position: (" + x + ", " + y + ", " + z + ")";
+            
+            if ( e.Control && e.KeyCode == Keys.Z ) 
+                e.Handled = true;
+
+            if (e.Control && e.KeyCode == Keys.Y)
+                e.Handled = true;
         }
 
         public void GameLoop()
@@ -592,19 +598,11 @@ namespace Example
             {
                 e.Handled = true;
             }
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != '-')
+            else if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
-
-            // only allow one decimal point
-            if (e.KeyChar == ',' && (sender as TextBox).Text.IndexOf(',') > -1)
-            {
-                e.Handled = true;
-            }
-
-            // only allow one minus
-            if (e.KeyChar == '-' && (sender as TextBox).Text.IndexOf('-') > -1)
+            else if (e.KeyChar == ',' && (sender as TextBox).Text.IndexOf(',') > -1)
             {
                 e.Handled = true;
             }
@@ -720,8 +718,9 @@ namespace Example
             UpdateSaveStatus();
         }
 
-        private void btnRTS_MouseEnter(object sender, EventArgs e)
+        private void RenderBox_Click(object sender, EventArgs e)
         {
+            RenderBox.Focus();
         }
     }
 }

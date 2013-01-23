@@ -100,16 +100,7 @@ void WorldRenderer::onEvent( Event* e )
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
 		const std::string& model = GetEntModel(ELE->entity->GetType());
-
-		if ( model.substr(model.size()-4,4) == ".ani" )
-		{
-			zEntities[ELE->entity] = zGraphics->CreateAnimatedMesh(model.c_str(), ELE->entity->GetPosition());
-		}
-		else
-		{
-			zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
-		}
-
+		zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
 		zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
 		ELE->entity->AddObserver(this);
 	}
@@ -230,7 +221,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 		curDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
 	}
 
-	while(counter < zEntities.size())
+	while(counter < closeEntities.size())
 	{
 		cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
 			cam->GetPosition(), 

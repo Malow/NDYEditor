@@ -647,43 +647,54 @@ void World::Update()
 	std::set< Vector2UINT > sectorsToUnload;
 	for( auto i = loadedSectors.begin(); i != loadedSectors.end(); ++i )
 	{
+		// Is Sector Anchored?
 		if ( anchoredSectors.find(*i) == anchoredSectors.end() )
 		{
-			Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
-			std::set< Entity* > entitiesInArea;
-			bool unsavedEntities = false;
+			// Has the sector been edited?
+			if ( !GetSector( i->x, i->y )->IsEdited() )
+			{
+				// Does Sector have edited entities?
+				Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+				std::set< Entity* > entitiesInArea;
+				bool unsavedEntities = false;
 
-			if ( GetEntitiesInRect(sectorRect, entitiesInArea) != zLoadedEntityCount[zSectors[i->x][i->y]] )
-			{
-				unsavedEntities = true;
-			}
-			else
-			{
-				for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+				if ( GetEntitiesInRect(sectorRect, entitiesInArea) != zLoadedEntityCount[zSectors[i->x][i->y]] )
+				{
+					unsavedEntities = true;
+				}
+
+				for( auto e = entitiesInArea.begin(); !unsavedEntities && e != entitiesInArea.end(); ++e )
 				{
 					if ( (*e)->IsEdited() )
 					{
 						unsavedEntities = true;
-						break;
 					}
 				}
-			}
 
-			if ( !unsavedEntities && !GetSector( i->x, i->y )->IsEdited() )
-			{
-				NotifyObservers(&SectorUnloadedEvent(this,i->x,i->y));
-				zLoadedSectors.erase( Vector2UINT(i->x, i->y) );
-
-				for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
-				{
-					RemoveEntity(*e);
-				}
-
-				zLoadedEntityCount.erase(zSectors[i->x][i->y]);
-				delete zSectors[i->x][i->y];
-				zSectors[i->x][i->y] = 0;
+				if ( !unsavedEntities )
+					sectorsToUnload.insert(*i);
 			}
 		}
+	}
+
+	// Unload Sectors
+	for( auto i = sectorsToUnload.begin(); i != sectorsToUnload.end(); ++i )
+	{
+		// Delete Entities
+		Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+		std::set< Entity* > entitiesInArea;
+		GetEntitiesInRect(sectorRect, entitiesInArea);
+		for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+		{
+			RemoveEntity(*e);
+		}
+		zLoadedEntityCount.erase(zSectors[i->x][i->y]);
+
+		// Delete Map
+		NotifyObservers(&SectorUnloadedEvent(this,i->x,i->y));
+		zLoadedSectors.erase(Vector2UINT(i->x, i->y));
+		delete zSectors[i->x][i->y];
+		zSectors[i->x][i->y] = 0;
 	}
 
 	// Load new sectors

@@ -572,10 +572,6 @@ void GameEngine::KeyUp( int key )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
 	}
-	else if ( key == 96 )	// keypad 0
-	{
-		zMovementMulti = 1.0;
-	}
 	else if ( key == 110 )
 	{
 		if ( zWorld )
@@ -985,6 +981,9 @@ void GameEngine::ClearActionHistory()
 	currentActionIndex = 0;
 	while ( !zActionHistory.empty() )
 	{
+		if ( *zActionHistory.rbegin() == zCurrentActionGroup )
+			zCurrentActionGroup = 0;
+
 		delete *zActionHistory.rbegin();
 		zActionHistory.pop_back();
 	}
