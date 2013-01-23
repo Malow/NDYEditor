@@ -39,8 +39,8 @@ public:
 	{
 		if ( point.x < topLeft.x ) return false;
 		if ( point.y < topLeft.y ) return false;
-		if ( point.x > topLeft.x + size.x ) return false;
-		if ( point.y > topLeft.y + size.y ) return false;
+		if ( point.x >= topLeft.x + size.x ) return false;
+		if ( point.y >= topLeft.y + size.y ) return false;
 		return true;
 	}
 };
