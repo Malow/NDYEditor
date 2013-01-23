@@ -23,7 +23,7 @@ public:
 	{
 	}
 
-	~ActionGroup()
+	virtual ~ActionGroup()
 	{
 		for( auto i = zActions.begin(); i != zActions.end(); ++i )
 		{

@@ -96,12 +96,20 @@ namespace Example
                 autoSaveWatch.Restart();
             }
 
-            // Number of entities in current sector
-            int numEntities;
-            m_GameEngine.CountEntitiesInSector(out numEntities);
+            // Status
+            string status="";
 
-            // Print Number of Entities
-            string status = "Number of entities: " + numEntities;
+            // Number of entities in current sector
+            if (m_GameEngine != null)
+            {
+                int numEntities;
+                m_GameEngine.CountEntitiesInSector(out numEntities);
+
+                // Print Number of Entities
+                status = "Number of entities: " + numEntities;
+            }
+
+            // Save Status
             if (!worldSavedAndNotEdited) status = "Not Saved! " + status;
             if (worldSavedAndNotEdited) status = "Saved! " + status;
             this.toolStripStatusLabel1.Text = status;
@@ -160,6 +168,7 @@ namespace Example
 
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
+                this.toolStripStatusLabel1.Text = "Saving!";
                 m_GameEngine.SaveWorldAs(fdlg.FileName);
                 this.filePathKnown = true;
                 UpdateSaveStatus();
@@ -168,13 +177,13 @@ namespace Example
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.toolStripStatusLabel1.Text = "Saving!";
             if (!this.filePathKnown)
             {
                 this.saveAsToolStripMenuItem_Click(sender, e);
             }
 			else
             {
+                this.toolStripStatusLabel1.Text = "Saving!";
                 m_GameEngine.SaveWorld();
                 UpdateSaveStatus();
             }
@@ -583,13 +592,19 @@ namespace Example
             {
                 e.Handled = true;
             }
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != '-')
             {
                 e.Handled = true;
             }
 
             // only allow one decimal point
             if (e.KeyChar == ',' && (sender as TextBox).Text.IndexOf(',') > -1)
+            {
+                e.Handled = true;
+            }
+
+            // only allow one minus
+            if (e.KeyChar == '-' && (sender as TextBox).Text.IndexOf('-') > -1)
             {
                 e.Handled = true;
             }

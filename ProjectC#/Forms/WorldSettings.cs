@@ -107,13 +107,19 @@ namespace Example
             {
                 e.Handled = true;
             }
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != ',' && e.KeyChar != '-')
             {
                 e.Handled = true;
             }
 
             // only allow one decimal point
             if (e.KeyChar == ',' && (sender as TextBox).Text.IndexOf(',') > -1)
+            {
+                e.Handled = true;
+            }
+
+            // only allow one minus
+            if (e.KeyChar == '-' && (sender as TextBox).Text.IndexOf('-') > -1)
             {
                 e.Handled = true;
             }

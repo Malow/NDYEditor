@@ -2,6 +2,7 @@
 #include "MaloWFileDebug.h"
 #include "EntityList.h"
 #include "HeightChangedAction.h"
+#include "BlendChangedAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -26,7 +27,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zMouseMoved(false),
 	zCreateEntityType(0),
 	zFPSLockToGround(false),
-	zMovementMulti(1),
+	zMovementMulti(2.95f),
 	zMaxSpeed(32),
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true),
@@ -277,7 +278,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				HeightChangedAction* HCA = new HeightChangedAction(zWorldRenderer, 
+				HeightChangedAction* HCA = new HeightChangedAction( 
 					zWorld, 
 					Vector2(cd.posx, cd.posz),
 					(zMode == MODE::LOWER? -zBrushStrength : zBrushStrength),
@@ -285,69 +286,35 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 
 				HCA->Execute();
 				zCurrentActionGroup->zActions.push_back( HCA );
-			}
-			/*
-			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
-			if(cd.collision)
-			{
-				std::set<Vector2> nodes;
-				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize, nodes) )
-				{
-					for( auto i = nodes.begin(); i != nodes.end(); ++i )
-					{
-						float distanceFactor = zBrushSize - Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( distanceFactor <= 0 ) continue;
-						distanceFactor /= zBrushSize;
-
-						try 
-						{
-							zWorld->ModifyHeightAt(i->x, i->y, (zMode == MODE::LOWER? -zBrushStrength : zBrushStrength) * distanceFactor);
-						}
-						catch(...)
-						{
-						}
-					}
-				}
 				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
 			}
-			*/
-			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
 		}
 		else if ( zMode == MODE::DRAWTEX )
 		{
+			if ( !zCurrentActionGroup )
+			{
+				zCurrentActionGroup = new ActionGroup();
+				ApplyAction(zCurrentActionGroup);
+			}
+
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				std::set<Vector2> nodes;
-				if ( zWorld->GetTextureNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
-				{
-					for( auto i = nodes.begin(); i != nodes.end(); ++i )
-					{
-						float factor = 1.0f;
-						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( zBrushSizeExtra > 0.0f && distance >= zBrushSize )
-						{
-							factor = zBrushSizeExtra - ( distance - zBrushSize );
-							factor /= zBrushSizeExtra;
-							if ( factor <= 0.0 ) factor = 0;
-						}
+				BlendChangedAction* BCA = new BlendChangedAction(
+					zWorld,
+					Vector2(cd.posx, cd.posz),
+					zBrushStrength,
+					zBrushSize,
+					zBrushSizeExtra,
+					zTexBrushSelectedTex );
 
-						Vector4 drawColor(0.0f,0.0f,0.0f,0.0f);
-						drawColor[zTexBrushSelectedTex] = zBrushStrength * factor;
-
-						try 
-						{
-							zWorld->ModifyBlendingAt(i->x,i->y,drawColor);
-						}
-						catch(...)
-						{
-						}
-					}
-				}
+				BCA->Execute();
+				zCurrentActionGroup->zActions.push_back( BCA );
 				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
 			}
-			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
 		}
 		else if(this->zMode == MODE::SELECT)

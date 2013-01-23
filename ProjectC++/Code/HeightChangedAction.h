@@ -9,15 +9,13 @@
 
 class HeightChangedAction : public Action
 {
-	WorldRenderer* zRenderer;
 	World* zWorld;
 	Vector2 zCenter;
 	float zBrushStrength;
 	float zBrushSize;
 
 public:
-	HeightChangedAction( WorldRenderer* renderer, World* World, const Vector2& center, float brushStrength, float size ) :
-		zRenderer(renderer),
+	HeightChangedAction( World* World, const Vector2& center, float brushStrength, float size ) :
 		zWorld(World),
 		zCenter(center),
 		zBrushStrength(brushStrength),
@@ -29,11 +27,11 @@ public:
 	virtual void Execute()
 	{
 		std::set<Vector2> nodes;
-		if ( zWorld->GetHeightNodesInCircle(Vector2(zCenter.x, zCenter.y), zBrushSize, nodes) )
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize, nodes) )
 		{
 			for( auto i = nodes.begin(); i != nodes.end(); ++i )
 			{
-				float distanceFactor = zBrushSize - Vector2(zCenter.x - i->x, zCenter.y - i->y).GetLength();
+				float distanceFactor = zBrushSize - (zCenter - *i).GetLength();
 				if ( distanceFactor <= 0 ) continue;
 				distanceFactor /= zBrushSize;
 

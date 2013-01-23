@@ -44,9 +44,6 @@ float Sector::GetHeightAt( float x, float y ) const throw(...)
 	if ( x < 0.0f || x >= 1.0f || y < 0.0f || y >= 1.0f )
 		throw("Out Of Bounds!");
 
-	// Interpolating
-
-
 	// Find pixel
 	float snapX = floor(x * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
 	float snapY = floor(y * SECTOR_HEIGHT_SIZE) / SECTOR_HEIGHT_SIZE;
@@ -90,7 +87,7 @@ void Sector::SetBlendingAt( float x, float y, const Vector4& val )
 	unsigned int scaledX = (unsigned int)((snapX / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
 	unsigned int scaledY = (unsigned int)((snapY / (float)SECTOR_WORLD_SIZE)*(SECTOR_BLEND_SIZE));
 
-	// Normalize Val
+	// Clamp Val
 	Vector4 normalizedVal = val;
 	normalizedVal.Normalize();
 
@@ -142,6 +139,8 @@ void Sector::SetTextureName( unsigned int index, const std::string& name )
 
 	memset( &zTextureNames[index*TEXTURE_NAME_LENGTH], 0, TEXTURE_NAME_LENGTH );
 	memcpy( &zTextureNames[index*TEXTURE_NAME_LENGTH], &name[0], name.length() );
+
+	SetEdited(true);
 }
 
 

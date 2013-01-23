@@ -168,10 +168,12 @@ void GameEngineWrapper::SetBrushAttr( char* info, char* stringValue )
 	m_GameEngine->SetBrushAttr(info, stringValue);
 }
 
+
 void GameEngineWrapper::SetEntityType( int value )
 {
 	m_GameEngine->SetEntityType(value);
 }
+
 
 void GameEngineWrapper::GetCameraInfo( char* info, float& x, float& y, float& z )
 {
@@ -184,6 +186,7 @@ void GameEngineWrapper::GetCameraInfo( char* info, float& x, float& y, float& z 
 	}
 }
 
+
 void GameEngineWrapper::GetSunInfo( char* info, float& x, float& y, float& z )
 {
 	try
@@ -195,10 +198,12 @@ void GameEngineWrapper::GetSunInfo( char* info, float& x, float& y, float& z )
 	}
 }
 
+
 void GameEngineWrapper::SetSunInfo( char* info, float x, float y, float z )
 {
 	m_GameEngine->SetSunInfo(info, x, y, z);
 }
+
 
 void GameEngineWrapper::GetAmbientLight( char* info, float& x, float& y, float& z )
 {
@@ -211,15 +216,18 @@ void GameEngineWrapper::GetAmbientLight( char* info, float& x, float& y, float& 
 	}
 }
 
+
 void GameEngineWrapper::SetAmbientLight( char* info, float x, float y, float z )
 {
 	m_GameEngine->SetAmbientLight(info, x, y, z);
 }
 
+
 void GameEngineWrapper::HasWorldBeenSaved( int& flag )
 {
 	flag = m_GameEngine->HasWorldBeenSaved();
 }
+
 
 void GameEngineWrapper::CountEntitiesInSector( int& num )
 {
