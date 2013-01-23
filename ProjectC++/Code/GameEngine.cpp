@@ -60,8 +60,11 @@ void GameEngine::ProcessFrame()
 
 	if ( zWorld ) 
 	{
-		zAnchor->position = camera->GetPosition().GetXZ();
-		zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
+		if ( zAnchor )
+		{
+			zAnchor->position = camera->GetPosition().GetXZ();
+			zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
+		}
 
 		zWorld->Update();
 
@@ -105,8 +108,8 @@ void GameEngine::ProcessFrame()
 			Vector2 sideways = zGraphics->GetCamera()->GetRightVector().GetXZ();
 			sideways.Normalize();
 
-			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.01f * zMovementMulti;
-			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.01f * zMovementMulti;
+			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.001f * zMovementMulti;
+			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.001f * zMovementMulti;
 
 			// Check Normal
 

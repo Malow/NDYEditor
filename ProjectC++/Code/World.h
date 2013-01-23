@@ -14,7 +14,7 @@ class World;
 class WorldAnchor
 {
 private:
-	WorldAnchor() : position(0.0f,0.0f), radius(100)
+	WorldAnchor() : position(0.0f,0.0f), radius(100.0f)
 	{
 	}
 
