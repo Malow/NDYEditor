@@ -1,10 +1,12 @@
 #include "GameEngine.h"
 #include "MaloWFileDebug.h"
 #include "EntityList.h"
+#include "HeightChangedAction.h"
 #include <math.h>
 #include <time.h>
 
 const float M_PI = 3.141592f;
+
 
 
 GameEngine::GameEngine( GraphicsEngine* GE ) :
@@ -27,7 +29,9 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zMovementMulti(1),
 	zMaxSpeed(32),
 	zRTSHeightFromGround(20),
-	zWorldSavedFlag(true)
+	zWorldSavedFlag(true),
+	currentActionIndex(0),
+	zCurrentActionGroup(0)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -49,6 +53,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 
 GameEngine::~GameEngine()
 {
+	ClearActionHistory();
 	if ( zWorld ) delete zWorld;
 }
 
@@ -263,6 +268,25 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
 		{
+			if ( !zCurrentActionGroup )
+			{
+				zCurrentActionGroup = new ActionGroup();
+				ApplyAction(zCurrentActionGroup);
+			}
+
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				HeightChangedAction* HCA = new HeightChangedAction(zWorldRenderer, 
+					zWorld, 
+					Vector2(cd.posx, cd.posz),
+					(zMode == MODE::LOWER? -zBrushStrength : zBrushStrength),
+					zBrushSize );
+
+				HCA->Execute();
+				zCurrentActionGroup->zActions.push_back( HCA );
+			}
+			/*
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
@@ -286,6 +310,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				}
 				zWorldSavedFlag = false;
 			}
+			*/
 			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
 		}
@@ -621,6 +646,20 @@ void GameEngine::KeyUp( int key )
 	{
 		this->zMovementMulti = 2.95f; // m/s
 	}
+	else if ( key == (int)'Z' )
+	{
+		if ( zGraphics->GetKeyListener()->IsPressed(17) )
+		{
+			UndoAction();
+		}
+	}
+	else if ( key == (int)'Y' )
+	{
+		if ( zGraphics->GetKeyListener()->IsPressed(17) )
+		{
+			RedoAction();
+		}
+	}
 }
 
 
@@ -720,6 +759,7 @@ void GameEngine::onEvent( Event* e )
 		if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
 		if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 		if ( zWorld ) zWorld = 0;
+		ClearActionHistory();
 	}
 	else if ( EntityRemovedEvent *ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{
@@ -944,4 +984,52 @@ int GameEngine::CountEntitiesInSector()
 int GameEngine::HasWorldBeenSaved()
 {
 	return zWorldSavedFlag;
+}
+
+void GameEngine::ApplyAction( Action* a )
+{
+	// Invalidate Previous Future
+	while ( currentActionIndex < zActionHistory.size())
+	{
+		delete *zActionHistory.rbegin();
+		zActionHistory.pop_back();
+	}
+
+	a->Execute();
+	zActionHistory.push_back(a);
+	currentActionIndex++; 
+}
+
+void GameEngine::UndoAction()
+{
+	if ( currentActionIndex == 0 ) return;
+
+	if ( zCurrentActionGroup && *zActionHistory.rbegin() == zCurrentActionGroup )
+	{
+		zCurrentActionGroup = 0;
+	}
+
+	zActionHistory[currentActionIndex-1]->Undo();
+	currentActionIndex--;
+}
+
+void GameEngine::ClearActionHistory()
+{
+	currentActionIndex = 0;
+	while ( !zActionHistory.empty() )
+	{
+		delete *zActionHistory.rbegin();
+		zActionHistory.pop_back();
+	}
+
+	if ( zCurrentActionGroup ) delete zCurrentActionGroup, zCurrentActionGroup=0;
+}
+
+void GameEngine::RedoAction()
+{
+	if ( zActionHistory.size() <= currentActionIndex ) return;
+
+	currentActionIndex++;
+
+	zActionHistory[currentActionIndex-1]->Execute();
 }

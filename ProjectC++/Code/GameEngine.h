@@ -2,6 +2,7 @@
 
 #include "World.h"
 #include "WorldRenderer.h"
+#include "Action.h"
 
 #ifdef _DEBUG
 #include <vld.h>
@@ -19,6 +20,8 @@ enum MODE
 	DRAWTEX = 7,
 	SMOOTH = 8,
 };
+
+
 
 class GameEngine : public Observer
 {
@@ -62,6 +65,11 @@ private:
 
 	// Graphics Engine
 	GraphicsEngine* zGraphics;
+
+	// Action History
+	std::vector< Action* > zActionHistory;
+	unsigned int currentActionIndex;
+	ActionGroup *zCurrentActionGroup;
 public:
 	GameEngine( GraphicsEngine* GE );
 	virtual ~GameEngine();
@@ -83,6 +91,13 @@ public:
 	void OpenWorld(char* msg);
 
 	void RemoveSelectedEntities();
+
+
+	// Action History
+	void ApplyAction( Action* a );
+	void UndoAction();
+	void RedoAction();
+	void ClearActionHistory();
 
 	void SetBrushAttr(char* info, float size);
 	void SetBrushAttr(char* info, char* stringValue);
@@ -108,6 +123,7 @@ public:
 	// Returns Number of entities in currect sector
 	int CountEntitiesInSector();
 	int HasWorldBeenSaved();
+
 protected:
 	virtual void onEvent( Event* e );
 };

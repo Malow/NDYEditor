@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Action.h" />
     <ClInclude Include="Code\CircleAndRect.h" />
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\EntityList.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
+    <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\World.h" />
@@ -35,6 +37,9 @@
     <ClCompile Include="Code\World.cpp" />
     <ClCompile Include="Code\WorldFile.cpp" />
     <ClCompile Include="Code\WorldRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EE71C2BC-BC4B-4FF4-B197-9FF385991C64}</ProjectGuid>

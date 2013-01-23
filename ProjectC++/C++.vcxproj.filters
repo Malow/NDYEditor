@@ -52,6 +52,12 @@
     <ClInclude Include="Code\EntityList.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\HeightChangedAction.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Action.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">
@@ -81,5 +87,8 @@
     <ClCompile Include="Code\EntityList.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
