@@ -70,6 +70,9 @@ private:
 	std::vector< Action* > zActionHistory;
 	unsigned int currentActionIndex;
 	ActionGroup *zCurrentActionGroup;
+
+	//Walking on ground
+	float zWalkingToleranceDegrees;
 public:
 	GameEngine( GraphicsEngine* GE );
 	virtual ~GameEngine();

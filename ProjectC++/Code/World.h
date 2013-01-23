@@ -96,6 +96,7 @@ public:
 
 	// Normals
 	Vector3 GetNormalAt( const Vector2& worldPos );
+	Vector3 GetNormalAtWorldPos( float x, float y );
 
 	// Modify Blend Functions
 	void ModifyBlendingAt( float x, float y, const Vector4& val );
