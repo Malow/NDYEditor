@@ -21,12 +21,15 @@ public:
 
 	ActionGroup()
 	{
-
 	}
 
 	~ActionGroup()
 	{
-		
+		for( auto i = zActions.begin(); i != zActions.end(); ++i )
+		{
+			delete (*i);
+		}
+		zActions.clear();
 	}
 
 	virtual void Execute()
