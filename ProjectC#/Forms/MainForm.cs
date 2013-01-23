@@ -462,12 +462,11 @@ namespace Example
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
-                float temp;
-                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
-                this.TextBox_BothCircles_Size.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
 
-                m_GameEngine.GetBrushAttr("Strength", out temp);
-                this.TextBox_Strength_RaiseLower.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
+
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
             }
             else if (this.m_mode == MODE.PLACEBRUSH)
             {
@@ -477,12 +476,11 @@ namespace Example
                 this.Panel_PlaceBrush.Show();
                 this.Panel_PlaceBrush.BringToFront();
 
-                float temp = 0;
-                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
-                this.TextBox_BrushPlace_Inner.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BrushPlace_Inner.Text));
 
-                m_GameEngine.GetBrushAttr("Strength", out temp);
-                this.TextBox_StrengthCircle.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
+
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_StrengthCircle.Text));
             }
             else if (this.m_mode == MODE.DRAWTEX)
             {
@@ -492,15 +490,11 @@ namespace Example
                 this.Panel_Tex_Picker.Show();
                 this.Panel_Tex_Picker.BringToFront();
 
-                float temp = 0;
-                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
-                textBox_InnerCircle_Terrain.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(textBox_InnerCircle_Terrain.Text));
 
-                m_GameEngine.GetBrushAttr("OuterCircle", out temp);
-                textBox_OuterCircle_Terrain.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(textBox_OuterCircle_Terrain.Text));
 
-                m_GameEngine.GetBrushAttr("Strength", out temp);
-                TextBox_Terrain_Strength.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Terrain_Strength.Text));
             }
             else if (this.m_mode == MODE.SMOOTH)
             {
@@ -510,15 +504,11 @@ namespace Example
                 this.Panel_SmoothTool.Show();
                 this.Panel_SmoothTool.BringToFront();
 
-                float temp = 0;
-                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
-                TextBox_InnerCircle_Smooth.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_InnerCircle_Smooth.Text));
 
-                m_GameEngine.GetBrushAttr("OuterCircle", out temp);
-                TextBox_OuterCircle_Smooth.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(TextBox_OuterCircle_Smooth.Text));
 
-                m_GameEngine.GetBrushAttr("Strength", out temp);
-                TextBox_Strength_Smooth.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Strength_Smooth.Text));
             }
         }
         private void setDrawTex(object sender, EventArgs e)
