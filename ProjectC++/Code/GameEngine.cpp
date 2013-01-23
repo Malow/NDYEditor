@@ -32,7 +32,8 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true),
 	currentActionIndex(0),
-	zCurrentActionGroup(0)
+	zCurrentActionGroup(0),
+	zWalkingToleranceDegrees(45.0f)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -108,35 +109,34 @@ void GameEngine::ProcessFrame()
 	{
 		if ( zFPSLockToGround && zWorld )
 		{
-			Vector2 pos = zGraphics->GetCamera()->GetPosition().GetXZ();
-			Vector2 forward = zGraphics->GetCamera()->GetForward().GetXZ();
+			iCamera* cam = zGraphics->GetCamera();
+			Vector3 pos = zGraphics->GetCamera()->GetPosition();
+			Vector3 oldPos = pos;
+			Vector3 forward = zGraphics->GetCamera()->GetForward();
 			forward.Normalize();
-			Vector2 sideways = zGraphics->GetCamera()->GetRightVector().GetXZ();
+			Vector3 sideways = zGraphics->GetCamera()->GetRightVector();
 			sideways.Normalize();
 
 			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.001f * zMovementMulti;
 			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.001f * zMovementMulti;
 
-			// Check Normal
+			float yPos = this->zWorld->GetHeightAtWorldPos(pos.x, pos.z);
+			Vector3 dir = pos - oldPos;
+			Vector3 groundNormal = this->zWorld->GetNormalAtWorldPos(pos.x, pos.z);
 
-			Vector3 temp(pos.x, 0.0f, pos.y);
-			if ( temp.x > 0.0f && temp.x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			dir.Normalize();
+			Vector3 tempGround = groundNormal;
+			tempGround.Normalize();
+			float dot = dir.GetDotProduct(tempGround);
+			float yTolerance = sin(zWalkingToleranceDegrees * (3.1415/180));
+			if(dot > 0.2)
 			{
-				if ( temp.z > 0.0f && temp.z < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
-				{
-					temp.y = zWorld->GetHeightAt(temp.x, temp.z) + 1.7f;
-				}
-				else
-				{
-					temp.y = zGraphics->GetCamera()->GetPosition().y;
-				}
+				cam->SetPosition(Vector3(pos.x, pos.y, pos.z));
 			}
-			else
+			else if(groundNormal.y > yTolerance)
 			{
-				temp.y = zGraphics->GetCamera()->GetPosition().y;
+				cam->SetPosition(Vector3(pos.x, yPos+1.7f, pos.z));
 			}
-
-			zGraphics->GetCamera()->SetPosition(temp);
 		}
 		else if ( zLockMouseToCamera )
 		{
@@ -981,7 +981,7 @@ void GameEngine::ClearActionHistory()
 	currentActionIndex = 0;
 	while ( !zActionHistory.empty() )
 	{
-		if ( *zActionHistory.rbegin() == zCurrentActionGroup )
+		if(*zActionHistory.rbegin() == zCurrentActionGroup)
 			zCurrentActionGroup = 0;
 
 		delete *zActionHistory.rbegin();

@@ -462,12 +462,11 @@ namespace Example
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
-                float temp;
-                m_GameEngine.GetBrushAttr("InnerCircle", out temp);
-                this.TextBox_BothCircles_Size.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
 
-                m_GameEngine.GetBrushAttr("Strength", out temp);
-                this.TextBox_Strength_RaiseLower.Text = temp.ToString();
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
+
+                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
             }
             else if (this.m_mode == MODE.RAISE)
             {

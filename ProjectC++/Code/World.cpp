@@ -823,6 +823,56 @@ Vector3 World::GetNormalAt( const Vector2& worldPos )
 
 	return GetSector(sectorX, sectorY)->GetNormalAt(localX, localY);
 }
+Vector3 World::GetNormalAtWorldPos( float posx, float posz )
+{
+	// 1 vector
+	Sector* s = GetSector(posx / SECTOR_WORLD_SIZE, posz / SECTOR_WORLD_SIZE);
 
+	float localX = fmod(posx, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	float localY = fmod(posz, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 
+	float yPos = s->GetHeightAt(localX, localY);
 
+	Vector3 v1 = Vector3(posx, yPos, posz);
+
+	// 2 vertex
+
+	if(((posx / SECTOR_WORLD_SIZE) != ((posx+1) / SECTOR_WORLD_SIZE)))
+		s = GetSector((posx+1) / SECTOR_WORLD_SIZE, posz / SECTOR_WORLD_SIZE);
+
+	localX = fmod(posx+1, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localY = fmod(posz, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	yPos = s->GetHeightAt(localX, localY);
+
+	Vector3 v2 = Vector3(posx+1, yPos, posz);
+
+	// 3 vertex
+	if(((posz / SECTOR_WORLD_SIZE) != ((int)posz+1) / SECTOR_WORLD_SIZE))
+		s = GetSector((int)posx / SECTOR_WORLD_SIZE, ((int)posz+1) / SECTOR_WORLD_SIZE);
+
+	localX = fmod(posx, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localY = fmod(posz+1, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	yPos = s->GetHeightAt(localX, localY);
+
+	Vector3 v3 = Vector3(posx, yPos, posz+1);
+
+	// 4 vertex
+	if(((posz / SECTOR_WORLD_SIZE) != ((int)posz+1) / SECTOR_WORLD_SIZE) || ((posx / SECTOR_WORLD_SIZE) != ((posx+1) / SECTOR_WORLD_SIZE)))
+		s = GetSector((posx+1) / SECTOR_WORLD_SIZE, (posz+1) / SECTOR_WORLD_SIZE);
+
+	localX = fmod(posx+1, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localY = fmod(posz+1, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	yPos = s->GetHeightAt(localX, localY);
+
+	Vector3 v4 = Vector3(posx+1, yPos, posz+1);
+
+	// Normal calc
+	Vector3 c1 = (v1 - v4);
+	Vector3 c2 = (v3 - v2);
+	Vector3 returnVector = (c1).GetCrossProduct(c2);
+	returnVector.Normalize();
+	return returnVector;
+}
