@@ -49,3 +49,7 @@ Model:Media/Models/SPAWN.obj
 Number:13
 Name:Plant-Grass
 Model:Media/Models/GrassPlant_01.ani
+
+Number:14
+Name:Flag
+Model:Media/Models/Flag/FlagBlue.ani
