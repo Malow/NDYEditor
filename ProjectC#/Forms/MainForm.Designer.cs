@@ -50,6 +50,8 @@
             this.btnRTS = new System.Windows.Forms.Button();
             this.btnFPS = new System.Windows.Forms.Button();
             this.LeftToolBarSplitter = new System.Windows.Forms.SplitContainer();
+            this.btn_ResetGround = new System.Windows.Forms.Button();
+            this.btn_DeleteEntity = new System.Windows.Forms.Button();
             this.btn_Smooth = new System.Windows.Forms.Button();
             this.btn_DrawTex = new System.Windows.Forms.Button();
             this.btn_PlaceBrush = new System.Windows.Forms.Button();
@@ -62,14 +64,6 @@
             this.RenderAndInfoSplitter = new System.Windows.Forms.SplitContainer();
             this.RenderBox = new System.Windows.Forms.Panel();
             this.InfoSplitter = new System.Windows.Forms.SplitContainer();
-            this.Panel_SmoothTool = new System.Windows.Forms.Panel();
-            this.Label_Strength_Smooth = new System.Windows.Forms.Label();
-            this.TextBox_Strength_Smooth = new System.Windows.Forms.TextBox();
-            this.Label_Circle_Smooth = new System.Windows.Forms.Label();
-            this.Label_Outer_Smooth = new System.Windows.Forms.Label();
-            this.TextBox_OuterCircle_Smooth = new System.Windows.Forms.TextBox();
-            this.Label_Inner_Smooth = new System.Windows.Forms.Label();
-            this.TextBox_InnerCircle_Smooth = new System.Windows.Forms.TextBox();
             this.Panel_Info = new System.Windows.Forms.Panel();
             this.Label_Scale = new System.Windows.Forms.Label();
             this.Label_Rot_Y = new System.Windows.Forms.Label();
@@ -105,6 +99,31 @@
             this.RadioBtn_Tex4 = new System.Windows.Forms.RadioButton();
             this.RadioBtn_Tex2 = new System.Windows.Forms.RadioButton();
             this.RadioBtn_Tex3 = new System.Windows.Forms.RadioButton();
+            this.Panel_SmoothTool = new System.Windows.Forms.Panel();
+            this.Label_Strength_Smooth = new System.Windows.Forms.Label();
+            this.TextBox_Strength_Smooth = new System.Windows.Forms.TextBox();
+            this.Label_Circle_Smooth = new System.Windows.Forms.Label();
+            this.Label_Outer_Smooth = new System.Windows.Forms.Label();
+            this.TextBox_OuterCircle_Smooth = new System.Windows.Forms.TextBox();
+            this.Label_Inner_Smooth = new System.Windows.Forms.Label();
+            this.TextBox_InnerCircle_Smooth = new System.Windows.Forms.TextBox();
+            this.panel_DeleteCircle = new System.Windows.Forms.Panel();
+            this.TextBox_DeleteCircle_Inner = new System.Windows.Forms.TextBox();
+            this.label_DeleteCircle_Circle = new System.Windows.Forms.Label();
+            this.Panel_PlaceBrush = new System.Windows.Forms.Panel();
+            this.TextBox_StrengthCircle = new System.Windows.Forms.TextBox();
+            this.Label_StrengthCircle = new System.Windows.Forms.Label();
+            this.Label_Brush_Circle = new System.Windows.Forms.Label();
+            this.Label_Brush_Inner = new System.Windows.Forms.Label();
+            this.TextBox_BrushPlace_Inner = new System.Windows.Forms.TextBox();
+            this.Label_Model_Brush = new System.Windows.Forms.Label();
+            this.ComboBox_Model_Brush = new System.Windows.Forms.ComboBox();
+            this.Panel_Lower_Raise_Ground = new System.Windows.Forms.Panel();
+            this.Label_RaiseLower_Strength = new System.Windows.Forms.Label();
+            this.TextBox_Strength_RaiseLower = new System.Windows.Forms.TextBox();
+            this.Label_Circle = new System.Windows.Forms.Label();
+            this.Label_InnerRing_Size = new System.Windows.Forms.Label();
+            this.TextBox_BothCircles_Size = new System.Windows.Forms.TextBox();
             this.Panel_ObjectInfo = new System.Windows.Forms.Panel();
             this.Label_Anim = new System.Windows.Forms.Label();
             this.ComboBox_Texture = new System.Windows.Forms.ComboBox();
@@ -124,20 +143,6 @@
             this.Label_Tex3 = new System.Windows.Forms.Label();
             this.Label_Tex2 = new System.Windows.Forms.Label();
             this.Label_Tex1 = new System.Windows.Forms.Label();
-            this.Panel_PlaceBrush = new System.Windows.Forms.Panel();
-            this.TextBox_StrengthCircle = new System.Windows.Forms.TextBox();
-            this.Label_StrengthCircle = new System.Windows.Forms.Label();
-            this.Label_Brush_Circle = new System.Windows.Forms.Label();
-            this.Label_Brush_Inner = new System.Windows.Forms.Label();
-            this.TextBox_BrushPlace_Inner = new System.Windows.Forms.TextBox();
-            this.Label_Model_Brush = new System.Windows.Forms.Label();
-            this.ComboBox_Model_Brush = new System.Windows.Forms.ComboBox();
-            this.Panel_Lower_Raise_Ground = new System.Windows.Forms.Panel();
-            this.Label_RaiseLower_Strength = new System.Windows.Forms.Label();
-            this.TextBox_Strength_RaiseLower = new System.Windows.Forms.TextBox();
-            this.Label_Circle = new System.Windows.Forms.Label();
-            this.Label_InnerRing_Size = new System.Windows.Forms.Label();
-            this.TextBox_BothCircles_Size = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
@@ -156,15 +161,16 @@
             this.InfoSplitter.Panel1.SuspendLayout();
             this.InfoSplitter.Panel2.SuspendLayout();
             this.InfoSplitter.SuspendLayout();
-            this.Panel_SmoothTool.SuspendLayout();
             this.Panel_Info.SuspendLayout();
             this.Panel_Tex_Picker.SuspendLayout();
             this.GroupBox_DrawTex.SuspendLayout();
+            this.Panel_SmoothTool.SuspendLayout();
+            this.panel_DeleteCircle.SuspendLayout();
+            this.Panel_PlaceBrush.SuspendLayout();
+            this.Panel_Lower_Raise_Ground.SuspendLayout();
             this.Panel_ObjectInfo.SuspendLayout();
             this.Panel_PlaceObject.SuspendLayout();
             this.Panel_Textures.SuspendLayout();
-            this.Panel_PlaceBrush.SuspendLayout();
-            this.Panel_Lower_Raise_Ground.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -371,6 +377,8 @@
             // 
             // LeftToolBarSplitter.Panel1
             // 
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_ResetGround);
+            this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_DeleteEntity);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_Smooth);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_DrawTex);
             this.LeftToolBarSplitter.Panel1.Controls.Add(this.btn_PlaceBrush);
@@ -387,6 +395,32 @@
             this.LeftToolBarSplitter.Size = new System.Drawing.Size(1116, 638);
             this.LeftToolBarSplitter.SplitterDistance = 100;
             this.LeftToolBarSplitter.TabIndex = 0;
+            // 
+            // btn_ResetGround
+            // 
+            this.btn_ResetGround.AccessibleName = "10";
+            this.btn_ResetGround.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_ResetGround.Location = new System.Drawing.Point(0, 250);
+            this.btn_ResetGround.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_ResetGround.Name = "btn_ResetGround";
+            this.btn_ResetGround.Size = new System.Drawing.Size(98, 25);
+            this.btn_ResetGround.TabIndex = 11;
+            this.btn_ResetGround.Text = " Res Ground";
+            this.btn_ResetGround.UseVisualStyleBackColor = true;
+            this.btn_ResetGround.Click += new System.EventHandler(this.btn_Change_Mode);
+            // 
+            // btn_DeleteEntity
+            // 
+            this.btn_DeleteEntity.AccessibleName = "9";
+            this.btn_DeleteEntity.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btn_DeleteEntity.Location = new System.Drawing.Point(0, 225);
+            this.btn_DeleteEntity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btn_DeleteEntity.Name = "btn_DeleteEntity";
+            this.btn_DeleteEntity.Size = new System.Drawing.Size(98, 25);
+            this.btn_DeleteEntity.TabIndex = 10;
+            this.btn_DeleteEntity.Text = "DeleteEntity";
+            this.btn_DeleteEntity.UseVisualStyleBackColor = true;
+            this.btn_DeleteEntity.Click += new System.EventHandler(this.btn_Change_Mode);
             // 
             // btn_Smooth
             // 
@@ -532,7 +566,7 @@
             this.RenderBox.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
-            this.RenderBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RenderBox.Margin = new System.Windows.Forms.Padding(4);
             this.RenderBox.Name = "RenderBox";
             this.RenderBox.Size = new System.Drawing.Size(795, 636);
             this.RenderBox.TabIndex = 3;
@@ -561,103 +595,15 @@
             // 
             // InfoSplitter.Panel2
             // 
-            this.InfoSplitter.Panel2.Controls.Add(this.Panel_Textures);
+            this.InfoSplitter.Panel2.Controls.Add(this.panel_DeleteCircle);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceBrush);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
+            this.InfoSplitter.Panel2.Controls.Add(this.Panel_Textures);
             this.InfoSplitter.Size = new System.Drawing.Size(211, 638);
             this.InfoSplitter.SplitterDistance = 300;
             this.InfoSplitter.TabIndex = 0;
-            // 
-            // Panel_SmoothTool
-            // 
-            this.Panel_SmoothTool.Controls.Add(this.Label_Strength_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.TextBox_Strength_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.Label_Circle_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.Label_Outer_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.TextBox_OuterCircle_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.Label_Inner_Smooth);
-            this.Panel_SmoothTool.Controls.Add(this.TextBox_InnerCircle_Smooth);
-            this.Panel_SmoothTool.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_SmoothTool.Location = new System.Drawing.Point(0, 0);
-            this.Panel_SmoothTool.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_SmoothTool.Name = "Panel_SmoothTool";
-            this.Panel_SmoothTool.Size = new System.Drawing.Size(209, 298);
-            this.Panel_SmoothTool.TabIndex = 14;
-            this.Panel_SmoothTool.Visible = false;
-            // 
-            // Label_Strength_Smooth
-            // 
-            this.Label_Strength_Smooth.AutoSize = true;
-            this.Label_Strength_Smooth.Location = new System.Drawing.Point(19, 86);
-            this.Label_Strength_Smooth.Name = "Label_Strength_Smooth";
-            this.Label_Strength_Smooth.Size = new System.Drawing.Size(66, 17);
-            this.Label_Strength_Smooth.TabIndex = 20;
-            this.Label_Strength_Smooth.Text = "Strength:";
-            // 
-            // TextBox_Strength_Smooth
-            // 
-            this.TextBox_Strength_Smooth.AccessibleName = "Strength";
-            this.TextBox_Strength_Smooth.Location = new System.Drawing.Point(85, 84);
-            this.TextBox_Strength_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Strength_Smooth.Name = "TextBox_Strength_Smooth";
-            this.TextBox_Strength_Smooth.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_Strength_Smooth.TabIndex = 19;
-            this.TextBox_Strength_Smooth.Text = "1";
-            this.TextBox_Strength_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_Strength_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_Circle_Smooth
-            // 
-            this.Label_Circle_Smooth.AutoSize = true;
-            this.Label_Circle_Smooth.Location = new System.Drawing.Point(19, 14);
-            this.Label_Circle_Smooth.Name = "Label_Circle_Smooth";
-            this.Label_Circle_Smooth.Size = new System.Drawing.Size(47, 17);
-            this.Label_Circle_Smooth.TabIndex = 18;
-            this.Label_Circle_Smooth.Text = "Circle:";
-            // 
-            // Label_Outer_Smooth
-            // 
-            this.Label_Outer_Smooth.AutoSize = true;
-            this.Label_Outer_Smooth.Location = new System.Drawing.Point(19, 60);
-            this.Label_Outer_Smooth.Name = "Label_Outer_Smooth";
-            this.Label_Outer_Smooth.Size = new System.Drawing.Size(48, 17);
-            this.Label_Outer_Smooth.TabIndex = 17;
-            this.Label_Outer_Smooth.Text = "Outer:";
-            // 
-            // TextBox_OuterCircle_Smooth
-            // 
-            this.TextBox_OuterCircle_Smooth.AccessibleName = "OuterCircle";
-            this.TextBox_OuterCircle_Smooth.Location = new System.Drawing.Point(85, 59);
-            this.TextBox_OuterCircle_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_OuterCircle_Smooth.Name = "TextBox_OuterCircle_Smooth";
-            this.TextBox_OuterCircle_Smooth.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_OuterCircle_Smooth.TabIndex = 16;
-            this.TextBox_OuterCircle_Smooth.Text = "1";
-            this.TextBox_OuterCircle_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_OuterCircle_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_Inner_Smooth
-            // 
-            this.Label_Inner_Smooth.AutoSize = true;
-            this.Label_Inner_Smooth.Location = new System.Drawing.Point(19, 34);
-            this.Label_Inner_Smooth.Name = "Label_Inner_Smooth";
-            this.Label_Inner_Smooth.Size = new System.Drawing.Size(44, 17);
-            this.Label_Inner_Smooth.TabIndex = 15;
-            this.Label_Inner_Smooth.Text = "Inner:";
-            // 
-            // TextBox_InnerCircle_Smooth
-            // 
-            this.TextBox_InnerCircle_Smooth.AccessibleName = "InnerCircle";
-            this.TextBox_InnerCircle_Smooth.Location = new System.Drawing.Point(85, 31);
-            this.TextBox_InnerCircle_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_InnerCircle_Smooth.Name = "TextBox_InnerCircle_Smooth";
-            this.TextBox_InnerCircle_Smooth.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_InnerCircle_Smooth.TabIndex = 14;
-            this.TextBox_InnerCircle_Smooth.Text = "1";
-            this.TextBox_InnerCircle_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_InnerCircle_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Panel_Info
             // 
@@ -1068,6 +1014,278 @@
             this.RadioBtn_Tex3.UseVisualStyleBackColor = true;
             this.RadioBtn_Tex3.CheckedChanged += new System.EventHandler(this.setDrawTex);
             // 
+            // Panel_SmoothTool
+            // 
+            this.Panel_SmoothTool.Controls.Add(this.Label_Strength_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.TextBox_Strength_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.Label_Circle_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.Label_Outer_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.TextBox_OuterCircle_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.Label_Inner_Smooth);
+            this.Panel_SmoothTool.Controls.Add(this.TextBox_InnerCircle_Smooth);
+            this.Panel_SmoothTool.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_SmoothTool.Location = new System.Drawing.Point(0, 0);
+            this.Panel_SmoothTool.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_SmoothTool.Name = "Panel_SmoothTool";
+            this.Panel_SmoothTool.Size = new System.Drawing.Size(209, 298);
+            this.Panel_SmoothTool.TabIndex = 14;
+            this.Panel_SmoothTool.Visible = false;
+            // 
+            // Label_Strength_Smooth
+            // 
+            this.Label_Strength_Smooth.AutoSize = true;
+            this.Label_Strength_Smooth.Location = new System.Drawing.Point(19, 86);
+            this.Label_Strength_Smooth.Name = "Label_Strength_Smooth";
+            this.Label_Strength_Smooth.Size = new System.Drawing.Size(66, 17);
+            this.Label_Strength_Smooth.TabIndex = 20;
+            this.Label_Strength_Smooth.Text = "Strength:";
+            // 
+            // TextBox_Strength_Smooth
+            // 
+            this.TextBox_Strength_Smooth.AccessibleName = "Strength";
+            this.TextBox_Strength_Smooth.Location = new System.Drawing.Point(85, 84);
+            this.TextBox_Strength_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Strength_Smooth.Name = "TextBox_Strength_Smooth";
+            this.TextBox_Strength_Smooth.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_Strength_Smooth.TabIndex = 19;
+            this.TextBox_Strength_Smooth.Text = "1";
+            this.TextBox_Strength_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_Strength_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_Circle_Smooth
+            // 
+            this.Label_Circle_Smooth.AutoSize = true;
+            this.Label_Circle_Smooth.Location = new System.Drawing.Point(19, 14);
+            this.Label_Circle_Smooth.Name = "Label_Circle_Smooth";
+            this.Label_Circle_Smooth.Size = new System.Drawing.Size(47, 17);
+            this.Label_Circle_Smooth.TabIndex = 18;
+            this.Label_Circle_Smooth.Text = "Circle:";
+            // 
+            // Label_Outer_Smooth
+            // 
+            this.Label_Outer_Smooth.AutoSize = true;
+            this.Label_Outer_Smooth.Location = new System.Drawing.Point(19, 60);
+            this.Label_Outer_Smooth.Name = "Label_Outer_Smooth";
+            this.Label_Outer_Smooth.Size = new System.Drawing.Size(48, 17);
+            this.Label_Outer_Smooth.TabIndex = 17;
+            this.Label_Outer_Smooth.Text = "Outer:";
+            // 
+            // TextBox_OuterCircle_Smooth
+            // 
+            this.TextBox_OuterCircle_Smooth.AccessibleName = "OuterCircle";
+            this.TextBox_OuterCircle_Smooth.Location = new System.Drawing.Point(85, 59);
+            this.TextBox_OuterCircle_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_OuterCircle_Smooth.Name = "TextBox_OuterCircle_Smooth";
+            this.TextBox_OuterCircle_Smooth.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_OuterCircle_Smooth.TabIndex = 16;
+            this.TextBox_OuterCircle_Smooth.Text = "1";
+            this.TextBox_OuterCircle_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_OuterCircle_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_Inner_Smooth
+            // 
+            this.Label_Inner_Smooth.AutoSize = true;
+            this.Label_Inner_Smooth.Location = new System.Drawing.Point(19, 34);
+            this.Label_Inner_Smooth.Name = "Label_Inner_Smooth";
+            this.Label_Inner_Smooth.Size = new System.Drawing.Size(44, 17);
+            this.Label_Inner_Smooth.TabIndex = 15;
+            this.Label_Inner_Smooth.Text = "Inner:";
+            // 
+            // TextBox_InnerCircle_Smooth
+            // 
+            this.TextBox_InnerCircle_Smooth.AccessibleName = "InnerCircle";
+            this.TextBox_InnerCircle_Smooth.Location = new System.Drawing.Point(85, 31);
+            this.TextBox_InnerCircle_Smooth.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_InnerCircle_Smooth.Name = "TextBox_InnerCircle_Smooth";
+            this.TextBox_InnerCircle_Smooth.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_InnerCircle_Smooth.TabIndex = 14;
+            this.TextBox_InnerCircle_Smooth.Text = "1";
+            this.TextBox_InnerCircle_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_InnerCircle_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // panel_DeleteCircle
+            // 
+            this.panel_DeleteCircle.Controls.Add(this.TextBox_DeleteCircle_Inner);
+            this.panel_DeleteCircle.Controls.Add(this.label_DeleteCircle_Circle);
+            this.panel_DeleteCircle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_DeleteCircle.Location = new System.Drawing.Point(0, 0);
+            this.panel_DeleteCircle.Name = "panel_DeleteCircle";
+            this.panel_DeleteCircle.Size = new System.Drawing.Size(209, 332);
+            this.panel_DeleteCircle.TabIndex = 16;
+            this.panel_DeleteCircle.Visible = false;
+            // 
+            // TextBox_DeleteCircle_Inner
+            // 
+            this.TextBox_DeleteCircle_Inner.Location = new System.Drawing.Point(69, 20);
+            this.TextBox_DeleteCircle_Inner.Name = "TextBox_DeleteCircle_Inner";
+            this.TextBox_DeleteCircle_Inner.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_DeleteCircle_Inner.TabIndex = 1;
+            this.TextBox_DeleteCircle_Inner.Text = "1";
+            this.TextBox_DeleteCircle_Inner.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
+            this.TextBox_DeleteCircle_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // label_DeleteCircle_Circle
+            // 
+            this.label_DeleteCircle_Circle.AutoSize = true;
+            this.label_DeleteCircle_Circle.Location = new System.Drawing.Point(16, 22);
+            this.label_DeleteCircle_Circle.Name = "label_DeleteCircle_Circle";
+            this.label_DeleteCircle_Circle.Size = new System.Drawing.Size(47, 17);
+            this.label_DeleteCircle_Circle.TabIndex = 0;
+            this.label_DeleteCircle_Circle.Text = "Circle:";
+            // 
+            // Panel_PlaceBrush
+            // 
+            this.Panel_PlaceBrush.Controls.Add(this.TextBox_StrengthCircle);
+            this.Panel_PlaceBrush.Controls.Add(this.Label_StrengthCircle);
+            this.Panel_PlaceBrush.Controls.Add(this.Label_Brush_Circle);
+            this.Panel_PlaceBrush.Controls.Add(this.Label_Brush_Inner);
+            this.Panel_PlaceBrush.Controls.Add(this.TextBox_BrushPlace_Inner);
+            this.Panel_PlaceBrush.Controls.Add(this.Label_Model_Brush);
+            this.Panel_PlaceBrush.Controls.Add(this.ComboBox_Model_Brush);
+            this.Panel_PlaceBrush.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_PlaceBrush.Location = new System.Drawing.Point(0, 0);
+            this.Panel_PlaceBrush.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_PlaceBrush.Name = "Panel_PlaceBrush";
+            this.Panel_PlaceBrush.Size = new System.Drawing.Size(209, 332);
+            this.Panel_PlaceBrush.TabIndex = 0;
+            this.Panel_PlaceBrush.Visible = false;
+            // 
+            // TextBox_StrengthCircle
+            // 
+            this.TextBox_StrengthCircle.AccessibleName = "Strength";
+            this.TextBox_StrengthCircle.Location = new System.Drawing.Point(83, 105);
+            this.TextBox_StrengthCircle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_StrengthCircle.Name = "TextBox_StrengthCircle";
+            this.TextBox_StrengthCircle.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_StrengthCircle.TabIndex = 10;
+            this.TextBox_StrengthCircle.Text = "1";
+            this.TextBox_StrengthCircle.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_StrengthCircle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_StrengthCircle
+            // 
+            this.Label_StrengthCircle.AutoSize = true;
+            this.Label_StrengthCircle.Location = new System.Drawing.Point(15, 108);
+            this.Label_StrengthCircle.Name = "Label_StrengthCircle";
+            this.Label_StrengthCircle.Size = new System.Drawing.Size(66, 17);
+            this.Label_StrengthCircle.TabIndex = 9;
+            this.Label_StrengthCircle.Text = "Strength:";
+            // 
+            // Label_Brush_Circle
+            // 
+            this.Label_Brush_Circle.AutoSize = true;
+            this.Label_Brush_Circle.Location = new System.Drawing.Point(15, 55);
+            this.Label_Brush_Circle.Name = "Label_Brush_Circle";
+            this.Label_Brush_Circle.Size = new System.Drawing.Size(47, 17);
+            this.Label_Brush_Circle.TabIndex = 8;
+            this.Label_Brush_Circle.Text = "Circle:";
+            // 
+            // Label_Brush_Inner
+            // 
+            this.Label_Brush_Inner.AutoSize = true;
+            this.Label_Brush_Inner.Location = new System.Drawing.Point(15, 80);
+            this.Label_Brush_Inner.Name = "Label_Brush_Inner";
+            this.Label_Brush_Inner.Size = new System.Drawing.Size(44, 17);
+            this.Label_Brush_Inner.TabIndex = 6;
+            this.Label_Brush_Inner.Text = "Inner:";
+            // 
+            // TextBox_BrushPlace_Inner
+            // 
+            this.TextBox_BrushPlace_Inner.AccessibleName = "InnerCircle";
+            this.TextBox_BrushPlace_Inner.Location = new System.Drawing.Point(83, 78);
+            this.TextBox_BrushPlace_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_BrushPlace_Inner.Name = "TextBox_BrushPlace_Inner";
+            this.TextBox_BrushPlace_Inner.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_BrushPlace_Inner.TabIndex = 4;
+            this.TextBox_BrushPlace_Inner.Text = "1";
+            this.TextBox_BrushPlace_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_BrushPlace_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_Model_Brush
+            // 
+            this.Label_Model_Brush.AutoSize = true;
+            this.Label_Model_Brush.Location = new System.Drawing.Point(15, 22);
+            this.Label_Model_Brush.Name = "Label_Model_Brush";
+            this.Label_Model_Brush.Size = new System.Drawing.Size(50, 17);
+            this.Label_Model_Brush.TabIndex = 3;
+            this.Label_Model_Brush.Text = "Model:";
+            // 
+            // ComboBox_Model_Brush
+            // 
+            this.ComboBox_Model_Brush.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Model_Brush.FormattingEnabled = true;
+            this.ComboBox_Model_Brush.Location = new System.Drawing.Point(71, 18);
+            this.ComboBox_Model_Brush.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ComboBox_Model_Brush.Name = "ComboBox_Model_Brush";
+            this.ComboBox_Model_Brush.Size = new System.Drawing.Size(121, 24);
+            this.ComboBox_Model_Brush.TabIndex = 2;
+            // 
+            // Panel_Lower_Raise_Ground
+            // 
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_RaiseLower_Strength);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_Strength_RaiseLower);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
+            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
+            this.Panel_Lower_Raise_Ground.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
+            this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
+            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(209, 332);
+            this.Panel_Lower_Raise_Ground.TabIndex = 2;
+            this.Panel_Lower_Raise_Ground.Visible = false;
+            // 
+            // Label_RaiseLower_Strength
+            // 
+            this.Label_RaiseLower_Strength.AutoSize = true;
+            this.Label_RaiseLower_Strength.Location = new System.Drawing.Point(13, 64);
+            this.Label_RaiseLower_Strength.Name = "Label_RaiseLower_Strength";
+            this.Label_RaiseLower_Strength.Size = new System.Drawing.Size(66, 17);
+            this.Label_RaiseLower_Strength.TabIndex = 6;
+            this.Label_RaiseLower_Strength.Text = "Strength:";
+            // 
+            // TextBox_Strength_RaiseLower
+            // 
+            this.TextBox_Strength_RaiseLower.AccessibleName = "Strength";
+            this.TextBox_Strength_RaiseLower.Location = new System.Drawing.Point(83, 62);
+            this.TextBox_Strength_RaiseLower.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_Strength_RaiseLower.Name = "TextBox_Strength_RaiseLower";
+            this.TextBox_Strength_RaiseLower.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_Strength_RaiseLower.TabIndex = 5;
+            this.TextBox_Strength_RaiseLower.Text = "1";
+            this.TextBox_Strength_RaiseLower.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_Strength_RaiseLower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_Circle
+            // 
+            this.Label_Circle.AutoSize = true;
+            this.Label_Circle.Location = new System.Drawing.Point(13, 14);
+            this.Label_Circle.Name = "Label_Circle";
+            this.Label_Circle.Size = new System.Drawing.Size(47, 17);
+            this.Label_Circle.TabIndex = 4;
+            this.Label_Circle.Text = "Circle:";
+            // 
+            // Label_InnerRing_Size
+            // 
+            this.Label_InnerRing_Size.AutoSize = true;
+            this.Label_InnerRing_Size.Location = new System.Drawing.Point(13, 36);
+            this.Label_InnerRing_Size.Name = "Label_InnerRing_Size";
+            this.Label_InnerRing_Size.Size = new System.Drawing.Size(39, 17);
+            this.Label_InnerRing_Size.TabIndex = 1;
+            this.Label_InnerRing_Size.Text = "Size:";
+            // 
+            // TextBox_BothCircles_Size
+            // 
+            this.TextBox_BothCircles_Size.AccessibleName = "InnerAndOuterCircle";
+            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(83, 33);
+            this.TextBox_BothCircles_Size.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
+            this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_BothCircles_Size.TabIndex = 0;
+            this.TextBox_BothCircles_Size.Text = "1";
+            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_BothCircles_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
             // Panel_ObjectInfo
             // 
             this.Panel_ObjectInfo.Controls.Add(this.Label_Anim);
@@ -1281,159 +1499,6 @@
             this.Label_Tex1.TabIndex = 8;
             this.Label_Tex1.Text = "Texture 1";
             // 
-            // Panel_PlaceBrush
-            // 
-            this.Panel_PlaceBrush.Controls.Add(this.TextBox_StrengthCircle);
-            this.Panel_PlaceBrush.Controls.Add(this.Label_StrengthCircle);
-            this.Panel_PlaceBrush.Controls.Add(this.Label_Brush_Circle);
-            this.Panel_PlaceBrush.Controls.Add(this.Label_Brush_Inner);
-            this.Panel_PlaceBrush.Controls.Add(this.TextBox_BrushPlace_Inner);
-            this.Panel_PlaceBrush.Controls.Add(this.Label_Model_Brush);
-            this.Panel_PlaceBrush.Controls.Add(this.ComboBox_Model_Brush);
-            this.Panel_PlaceBrush.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_PlaceBrush.Location = new System.Drawing.Point(0, 0);
-            this.Panel_PlaceBrush.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_PlaceBrush.Name = "Panel_PlaceBrush";
-            this.Panel_PlaceBrush.Size = new System.Drawing.Size(209, 332);
-            this.Panel_PlaceBrush.TabIndex = 0;
-            this.Panel_PlaceBrush.Visible = false;
-            // 
-            // TextBox_StrengthCircle
-            // 
-            this.TextBox_StrengthCircle.AccessibleName = "Strength";
-            this.TextBox_StrengthCircle.Location = new System.Drawing.Point(83, 105);
-            this.TextBox_StrengthCircle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_StrengthCircle.Name = "TextBox_StrengthCircle";
-            this.TextBox_StrengthCircle.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_StrengthCircle.TabIndex = 10;
-            this.TextBox_StrengthCircle.Text = "1";
-            this.TextBox_StrengthCircle.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_StrengthCircle.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_StrengthCircle
-            // 
-            this.Label_StrengthCircle.AutoSize = true;
-            this.Label_StrengthCircle.Location = new System.Drawing.Point(15, 108);
-            this.Label_StrengthCircle.Name = "Label_StrengthCircle";
-            this.Label_StrengthCircle.Size = new System.Drawing.Size(66, 17);
-            this.Label_StrengthCircle.TabIndex = 9;
-            this.Label_StrengthCircle.Text = "Strength:";
-            // 
-            // Label_Brush_Circle
-            // 
-            this.Label_Brush_Circle.AutoSize = true;
-            this.Label_Brush_Circle.Location = new System.Drawing.Point(15, 55);
-            this.Label_Brush_Circle.Name = "Label_Brush_Circle";
-            this.Label_Brush_Circle.Size = new System.Drawing.Size(47, 17);
-            this.Label_Brush_Circle.TabIndex = 8;
-            this.Label_Brush_Circle.Text = "Circle:";
-            // 
-            // Label_Brush_Inner
-            // 
-            this.Label_Brush_Inner.AutoSize = true;
-            this.Label_Brush_Inner.Location = new System.Drawing.Point(15, 80);
-            this.Label_Brush_Inner.Name = "Label_Brush_Inner";
-            this.Label_Brush_Inner.Size = new System.Drawing.Size(44, 17);
-            this.Label_Brush_Inner.TabIndex = 6;
-            this.Label_Brush_Inner.Text = "Inner:";
-            // 
-            // TextBox_BrushPlace_Inner
-            // 
-            this.TextBox_BrushPlace_Inner.AccessibleName = "InnerCircle";
-            this.TextBox_BrushPlace_Inner.Location = new System.Drawing.Point(83, 78);
-            this.TextBox_BrushPlace_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_BrushPlace_Inner.Name = "TextBox_BrushPlace_Inner";
-            this.TextBox_BrushPlace_Inner.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_BrushPlace_Inner.TabIndex = 4;
-            this.TextBox_BrushPlace_Inner.Text = "1";
-            this.TextBox_BrushPlace_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_BrushPlace_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_Model_Brush
-            // 
-            this.Label_Model_Brush.AutoSize = true;
-            this.Label_Model_Brush.Location = new System.Drawing.Point(15, 22);
-            this.Label_Model_Brush.Name = "Label_Model_Brush";
-            this.Label_Model_Brush.Size = new System.Drawing.Size(50, 17);
-            this.Label_Model_Brush.TabIndex = 3;
-            this.Label_Model_Brush.Text = "Model:";
-            // 
-            // ComboBox_Model_Brush
-            // 
-            this.ComboBox_Model_Brush.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBox_Model_Brush.FormattingEnabled = true;
-            this.ComboBox_Model_Brush.Location = new System.Drawing.Point(71, 18);
-            this.ComboBox_Model_Brush.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.ComboBox_Model_Brush.Name = "ComboBox_Model_Brush";
-            this.ComboBox_Model_Brush.Size = new System.Drawing.Size(121, 24);
-            this.ComboBox_Model_Brush.TabIndex = 2;
-            // 
-            // Panel_Lower_Raise_Ground
-            // 
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_RaiseLower_Strength);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_Strength_RaiseLower);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_Circle);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.Label_InnerRing_Size);
-            this.Panel_Lower_Raise_Ground.Controls.Add(this.TextBox_BothCircles_Size);
-            this.Panel_Lower_Raise_Ground.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
-            this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
-            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(209, 332);
-            this.Panel_Lower_Raise_Ground.TabIndex = 2;
-            this.Panel_Lower_Raise_Ground.Visible = false;
-            // 
-            // Label_RaiseLower_Strength
-            // 
-            this.Label_RaiseLower_Strength.AutoSize = true;
-            this.Label_RaiseLower_Strength.Location = new System.Drawing.Point(13, 64);
-            this.Label_RaiseLower_Strength.Name = "Label_RaiseLower_Strength";
-            this.Label_RaiseLower_Strength.Size = new System.Drawing.Size(66, 17);
-            this.Label_RaiseLower_Strength.TabIndex = 6;
-            this.Label_RaiseLower_Strength.Text = "Strength:";
-            // 
-            // TextBox_Strength_RaiseLower
-            // 
-            this.TextBox_Strength_RaiseLower.AccessibleName = "Strength";
-            this.TextBox_Strength_RaiseLower.Location = new System.Drawing.Point(83, 62);
-            this.TextBox_Strength_RaiseLower.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_Strength_RaiseLower.Name = "TextBox_Strength_RaiseLower";
-            this.TextBox_Strength_RaiseLower.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_Strength_RaiseLower.TabIndex = 5;
-            this.TextBox_Strength_RaiseLower.Text = "1";
-            this.TextBox_Strength_RaiseLower.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_Strength_RaiseLower.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_Circle
-            // 
-            this.Label_Circle.AutoSize = true;
-            this.Label_Circle.Location = new System.Drawing.Point(13, 14);
-            this.Label_Circle.Name = "Label_Circle";
-            this.Label_Circle.Size = new System.Drawing.Size(47, 17);
-            this.Label_Circle.TabIndex = 4;
-            this.Label_Circle.Text = "Circle:";
-            // 
-            // Label_InnerRing_Size
-            // 
-            this.Label_InnerRing_Size.AutoSize = true;
-            this.Label_InnerRing_Size.Location = new System.Drawing.Point(13, 36);
-            this.Label_InnerRing_Size.Name = "Label_InnerRing_Size";
-            this.Label_InnerRing_Size.Size = new System.Drawing.Size(39, 17);
-            this.Label_InnerRing_Size.TabIndex = 1;
-            this.Label_InnerRing_Size.Text = "Size:";
-            // 
-            // TextBox_BothCircles_Size
-            // 
-            this.TextBox_BothCircles_Size.AccessibleName = "InnerAndOuterCircle";
-            this.TextBox_BothCircles_Size.Location = new System.Drawing.Point(83, 33);
-            this.TextBox_BothCircles_Size.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_BothCircles_Size.Name = "TextBox_BothCircles_Size";
-            this.TextBox_BothCircles_Size.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_BothCircles_Size.TabIndex = 0;
-            this.TextBox_BothCircles_Size.Text = "1";
-            this.TextBox_BothCircles_Size.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_BothCircles_Size.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
             // NDYEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1444,7 +1509,7 @@
             this.Controls.Add(this.menuStrip1);
             this.HelpButton = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(661, 332);
             this.Name = "NDYEditor";
             this.Text = "BOOM! Editor";
@@ -1473,24 +1538,26 @@
             this.InfoSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.InfoSplitter)).EndInit();
             this.InfoSplitter.ResumeLayout(false);
-            this.Panel_SmoothTool.ResumeLayout(false);
-            this.Panel_SmoothTool.PerformLayout();
             this.Panel_Info.ResumeLayout(false);
             this.Panel_Info.PerformLayout();
             this.Panel_Tex_Picker.ResumeLayout(false);
             this.Panel_Tex_Picker.PerformLayout();
             this.GroupBox_DrawTex.ResumeLayout(false);
             this.GroupBox_DrawTex.PerformLayout();
+            this.Panel_SmoothTool.ResumeLayout(false);
+            this.Panel_SmoothTool.PerformLayout();
+            this.panel_DeleteCircle.ResumeLayout(false);
+            this.panel_DeleteCircle.PerformLayout();
+            this.Panel_PlaceBrush.ResumeLayout(false);
+            this.Panel_PlaceBrush.PerformLayout();
+            this.Panel_Lower_Raise_Ground.ResumeLayout(false);
+            this.Panel_Lower_Raise_Ground.PerformLayout();
             this.Panel_ObjectInfo.ResumeLayout(false);
             this.Panel_ObjectInfo.PerformLayout();
             this.Panel_PlaceObject.ResumeLayout(false);
             this.Panel_PlaceObject.PerformLayout();
             this.Panel_Textures.ResumeLayout(false);
             this.Panel_Textures.PerformLayout();
-            this.Panel_PlaceBrush.ResumeLayout(false);
-            this.Panel_PlaceBrush.PerformLayout();
-            this.Panel_Lower_Raise_Ground.ResumeLayout(false);
-            this.Panel_Lower_Raise_Ground.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1608,6 +1675,11 @@
         private System.Windows.Forms.TextBox TextBox_InnerCircle_Smooth;
         private System.Windows.Forms.ToolStripMenuItem worldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.Button btn_DeleteEntity;
+        private System.Windows.Forms.Button btn_ResetGround;
+        private System.Windows.Forms.Panel panel_DeleteCircle;
+        private System.Windows.Forms.TextBox TextBox_DeleteCircle_Inner;
+        private System.Windows.Forms.Label label_DeleteCircle_Circle;
     }
 }
 

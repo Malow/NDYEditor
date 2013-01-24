@@ -23,7 +23,9 @@ namespace Example
         LOWER = 5,
         PLACEBRUSH = 6,
         DRAWTEX = 7,
-        SMOOTH = 8
+        SMOOTH = 8,
+        DELETEENTITIES = 9,
+        RESETGROUND = 10
     }
 
     public partial class NDYEditor : Form
@@ -422,6 +424,7 @@ namespace Example
             this.Panel_Textures.Hide();
             this.Panel_PlaceBrush.Hide();
             this.Panel_SmoothTool.Hide();
+            this.panel_DeleteCircle.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
@@ -430,6 +433,7 @@ namespace Example
             this.Panel_Textures.SendToBack();
             this.Panel_PlaceBrush.SendToBack();
             this.Panel_SmoothTool.SendToBack();
+            this.panel_DeleteCircle.SendToBack();
         }
 
         private void switchMode()
@@ -466,11 +470,13 @@ namespace Example
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
+                if(TextBox_BothCircles_Size.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
 
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
 
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
+                if(TextBox_Strength_RaiseLower.Text != "")
+                    m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
             }
             else if (this.m_mode == MODE.RAISE)
             {
@@ -480,11 +486,13 @@ namespace Example
                 this.Panel_Lower_Raise_Ground.Show();
                 this.Panel_Lower_Raise_Ground.BringToFront();
 
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
+                if(TextBox_BothCircles_Size.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BothCircles_Size.Text));
 
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
 
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
+                if(TextBox_Strength_RaiseLower.Text != "")
+                    m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_Strength_RaiseLower.Text));
             }
             else if (this.m_mode == MODE.PLACEBRUSH)
             {
@@ -494,11 +502,13 @@ namespace Example
                 this.Panel_PlaceBrush.Show();
                 this.Panel_PlaceBrush.BringToFront();
 
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BrushPlace_Inner.Text));
+                if(TextBox_BrushPlace_Inner.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(this.TextBox_BrushPlace_Inner.Text));
 
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
 
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_StrengthCircle.Text));
+                if(TextBox_StrengthCircle.Text != "")
+                    m_GameEngine.SetBrushAttr("Strength", float.Parse(this.TextBox_StrengthCircle.Text));
             }
             else if (this.m_mode == MODE.DRAWTEX)
             {
@@ -507,12 +517,12 @@ namespace Example
 
                 this.Panel_Tex_Picker.Show();
                 this.Panel_Tex_Picker.BringToFront();
-
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(textBox_InnerCircle_Terrain.Text));
-
-                m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(textBox_OuterCircle_Terrain.Text));
-
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Terrain_Strength.Text));
+                if(textBox_InnerCircle_Terrain.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(textBox_InnerCircle_Terrain.Text));
+                if(textBox_OuterCircle_Terrain.Text != "")
+                    m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(textBox_OuterCircle_Terrain.Text));
+                if(TextBox_Terrain_Strength.Text != "")
+                    m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Terrain_Strength.Text));
             }
             else if (this.m_mode == MODE.SMOOTH)
             {
@@ -521,12 +531,35 @@ namespace Example
 
                 this.Panel_SmoothTool.Show();
                 this.Panel_SmoothTool.BringToFront();
+                if(TextBox_InnerCircle_Smooth.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_InnerCircle_Smooth.Text));
+                if(TextBox_OuterCircle_Smooth.Text != "")
+                    m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(TextBox_OuterCircle_Smooth.Text));
+                if(TextBox_Strength_Smooth.Text != "")
+                    m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Strength_Smooth.Text));
+            }
 
-                m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_InnerCircle_Smooth.Text));
+            else if (this.m_mode == MODE.DELETEENTITIES)
+            {
+                this.btn_DeleteEntity.Focus();
+                this.hideAll();
 
-                m_GameEngine.SetBrushAttr("OuterCircle", float.Parse(TextBox_OuterCircle_Smooth.Text));
+                this.panel_DeleteCircle.Show();
+                this.panel_DeleteCircle.BringToFront();
 
-                m_GameEngine.SetBrushAttr("Strength", float.Parse(TextBox_Strength_Smooth.Text));
+                if(TextBox_DeleteCircle_Inner.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+            }
+            else if (this.m_mode == MODE.RESETGROUND)
+            {
+                this.btn_DeleteEntity.Focus();
+                this.hideAll();
+
+                this.panel_DeleteCircle.Show();
+                this.panel_DeleteCircle.BringToFront();
+
+                if (TextBox_DeleteCircle_Inner.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
             }
         }
         private void setDrawTex(object sender, EventArgs e)
