@@ -12,7 +12,7 @@ Model:Media/Models/Bush_01_v04_r.obj
 
 Number:4
 Name:Fern
-Model:Media/Models/Fern_02_v01_r.obj
+Model:Media/Models/Fern_02.ani
 
 Number:5
 Name:Tree
@@ -48,4 +48,4 @@ Model:Media/Models/SPAWN.obj
 
 Number:13
 Name:Plant-Grass
-Model:Media/Models/GrassPlant_01_v02.obj
+Model:Media/Models/GrassPlant_01.ani

@@ -43,7 +43,7 @@ void WorldFile::Open()
 
 	auto format = std::ios::in | std::ios::binary;
 	if ( zMode == OPEN_EDIT ) format = format | std::ios::out | std::ios::ate;
-	if ( zMode == OPEN_SAVE ) format = format | std::ios::out | std::ios::trunc;
+	if ( zMode == OPEN_SAVE ) format = format | std::ios::out | std::ios::ate;
 
 	// Open File
 	zFile = new std::fstream(zFileName, format);
@@ -72,8 +72,10 @@ void WorldFile::Open()
 		zNumSectors = zHeader.width * zHeader.height;
 
 		// Expand File
-		zFile->seekp(0, std::ios::end);
-		unsigned int fileSize = (unsigned int)zFile->tellp();
+		std::streampos end = zFile->tellp();
+		zFile->seekp(0, std::ios::beg);
+		unsigned int fileSize = (unsigned int)(end - zFile->tellp());
+
 		if ( fileSize < GetEnding() )
 		{
 			std::vector<unsigned char> v;

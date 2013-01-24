@@ -11,6 +11,7 @@ World::World( Observer* observer, const std::string& fileName) throw(...) :
 	zNrOfSectorsHeight(0)
 {
 	zFile = new WorldFile(this, fileName, OPEN_EDIT);
+	zFile->ReadHeader();
 }
 
 
@@ -288,7 +289,13 @@ void World::SaveFileAs( const std::string& fileName )
 			// Handle Save As
 			std::string filePath = zFile->GetFileName();
 			delete zFile;
-			CopyFile( filePath.c_str(), fileName.c_str(), false );
+
+			if ( !CopyFile( filePath.c_str(), fileName.c_str(), false ) )
+			{
+				int err = GetLastError();
+				throw("Failed Copy!");
+			}
+
 			zFile = new WorldFile(this, fileName, OPEN_SAVE);
 			SaveFile();
 		}
