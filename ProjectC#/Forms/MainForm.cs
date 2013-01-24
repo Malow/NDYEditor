@@ -97,6 +97,7 @@ namespace Example
             if (filePathKnown && autoSaveWatch.ElapsedMilliseconds > 1000 * 60)
             {
                 this.toolStripStatusLabel1.Text = "Saving!";
+                Application.DoEvents();
                 m_GameEngine.SaveWorld();
                 UpdateSaveStatus();
                 autoSaveWatch.Restart();
@@ -175,6 +176,7 @@ namespace Example
             if (fdlg.ShowDialog() == DialogResult.OK)
             {
                 this.toolStripStatusLabel1.Text = "Saving!";
+                Application.DoEvents();
                 m_GameEngine.SaveWorldAs(fdlg.FileName);
                 this.filePathKnown = true;
                 UpdateSaveStatus();
@@ -190,6 +192,7 @@ namespace Example
 			else
             {
                 this.toolStripStatusLabel1.Text = "Saving!";
+                Application.DoEvents();
                 m_GameEngine.SaveWorld();
                 UpdateSaveStatus();
             }
@@ -565,22 +568,18 @@ namespace Example
                 {
                     e.Cancel = true;
                 }
-                else if (temp == "DontSave")
-                {
-                    this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
-                }
                 else if (temp == "Save")
                 {
-                    this.toolStripStatusLabel1.Text = "Saving!";
                     if (!this.filePathKnown)
                     {
                         this.saveAsToolStripMenuItem_Click(sender, e);
                     }
                     else
                     {
+                        this.toolStripStatusLabel1.Text = "Saving!";
+                        Application.DoEvents();
                         m_GameEngine.SaveWorld();
                     }
-                    this.toolStripStatusLabel1.Text = "Last Save: " + System.DateTime.Now;
                 }
             }
         }
