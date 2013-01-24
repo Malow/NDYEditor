@@ -240,6 +240,7 @@ namespace Example
             else if (this.m_mode == MODE.MOVE)
             {
                 this.m_mode = MODE.SELECT;
+                autoSwitchMove = true;
                 switchMode();
                 m_GameEngine.ChangeMode((int)m_mode);
                 GetAllSelectedInfo();

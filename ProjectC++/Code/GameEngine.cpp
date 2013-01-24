@@ -87,16 +87,25 @@ void GameEngine::ProcessFrame()
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
 		CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
-		
+		float tempY = 0;
 		if(cd.collision)
 		{
 			auto i = zTargetedEntities.begin();
 			zMoveOffSet = Vector3(cd.posx, 0.0f, cd.posz) - zPrevPosOfSelected[(*i)];
-			float tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z);
-			(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet + Vector3(0,tempY,0));
-
+			if((*i)->GetPosition().x >= 0 && (*i)->GetPosition().z >= 0 && (*i)->GetPosition().x < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE && (*i)->GetPosition().z < zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)
+			{
+				tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z);
+				(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet + Vector3(0,tempY,0));
+			}
+			Vector3 newPos = NULL;
 			for ( auto it=zTargetedEntities.begin(); it != zTargetedEntities.end(); it++ )
 			{
+				newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
+				if(newPos.x  < 0.0f) continue;
+				else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
+				if(newPos.z  < 0.0f) continue;
+				else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
+
 				tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0,tempY,0));
 			}
@@ -247,12 +256,23 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				if(cd.collision)
 				{
 					float tempY;
+					Vector3 newPos = NULL;
 					for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 					{
+						(*it)->SetSelected(false);
+
+						newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
+						if(newPos.x  < 0.0f) continue;
+						else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
+						if(newPos.z  < 0.0f) continue;
+						else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
+						
 						tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0, tempY, 0));
-						zPrevPosOfSelected[(*it)] = (*it)->GetPosition();
 					}
+					zPrevPosOfSelected.clear();
+					zTargetedEntities.clear();
+
 					zWorldSavedFlag = false;
 				}
 			}
