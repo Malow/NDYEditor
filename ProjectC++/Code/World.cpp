@@ -289,7 +289,7 @@ void World::SaveFileAs( const std::string& fileName )
 			std::string filePath = zFile->GetFileName();
 			delete zFile;
 			CopyFile( filePath.c_str(), fileName.c_str(), false );
-			zFile = new WorldFile(this, fileName, OPEN_SAVE);
+			zFile = new WorldFile(this, fileName, OPEN_EDIT);
 			SaveFile();
 		}
 	}

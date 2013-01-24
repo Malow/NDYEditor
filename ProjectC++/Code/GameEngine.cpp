@@ -230,6 +230,9 @@ void GameEngine::OnResize(int width, int height)
 
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX ) )
+		zCurrentActionGroup = 0;
+
 	zLeftMouseDown = false;
 }
 
@@ -961,6 +964,13 @@ void GameEngine::ApplyAction( Action* a )
 	a->Execute();
 	zActionHistory.push_back(a);
 	currentActionIndex++; 
+
+	if ( zActionHistory.size() > 100 )
+	{
+		delete *zActionHistory.begin();
+		zActionHistory.erase(zActionHistory.begin());
+		currentActionIndex--;
+	}
 }
 
 void GameEngine::UndoAction()
