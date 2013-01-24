@@ -39,9 +39,13 @@ Name:Veins
 Model:Media/Models/Veins_01_v03_r.obj
 
 Number:11
-Name:Flag
-Model:Media/Models/Flag/FlagBlue.ani
+Name:Plant-Bigleaf
+Model:Media/Models/BigleafShrubbery_01_v02.obj
 
 Number:12
 Name:Spawn
 Model:Media/Models/SPAWN.obj
+
+Number:13
+Name:Plant-Grass
+Model:Media/Models/GrassPlant_01_v02.obj
