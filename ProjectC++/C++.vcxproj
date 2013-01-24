@@ -17,6 +17,7 @@
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\EntityList.h" />
+    <ClInclude Include="Code\EntityPlacedAction.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
     <ClInclude Include="Code\HeightChangedAction.h" />

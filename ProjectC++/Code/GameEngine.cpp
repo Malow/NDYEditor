@@ -3,6 +3,7 @@
 #include "EntityList.h"
 #include "HeightChangedAction.h"
 #include "BlendChangedAction.h"
+#include "EntityPlacedAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -285,8 +286,15 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				Entity* ent = zWorld->CreateEntity(this->zCreateEntityType);
-				ent->SetPosition(Vector3(cd.posx, cd.posy, cd.posz));
+				EntityPlacedAction *EPA = new EntityPlacedAction(
+					zWorld, 
+					zCreateEntityType,
+					Vector3(cd.posx, cd.posy, cd.posz),
+					Vector3(0.0f, (float)rand()/float(RAND_MAX)*360.0f, 0.0f),
+					Vector3(1.0f, 1.0f, 1.0f)
+					);
+
+				ApplyAction(EPA);
 				zWorldSavedFlag = false;
 			}
 		}
