@@ -136,16 +136,32 @@ void GameEngine::ProcessFrame()
 
 			dir.Normalize();
 			Vector3 tempGround = groundNormal;
+			tempGround.y = 0;
 			tempGround.Normalize();
 			float dot = dir.GetDotProduct(tempGround);
-			float yTolerance = sin(zWalkingToleranceDegrees * (3.1415/180));
-			if(dot > 0.2)
+
+			if( groundNormal.y	 <= 0.5f )
 			{
-				cam->SetPosition(Vector3(pos.x, pos.y, pos.z));
+				Vector3 newPlayerTempPos = pos + (tempGround * (dt));
+
+				float yPosNew = this->zWorld->GetHeightAtWorldPos(newPlayerTempPos.x, newPlayerTempPos.z);
+				newPlayerTempPos.y += -9.82 * dt;
+				if(newPlayerTempPos.y < yPosNew + 1.7f)
+					newPlayerTempPos.y = yPosNew + 1.7f;
+				cam->SetPosition(newPlayerTempPos);
 			}
-			else if(groundNormal.y > yTolerance)
+			else if(dot > 0.2)
 			{
-				cam->SetPosition(Vector3(pos.x, yPos+1.7f, pos.z));
+				pos.y += -9.82 * dt;
+				if(pos.y < yPos + 1.7f)
+					pos.y = yPos + 1.7f;
+
+				cam->SetPosition(pos);
+			}			
+			else if(groundNormal.y > 0.7f)
+			{
+				pos.y = yPos + 1.7f;
+				cam->SetPosition(pos);
 			}
 		}
 		else if ( zLockMouseToCamera )
