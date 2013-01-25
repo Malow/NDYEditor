@@ -41,7 +41,7 @@ WorldRenderer::~WorldRenderer()
 	zTerrain.clear();
 
 	// Clean Entities
-	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
+	for( auto i = zEntities.begin(); i != zEntities.end(); ++i )
 	{
 		zGraphics->DeleteMesh( i->second );
 	}

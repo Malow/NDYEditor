@@ -608,8 +608,8 @@ void GameEngine::KeyUp( int key )
 		if ( zWorld )
 		{
 			Vector3 startPos;
-			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5;
-			startPos.z = zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE * 0.5;
+			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5f;
+			startPos.z = zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE * 0.5f;
 			startPos.y = zWorld->GetHeightAt(startPos.x, startPos.y) + 1.7f; 
 			zGraphics->GetCamera()->SetPosition(startPos);
 		}
