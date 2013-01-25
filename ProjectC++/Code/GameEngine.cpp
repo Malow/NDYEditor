@@ -138,23 +138,23 @@ void GameEngine::ProcessFrame()
 
 			dir.Normalize();
 			Vector3 tempGround = groundNormal;
-			tempGround.y = 0;
+			tempGround.y = 0.0f;
 			tempGround.Normalize();
 			float dot = dir.GetDotProduct(tempGround);
 
-			if( groundNormal.y	 <= 0.5f )
+			if( groundNormal.y <= 0.5f )
 			{
-				Vector3 newPlayerTempPos = pos + (tempGround * (dt));
+				Vector3 newPlayerTempPos = pos + (tempGround * dt);
 
 				float yPosNew = this->zWorld->GetHeightAtWorldPos(newPlayerTempPos.x, newPlayerTempPos.z);
-				newPlayerTempPos.y += -9.82 * dt;
+				newPlayerTempPos.y += -9.82f * dt;
 				if(newPlayerTempPos.y < yPosNew + 1.7f)
 					newPlayerTempPos.y = yPosNew + 1.7f;
 				cam->SetPosition(newPlayerTempPos);
 			}
-			else if(dot > 0.2)
+			else if(dot > 0.2f)
 			{
-				pos.y += -9.82 * dt;
+				pos.y += -9.82f * dt;
 				if(pos.y < yPos + 1.7f)
 					pos.y = yPos + 1.7f;
 
@@ -904,13 +904,21 @@ void GameEngine::GetBrushAttr( char* info, char* SChar )
 
 void GameEngine::RemoveSelectedEntities()
 {
-	while(!zTargetedEntities.empty())
+	if ( !zTargetedEntities.empty() )
 	{
-		zWorld->RemoveEntity(*zTargetedEntities.begin());
+		ActionGroup *AG = new ActionGroup();
+
+		for( auto i = zTargetedEntities.begin(); i != zTargetedEntities.end(); ++i )
+		{
+			AG->zActions.push_back( new EntityRemovedAction(zWorld, *i) );
+		}
+
+		ApplyAction( AG );
+
+		zTargetedEntities.clear();
+		zPrevPosOfSelected.clear();
 	}
 
-	zTargetedEntities.clear();
-	zPrevPosOfSelected.clear();
 }
 
 
@@ -982,7 +990,7 @@ void GameEngine::GetCameraInfo( char* info, float& x, float& y, float& z )
 
 void GameEngine::MoveObjectToSurface()
 {
-	if( zTargetedEntities.size() > 0 )
+	if( !zTargetedEntities.empty() )
 	{
 		float tempY;
 		Vector3 tempPos;
@@ -1027,13 +1035,13 @@ void GameEngine::SetSunInfo( char* info, float x, float y, float z )
 	if( string(info) == "Dir" ) // Returns the sunlight dir
 	{
 		if ( zWorld ) zWorld->SetSunProperties( Vector3(x, y, z), zWorld->GetSunColor(), zWorld->GetSunIntensity() );
+		zWorldSavedFlag = false;
 	}
 	else if( string(info) == "Color" )
 	{
 		if ( zWorld ) zWorld->SetSunProperties( zWorld->GetSunDir(), Vector3(x, y, z), zWorld->GetSunIntensity() );
+		zWorldSavedFlag = false;
 	}
-
-	zWorldSavedFlag = false;
 }
 
 
@@ -1060,8 +1068,8 @@ void GameEngine::SetAmbientLight( char* info, float x, float y, float z )
 	if(string(info) == "Color")
 	{
 		if ( zWorld ) zWorld->SetWorldAmbient(Vector3(x, y, z));
+		zWorldSavedFlag = false;
 	}
-	zWorldSavedFlag = false;
 }
 
 
