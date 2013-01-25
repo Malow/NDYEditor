@@ -25,7 +25,8 @@ namespace Example
         DRAWTEX = 7,
         SMOOTH = 8,
         DELETEENTITIES = 9,
-        RESETGROUND = 10
+        RESETGROUND = 10,
+        AIGRID = 11
     }
 
     public partial class NDYEditor : Form
@@ -440,6 +441,7 @@ namespace Example
         {
             if (this.m_mode == MODE.NONE)
             {
+                bnt_None.Focus();
                 this.hideAll();
             }
             else if (this.m_mode == MODE.SELECT)
@@ -552,7 +554,18 @@ namespace Example
             }
             else if (this.m_mode == MODE.RESETGROUND)
             {
-                this.btn_DeleteEntity.Focus();
+                this.btn_ResetGround.Focus();
+                this.hideAll();
+
+                this.panel_DeleteCircle.Show();
+                this.panel_DeleteCircle.BringToFront();
+
+                if (TextBox_DeleteCircle_Inner.Text != "")
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+            }
+            else if (this.m_mode == MODE.AIGRID)
+            {
+                this.btn_AIGrid.Focus();
                 this.hideAll();
 
                 this.panel_DeleteCircle.Show();

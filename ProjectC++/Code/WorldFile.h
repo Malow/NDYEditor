@@ -142,7 +142,6 @@ public:
 	Vector3 GetSunColor();
 	float GetSunIntensity();
 
-
 	inline const std::string& GetFileName() const { return zFileName; }
 
 private:

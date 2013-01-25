@@ -1,6 +1,8 @@
 #include "World.h"
 #include "CircleAndRect.h"
 #include <windows.h>
+#include "MaloWFileDebug.h"
+#include <sstream>
 
 
 
@@ -346,23 +348,34 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 
 				if ( !zFile->ReadHeightMap(s->GetHeightMap(), y * GetNumSectorsWidth() + x) )
 				{
-					s->Reset();
+					std::stringstream ss;
+					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
 				}
 				else if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x) )
 				{
-					s->Reset();
+					std::stringstream ss;
+					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
 				}
 				else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x) )
 				{
-					s->Reset();
+					std::stringstream ss;
+					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
 				}
 				else if ( !zFile->ReadAIGrid(s->GetAIGrid(), y * GetNumSectorsWidth() + x) )
 				{
-					//s->Reset();
+					std::stringstream ss;
+					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
 				}
 			}
 			else
 			{
+				std::stringstream ss;
+				ss << "Failed Loading Header For Sector: (" << x << ", " << y << ")";
+				MaloW::Debug( ss.str() );
 				s->Reset();
 			}
 
@@ -451,7 +464,7 @@ void World::LoadAllSectors()
 }
 
 
-unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const
+unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out) const
 {
 	unsigned int counter=0;
 
@@ -460,7 +473,7 @@ unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, st
 		Vector2 pos( (*i)->GetPosition().x, (*i)->GetPosition().z );
 		if( Vector2(center-pos).GetLength() < radius)
 		{
-			out.push_back(*i);
+			out.insert(*i);
 			counter++;
 		}
 	}
@@ -551,10 +564,11 @@ unsigned int World::GetNumSectorsHeight() const
 
 void World::RemoveEntity( Entity* entity )
 {
-	NotifyObservers( &EntityRemovedEvent(this,entity));
+	NotifyObservers(&EntityRemovedEvent(this,entity));
 	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
 	zEntities.erase(i);
 	delete entity;
+	entity = 0;
 }
 
 
@@ -780,8 +794,8 @@ Vector3 World::GetAmbientAtWorldPos( const Vector2& worldPos )
 {
 	if ( worldPos.x < 0 ) return zAmbient;
 	if ( worldPos.y < 0 ) return zAmbient;
-	if ( worldPos.x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE ) return zAmbient;
-	if ( worldPos.y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE ) return zAmbient;
+	if ( worldPos.x >= GetNumSectorsWidth() * SECTOR_WORLD_SIZE ) return zAmbient;
+	if ( worldPos.y >= GetNumSectorsHeight() * SECTOR_WORLD_SIZE ) return zAmbient;
 
 	Sector* s = GetSectorAtWorldPos(worldPos);
 	return zAmbient + s->GetAmbient();

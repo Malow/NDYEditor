@@ -18,11 +18,13 @@
     <ClInclude Include="Code\Entity.h" />
     <ClInclude Include="Code\EntityList.h" />
     <ClInclude Include="Code\EntityPlacedAction.h" />
+    <ClInclude Include="Code\EntityRemovedAction.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
     <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
+    <ClInclude Include="Code\TerrainSetHeightAction.h" />
     <ClInclude Include="Code\World.h" />
     <ClInclude Include="Code\WorldEvents.h" />
     <ClInclude Include="Code\WorldFile.h" />

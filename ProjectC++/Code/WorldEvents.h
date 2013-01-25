@@ -109,6 +109,19 @@ public:
 	}
 };
 
+class SectorAIGridChanged : public Event
+{
+public:
+	World* world;
+	unsigned int sectorX, sectorY;
+	SectorAIGridChanged( World* world, unsigned int sectorX, unsigned int sectorY ) :
+		world(world),
+		sectorX(sectorX),
+		sectorY(sectorY)
+	{
+	}
+};
+
 class SectorUnloadedEvent : public Event
 {
 public:

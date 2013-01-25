@@ -1,0 +1,54 @@
+#pragma once
+
+#include "World.h"
+#include "Action.h"
+#include <vector>
+
+
+class TerrainSetHeightAction : public Action
+{
+	World* zWorld;
+	Vector2 zPos;
+	float zRadius;
+	float zHeight;
+
+	std::vector< std::pair<Vector2, float> > zPrevHeights;
+public:
+	TerrainSetHeightAction( 
+		World *world, 
+		const Vector2& pos,
+		float radius,
+		float height
+		) :
+		zWorld(world),
+		zPos(pos),
+		zRadius(radius),
+		zHeight(height)
+	{
+
+	}
+
+
+	virtual void Execute()
+	{
+		std::set< Vector2 > nodes;
+		zWorld->GetHeightNodesInCircle( zPos, zRadius, nodes );
+
+		for( auto i = nodes.begin(); i != nodes.end(); ++i )
+		{
+			zPrevHeights.push_back(std::pair<Vector2,float>(*i, zWorld->GetHeightAt(i->x, i->y)));
+			zWorld->SetHeightAt( i->x, i->y, zHeight );
+		}
+	}
+
+
+	virtual void Undo()
+	{
+		for( auto i = zPrevHeights.rbegin(); i != zPrevHeights.rend(); ++i )
+		{
+			zWorld->SetHeightAt( i->first.x, i->first.y, i->second );
+		}
+
+		zPrevHeights.clear();
+	}
+};

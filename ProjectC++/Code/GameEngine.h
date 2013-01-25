@@ -19,6 +19,9 @@ enum MODE
 	PLACEBRUSH = 6,
 	DRAWTEX = 7,
 	SMOOTH = 8,
+	DELETEBRUSH = 9,
+	RESETBRUSH = 10,
+	AIGRIDBRUSH = 11
 };
 
 
@@ -95,7 +98,6 @@ public:
 
 	void RemoveSelectedEntities();
 
-
 	// Action History
 	void ApplyAction( Action* a );
 	void UndoAction();
@@ -108,7 +110,7 @@ public:
 	void GetBrushAttr(char* info, char* string);
 	void MouseInsideFrame(bool flag);
 	void MouseMove(int x, int y);
-	void ChangeMode(int mode);
+	void ChangeMode(unsigned int mode);
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
 	void MoveObjectToSurface();
@@ -123,7 +125,7 @@ public:
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
 
-	// Returns Number of entities in currect sector
+	// Returns Number of entities in current sector
 	int CountEntitiesInSector();
 	int HasWorldBeenSaved();
 

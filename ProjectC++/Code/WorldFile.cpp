@@ -42,8 +42,7 @@ void WorldFile::Open()
 	if ( zFile ) return;
 
 	auto format = std::ios::in | std::ios::binary;
-	if ( zMode == OPEN_EDIT ) format = format | std::ios::out | std::ios::ate;
-	if ( zMode == OPEN_SAVE ) format = format | std::ios::out | std::ios::ate;
+	if ( zMode == OPEN_EDIT || zMode == OPEN_SAVE ) format = format | std::ios::out | std::ios::ate;
 
 	// Open File
 	zFile = new std::fstream(zFileName, format);

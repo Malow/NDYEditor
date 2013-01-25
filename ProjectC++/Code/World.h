@@ -127,7 +127,7 @@ public:
 
 	// Data Access
 	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
-	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::vector<Entity*>& out) const;
+	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out) const;
 	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const;
 	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
 	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;

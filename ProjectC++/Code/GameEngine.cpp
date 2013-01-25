@@ -4,6 +4,8 @@
 #include "HeightChangedAction.h"
 #include "BlendChangedAction.h"
 #include "EntityPlacedAction.h"
+#include "TerrainSetHeightAction.h"
+#include "EntityRemovedAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -103,9 +105,9 @@ void GameEngine::ProcessFrame()
 			{
 				newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
 				if(newPos.x  < 0.0f) continue;
-				else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
+				else if(newPos.x >= (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
 				if(newPos.z  < 0.0f) continue;
-				else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
+				else if(newPos.z >= (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
 
 				tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 				(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0,tempY,0));
@@ -240,7 +242,7 @@ void GameEngine::OnResize(int width, int height)
 
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
-	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX ) )
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH ) )
 		zCurrentActionGroup = 0;
 
 	zLeftMouseDown = false;
@@ -281,6 +283,68 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				}
 			}
 		}
+		else if(this->zMode == MODE::RESETBRUSH)
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				if ( !zCurrentActionGroup )
+				{
+					zCurrentActionGroup = new ActionGroup();
+					ApplyAction(zCurrentActionGroup);
+				}
+
+				TerrainSetHeightAction *TSHA = new TerrainSetHeightAction(
+					zWorld,
+					Vector2(cd.posx, cd.posz),
+					zBrushSize,
+					0
+					);
+
+				TSHA->Execute();
+
+				zCurrentActionGroup->zActions.push_back( TSHA );
+				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+			}
+			zLeftMouseDown = true;
+		}
+		else if (this->zMode == MODE::AIGRIDBRUSH)
+		{
+
+		}
+		else if (this->zMode == MODE::DELETEBRUSH)
+		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				std::set<Entity*> entities;
+				if ( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, entities) )
+				{
+					// Create Event Group
+					if ( !zCurrentActionGroup )
+					{
+						zCurrentActionGroup = new ActionGroup();
+						ApplyAction(zCurrentActionGroup);
+					}
+
+					// Delete Entities
+					for( auto i = entities.begin(); i != entities.end(); ++i )
+					{
+						EntityRemovedAction* ERA = new EntityRemovedAction( 
+							zWorld,
+							*i );
+
+						ERA->Execute();
+						zCurrentActionGroup->zActions.push_back( ERA );
+					}
+
+					zWorldSavedFlag = false;
+				}
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+			}
+			zLeftMouseDown = true;
+		}
 		else if(this->zMode == MODE::PLACE)
 		{
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
@@ -300,15 +364,15 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 		else if ( this->zMode == MODE::RAISE || this->zMode == MODE::LOWER )
 		{
-			if ( !zCurrentActionGroup )
-			{
-				zCurrentActionGroup = new ActionGroup();
-				ApplyAction(zCurrentActionGroup);
-			}
-
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
+				if ( !zCurrentActionGroup )
+				{
+					zCurrentActionGroup = new ActionGroup();
+					ApplyAction(zCurrentActionGroup);
+				}
+
 				HeightChangedAction* HCA = new HeightChangedAction( 
 					zWorld, 
 					Vector2(cd.posx, cd.posz),
@@ -408,7 +472,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				double theta;
 				double x;
 				double z;
-				vector<Entity*> insideCircle;
+				std::set<Entity*> insideCircle;
 				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle) < zBrushStrength )
 				{
 					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
@@ -482,9 +546,25 @@ void GameEngine::CreateWorld( int width, int height )
 }
 
 
-void GameEngine::ChangeMode( int mode )
+void GameEngine::ChangeMode( unsigned int mode )
 {
+	if ( zMode == AIGRIDBRUSH && mode != AIGRIDBRUSH )
+	{
+		if ( zWorldRenderer )
+		{
+			zWorldRenderer->ToggleAIGrid(false);
+		}
+	}
+	else if ( mode == AIGRIDBRUSH )
+	{
+		if ( zWorldRenderer )
+		{
+			zWorldRenderer->ToggleAIGrid(true);
+		}
+	}
+
 	this->zMode = (MODE)mode;
+
 	if(this->zMode == MODE::MOVE)
 	{
 		if(!this->zTargetedEntities.empty())
@@ -506,7 +586,14 @@ void GameEngine::ChangeMode( int mode )
 	}
 
 	// Brush Control
-	if ( zMode == MODE::RAISE || zMode == MODE::LOWER || zMode == MODE::PLACEBRUSH || zMode == MODE::DRAWTEX || zMode == MODE::SMOOTH )
+	if ( zMode == MODE::RAISE || 
+		zMode == MODE::LOWER || 
+		zMode == MODE::PLACEBRUSH || 
+		zMode == MODE::DRAWTEX || 
+		zMode == MODE::SMOOTH || 
+		zMode == MODE::DELETEBRUSH || 
+		zMode == MODE::RESETBRUSH ||
+		zMode == MODE::AIGRIDBRUSH )
 	{
 		zDrawBrush = true;
 	}
@@ -1010,8 +1097,8 @@ void GameEngine::UndoAction()
 		zCurrentActionGroup = 0;
 	}
 
-	zActionHistory[currentActionIndex-1]->Undo();
 	currentActionIndex--;
+	zActionHistory[currentActionIndex]->Undo();
 }
 
 void GameEngine::ClearActionHistory()
@@ -1032,8 +1119,6 @@ void GameEngine::ClearActionHistory()
 void GameEngine::RedoAction()
 {
 	if ( zActionHistory.size() <= currentActionIndex ) return;
-
-	currentActionIndex++;
-
-	zActionHistory[currentActionIndex-1]->Execute();
+	zActionHistory[currentActionIndex]->Execute();
+	currentActionIndex++;	
 }
