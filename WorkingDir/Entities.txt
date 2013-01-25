@@ -53,3 +53,15 @@ Model:Media/Models/GrassPlant_01.ani
 Number:14
 Name:Flag
 Model:Media/Models/Flag/FlagBlue.ani
+
+Number:200
+Name:Deer Spawnpoint
+Model:Media/Scale.obj
+
+Number:201
+Name:Wolf Spawnpoint
+Model:Media/Scale.obj
+
+Number:202
+Name:Bear Spawnpoint
+Model:Media/Scale.obj

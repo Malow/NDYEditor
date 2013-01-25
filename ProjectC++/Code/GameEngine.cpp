@@ -6,6 +6,7 @@
 #include "EntityPlacedAction.h"
 #include "TerrainSetHeightAction.h"
 #include "EntityRemovedAction.h"
+#include "AIGridChangeAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -148,8 +149,10 @@ void GameEngine::ProcessFrame()
 
 				float yPosNew = this->zWorld->GetHeightAtWorldPos(newPlayerTempPos.x, newPlayerTempPos.z);
 				newPlayerTempPos.y += -9.82f * dt;
+
 				if(newPlayerTempPos.y < yPosNew + 1.7f)
 					newPlayerTempPos.y = yPosNew + 1.7f;
+
 				cam->SetPosition(newPlayerTempPos);
 			}
 			else if(dot > 0.2f)
@@ -327,7 +330,30 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 		else if (this->zMode == MODE::AIGRIDBRUSH)
 		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				// Create Event Group
+				if ( !zCurrentActionGroup )
+				{
+					zCurrentActionGroup = new ActionGroup();
+					ApplyAction(zCurrentActionGroup);
+				}
 
+				AIGridChangeAction* AIGCA = new AIGridChangeAction( 
+					zWorld, 
+					Vector2(cd.posx, cd.posz), 
+					zBrushSize, 
+					zBrushStrength );
+
+				AIGCA->Execute();
+
+				zCurrentActionGroup->zActions.push_back(AIGCA);
+
+				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+			}
+			zLeftMouseDown = true;
 		}
 		else if (this->zMode == MODE::DELETEBRUSH)
 		{

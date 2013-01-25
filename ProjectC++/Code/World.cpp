@@ -568,7 +568,6 @@ void World::RemoveEntity( Entity* entity )
 	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
 	zEntities.erase(i);
 	delete entity;
-	entity = 0;
 }
 
 
@@ -835,6 +834,19 @@ bool World::IsBlockingAt( const Vector2& pos )
 }
 
 
+void World::SetBlockingAt( const Vector2& pos, const bool& flag )
+{
+	unsigned int sectorX = (unsigned int)pos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)pos.y / SECTOR_WORLD_SIZE;
+	float localX = fmod(pos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	float localY = fmod(pos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	GetSector(sectorX, sectorY)->SetBlocking( Vector2(localX, localY), flag );
+
+	NotifyObservers(&SectorAIGridChanged(this, sectorX, sectorY));
+}
+
+
 Vector3 World::GetNormalAt( const Vector2& worldPos )
 {
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
@@ -844,6 +856,8 @@ Vector3 World::GetNormalAt( const Vector2& worldPos )
 
 	return GetSector(sectorX, sectorY)->GetNormalAt(localX, localY);
 }
+
+
 Vector3 World::GetNormalAtWorldPos( float posx, float posz )
 {
 	// 1 vector
@@ -890,10 +904,47 @@ Vector3 World::GetNormalAtWorldPos( float posx, float posz )
 
 	Vector3 v4 = Vector3(posx+1, yPos, posz+1);
 
-	// Normal calc
+	// Normal calculation
 	Vector3 c1 = (v1 - v4);
 	Vector3 c2 = (v3 - v2);
 	Vector3 returnVector = (c1).GetCrossProduct(c2);
 	returnVector.Normalize();
 	return returnVector;
+}
+
+unsigned int World::GetAINodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
+{
+	unsigned int counter=0;
+
+	// Calculate Height Node Density
+	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_AI_GRID_SIZE );
+
+	// Snap Center To Closest Position
+	float centerSnapX = floor( center.x / density ) * density;
+	float centerSnapY = floor( center.y / density ) * density;
+
+	for( float x = centerSnapX - radius; x < centerSnapX + radius + 1; x+=density )
+	{
+		// Outside World
+		if ( x < 0.0f || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+			continue;
+
+		for( float y = centerSnapY - radius; y < centerSnapY + radius + 1; y+=density )
+		{
+			// Outside World
+			if ( y < 0.0f || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+				continue;
+
+			// Create Rectangle For Node
+			Rect NodeRect(Vector2(x, y), Vector2(density, density));
+
+			if (DoesIntersect(NodeRect, Circle(center, radius)))
+			{
+				out.insert(Vector2(x,y));
+				counter++;
+			}
+		}
+	}
+
+	return counter;
 }

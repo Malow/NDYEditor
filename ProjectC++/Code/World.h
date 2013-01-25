@@ -123,14 +123,16 @@ public:
 	void Update();
 
 	// AI Grid
+	void SetBlockingAt( const Vector2& pos, const bool& flag );
 	bool IsBlockingAt( const Vector2& pos );
 
 	// Data Access
-	unsigned int GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const;
-	unsigned int GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out) const;
-	unsigned int GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const;
-	unsigned int GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
-	unsigned int GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const;
+	unsigned int GetAINodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;
+	unsigned int GetEntitiesInRect(const Rect& rect, std::set<Entity*>& out) const;
+	unsigned int GetEntitiesInCircle(const Vector2& center, float radius, std::set<Entity*>& out) const;
+	unsigned int GetSectorsInCicle(const Vector2& center, float radius, std::set<Vector2UINT>& out) const;
+	unsigned int GetHeightNodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;
+	unsigned int GetTextureNodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;
 	const std::set< Vector2UINT >& GetLoadedSectors() const { return zLoadedSectors; }
 
 protected:
