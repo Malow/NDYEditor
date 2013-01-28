@@ -255,6 +255,8 @@ namespace Example
 
         private void RenderBox_RightMouseDown(object sender, MouseEventArgs e)
         {
+            m_GameEngine.OnRightMouseDown((uint)e.X, (uint)e.Y);
+
             if (this.m_mode == MODE.DRAWTEX)
             {
                 string temp;
@@ -426,6 +428,7 @@ namespace Example
             this.Panel_PlaceBrush.Hide();
             this.Panel_SmoothTool.Hide();
             this.panel_DeleteCircle.Hide();
+            this.Panel_AIGrid.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
@@ -435,6 +438,7 @@ namespace Example
             this.Panel_PlaceBrush.SendToBack();
             this.Panel_SmoothTool.SendToBack();
             this.panel_DeleteCircle.SendToBack();
+            this.Panel_AIGrid.SendToBack();
         }
 
         private void switchMode()
@@ -568,11 +572,11 @@ namespace Example
                 this.btn_AIGrid.Focus();
                 this.hideAll();
 
-                this.panel_DeleteCircle.Show();
-                this.panel_DeleteCircle.BringToFront();
+                this.Panel_AIGrid.Show();
+                this.Panel_AIGrid.BringToFront();
 
                 if (TextBox_DeleteCircle_Inner.Text != "")
-                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+                    m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_AIGrid_Inner.Text));
             }
         }
         private void setDrawTex(object sender, EventArgs e)
@@ -727,12 +731,6 @@ namespace Example
             this.m_GameEngine.ChangeMode((int)this.m_mode);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ProjectProperties form = new ProjectProperties();
-            form.ShowDialog();
-        }
-
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ProjectProperties form = new ProjectProperties();
@@ -766,6 +764,11 @@ namespace Example
         private void RenderBox_Click(object sender, EventArgs e)
         {
             RenderBox.Focus();
+        }
+
+        private void btn_MakeAI_Click(object sender, EventArgs e)
+        {
+            m_GameEngine.CalculateAIGrid();
         }
     }
 }

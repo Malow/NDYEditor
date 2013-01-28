@@ -90,6 +90,7 @@ public:
 
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
+	void OnRightMouseDown( unsigned int x, unsigned int y );
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);
@@ -97,6 +98,8 @@ public:
 	void OpenWorld(char* msg);
 
 	void RemoveSelectedEntities();
+
+	void CalculateAIGrid();
 
 	// Action History
 	void ApplyAction( Action* a );

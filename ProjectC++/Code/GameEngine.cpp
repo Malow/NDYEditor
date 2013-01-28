@@ -142,7 +142,7 @@ void GameEngine::ProcessFrame()
 			tempGround.Normalize();
 			float dot = dir.GetDotProduct(tempGround);
 
-			if( groundNormal.y <= 0.5f )
+			/*if( groundNormal.y <= 0.5f ) // Falling
 			{
 				Vector3 newPlayerTempPos = pos + (tempGround * dt);
 
@@ -151,8 +151,8 @@ void GameEngine::ProcessFrame()
 				if(newPlayerTempPos.y < yPosNew + 1.7f)
 					newPlayerTempPos.y = yPosNew + 1.7f;
 				cam->SetPosition(newPlayerTempPos);
-			}
-			else if(dot > 0.2f)
+			}*/
+			if(dot > 0.2f)
 			{
 				pos.y += -9.82f * dt;
 				if(pos.y < yPos + 1.7f)
@@ -551,7 +551,10 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 	}
 }
-
+void GameEngine::OnRightMouseDown( unsigned int, unsigned int )
+{
+	
+}
 
 void GameEngine::CreateWorld( int width, int height )
 {
@@ -1145,4 +1148,9 @@ void GameEngine::RedoAction()
 	if ( zActionHistory.size() <= currentActionIndex ) return;
 	zActionHistory[currentActionIndex]->Execute();
 	currentActionIndex++;	
+}
+
+void GameEngine::CalculateAIGrid()
+{
+	// TODO: Implement here.
 }

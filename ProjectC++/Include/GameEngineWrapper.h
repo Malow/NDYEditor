@@ -25,6 +25,7 @@ public:
 
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
+	void OnRightMouseDown( unsigned int x, unsigned int y );
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);
@@ -53,4 +54,6 @@ public:
 	void GetCameraInfo(char* info, float& x, float& y, float& z);
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
+
+	void CalculateAIGrid();
 };
