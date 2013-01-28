@@ -234,3 +234,13 @@ void GameEngineWrapper::CountEntitiesInSector( int& num )
 	num = m_GameEngine->CountEntitiesInSector();
 }
 
+void GameEngineWrapper::OnRightMouseDown( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnRightMouseDown(x,y);
+}
+
+void GameEngineWrapper::CalculateAIGrid()
+{
+	m_GameEngine->CalculateAIGrid();
+}
+

@@ -372,4 +372,14 @@ namespace System { namespace Windows { namespace Interop
 		}
 	}
 
+	void CppCLI::OnRightMouseDown( unsigned int x, unsigned int y )
+	{
+		if ( m_GameEngine ) m_GameEngine->OnRightMouseDown(x,y);
+	}
+
+	void CppCLI::CalculateAIGrid()
+	{
+		m_GameEngine->CalculateAIGrid();
+	}
+
 }}}

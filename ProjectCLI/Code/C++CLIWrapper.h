@@ -36,6 +36,7 @@ namespace System { namespace Windows { namespace Interop
 		void KeyUp(int key);
 		void OnLeftMouseUp( unsigned int x, unsigned int y );
 		void OnLeftMouseDown( unsigned int x, unsigned int y );
+		void OnRightMouseDown( unsigned int x, unsigned int y );
 		void CreateWorld(int x, int y);
 		void SaveWorldAs( String^ filePath );
 		void SaveWorld();
@@ -60,6 +61,7 @@ namespace System { namespace Windows { namespace Interop
 		void SetAmbientLight(  String^ info, float x, float y, float z );
 		void GetNrOfSelectedEntities([Out] int% x);
 		void SetEntityType(int value);
+		void CalculateAIGrid();
 
 	};
 }}}
