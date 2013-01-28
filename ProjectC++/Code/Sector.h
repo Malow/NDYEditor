@@ -13,7 +13,7 @@ static const unsigned int SECTOR_HEIGHT_SIZE = 64;
 static const unsigned int TEXTURE_NAME_LENGTH = 60;
 
 // AI Grid
-static const unsigned int SECTOR_AI_GRID_SIZE = SECTOR_WORLD_SIZE * 2;
+static const unsigned int SECTOR_AI_GRID_SIZE = 63;
 typedef std::bitset< SECTOR_AI_GRID_SIZE * SECTOR_AI_GRID_SIZE > AIGrid;
 
 
@@ -70,9 +70,6 @@ public:
 	Throws when out of bounds
 	*/
 	void SetHeightAt( float x, float y, float val ) throw(...);
-
-	// Returns the normal at point
-	Vector3 GetNormalAt( float localx, float localy ) throw(...);
 
 	// Returns The Texture Name (0<=index<4)
 	const char* const GetTextureName( unsigned int index ) const;

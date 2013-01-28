@@ -176,7 +176,6 @@ void Sector::SetBlocking( const Vector2& pos, bool flag )
 	SetEdited(true);
 }
 
-
 bool Sector::GetBlocking( const Vector2& pos ) const
 {
 	if ( pos.x < 0.0f || pos.x >= 1.0f || pos.y < 0.0f || pos.y >= 1.0f )
@@ -191,33 +190,4 @@ bool Sector::GetBlocking( const Vector2& pos ) const
 
 	// Set Values
 	return zAiGrid[ scaledY * SECTOR_AI_GRID_SIZE + scaledX ];
-}
-
-
-Vector3 Sector::GetNormalAt( float x, float y ) throw(...)
-{
-	float minX = floor(x * SECTOR_HEIGHT_SIZE);
-	float minY = floor(y * SECTOR_HEIGHT_SIZE);
-
-	float maxX = minX + 1.0f;
-	float maxY = minY + 1.0f;
-
-	minX = minX / SECTOR_HEIGHT_SIZE;
-	minY = minY / SECTOR_HEIGHT_SIZE;
-	maxX = maxX / SECTOR_HEIGHT_SIZE;
-	maxY = maxY / SECTOR_HEIGHT_SIZE;
-	
-	Vector3 a(minX, GetHeightAt(minX, minY), minY);
-	Vector3 b(minX, GetHeightAt(minY, maxY), maxY);
-	Vector3 c(maxX, GetHeightAt(maxY, minY), minY);
-	Vector3 d(maxX, GetHeightAt(maxY, maxY), maxY);
-
-	//a.Normalize();
-	//b.Normalize();
-	//c.Normalize();
-	//d.Normalize();
-
-	Vector3 normal = (d-a).GetCrossProduct(c-b);
-	normal.Normalize();
-	return normal;
 }

@@ -66,6 +66,7 @@ public:
 	// World Settings
 	unsigned int GetNumSectorsWidth() const;
 	unsigned int GetNumSectorsHeight() const;
+	Vector2 GetWorldSize() const;
 
 	// Sun Settings
 	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );
@@ -89,14 +90,13 @@ public:
 	Vector3 GetAmbientAtWorldPos( const Vector2& worldPos );
 	
 	// Modify Height Functions
-	void ModifyHeightAt( float x, float y, float value );
-	float GetHeightAt( float x, float y );
-	void SetHeightAt( float x, float y, float value );
-	float GetHeightAtWorldPos( float posx, float posz );
+	void ModifyHeightAt( float x, float y, float value ) throw(...);
+	float GetHeightAt( float x, float y ) throw(...);
+	void SetHeightAt( float x, float y, float value ) throw(...);
+	float CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...);
 
 	// Normals
-	Vector3 GetNormalAt( const Vector2& worldPos );
-	Vector3 GetNormalAtWorldPos( float x, float y );
+	Vector3 CalcNormalAt( const Vector2& worldPos ) throw(...);
 
 	// Modify Blend Functions
 	void ModifyBlendingAt( float x, float y, const Vector4& val );

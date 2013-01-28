@@ -28,7 +28,7 @@ public:
 		{
 			for( auto i = nodes.begin(); i != nodes.end(); ++i )
 			{
-				zChangesMade.push_back(std::pair<Vector2, bool>(zCenter, zWorld->IsBlockingAt(*i)));
+				zChangesMade.push_back(std::pair<Vector2, bool>(*i, zWorld->IsBlockingAt(*i)));
 				zWorld->SetBlockingAt(*i, zFlag);
 			}
 		}

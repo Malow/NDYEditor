@@ -7,6 +7,7 @@
 #include "TerrainSetHeightAction.h"
 #include "EntityRemovedAction.h"
 #include "AIGridChangeAction.h"
+#include "GridCalculateAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -122,9 +123,7 @@ void GameEngine::ProcessFrame()
 	{
 		if ( zFPSLockToGround && zWorld )
 		{
-			iCamera* cam = zGraphics->GetCamera();
 			Vector3 pos = zGraphics->GetCamera()->GetPosition();
-			Vector3 oldPos = pos;
 			Vector3 forward = zGraphics->GetCamera()->GetForward();
 			forward.Normalize();
 			Vector3 sideways = zGraphics->GetCamera()->GetRightVector();
@@ -133,40 +132,13 @@ void GameEngine::ProcessFrame()
 			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.001f * zMovementMulti;
 			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.001f * zMovementMulti;
 
-			float yPos = this->zWorld->GetHeightAtWorldPos(pos.x, pos.z);
-			Vector3 dir = pos - oldPos;
-			Vector3 groundNormal = this->zWorld->GetNormalAtWorldPos(pos.x, pos.z);
-
-			dir.Normalize();
-			Vector3 tempGround = groundNormal;
-			tempGround.y = 0.0f;
-			tempGround.Normalize();
-			float dot = dir.GetDotProduct(tempGround);
-
-			if( groundNormal.y <= 0.5f )
+			if ( pos.x >= 0.0f && pos.z >= 0.0f && pos.x < zWorld->GetWorldSize().x && pos.z < zWorld->GetWorldSize().y )
 			{
-				Vector3 newPlayerTempPos = pos + (tempGround * dt);
-
-				float yPosNew = this->zWorld->GetHeightAtWorldPos(newPlayerTempPos.x, newPlayerTempPos.z);
-				newPlayerTempPos.y += -9.82f * dt;
-
-				if(newPlayerTempPos.y < yPosNew + 1.7f)
-					newPlayerTempPos.y = yPosNew + 1.7f;
-
-				cam->SetPosition(newPlayerTempPos);
-			}
-			else if(dot > 0.2f)
-			{
-				pos.y += -9.82f * dt;
-				if(pos.y < yPos + 1.7f)
-					pos.y = yPos + 1.7f;
-
-				cam->SetPosition(pos);
-			}			
-			else if(groundNormal.y > 0.7f)
-			{
-				pos.y = yPos + 1.7f;
-				cam->SetPosition(pos);
+				if ( !zWorld->IsBlockingAt(pos.GetXZ()) )
+				{
+					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + 1.7f;
+					zGraphics->GetCamera()->SetPosition( pos );
+				}
 			}
 		}
 		else if ( zLockMouseToCamera )
@@ -241,14 +213,14 @@ void GameEngine::ProcessFrame()
 			}
 			else
 			{
-				zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
+				zGraphics->SetSpecialCircle(-1.0f, 0.0f, Vector2(0.0f,0.0f));
 			}
 			zMouseMoved = false;
 		}
 	}
 	else
 	{
-		zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
+		zGraphics->SetSpecialCircle(-1.0f,0.0f,Vector2(0.0f,0.0f));
 	}
 }
 
@@ -545,7 +517,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
 				{
 					// Target = center
-					float targetHeight = zWorld->GetHeightAtWorldPos( cd.posx, cd.posz );
+					float targetHeight = zWorld->CalcHeightAtWorldPos( Vector2(cd.posx, cd.posz) );
 
 					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
@@ -775,6 +747,12 @@ void GameEngine::KeyUp( int key )
 		{
 			UndoAction();
 		}
+	}
+	else if ( key == (int)'O' )
+	{
+		GridCalculateAction* GCA = new GridCalculateAction(zWorld, zWorld->WorldPosToSector(zGraphics->GetCamera()->GetPosition().GetXZ()));
+		ApplyAction(GCA);
+		zWorldSavedFlag = false;
 	}
 	else if ( key == (int)'Y' )
 	{
