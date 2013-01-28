@@ -8,6 +8,7 @@ struct EntInfo
 {
 	std::string entName;
 	std::string entModel;
+	float blockRadius;
 };
 
 static std::vector<EntInfo> entities;
@@ -42,6 +43,10 @@ void LoadEntList( const std::string& fileName ) throw(...)
 		{
 			entities[curNumber-1].entModel = curLine.substr(6, curLine.length() - 6);
 		}
+		else if ( curLine.substr(0,12) == "blockradius:" )
+		{
+			sscanf_s(curLine.c_str(), "blockradius:%f", &entities[curNumber-1].blockRadius);
+		}
 	}
 
 	file.close();
@@ -57,6 +62,12 @@ const std::string& GetEntModel( unsigned int entIndex ) throw(...)
 {
 	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
 	return entities[entIndex-1].entModel;
+}
+
+const float& GetEntBlockRadius( unsigned int entIndex ) throw(...)
+{
+	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
+	return entities[entIndex-1].blockRadius;
 }
 
 unsigned int GetEntListSize()

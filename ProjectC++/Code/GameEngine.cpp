@@ -6,6 +6,8 @@
 #include "EntityPlacedAction.h"
 #include "TerrainSetHeightAction.h"
 #include "EntityRemovedAction.h"
+#include "AIGridChangeAction.h"
+#include "GridCalculateAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -23,6 +25,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
 	zLeftMouseDown(false),
+	zRightMouseDown(false),
 	zBrushStrength(1),
 	zTexBrushSelectedTex(0),
 	zAnchor(0),
@@ -120,9 +123,7 @@ void GameEngine::ProcessFrame()
 	{
 		if ( zFPSLockToGround && zWorld )
 		{
-			iCamera* cam = zGraphics->GetCamera();
 			Vector3 pos = zGraphics->GetCamera()->GetPosition();
-			Vector3 oldPos = pos;
 			Vector3 forward = zGraphics->GetCamera()->GetForward();
 			forward.Normalize();
 			Vector3 sideways = zGraphics->GetCamera()->GetRightVector();
@@ -131,38 +132,13 @@ void GameEngine::ProcessFrame()
 			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.001f * zMovementMulti;
 			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.001f * zMovementMulti;
 
-			float yPos = this->zWorld->GetHeightAtWorldPos(pos.x, pos.z);
-			Vector3 dir = pos - oldPos;
-			Vector3 groundNormal = this->zWorld->GetNormalAtWorldPos(pos.x, pos.z);
-
-			dir.Normalize();
-			Vector3 tempGround = groundNormal;
-			tempGround.y = 0.0f;
-			tempGround.Normalize();
-			float dot = dir.GetDotProduct(tempGround);
-
-			/*if( groundNormal.y <= 0.5f ) // Falling
+			if ( pos.x >= 0.0f && pos.z >= 0.0f && pos.x < zWorld->GetWorldSize().x && pos.z < zWorld->GetWorldSize().y )
 			{
-				Vector3 newPlayerTempPos = pos + (tempGround * dt);
-
-				float yPosNew = this->zWorld->GetHeightAtWorldPos(newPlayerTempPos.x, newPlayerTempPos.z);
-				newPlayerTempPos.y += -9.82f * dt;
-				if(newPlayerTempPos.y < yPosNew + 1.7f)
-					newPlayerTempPos.y = yPosNew + 1.7f;
-				cam->SetPosition(newPlayerTempPos);
-			}*/
-			if(dot > 0.2f)
-			{
-				pos.y += -9.82f * dt;
-				if(pos.y < yPos + 1.7f)
-					pos.y = yPos + 1.7f;
-
-				cam->SetPosition(pos);
-			}			
-			else if(groundNormal.y > 0.7f)
-			{
-				pos.y = yPos + 1.7f;
-				cam->SetPosition(pos);
+				if ( !zWorld->IsBlockingAt(pos.GetXZ()) )
+				{
+					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + 1.7f;
+					zGraphics->GetCamera()->SetPosition( pos );
+				}
 			}
 		}
 		else if ( zLockMouseToCamera )
@@ -226,25 +202,30 @@ void GameEngine::ProcessFrame()
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				zGraphics->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
+				zGraphics->SetSpecialCircle(zBrushSize, zBrushSize+zBrushSizeExtra, Vector2(cd.posx,cd.posz));
 
 				// Brush Drawing
 				if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
 				{
-					this->OnLeftMouseDown(0,0);
+					this->OnLeftMouseDown(0, 0);
+					zBrushLastPos = Vector2(cd.posx, cd.posz);
+				}
+				else if ( zRightMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
+				{
+					this->OnRightMouseDown(0, 0);
 					zBrushLastPos = Vector2(cd.posx, cd.posz);
 				}
 			}
 			else
 			{
-				zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
+				zGraphics->SetSpecialCircle(-1.0f, 0.0f, Vector2(0.0f,0.0f));
 			}
 			zMouseMoved = false;
 		}
 	}
 	else
 	{
-		zGraphics->SetSpecialCircle(-1,0,Vector2(0,0));
+		zGraphics->SetSpecialCircle(-1.0f,0.0f,Vector2(0.0f,0.0f));
 	}
 }
 
@@ -257,7 +238,7 @@ void GameEngine::OnResize(int width, int height)
 
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
-	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH ) )
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH) )
 		zCurrentActionGroup = 0;
 
 	zLeftMouseDown = false;
@@ -283,9 +264,9 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						(*it)->SetSelected(false);
 
 						newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
-						if(newPos.x  < 0.0f) continue;
+						if(newPos.x < 0.0f) continue;
 						else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
-						if(newPos.z  < 0.0f) continue;
+						if(newPos.z < 0.0f) continue;
 						else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
 						
 						tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
@@ -326,7 +307,30 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 		else if (this->zMode == MODE::AIGRIDBRUSH)
 		{
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				// Create Event Group
+				if ( !zCurrentActionGroup )
+				{
+					zCurrentActionGroup = new ActionGroup();
+					ApplyAction(zCurrentActionGroup);
+				}
 
+				AIGridChangeAction* AIGCA = new AIGridChangeAction( 
+					zWorld, 
+					Vector2(cd.posx, cd.posz), 
+					zBrushSize, 
+					true );
+
+				AIGCA->Execute();
+
+				zCurrentActionGroup->zActions.push_back(AIGCA);
+
+				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
+			}
+			zLeftMouseDown = true;
 		}
 		else if (this->zMode == MODE::DELETEBRUSH)
 		{
@@ -518,7 +522,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
 				{
 					// Target = center
-					float targetHeight = zWorld->GetHeightAtWorldPos( cd.posx, cd.posz );
+					float targetHeight = zWorld->CalcHeightAtWorldPos( Vector2(cd.posx, cd.posz) );
 
 					for( auto i = nodes.begin(); i != nodes.end(); ++i )
 					{
@@ -550,10 +554,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 		}
 	}
 }
-void GameEngine::OnRightMouseDown( unsigned int, unsigned int )
-{
-	
-}
+
 
 void GameEngine::CreateWorld( int width, int height )
 {
@@ -1151,7 +1152,52 @@ void GameEngine::RedoAction()
 
 void GameEngine::CalculateAIGrid()
 {
-	// TODO: Implement here.
+	if ( zWorld )
+	{
+		GridCalculateAction* GCA = new GridCalculateAction(zWorld, zWorld->WorldPosToSector(zGraphics->GetCamera()->GetPosition().GetXZ()));
+		ApplyAction(GCA);
+		zWorldSavedFlag = false;
+	}
+}
+
+void GameEngine::OnRightMouseDown( unsigned int x, unsigned int y )
+{
+	if (this->zMode == MODE::AIGRIDBRUSH)
+	{
+		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+		if(cd.collision)
+		{
+			// Create Event Group
+			if ( !zCurrentActionGroup )
+			{
+				zCurrentActionGroup = new ActionGroup();
+				ApplyAction(zCurrentActionGroup);
+			}
+
+			AIGridChangeAction* AIGCA = new AIGridChangeAction( 
+				zWorld, 
+				Vector2(cd.posx, cd.posz), 
+				zBrushSize, 
+				false );
+
+			AIGCA->Execute();
+
+			zCurrentActionGroup->zActions.push_back(AIGCA);
+
+			zWorldSavedFlag = false;
+			zBrushLastPos = Vector2(cd.posx, cd.posz);
+		}
+		zRightMouseDown = true;
+	}
+	
+}
+
+void GameEngine::OnRightMouseUp( unsigned int x, unsigned int y )
+{
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH ) )
+		zCurrentActionGroup = 0;
+
+	zRightMouseDown = false;
 }
 
 float GameEngine::GetSunOnOff()

@@ -17,7 +17,7 @@ enum UPDATEENUM
 class WorldRenderer : Observer
 {
 	std::vector< iTerrain* > zTerrain;
-	std::map< iTerrain*, std::vector<char> > zAIGrids;
+	std::map< iTerrain*, std::vector<unsigned char> > zAIGrids;
 
 	World* zWorld;
 	GraphicsEngine* zGraphics;

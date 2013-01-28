@@ -244,6 +244,10 @@ void GameEngineWrapper::CalculateAIGrid()
 	m_GameEngine->CalculateAIGrid();
 }
 
+void GameEngineWrapper::OnRightMouseUp( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnRightMouseUp(x,y);
+}
 float GameEngineWrapper::GetSunOnOff()
 {
 	return m_GameEngine->GetSunOnOff();
@@ -253,4 +257,3 @@ void GameEngineWrapper::SunOnOff( bool value )
 {
 	m_GameEngine->SunOnOff(value);
 }
-

@@ -1,6 +1,7 @@
 Number:1
 Name:Scale
 Model:Media/Scale.obj
+BlockRadius:0.5
 
 Number:2
 Name:Arrow
@@ -53,7 +54,6 @@ Model:Media/Models/GrassPlant_01.ani
 Number:14
 Name:Flag
 Model:Media/Models/Flag/FlagBlue.ani
-
 Number:15
 Name:Stone_02
 Model:Media/Models/Stone_02_v01.obj
@@ -65,3 +65,15 @@ Model:Media/Models/WaterGrass_01_v01.obj
 Number:17
 Name:WaterGrass_02
 Model:Media/Models/WaterGrass_02.ani
+
+Number:200
+Name:Deer Spawnpoint
+Model:Media/Scale.obj
+
+Number:201
+Name:Wolf Spawnpoint
+Model:Media/Scale.obj
+
+Number:202
+Name:Bear Spawnpoint
+Model:Media/Scale.obj

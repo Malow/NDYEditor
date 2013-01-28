@@ -151,6 +151,14 @@ void WorldRenderer::onEvent( Event* e )
 			u = (UPDATEENUM)(u | UPDATE_TEXTURES);
 		}
 	}
+	else if ( SectorAIGridChanged* SBTC = dynamic_cast<SectorAIGridChanged*>(e) )
+	{
+		if ( SBTC->world == zWorld )
+		{
+			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SBTC->sectorX, SBTC->sectorY) ];
+			u = (UPDATEENUM)(u | UPDATE_AIGRID);
+		}
+	}
 }
 
 
@@ -320,6 +328,9 @@ void WorldRenderer::update()
 		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
 			UpdateSectorTextures(i->first.x, i->first.y);
 
+		if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
+			UpdateSectorAIGrid(i->first.x, i->first.y);
+
 		zUpdatesRequired.erase(i);
 	}
 }
@@ -347,13 +358,16 @@ void WorldRenderer::UpdateSectorAIGrid( unsigned int x, unsigned int y )
 
 		// Data Access
 		AIGrid& sectorGrid = zWorld->GetSector(x,y)->GetAIGrid();
-		zAIGrids[zTerrain[tIndex]].resize(SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE);
+		std::vector<unsigned char> &graphicsGrid = zAIGrids[zTerrain[tIndex]];
+		graphicsGrid.resize(SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE);
+
+		// Bit To Byte
 		for( unsigned int x=0; x<SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE; ++x )
 		{
-			zAIGrids[zTerrain[tIndex]][x] = sectorGrid[x];
+			graphicsGrid[x] = sectorGrid[x] * 255;
 		}
 
-		zTerrain[tIndex]->SetAIGrid(SECTOR_AI_GRID_SIZE, &zAIGrids[zTerrain[tIndex]][0]);
+		zTerrain[tIndex]->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
 		zTerrain[tIndex]->SetAIGridThickness();
 	}
 }

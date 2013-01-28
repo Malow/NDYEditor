@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Action.h" />
+    <ClInclude Include="Code\AIGridChangeAction.h" />
     <ClInclude Include="Code\BlendChangedAction.h" />
     <ClInclude Include="Code\CircleAndRect.h" />
     <ClInclude Include="Code\Debug.h" />
@@ -21,6 +22,7 @@
     <ClInclude Include="Code\EntityRemovedAction.h" />
     <ClInclude Include="Code\GameEngine.h" />
     <ClInclude Include="Code\Graphics.h" />
+    <ClInclude Include="Code\GridCalculateAction.h" />
     <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />

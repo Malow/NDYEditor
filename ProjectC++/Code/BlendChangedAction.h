@@ -66,5 +66,7 @@ public:
 		{
 			zWorld->SetBlendingAt(i->first.x, i->first.y, i->second);
 		}
+
+		zChangesMade.clear();
 	}
 };

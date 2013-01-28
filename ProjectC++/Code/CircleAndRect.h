@@ -64,13 +64,14 @@ inline bool DoesIntersect( const Rect& A, const Rect& B )
 
 inline bool DoesIntersect( const Rect& A, const Circle& B )
 {
-	if ( B.center.x + B.radius > A.topLeft.x && B.center.x - B.radius < A.topLeft.x + A.size.x )
-	{
-		if ( B.center.y + B.radius > A.topLeft.y && B.center.y - B.radius < A.topLeft.y + A.size.y )
-		{
-			float cornerRadius = Vector2(A.size.x/2.0f,A.size.y/2.0f).GetLength();
-			return DoesIntersect( Circle(Vector2(A.topLeft.x+A.size.x/2.0f,A.topLeft.y+A.size.y/2.0f), cornerRadius), B);
-		}
-	}
-	return false;
+	float cornerRadius = Vector2(A.size.x/2.0f,A.size.y/2.0f).GetLength();
+	if ( !DoesIntersect( Circle(Vector2(A.topLeft.x+A.size.x/2.0f,A.topLeft.y+A.size.y/2.0f), cornerRadius), B) )
+		return false;
+
+	if ( B.center.x + B.radius < A.topLeft.x ) return false;
+	if ( B.center.x - B.radius > A.topLeft.x + A.size.x ) return false;
+	if ( B.center.y + B.radius < A.topLeft.y ) return false;
+	if ( B.center.y - B.radius > A.topLeft.y + A.size.y ) return false;
+	
+	return true;
 }

@@ -74,6 +74,9 @@ private:
 	std::vector< Action* > zActionHistory;
 	unsigned int currentActionIndex;
 	ActionGroup *zCurrentActionGroup;
+
+	//Walking on ground
+	bool zRightMouseDown;
 public:
 	GameEngine( GraphicsEngine* GE );
 	virtual ~GameEngine();
@@ -89,6 +92,7 @@ public:
 	void OnLeftMouseUp( unsigned int x, unsigned int y );
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
 	void OnRightMouseDown( unsigned int x, unsigned int y );
+	void OnRightMouseUp( unsigned int x, unsigned int y );
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);
