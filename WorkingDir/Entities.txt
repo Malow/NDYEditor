@@ -53,3 +53,15 @@ Model:Media/Models/GrassPlant_01.ani
 Number:14
 Name:Flag
 Model:Media/Models/Flag/FlagBlue.ani
+
+Number:15
+Name:Flag
+Model:Media/Models/Stone_02_v01.obj
+
+Number:16
+Name:Flag
+Model:Media/Models/WaterGrass_01_v01.obj
+
+Number:17
+Name:Flag
+Model:Media/Models/WaterGrass_02.ani
