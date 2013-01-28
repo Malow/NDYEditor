@@ -55,13 +55,13 @@ Name:Flag
 Model:Media/Models/Flag/FlagBlue.ani
 
 Number:15
-Name:Flag
+Name:Stone_02
 Model:Media/Models/Stone_02_v01.obj
 
 Number:16
-Name:Flag
+Name:WaterGrass_01
 Model:Media/Models/WaterGrass_01_v01.obj
 
 Number:17
-Name:Flag
+Name:WaterGrass_02
 Model:Media/Models/WaterGrass_02.ani
