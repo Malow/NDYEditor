@@ -35,15 +35,14 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true),
 	currentActionIndex(0),
-	zCurrentActionGroup(0),
-	zWalkingToleranceDegrees(45.0f)
+	zCurrentActionGroup(0)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
 	zGraphics->GetKeyListener()->SetCursorVisibility(true);
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	zGraphics->StartRendering();
-
+	prevSunDir = Vector3(0, -1, 0);
 	// Entities
 	LoadEntList("Entities.txt");
 
@@ -1153,4 +1152,22 @@ void GameEngine::RedoAction()
 void GameEngine::CalculateAIGrid()
 {
 	// TODO: Implement here.
+}
+
+float GameEngine::GetSunOnOff()
+{
+	return zGraphics->GetSunLightDirection().GetLength();
+}
+
+void GameEngine::SunOnOff(bool value)
+{
+	if(value)
+	{
+		zGraphics->SetSunLightProperties(prevSunDir, zGraphics->GetSunLightColor());
+	}
+	else
+	{
+		prevSunDir = zGraphics->GetSunLightDirection();
+		zGraphics->SetSunLightDisabled();
+	}
 }

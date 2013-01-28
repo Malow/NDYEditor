@@ -244,3 +244,13 @@ void GameEngineWrapper::CalculateAIGrid()
 	m_GameEngine->CalculateAIGrid();
 }
 
+float GameEngineWrapper::GetSunOnOff()
+{
+	return m_GameEngine->GetSunOnOff();
+}
+
+void GameEngineWrapper::SunOnOff( bool value )
+{
+	m_GameEngine->SunOnOff(value);
+}
+

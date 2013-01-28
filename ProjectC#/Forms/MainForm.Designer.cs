@@ -109,13 +109,6 @@
             this.TextBox_OuterCircle_Smooth = new System.Windows.Forms.TextBox();
             this.Label_Inner_Smooth = new System.Windows.Forms.Label();
             this.TextBox_InnerCircle_Smooth = new System.Windows.Forms.TextBox();
-            this.panel_DeleteCircle = new System.Windows.Forms.Panel();
-            this.TextBox_DeleteCircle_Inner = new System.Windows.Forms.TextBox();
-            this.label_DeleteCircle_Circle = new System.Windows.Forms.Label();
-            this.Panel_AIGrid = new System.Windows.Forms.Panel();
-            this.btn_MakeAI = new System.Windows.Forms.Button();
-            this.TextBox_AIGrid_Inner = new System.Windows.Forms.TextBox();
-            this.Label_AIGrid_Circle = new System.Windows.Forms.Label();
             this.Panel_PlaceBrush = new System.Windows.Forms.Panel();
             this.TextBox_StrengthCircle = new System.Windows.Forms.TextBox();
             this.Label_StrengthCircle = new System.Windows.Forms.Label();
@@ -149,6 +142,13 @@
             this.Label_Tex3 = new System.Windows.Forms.Label();
             this.Label_Tex2 = new System.Windows.Forms.Label();
             this.Label_Tex1 = new System.Windows.Forms.Label();
+            this.panel_DeleteCircle = new System.Windows.Forms.Panel();
+            this.TextBox_DeleteCircle_Inner = new System.Windows.Forms.TextBox();
+            this.label_DeleteCircle_Circle = new System.Windows.Forms.Label();
+            this.Panel_AIGrid = new System.Windows.Forms.Panel();
+            this.btn_MakeAI = new System.Windows.Forms.Button();
+            this.TextBox_AIGrid_Inner = new System.Windows.Forms.TextBox();
+            this.Label_AIGrid_Circle = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
@@ -171,13 +171,13 @@
             this.Panel_Tex_Picker.SuspendLayout();
             this.GroupBox_DrawTex.SuspendLayout();
             this.Panel_SmoothTool.SuspendLayout();
-            this.panel_DeleteCircle.SuspendLayout();
-            this.Panel_AIGrid.SuspendLayout();
             this.Panel_PlaceBrush.SuspendLayout();
             this.Panel_Lower_Raise_Ground.SuspendLayout();
             this.Panel_ObjectInfo.SuspendLayout();
             this.Panel_PlaceObject.SuspendLayout();
             this.Panel_Textures.SuspendLayout();
+            this.panel_DeleteCircle.SuspendLayout();
+            this.Panel_AIGrid.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -704,7 +704,6 @@
             this.TextBox_Pos_X.TabIndex = 0;
             this.TextBox_Pos_X.Text = "0";
             this.TextBox_Pos_X.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
-            this.TextBox_Pos_X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Scale_Z
             // 
@@ -746,7 +745,6 @@
             this.TextBox_Pos_Y.TabIndex = 2;
             this.TextBox_Pos_Y.Text = "0";
             this.TextBox_Pos_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
-            this.TextBox_Pos_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Scale_Y
             // 
@@ -848,7 +846,6 @@
             this.TextBox_Rot_X.TabIndex = 7;
             this.TextBox_Rot_X.Text = "0";
             this.TextBox_Rot_X.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
-            this.TextBox_Rot_X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // TextBox_Rot_Z
             // 
@@ -860,7 +857,6 @@
             this.TextBox_Rot_Z.TabIndex = 11;
             this.TextBox_Rot_Z.Text = "0";
             this.TextBox_Rot_Z.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
-            this.TextBox_Rot_Z.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Rot_X
             // 
@@ -881,7 +877,6 @@
             this.TextBox_Rot_Y.TabIndex = 9;
             this.TextBox_Rot_Y.Text = "0";
             this.TextBox_Rot_Y.TextChanged += new System.EventHandler(this.SetSelecetedObjectInfo);
-            this.TextBox_Rot_Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Panel_Tex_Picker
             // 
@@ -1133,83 +1128,6 @@
             this.TextBox_InnerCircle_Smooth.Text = "1";
             this.TextBox_InnerCircle_Smooth.TextChanged += new System.EventHandler(this.SetBrushAttr);
             this.TextBox_InnerCircle_Smooth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // panel_DeleteCircle
-            // 
-            this.panel_DeleteCircle.Controls.Add(this.TextBox_DeleteCircle_Inner);
-            this.panel_DeleteCircle.Controls.Add(this.label_DeleteCircle_Circle);
-            this.panel_DeleteCircle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_DeleteCircle.Location = new System.Drawing.Point(0, 0);
-            this.panel_DeleteCircle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panel_DeleteCircle.Name = "panel_DeleteCircle";
-            this.panel_DeleteCircle.Size = new System.Drawing.Size(208, 332);
-            this.panel_DeleteCircle.TabIndex = 16;
-            this.panel_DeleteCircle.Visible = false;
-            // 
-            // TextBox_DeleteCircle_Inner
-            // 
-            this.TextBox_DeleteCircle_Inner.AccessibleName = "InnerCircle";
-            this.TextBox_DeleteCircle_Inner.Location = new System.Drawing.Point(69, 20);
-            this.TextBox_DeleteCircle_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_DeleteCircle_Inner.Name = "TextBox_DeleteCircle_Inner";
-            this.TextBox_DeleteCircle_Inner.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_DeleteCircle_Inner.TabIndex = 1;
-            this.TextBox_DeleteCircle_Inner.Text = "1";
-            this.TextBox_DeleteCircle_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_DeleteCircle_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // label_DeleteCircle_Circle
-            // 
-            this.label_DeleteCircle_Circle.AutoSize = true;
-            this.label_DeleteCircle_Circle.Location = new System.Drawing.Point(16, 22);
-            this.label_DeleteCircle_Circle.Name = "label_DeleteCircle_Circle";
-            this.label_DeleteCircle_Circle.Size = new System.Drawing.Size(47, 17);
-            this.label_DeleteCircle_Circle.TabIndex = 0;
-            this.label_DeleteCircle_Circle.Text = "Circle:";
-            // 
-            // Panel_AIGrid
-            // 
-            this.Panel_AIGrid.Controls.Add(this.btn_MakeAI);
-            this.Panel_AIGrid.Controls.Add(this.TextBox_AIGrid_Inner);
-            this.Panel_AIGrid.Controls.Add(this.Label_AIGrid_Circle);
-            this.Panel_AIGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Panel_AIGrid.Location = new System.Drawing.Point(0, 0);
-            this.Panel_AIGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Panel_AIGrid.Name = "Panel_AIGrid";
-            this.Panel_AIGrid.Size = new System.Drawing.Size(208, 332);
-            this.Panel_AIGrid.TabIndex = 17;
-            this.Panel_AIGrid.Visible = false;
-            // 
-            // btn_MakeAI
-            // 
-            this.btn_MakeAI.Location = new System.Drawing.Point(19, 47);
-            this.btn_MakeAI.Name = "btn_MakeAI";
-            this.btn_MakeAI.Size = new System.Drawing.Size(75, 23);
-            this.btn_MakeAI.TabIndex = 2;
-            this.btn_MakeAI.Text = "Make AI";
-            this.btn_MakeAI.UseVisualStyleBackColor = true;
-            this.btn_MakeAI.Click += new System.EventHandler(this.btn_MakeAI_Click);
-            // 
-            // TextBox_AIGrid_Inner
-            // 
-            this.TextBox_AIGrid_Inner.AccessibleName = "InnerCircle";
-            this.TextBox_AIGrid_Inner.Location = new System.Drawing.Point(69, 20);
-            this.TextBox_AIGrid_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TextBox_AIGrid_Inner.Name = "TextBox_AIGrid_Inner";
-            this.TextBox_AIGrid_Inner.Size = new System.Drawing.Size(100, 22);
-            this.TextBox_AIGrid_Inner.TabIndex = 1;
-            this.TextBox_AIGrid_Inner.Text = "1";
-            this.TextBox_AIGrid_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
-            this.TextBox_AIGrid_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
-            // 
-            // Label_AIGrid_Circle
-            // 
-            this.Label_AIGrid_Circle.AutoSize = true;
-            this.Label_AIGrid_Circle.Location = new System.Drawing.Point(16, 22);
-            this.Label_AIGrid_Circle.Name = "Label_AIGrid_Circle";
-            this.Label_AIGrid_Circle.Size = new System.Drawing.Size(47, 17);
-            this.Label_AIGrid_Circle.TabIndex = 0;
-            this.Label_AIGrid_Circle.Text = "Circle:";
             // 
             // Panel_PlaceBrush
             // 
@@ -1577,6 +1495,83 @@
             this.Label_Tex1.TabIndex = 8;
             this.Label_Tex1.Text = "Texture 1";
             // 
+            // panel_DeleteCircle
+            // 
+            this.panel_DeleteCircle.Controls.Add(this.TextBox_DeleteCircle_Inner);
+            this.panel_DeleteCircle.Controls.Add(this.label_DeleteCircle_Circle);
+            this.panel_DeleteCircle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_DeleteCircle.Location = new System.Drawing.Point(0, 0);
+            this.panel_DeleteCircle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.panel_DeleteCircle.Name = "panel_DeleteCircle";
+            this.panel_DeleteCircle.Size = new System.Drawing.Size(208, 332);
+            this.panel_DeleteCircle.TabIndex = 16;
+            this.panel_DeleteCircle.Visible = false;
+            // 
+            // TextBox_DeleteCircle_Inner
+            // 
+            this.TextBox_DeleteCircle_Inner.AccessibleName = "InnerCircle";
+            this.TextBox_DeleteCircle_Inner.Location = new System.Drawing.Point(69, 20);
+            this.TextBox_DeleteCircle_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_DeleteCircle_Inner.Name = "TextBox_DeleteCircle_Inner";
+            this.TextBox_DeleteCircle_Inner.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_DeleteCircle_Inner.TabIndex = 1;
+            this.TextBox_DeleteCircle_Inner.Text = "1";
+            this.TextBox_DeleteCircle_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_DeleteCircle_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // label_DeleteCircle_Circle
+            // 
+            this.label_DeleteCircle_Circle.AutoSize = true;
+            this.label_DeleteCircle_Circle.Location = new System.Drawing.Point(16, 22);
+            this.label_DeleteCircle_Circle.Name = "label_DeleteCircle_Circle";
+            this.label_DeleteCircle_Circle.Size = new System.Drawing.Size(47, 17);
+            this.label_DeleteCircle_Circle.TabIndex = 0;
+            this.label_DeleteCircle_Circle.Text = "Circle:";
+            // 
+            // Panel_AIGrid
+            // 
+            this.Panel_AIGrid.Controls.Add(this.btn_MakeAI);
+            this.Panel_AIGrid.Controls.Add(this.TextBox_AIGrid_Inner);
+            this.Panel_AIGrid.Controls.Add(this.Label_AIGrid_Circle);
+            this.Panel_AIGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Panel_AIGrid.Location = new System.Drawing.Point(0, 0);
+            this.Panel_AIGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Panel_AIGrid.Name = "Panel_AIGrid";
+            this.Panel_AIGrid.Size = new System.Drawing.Size(208, 332);
+            this.Panel_AIGrid.TabIndex = 17;
+            this.Panel_AIGrid.Visible = false;
+            // 
+            // btn_MakeAI
+            // 
+            this.btn_MakeAI.Location = new System.Drawing.Point(19, 47);
+            this.btn_MakeAI.Name = "btn_MakeAI";
+            this.btn_MakeAI.Size = new System.Drawing.Size(75, 23);
+            this.btn_MakeAI.TabIndex = 2;
+            this.btn_MakeAI.Text = "Make AI";
+            this.btn_MakeAI.UseVisualStyleBackColor = true;
+            this.btn_MakeAI.Click += new System.EventHandler(this.btn_MakeAI_Click);
+            // 
+            // TextBox_AIGrid_Inner
+            // 
+            this.TextBox_AIGrid_Inner.AccessibleName = "InnerCircle";
+            this.TextBox_AIGrid_Inner.Location = new System.Drawing.Point(69, 20);
+            this.TextBox_AIGrid_Inner.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TextBox_AIGrid_Inner.Name = "TextBox_AIGrid_Inner";
+            this.TextBox_AIGrid_Inner.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_AIGrid_Inner.TabIndex = 1;
+            this.TextBox_AIGrid_Inner.Text = "1";
+            this.TextBox_AIGrid_Inner.TextChanged += new System.EventHandler(this.SetBrushAttr);
+            this.TextBox_AIGrid_Inner.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
+            // 
+            // Label_AIGrid_Circle
+            // 
+            this.Label_AIGrid_Circle.AutoSize = true;
+            this.Label_AIGrid_Circle.Location = new System.Drawing.Point(16, 22);
+            this.Label_AIGrid_Circle.Name = "Label_AIGrid_Circle";
+            this.Label_AIGrid_Circle.Size = new System.Drawing.Size(47, 17);
+            this.Label_AIGrid_Circle.TabIndex = 0;
+            this.Label_AIGrid_Circle.Text = "Circle:";
+            // 
             // NDYEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1624,10 +1619,6 @@
             this.GroupBox_DrawTex.PerformLayout();
             this.Panel_SmoothTool.ResumeLayout(false);
             this.Panel_SmoothTool.PerformLayout();
-            this.panel_DeleteCircle.ResumeLayout(false);
-            this.panel_DeleteCircle.PerformLayout();
-            this.Panel_AIGrid.ResumeLayout(false);
-            this.Panel_AIGrid.PerformLayout();
             this.Panel_PlaceBrush.ResumeLayout(false);
             this.Panel_PlaceBrush.PerformLayout();
             this.Panel_Lower_Raise_Ground.ResumeLayout(false);
@@ -1638,6 +1629,10 @@
             this.Panel_PlaceObject.PerformLayout();
             this.Panel_Textures.ResumeLayout(false);
             this.Panel_Textures.PerformLayout();
+            this.panel_DeleteCircle.ResumeLayout(false);
+            this.panel_DeleteCircle.PerformLayout();
+            this.Panel_AIGrid.ResumeLayout(false);
+            this.Panel_AIGrid.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -382,4 +382,14 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->CalculateAIGrid();
 	}
 
+	void CppCLI::GetSunOnOff( [Out] float% onOff )
+	{
+		onOff = m_GameEngine->GetSunOnOff();
+	}
+
+	void CppCLI::SunOnOff( bool value )
+	{
+		m_GameEngine->SunOnOff(value);
+	}
+
 }}}

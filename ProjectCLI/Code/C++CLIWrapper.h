@@ -62,6 +62,8 @@ namespace System { namespace Windows { namespace Interop
 		void GetNrOfSelectedEntities([Out] int% x);
 		void SetEntityType(int value);
 		void CalculateAIGrid();
+		void GetSunOnOff([Out] float% onOff);
+		void SunOnOff(bool value);
 
 	};
 }}}
