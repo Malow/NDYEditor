@@ -244,3 +244,8 @@ void GameEngineWrapper::CalculateAIGrid()
 	m_GameEngine->CalculateAIGrid();
 }
 
+void GameEngineWrapper::OnRightMouseUp( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnRightMouseUp(x,y);
+}
+

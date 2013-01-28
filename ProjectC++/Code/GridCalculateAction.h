@@ -17,7 +17,6 @@ public:
 		zWorld(world),
 		zSector(sector)
 	{
-
 	}
 
 
@@ -66,6 +65,22 @@ public:
 				catch(...)
 				{
 
+				}
+			}
+		}
+
+		std::set<Entity*> ents;
+		if ( zWorld->GetEntitiesInRect(Rect(Vector2(zSector.x, zSector.y), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE)), ents) )
+		{
+			for( auto e = ents.cbegin(); e != ents.cend(); ++e )
+			{
+				std::set< Vector2 > blocks;
+				if ( zWorld->GetAINodesInCircle((*e)->GetPosition().GetXZ(), GetEntBlockRadius((*e)->GetType()), blocks) )
+				{
+					for( auto b = blocks.begin(); b != blocks.end(); ++b )
+					{
+						zWorld->SetBlockingAt(*b, true);
+					}
 				}
 			}
 		}

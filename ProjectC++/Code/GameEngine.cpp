@@ -25,6 +25,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zBrushSizeExtra(0.0f),
 	zDrawBrush(false),
 	zLeftMouseDown(false),
+	zRightMouseDown(false),
 	zBrushStrength(1),
 	zTexBrushSelectedTex(0),
 	zAnchor(0),
@@ -202,12 +203,17 @@ void GameEngine::ProcessFrame()
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if(cd.collision)
 			{
-				zGraphics->SetSpecialCircle(zBrushSize,zBrushSize+zBrushSizeExtra,Vector2(cd.posx,cd.posz));
+				zGraphics->SetSpecialCircle(zBrushSize, zBrushSize+zBrushSizeExtra, Vector2(cd.posx,cd.posz));
 
 				// Brush Drawing
 				if ( zLeftMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
 				{
-					this->OnLeftMouseDown(0,0);
+					this->OnLeftMouseDown(0, 0);
+					zBrushLastPos = Vector2(cd.posx, cd.posz);
+				}
+				else if ( zRightMouseDown && Vector2(zBrushLastPos - Vector2(cd.posx, cd.posz) ).GetLength() > zBrushSize/2.0f )
+				{
+					this->OnRightMouseDown(0, 0);
 					zBrushLastPos = Vector2(cd.posx, cd.posz);
 				}
 			}
@@ -233,7 +239,7 @@ void GameEngine::OnResize(int width, int height)
 
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
-	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH ) )
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH) )
 		zCurrentActionGroup = 0;
 
 	zLeftMouseDown = false;
@@ -259,9 +265,9 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						(*it)->SetSelected(false);
 
 						newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
-						if(newPos.x  < 0.0f) continue;
+						if(newPos.x < 0.0f) continue;
 						else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
-						if(newPos.z  < 0.0f) continue;
+						if(newPos.z < 0.0f) continue;
 						else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
 						
 						tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
@@ -316,7 +322,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					zWorld, 
 					Vector2(cd.posx, cd.posz), 
 					zBrushSize, 
-					zBrushStrength );
+					true );
 
 				AIGCA->Execute();
 
@@ -748,12 +754,6 @@ void GameEngine::KeyUp( int key )
 			UndoAction();
 		}
 	}
-	else if ( key == (int)'O' )
-	{
-		GridCalculateAction* GCA = new GridCalculateAction(zWorld, zWorld->WorldPosToSector(zGraphics->GetCamera()->GetPosition().GetXZ()));
-		ApplyAction(GCA);
-		zWorldSavedFlag = false;
-	}
 	else if ( key == (int)'Y' )
 	{
 		if ( zGraphics->GetKeyListener()->IsPressed(17) )
@@ -1149,4 +1149,54 @@ void GameEngine::RedoAction()
 	if ( zActionHistory.size() <= currentActionIndex ) return;
 	zActionHistory[currentActionIndex]->Execute();
 	currentActionIndex++;	
+}
+
+void GameEngine::CalculateAIGrid()
+{
+	if ( zWorld )
+	{
+		GridCalculateAction* GCA = new GridCalculateAction(zWorld, zWorld->WorldPosToSector(zGraphics->GetCamera()->GetPosition().GetXZ()));
+		ApplyAction(GCA);
+		zWorldSavedFlag = false;
+	}
+}
+
+void GameEngine::OnRightMouseDown( unsigned int x, unsigned int y )
+{
+	if (this->zMode == MODE::AIGRIDBRUSH)
+	{
+		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+		if(cd.collision)
+		{
+			// Create Event Group
+			if ( !zCurrentActionGroup )
+			{
+				zCurrentActionGroup = new ActionGroup();
+				ApplyAction(zCurrentActionGroup);
+			}
+
+			AIGridChangeAction* AIGCA = new AIGridChangeAction( 
+				zWorld, 
+				Vector2(cd.posx, cd.posz), 
+				zBrushSize, 
+				false );
+
+			AIGCA->Execute();
+
+			zCurrentActionGroup->zActions.push_back(AIGCA);
+
+			zWorldSavedFlag = false;
+			zBrushLastPos = Vector2(cd.posx, cd.posz);
+		}
+		zRightMouseDown = true;
+	}
+	
+}
+
+void GameEngine::OnRightMouseUp( unsigned int x, unsigned int y )
+{
+	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH ) )
+		zCurrentActionGroup = 0;
+
+	zRightMouseDown = false;
 }

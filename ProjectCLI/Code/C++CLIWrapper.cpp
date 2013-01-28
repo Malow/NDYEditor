@@ -382,4 +382,9 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->CalculateAIGrid();
 	}
 
+	void CppCLI::OnRightMouseUp( unsigned int x, unsigned int y )
+	{
+		if ( m_GameEngine ) m_GameEngine->OnRightMouseUp(x,y);
+	}
+
 }}}

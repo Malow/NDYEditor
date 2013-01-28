@@ -45,7 +45,7 @@ void LoadEntList( const std::string& fileName ) throw(...)
 		}
 		else if ( curLine.substr(0,12) == "blockradius:" )
 		{
-			sscanf_s(curLine, "block radius:%f", entities[curNumber-1].blockRadius);
+			sscanf_s(curLine.c_str(), "blockradius:%f", &entities[curNumber-1].blockRadius);
 		}
 	}
 

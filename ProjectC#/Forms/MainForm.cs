@@ -604,7 +604,15 @@ namespace Example
 
 		private void RenderBox_MouseUp(object sender, MouseEventArgs e)
         {
-            m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
+            if (e.Button == MouseButtons.Left)
+            {
+                m_GameEngine.OnLeftMouseUp((uint)e.X, (uint)e.Y);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                m_GameEngine.OnRightMouseUp((uint)e.X, (uint)e.Y);
+            }
+            
         }
 
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)

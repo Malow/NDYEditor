@@ -877,28 +877,27 @@ unsigned int World::GetAINodesInCircle( const Vector2& center, float radius, std
 	// Calculate Height Node Density
 	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_AI_GRID_SIZE );
 
-	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x / density ) * density;
-	float centerSnapY = floor( center.y / density ) * density;
-
-	for( float x = centerSnapX - radius; x < centerSnapX + radius + 1; x+=density )
+	for( float x = center.x-radius-density; x <= center.x+radius+density; x+=density )
 	{
 		// Outside World
 		if ( x < 0.0f || x > GetWorldSize().x )
 			continue;
 
-		for( float y = centerSnapY - radius; y < centerSnapY + radius + 1; y+=density )
+		for( float y = center.y-radius-density; y <= center.y+radius+density; y+=density )
 		{
 			// Outside World
 			if ( y < 0.0f || y > GetWorldSize().y )
 				continue;
 
-			// Create Rectangle For Node
-			Rect NodeRect(Vector2(x, y), Vector2(density, density));
+			Vector2 snap;
+			snap.x = floor(x / density) * density;
+			snap.y = floor(y / density) * density;
 
-			if (DoesIntersect(NodeRect, Circle(center, radius)))
+			Rect r(snap, Vector2(density,density));
+
+			if (DoesIntersect(r, Circle(center,radius)))
 			{
-				out.insert(Vector2(x,y));
+				out.insert( Vector2(snap.x, snap.y) );
 				counter++;
 			}
 		}

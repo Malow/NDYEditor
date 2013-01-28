@@ -136,22 +136,26 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 	{
 		float boolColor = AIMap.Sample(PointClampSampler, input.tex).r;
 
-		//If node is blocked, render it red (true = 1 = red).
-		if(boolColor == 1.0f)
-		{
-			finalColor.r = 1.0f; //Render non-traversable/blocked nodes
-		}
-		else if(textured)
+		if(textured)
 		{
 			finalColor = RenderTextured(textureScale, input.tex, blendMapped);
+		}
+		//If node is blocked, add 50% redness (true = 1 = red).
+		if(boolColor == 1.0f)
+		{
+			finalColor.r += 0.5f; //Render non-traversable/blocked nodes
+			finalColor.r *= 0.66666666f;
 		}
 
 		//Render grid
 		float deltaXY = 1.0f / nodesPerSide;
 		float texX = fmod(input.tex.x, deltaXY);
 		float texY = fmod(input.tex.y, deltaXY);
-		if(	texX > 0.0f && texX < AIGridThickness || 
+		/*if(	texX > 0.0f && texX < AIGridThickness || 
 			texY >  0.0f && texY < AIGridThickness) 
+		{*/
+		if(texX > deltaXY - (AIGridThickness * 0.5f) || texX < (AIGridThickness * 0.5f) || 
+			texY > deltaXY - (AIGridThickness * 0.5f) || texY < (AIGridThickness * 0.5f)) 
 		{
 			finalColor.rgb = 1.0f;
 		}
