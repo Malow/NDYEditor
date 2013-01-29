@@ -10,6 +10,7 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Example
 {
@@ -670,21 +671,42 @@ namespace Example
             if ((sender as TextBox).Enabled == true)
             {
                 string info = (sender as TextBox).AccessibleName;
-
+                string pattern = "^[-+]?[0-9]*\\.?[0-9]*$";
                 if (info == "pos")
-                    if ((TextBox_Pos_X.Text != "") && (TextBox_Pos_Y.Text != "") && (TextBox_Pos_Z.Text != ""))
-                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Pos_X.Text), float.Parse(TextBox_Pos_Y.Text),
-                            float.Parse(TextBox_Pos_Z.Text));
+                {
+                    float x, y, z;
+                    bool boolX, boolY, boolZ;
+                    boolX = float.TryParse(TextBox_Pos_X.Text, out x);
+                    boolY = float.TryParse(TextBox_Pos_Y.Text, out y);
+                    boolZ = float.TryParse(TextBox_Pos_Z.Text, out z);
+
+                    if(boolX && boolY && boolZ)
+                        m_GameEngine.SetSelectedObjectInfo(info, x, y, z);
+                }
 
                 if (info == "rot")
-                    if ((TextBox_Rot_X.Text != "") && (TextBox_Rot_Y.Text != "") && (TextBox_Rot_Z.Text != ""))
-                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Rot_X.Text), float.Parse(TextBox_Rot_Y.Text),
-                               float.Parse(TextBox_Rot_Z.Text));
+                {
+                    float x, y, z;
+                    bool boolX, boolY, boolZ;
+                    boolX = float.TryParse(TextBox_Rot_X.Text, out x);
+                    boolY = float.TryParse(TextBox_Rot_Y.Text, out y);
+                    boolZ = float.TryParse(TextBox_Rot_Z.Text, out z);
+
+                    if (boolX && boolY && boolZ)
+                        m_GameEngine.SetSelectedObjectInfo(info, x, y, z);
+                }
 
                 if (info == "scale")
-                    if ((TextBox_Scale_X.Text != "") && (TextBox_Scale_Y.Text != "") && (TextBox_Scale_Z.Text != ""))
-                        m_GameEngine.SetSelectedObjectInfo(info, float.Parse(TextBox_Scale_X.Text), float.Parse(TextBox_Scale_Y.Text),
-                               float.Parse(TextBox_Scale_Z.Text));
+                {
+                    float x, y, z;
+                    bool boolX, boolY, boolZ;
+                    boolX = float.TryParse(TextBox_Scale_X.Text, out x);
+                    boolY = float.TryParse(TextBox_Scale_Y.Text, out y);
+                    boolZ = float.TryParse(TextBox_Scale_Z.Text, out z);
+
+                    if (boolX && boolY && boolZ)
+                        m_GameEngine.SetSelectedObjectInfo(info, x, y, z);
+                }
             }
         }
 
@@ -777,6 +799,22 @@ namespace Example
         private void btn_MakeAI_Click(object sender, EventArgs e)
         {
             m_GameEngine.CalculateAIGrid();
+        }
+
+        private void shadowOnOffToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            shadowOnOffToolStripMenuItem.Checked = !shadowOnOffToolStripMenuItem.Checked;
+            m_GameEngine.SunOnOff(shadowOnOffToolStripMenuItem.Checked);
+        }
+
+        private void worldToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            float tempOnOff = 0;
+            m_GameEngine.GetSunOnOff(out tempOnOff);
+            if (tempOnOff > 0)
+                shadowOnOffToolStripMenuItem.Checked = true;
+            else
+                shadowOnOffToolStripMenuItem.Checked = false;
         }
     }
 }

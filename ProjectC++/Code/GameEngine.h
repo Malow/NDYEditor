@@ -34,6 +34,7 @@ private:
 	WorldRenderer *zWorldRenderer;
 	WorldAnchor* zAnchor;
 	bool zWorldSavedFlag;
+	Vector3 prevSunDir;
 
 	// Camera
 	bool zLockMouseToCamera;
@@ -75,7 +76,6 @@ private:
 	ActionGroup *zCurrentActionGroup;
 
 	//Walking on ground
-	float zWalkingToleranceDegrees;
 	bool zRightMouseDown;
 public:
 	GameEngine( GraphicsEngine* GE );
@@ -102,6 +102,8 @@ public:
 	void RemoveSelectedEntities();
 
 	void CalculateAIGrid();
+	float GetSunOnOff();
+	void SunOnOff(bool value);
 
 	// Action History
 	void ApplyAction( Action* a );

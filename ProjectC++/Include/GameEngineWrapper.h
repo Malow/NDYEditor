@@ -57,4 +57,6 @@ public:
 	void SetAmbientLight(char* info, float x, float y, float z);
 
 	void CalculateAIGrid();
+	float GetSunOnOff();
+	void SunOnOff(bool value);
 };

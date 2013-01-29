@@ -386,5 +386,13 @@ namespace System { namespace Windows { namespace Interop
 	{
 		if ( m_GameEngine ) m_GameEngine->OnRightMouseUp(x,y);
 	}
+	void CppCLI::GetSunOnOff( [Out] float% onOff )
+	{
+		onOff = m_GameEngine->GetSunOnOff();
+	}
 
+	void CppCLI::SunOnOff( bool value )
+	{
+		m_GameEngine->SunOnOff(value);
+	}
 }}}
