@@ -39,7 +39,14 @@ public:
 			{
 				Vector2 centerPoint = Vector2(x,y);
 				centerPoint += density * 0.5f;
-				zPrevBlocks.push_back( std::pair<Vector2, bool>(centerPoint, zWorld->IsBlockingAt(centerPoint) ) );
+				try
+				{
+					zPrevBlocks.push_back( std::pair<Vector2, bool>(centerPoint, zWorld->IsBlockingAt(centerPoint) ) );
+				}
+				catch(...)
+				{
+
+				}
 			}
 		}
 
