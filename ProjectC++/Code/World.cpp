@@ -514,18 +514,24 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 	for( float x = center.x - radius; x < center.x + radius; x+=density )
 	{
 		// Outside World
-		if ( x < 0.0f || x >= GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		if ( x < 0.0f || x >= GetWorldSize().x )
 			continue;
 
 		for( float y = center.y - radius; y < center.y + radius; y+=density )
 		{
 			// Outside World
-			if ( y < 0.0f || y >= GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( y < 0.0f || y >= GetWorldSize().y )
 				continue;
 
-			if ( Circle(Vector2(center.x, center.y), radius).IsInside(Vector2(x, y) ) )
+			// Snap it
+			Vector2 snap;
+			snap.x = floor(x / density) * density;
+			snap.y = floor(y / density) * density;
+
+
+			if ( Circle(Vector2(center.x, center.y), radius).IsInside(Vector2(snap.x, snap.y) ) )
 			{
-				out.insert( Vector2(x,y) );
+				out.insert(Vector2(snap.x, snap.y));
 				counter++;
 			}
 		}

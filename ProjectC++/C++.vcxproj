@@ -26,6 +26,7 @@
     <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
+    <ClInclude Include="Code\SmoothAction.h" />
     <ClInclude Include="Code\TerrainSetHeightAction.h" />
     <ClInclude Include="Code\World.h" />
     <ClInclude Include="Code\WorldEvents.h" />

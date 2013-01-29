@@ -8,6 +8,7 @@
 #include "EntityRemovedAction.h"
 #include "AIGridChangeAction.h"
 #include "GridCalculateAction.h"
+#include "SmoothAction.h"
 #include <math.h>
 #include <time.h>
 
@@ -519,38 +520,25 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if( cd.collision )
 			{
-				std::set<Vector2> nodes;
-				if ( zWorld->GetHeightNodesInCircle(Vector2(cd.posx,cd.posz), zBrushSize+zBrushSizeExtra, nodes) )
+				if ( !zCurrentActionGroup )
 				{
-					// Target = center
-					float targetHeight = zWorld->CalcHeightAtWorldPos( Vector2(cd.posx, cd.posz) );
-
-					for( auto i = nodes.begin(); i != nodes.end(); ++i )
-					{
-						float factor = 1.0f;
-						float distance = Vector2(cd.posx - i->x, cd.posz - i->y).GetLength();
-						if ( zBrushSizeExtra > 0.0f && distance >= zBrushSize )
-						{
-							factor = zBrushSizeExtra - ( distance - zBrushSize );
-							factor /= zBrushSizeExtra;
-							if ( factor <= 0.0 ) factor = 0;
-						}
-
-						float curHeight = zWorld->GetHeightAt( i->x, i->y );
-						float dif = targetHeight - curHeight;
-
-						try
-						{
-							zWorld->SetHeightAt( i->x, i->y, curHeight + dif * max(min(zBrushStrength,1.0f),0.0f) * factor );
-						}
-						catch(...)
-						{
-						}
-					}
+					zCurrentActionGroup = new ActionGroup();
+					ApplyAction(zCurrentActionGroup);
 				}
+
+				SmoothAction* SM = new SmoothAction(
+					zWorld,
+					Vector2(cd.posx, cd.posz),
+					zBrushSize,
+					zBrushSizeExtra,
+					zBrushStrength );
+
+				SM->Execute();
+				zCurrentActionGroup->zActions.push_back(SM);
+
 				zWorldSavedFlag = false;
+				zBrushLastPos = Vector2(cd.posx, cd.posz);
 			}
-			zBrushLastPos = Vector2(cd.posx, cd.posz);
 			zLeftMouseDown = true;
 		}
 	}
