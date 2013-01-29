@@ -772,11 +772,11 @@ float World::CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...)
 	proportions.y = (worldPos - Vector2(b.x, b.y)).GetLength();
 	proportions.z = (worldPos - Vector2(c.x, c.y)).GetLength();
 	proportions.w = (worldPos - Vector2(d.x, d.y)).GetLength();
-	proportions.Normalize();
 
+	float total = proportions[0] + proportions[1] + proportions[2] + proportions[3];
 	for( unsigned int x=0; x<4; ++x )
 	{
-		proportions[x] = abs(proportions[x]);
+		proportions[x] /= total;
 	}
 
 	return ( 
