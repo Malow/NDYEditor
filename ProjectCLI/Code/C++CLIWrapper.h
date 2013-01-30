@@ -53,6 +53,7 @@ namespace System { namespace Windows { namespace Interop
 		void ChangeMode(int mode);
 		void ChangeCameraMode( String^ cameraMode);
 		void LockMouseToCamera();
+		void TeleportTo( float x, float y, float z );
 		void GetSelectedInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void GetCameraInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void GetSunInfo( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );

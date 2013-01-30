@@ -132,6 +132,7 @@ public:
 	void SetSunInfo(char* info, float x, float y, float z);
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
+	void TeleportTo( float x, float y, float z );
 
 	// Returns Number of entities in current sector
 	int CountEntitiesInSector();

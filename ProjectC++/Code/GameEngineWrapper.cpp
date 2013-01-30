@@ -262,3 +262,8 @@ void GameEngineWrapper::GetWorldSize( float& x, float& y )
 {
 	m_GameEngine->GetWorldSize( x, y );
 }
+
+void GameEngineWrapper::TeleportTo( float x, float y, float z )
+{
+	m_GameEngine->TeleportTo(x, y, z);
+}

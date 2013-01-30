@@ -56,6 +56,7 @@ public:
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
 	void GetWorldSize( float& x, float& y );
+	void TeleportTo(float x, float y, float z);
 
 	void CalculateAIGrid();
 	float GetSunOnOff();

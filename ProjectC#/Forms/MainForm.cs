@@ -851,9 +851,15 @@ namespace Editor.Forms
         private void teleportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TeleportForm form = new TeleportForm();
+
+            float width, height;
+            m_GameEngine.GetWorldSize(out width, out height);
+            form.SetCoordinates(width / 2.0f, height / 2.0f);
+
             if (form.ShowDialog() == DialogResult.OK)
             {
-
+                float x = form.returnX, y = form.returnY;
+                m_GameEngine.TeleportTo(x, 2.0f, y);
             }
         }
     }

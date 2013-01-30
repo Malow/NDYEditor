@@ -1219,3 +1219,8 @@ void GameEngine::GetWorldSize( float &x, float&y )
 		y = 0.0f;
 	}
 }
+
+void GameEngine::TeleportTo( float x, float y, float z )
+{
+	zGraphics->GetCamera()->SetPosition( Vector3(x, y, z) );
+}

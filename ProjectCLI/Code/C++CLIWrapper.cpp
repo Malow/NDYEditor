@@ -404,4 +404,9 @@ namespace System { namespace Windows { namespace Interop
 		y = ty;
 	}
 
+	void CppCLI::TeleportTo( float x, float y, float z )
+	{
+		m_GameEngine->TeleportTo(x, y, z);
+	}
+
 }}}

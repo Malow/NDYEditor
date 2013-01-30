@@ -11,6 +11,8 @@ namespace Editor.Forms
 {
     public partial class TeleportForm : Form
     {
+        public float returnX, returnY;
+
         public TeleportForm()
         {
             InitializeComponent();
@@ -20,6 +22,9 @@ namespace Editor.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
+            float.TryParse(this.textBox1.Text, out returnX);
+            float.TryParse(this.textBox2.Text, out returnY);
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
@@ -30,6 +35,12 @@ namespace Editor.Forms
             {
                 e.Handled = true;
             }
+        }
+
+        public void SetCoordinates(float x, float y)
+        {
+            this.textBox1.Text = x.ToString();
+            this.textBox2.Text = y.ToString();
         }
     }
 }
