@@ -267,3 +267,8 @@ void GameEngineWrapper::TeleportTo( float x, float y, float z )
 {
 	m_GameEngine->TeleportTo(x, y, z);
 }
+
+void GameEngineWrapper::ToggleShadows( bool flag )
+{
+	m_GameEngine->ToggleShadows(flag);
+}

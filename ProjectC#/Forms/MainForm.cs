@@ -862,5 +862,11 @@ namespace Editor.Forms
                 m_GameEngine.TeleportTo(x, 2.0f, y);
             }
         }
+
+        private void shadowOnOffToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            (sender as ToolStripMenuItem).Checked = !(sender as ToolStripMenuItem).Checked;
+            m_GameEngine.ToggleShadows((sender as ToolStripMenuItem).Checked);
+        }
     }
 }

@@ -1224,3 +1224,8 @@ void GameEngine::TeleportTo( float x, float y, float z )
 {
 	zGraphics->GetCamera()->SetPosition( Vector3(x, y, z) );
 }
+
+void GameEngine::ToggleShadows( bool flag )
+{
+	zGraphics->UseShadow(flag);
+}

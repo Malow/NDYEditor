@@ -67,6 +67,6 @@ namespace System { namespace Windows { namespace Interop
 		void CalculateAIGrid();
 		void GetSunOnOff([Out] float% onOff);
 		void SunOnOff(bool value);
-
+		void ToggleShadows(bool flag);
 	};
 }}}

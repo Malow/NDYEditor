@@ -40,6 +40,7 @@
             this.worldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shadowOnOffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.teleportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
@@ -161,7 +162,6 @@
             this.Panel_PlaceObject = new System.Windows.Forms.Panel();
             this.Lable_Model = new System.Windows.Forms.Label();
             this.Combo_Model = new System.Windows.Forms.ComboBox();
-            this.teleportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TopPanelSplitter)).BeginInit();
@@ -224,7 +224,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -233,40 +233,40 @@
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -294,6 +294,15 @@
             this.shadowOnOffToolStripMenuItem.Name = "shadowOnOffToolStripMenuItem";
             this.shadowOnOffToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.shadowOnOffToolStripMenuItem.Text = "Shadow On/Off";
+            this.shadowOnOffToolStripMenuItem.Click += new System.EventHandler(this.shadowOnOffToolStripMenuItem_Click_1);
+            // 
+            // teleportToolStripMenuItem
+            // 
+            this.teleportToolStripMenuItem.Name = "teleportToolStripMenuItem";
+            this.teleportToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.teleportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.teleportToolStripMenuItem.Text = "Teleport";
+            this.teleportToolStripMenuItem.Click += new System.EventHandler(this.teleportToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -604,7 +613,7 @@
             // 
             this.RenderAndInfoSplitter.Panel2.Controls.Add(this.InfoSplitter);
             this.RenderAndInfoSplitter.Size = new System.Drawing.Size(734, 510);
-            this.RenderAndInfoSplitter.SplitterDistance = 523;
+            this.RenderAndInfoSplitter.SplitterDistance = 524;
             this.RenderAndInfoSplitter.SplitterWidth = 3;
             this.RenderAndInfoSplitter.TabIndex = 0;
             // 
@@ -614,7 +623,7 @@
             this.RenderBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RenderBox.Location = new System.Drawing.Point(0, 0);
             this.RenderBox.Name = "RenderBox";
-            this.RenderBox.Size = new System.Drawing.Size(521, 508);
+            this.RenderBox.Size = new System.Drawing.Size(522, 508);
             this.RenderBox.TabIndex = 3;
             this.RenderBox.Click += new System.EventHandler(this.RenderBox_Click);
             this.RenderBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RenderBox_MouseDown);
@@ -648,7 +657,7 @@
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_Lower_Raise_Ground);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_ObjectInfo);
             this.InfoSplitter.Panel2.Controls.Add(this.Panel_PlaceObject);
-            this.InfoSplitter.Size = new System.Drawing.Size(208, 510);
+            this.InfoSplitter.Size = new System.Drawing.Size(207, 510);
             this.InfoSplitter.SplitterDistance = 300;
             this.InfoSplitter.SplitterWidth = 3;
             this.InfoSplitter.TabIndex = 0;
@@ -662,7 +671,7 @@
             this.Panel_Tex_Picker.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Tex_Picker.Name = "Panel_Tex_Picker";
             this.Panel_Tex_Picker.Padding = new System.Windows.Forms.Padding(5);
-            this.Panel_Tex_Picker.Size = new System.Drawing.Size(206, 298);
+            this.Panel_Tex_Picker.Size = new System.Drawing.Size(205, 298);
             this.Panel_Tex_Picker.TabIndex = 0;
             this.Panel_Tex_Picker.Visible = false;
             // 
@@ -677,7 +686,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(5, 166);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(196, 124);
+            this.groupBox1.Size = new System.Drawing.Size(195, 124);
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Brush Settings";
@@ -763,7 +772,7 @@
             this.GroupBox_DrawTex.Margin = new System.Windows.Forms.Padding(5);
             this.GroupBox_DrawTex.Name = "GroupBox_DrawTex";
             this.GroupBox_DrawTex.Padding = new System.Windows.Forms.Padding(5);
-            this.GroupBox_DrawTex.Size = new System.Drawing.Size(196, 161);
+            this.GroupBox_DrawTex.Size = new System.Drawing.Size(195, 161);
             this.GroupBox_DrawTex.TabIndex = 4;
             this.GroupBox_DrawTex.TabStop = false;
             this.GroupBox_DrawTex.Text = "Selected Channel";
@@ -776,7 +785,7 @@
             this.RadioBtn_Tex8.Location = new System.Drawing.Point(5, 137);
             this.RadioBtn_Tex8.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex8.Name = "RadioBtn_Tex8";
-            this.RadioBtn_Tex8.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex8.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex8.TabIndex = 7;
             this.RadioBtn_Tex8.Text = "Texture 8";
             this.RadioBtn_Tex8.UseVisualStyleBackColor = true;
@@ -790,7 +799,7 @@
             this.RadioBtn_Tex7.Location = new System.Drawing.Point(5, 120);
             this.RadioBtn_Tex7.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex7.Name = "RadioBtn_Tex7";
-            this.RadioBtn_Tex7.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex7.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex7.TabIndex = 6;
             this.RadioBtn_Tex7.Text = "Texture 7";
             this.RadioBtn_Tex7.UseVisualStyleBackColor = true;
@@ -804,7 +813,7 @@
             this.RadioBtn_Tex6.Location = new System.Drawing.Point(5, 103);
             this.RadioBtn_Tex6.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex6.Name = "RadioBtn_Tex6";
-            this.RadioBtn_Tex6.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex6.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex6.TabIndex = 6;
             this.RadioBtn_Tex6.Text = "Texture 6";
             this.RadioBtn_Tex6.UseVisualStyleBackColor = true;
@@ -818,7 +827,7 @@
             this.RadioBtn_Tex5.Location = new System.Drawing.Point(5, 86);
             this.RadioBtn_Tex5.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex5.Name = "RadioBtn_Tex5";
-            this.RadioBtn_Tex5.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex5.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex5.TabIndex = 0;
             this.RadioBtn_Tex5.Text = "Texture 5";
             this.RadioBtn_Tex5.UseVisualStyleBackColor = true;
@@ -832,7 +841,7 @@
             this.RadioBtn_Tex1.Location = new System.Drawing.Point(5, 69);
             this.RadioBtn_Tex1.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex1.Name = "RadioBtn_Tex1";
-            this.RadioBtn_Tex1.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex1.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex1.TabIndex = 0;
             this.RadioBtn_Tex1.Text = "Texture 4";
             this.RadioBtn_Tex1.UseVisualStyleBackColor = true;
@@ -846,7 +855,7 @@
             this.RadioBtn_Tex43.Location = new System.Drawing.Point(5, 52);
             this.RadioBtn_Tex43.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex43.Name = "RadioBtn_Tex43";
-            this.RadioBtn_Tex43.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex43.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex43.TabIndex = 3;
             this.RadioBtn_Tex43.Text = "Texture 3";
             this.RadioBtn_Tex43.UseVisualStyleBackColor = true;
@@ -860,7 +869,7 @@
             this.RadioBtn_Tex2.Location = new System.Drawing.Point(5, 35);
             this.RadioBtn_Tex2.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex2.Name = "RadioBtn_Tex2";
-            this.RadioBtn_Tex2.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex2.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex2.TabIndex = 1;
             this.RadioBtn_Tex2.Text = "Texture 2";
             this.RadioBtn_Tex2.UseVisualStyleBackColor = true;
@@ -875,7 +884,7 @@
             this.RadioBtn_Tex3.Location = new System.Drawing.Point(5, 18);
             this.RadioBtn_Tex3.Margin = new System.Windows.Forms.Padding(2);
             this.RadioBtn_Tex3.Name = "RadioBtn_Tex3";
-            this.RadioBtn_Tex3.Size = new System.Drawing.Size(186, 17);
+            this.RadioBtn_Tex3.Size = new System.Drawing.Size(185, 17);
             this.RadioBtn_Tex3.TabIndex = 2;
             this.RadioBtn_Tex3.TabStop = true;
             this.RadioBtn_Tex3.Text = "Texture 1";
@@ -895,7 +904,7 @@
             this.Panel_SmoothTool.Location = new System.Drawing.Point(0, 0);
             this.Panel_SmoothTool.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_SmoothTool.Name = "Panel_SmoothTool";
-            this.Panel_SmoothTool.Size = new System.Drawing.Size(206, 298);
+            this.Panel_SmoothTool.Size = new System.Drawing.Size(205, 298);
             this.Panel_SmoothTool.TabIndex = 14;
             this.Panel_SmoothTool.Visible = false;
             // 
@@ -1002,7 +1011,7 @@
             this.Panel_Info.Location = new System.Drawing.Point(0, 0);
             this.Panel_Info.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Info.Name = "Panel_Info";
-            this.Panel_Info.Size = new System.Drawing.Size(206, 298);
+            this.Panel_Info.Size = new System.Drawing.Size(205, 298);
             this.Panel_Info.TabIndex = 21;
             this.Panel_Info.Visible = false;
             // 
@@ -1251,7 +1260,7 @@
             this.Panel_Textures.Location = new System.Drawing.Point(0, 0);
             this.Panel_Textures.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Textures.Name = "Panel_Textures";
-            this.Panel_Textures.Size = new System.Drawing.Size(206, 205);
+            this.Panel_Textures.Size = new System.Drawing.Size(205, 205);
             this.Panel_Textures.TabIndex = 1;
             this.Panel_Textures.Visible = false;
             // 
@@ -1447,7 +1456,7 @@
             this.panel_DeleteCircle.Location = new System.Drawing.Point(0, 0);
             this.panel_DeleteCircle.Margin = new System.Windows.Forms.Padding(2);
             this.panel_DeleteCircle.Name = "panel_DeleteCircle";
-            this.panel_DeleteCircle.Size = new System.Drawing.Size(206, 205);
+            this.panel_DeleteCircle.Size = new System.Drawing.Size(205, 205);
             this.panel_DeleteCircle.TabIndex = 16;
             this.panel_DeleteCircle.Visible = false;
             // 
@@ -1482,7 +1491,7 @@
             this.Panel_AIGrid.Location = new System.Drawing.Point(0, 0);
             this.Panel_AIGrid.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_AIGrid.Name = "Panel_AIGrid";
-            this.Panel_AIGrid.Size = new System.Drawing.Size(206, 205);
+            this.Panel_AIGrid.Size = new System.Drawing.Size(205, 205);
             this.Panel_AIGrid.TabIndex = 17;
             this.Panel_AIGrid.Visible = false;
             // 
@@ -1532,7 +1541,7 @@
             this.Panel_PlaceBrush.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceBrush.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceBrush.Name = "Panel_PlaceBrush";
-            this.Panel_PlaceBrush.Size = new System.Drawing.Size(206, 205);
+            this.Panel_PlaceBrush.Size = new System.Drawing.Size(205, 205);
             this.Panel_PlaceBrush.TabIndex = 0;
             this.Panel_PlaceBrush.Visible = false;
             // 
@@ -1621,7 +1630,7 @@
             this.Panel_Lower_Raise_Ground.Location = new System.Drawing.Point(0, 0);
             this.Panel_Lower_Raise_Ground.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_Lower_Raise_Ground.Name = "Panel_Lower_Raise_Ground";
-            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(206, 205);
+            this.Panel_Lower_Raise_Ground.Size = new System.Drawing.Size(205, 205);
             this.Panel_Lower_Raise_Ground.TabIndex = 2;
             this.Panel_Lower_Raise_Ground.Visible = false;
             // 
@@ -1691,7 +1700,7 @@
             this.Panel_ObjectInfo.Location = new System.Drawing.Point(0, 0);
             this.Panel_ObjectInfo.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_ObjectInfo.Name = "Panel_ObjectInfo";
-            this.Panel_ObjectInfo.Size = new System.Drawing.Size(206, 205);
+            this.Panel_ObjectInfo.Size = new System.Drawing.Size(205, 205);
             this.Panel_ObjectInfo.TabIndex = 6;
             this.Panel_ObjectInfo.Visible = false;
             // 
@@ -1766,7 +1775,7 @@
             this.Panel_PlaceObject.Location = new System.Drawing.Point(0, 0);
             this.Panel_PlaceObject.Margin = new System.Windows.Forms.Padding(2);
             this.Panel_PlaceObject.Name = "Panel_PlaceObject";
-            this.Panel_PlaceObject.Size = new System.Drawing.Size(206, 205);
+            this.Panel_PlaceObject.Size = new System.Drawing.Size(205, 205);
             this.Panel_PlaceObject.TabIndex = 21;
             this.Panel_PlaceObject.Visible = false;
             // 
@@ -1789,14 +1798,6 @@
             this.Combo_Model.Name = "Combo_Model";
             this.Combo_Model.Size = new System.Drawing.Size(92, 21);
             this.Combo_Model.TabIndex = 0;
-            // 
-            // teleportToolStripMenuItem
-            // 
-            this.teleportToolStripMenuItem.Name = "teleportToolStripMenuItem";
-            this.teleportToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.teleportToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.teleportToolStripMenuItem.Text = "Teleport";
-            this.teleportToolStripMenuItem.Click += new System.EventHandler(this.teleportToolStripMenuItem_Click);
             // 
             // NDYEditor
             // 

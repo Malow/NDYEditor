@@ -409,4 +409,9 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->TeleportTo(x, y, z);
 	}
 
+	void CppCLI::ToggleShadows( bool flag )
+	{
+		m_GameEngine->ToggleShadows(flag);
+	}
+
 }}}
