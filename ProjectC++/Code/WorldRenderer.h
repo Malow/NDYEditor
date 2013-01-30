@@ -24,6 +24,7 @@ class WorldRenderer : Observer
 	std::map< Entity*, iMesh* > zEntities;
 
 	std::map< Vector2UINT, UPDATEENUM > zUpdatesRequired;
+	bool zShowAIMap;
 
 public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);

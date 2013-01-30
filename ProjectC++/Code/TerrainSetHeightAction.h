@@ -36,7 +36,7 @@ public:
 
 		for( auto i = nodes.begin(); i != nodes.end(); ++i )
 		{
-			zPrevHeights.push_back(std::pair<Vector2,float>(*i, zWorld->GetHeightAt(i->x, i->y)));
+			zPrevHeights.push_back(std::pair<Vector2,float>(*i, zWorld->GetHeightAt(*i)));
 			zWorld->SetHeightAt( i->x, i->y, zHeight );
 		}
 	}

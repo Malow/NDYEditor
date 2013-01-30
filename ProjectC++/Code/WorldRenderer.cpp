@@ -5,7 +5,8 @@
 
 WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) : 
 	zWorld(world),
-	zGraphics(graphics)
+	zGraphics(graphics),
+	zShowAIMap(false)
 {
 	zWorld->AddObserver(this);
 
@@ -346,6 +347,8 @@ void WorldRenderer::update()
 
 void WorldRenderer::ToggleAIGrid( bool state )
 {
+	zShowAIMap = state;
+
 	if ( !zTerrain.empty() )
 	{
 		for( unsigned int i=0; i<zWorld->GetNumSectorsWidth()*zWorld->GetNumSectorsHeight(); ++i )
@@ -378,5 +381,6 @@ void WorldRenderer::UpdateSectorAIGrid( unsigned int x, unsigned int y )
 
 		zTerrain[tIndex]->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
 		zTerrain[tIndex]->SetAIGridThickness();
+		zTerrain[tIndex]->UseAIMap(zShowAIMap);
 	}
 }

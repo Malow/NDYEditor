@@ -103,7 +103,7 @@ Entity* World::CreateEntity( unsigned int entityType )
 
 void World::ModifyHeightAt( float x, float y, float delta )
 {
-	SetHeightAt( x, y, GetHeightAt( x, y ) + delta );
+	SetHeightAt( x, y, GetHeightAt( Vector2(x, y) ) + delta );
 }
 
 void World::SetHeightAt( float x, float y, float val )
@@ -149,13 +149,13 @@ void World::SetHeightAt( float x, float y, float val )
 }
 
 
-float World::GetHeightAt( float x, float y )
+float World::GetHeightAt( const Vector2& worldPos )
 {
-	unsigned int sectorX = (unsigned int)x / SECTOR_WORLD_SIZE;
-	unsigned int sectorY = (unsigned int)y / SECTOR_WORLD_SIZE;
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
 
-	float localX = fmod(x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
-	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localX = fmod(worldPos.x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localY = fmod(worldPos.y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	float snapX = floor(localX * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
@@ -800,10 +800,10 @@ float World::CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...)
 	float maxX = minX + density;
 	float maxY = minY + density;
 
-	Vector3 a(minX, GetHeightAt(minX, minY), minY);
-	Vector3 b(maxX, GetHeightAt(maxX, minY), minY);
-	Vector3 c(minX, GetHeightAt(minX, maxY), maxY);
-	Vector3 d(maxX, GetHeightAt(maxX, maxY), maxY);
+	Vector3 a(minX, GetHeightAt(Vector2(minX, minY)), minY);
+	Vector3 b(maxX, GetHeightAt(Vector2(maxX, minY)), minY);
+	Vector3 c(minX, GetHeightAt(Vector2(minX, maxY)), maxY);
+	Vector3 d(maxX, GetHeightAt(Vector2(maxX, maxY)), maxY);
 
 	float s = (worldPos.x-a.x) / (b.x-a.x);
 	float t = (worldPos.y-a.z) / (c.z-a.z);
@@ -894,10 +894,10 @@ Vector3 World::CalcNormalAt( const Vector2& worldPos ) throw(...)
 	// Density
 	float density = (float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1);
 
-	Vector3 a(worldPos.x, GetHeightAt(worldPos.x, worldPos.y), worldPos.y);
-	Vector3 b(worldPos.x+density, GetHeightAt(worldPos.x+density, worldPos.y), worldPos.y);
-	Vector3 c(worldPos.x, GetHeightAt(worldPos.x, worldPos.y+density), worldPos.y+density);
-	Vector3 d(worldPos.x+density, GetHeightAt(worldPos.x+density, worldPos.y+density), worldPos.y+density);
+	Vector3 a(worldPos.x, GetHeightAt(worldPos), worldPos.y);
+	Vector3 b(worldPos.x+density, GetHeightAt(worldPos+Vector2(density, 0.0f)), worldPos.y);
+	Vector3 c(worldPos.x, GetHeightAt(worldPos+Vector2(0.0f, density)), worldPos.y+density);
+	Vector3 d(worldPos.x+density, GetHeightAt(worldPos+density), worldPos.y+density);
 
 	Vector3 normal = (c-b).GetCrossProduct(d-a);
 	normal.Normalize();

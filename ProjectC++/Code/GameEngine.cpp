@@ -103,7 +103,7 @@ void GameEngine::ProcessFrame()
 				tempY = zWorldRenderer->GetYPosFromHeightMap((*i)->GetPosition().x, (*i)->GetPosition().z);
 				(*i)->SetPosition(zPrevPosOfSelected[(*i)] + zMoveOffSet + Vector3(0,tempY,0));
 			}
-			Vector3 newPos = NULL;
+			Vector3 newPos(0.0f, 0.0f, 0.0f);
 			for ( auto it=zTargetedEntities.begin(); it != zTargetedEntities.end(); it++ )
 			{
 				newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
@@ -185,7 +185,7 @@ void GameEngine::ProcessFrame()
 				{
 					if ( temp.z > 0.0f && temp.z < zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
 					{
-						temp.y = zWorld->GetHeightAt(temp.x, temp.z) + zRTSHeightFromGround;
+						temp.y = zWorld->GetHeightAt(temp.GetXZ()) + zRTSHeightFromGround;
 						zGraphics->GetCamera()->SetPosition(temp);
 					}
 				}
@@ -259,7 +259,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				if(cd.collision)
 				{
 					float tempY;
-					Vector3 newPos = NULL;
+					Vector3 newPos(0.0f, 0.0f, 0.0f);
 					for ( auto it=zTargetedEntities.begin() ; it != zTargetedEntities.end(); it++ )
 					{
 						(*it)->SetSelected(false);
@@ -705,7 +705,7 @@ void GameEngine::KeyUp( int key )
 			Vector3 startPos;
 			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5f;
 			startPos.z = zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE * 0.5f;
-			startPos.y = zWorld->GetHeightAt(startPos.x, startPos.y) + 1.7f; 
+			startPos.y = zWorld->GetHeightAt(startPos.GetXZ()) + 1.7f; 
 			zGraphics->GetCamera()->SetPosition(startPos);
 		}
 	}

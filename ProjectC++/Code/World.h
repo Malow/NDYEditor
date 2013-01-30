@@ -91,7 +91,7 @@ public:
 	
 	// Modify Height Functions
 	void ModifyHeightAt( float x, float y, float value ) throw(...);
-	float GetHeightAt( float x, float y ) throw(...);
+	float GetHeightAt( const Vector2 &worldPos ) throw(...);
 	void SetHeightAt( float x, float y, float value ) throw(...);
 	float CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...);
 

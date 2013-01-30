@@ -36,7 +36,7 @@ public:
 		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+zBrushSizeExtra, nodes) )
 		{
 			// Target = center
-			float targetHeight = zWorld->GetHeightAt( zCenter.x, zCenter.y );
+			float targetHeight = zWorld->GetHeightAt( zCenter );
 
 			for( auto i = nodes.begin(); i != nodes.end(); ++i )
 			{
@@ -49,12 +49,12 @@ public:
 					if ( factor <= 0.0 ) factor = 0;
 				}
 
-				float curHeight = zWorld->GetHeightAt( i->x, i->y );
+				float curHeight = zWorld->GetHeightAt(*i);
 				float dif = targetHeight - curHeight;
 
 				try
 				{
-					zPrevChanges.push_back( std::pair<Vector2, float>(*i, zWorld->GetHeightAt(i->x, i->y)) );
+					zPrevChanges.push_back( std::pair<Vector2, float>(*i, zWorld->GetHeightAt(*i)) );
 					zWorld->SetHeightAt( i->x, i->y, curHeight + dif * zBrushStrength * factor );
 				}
 				catch(...)
