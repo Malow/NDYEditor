@@ -81,12 +81,16 @@ public:
 		{
 			for( auto e = ents.cbegin(); e != ents.cend(); ++e )
 			{
-				std::set< Vector2 > blocks;
-				if ( zWorld->GetAINodesInCircle((*e)->GetPosition().GetXZ(), GetEntBlockRadius((*e)->GetType()), blocks) )
+				float blockRadius = GetEntBlockRadius((*e)->GetType());
+				if ( blockRadius > 0.0f )
 				{
-					for( auto b = blocks.begin(); b != blocks.end(); ++b )
+					std::set< Vector2 > blocks;
+					if ( zWorld->GetAINodesInCircle((*e)->GetPosition().GetXZ(), blockRadius, blocks) )
 					{
-						zWorld->SetBlockingAt(*b, true);
+						for( auto b = blocks.begin(); b != blocks.end(); ++b )
+						{
+							zWorld->SetBlockingAt(*b, true);
+						}
 					}
 				}
 			}
