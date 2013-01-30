@@ -60,6 +60,7 @@ namespace System { namespace Windows { namespace Interop
 		void SetSunInfo( String^ info, float x, float y, float z );
 		void GetAmbientLight( String^ info, [Out] float% x, [Out] float% y, [Out] float% z );
 		void SetAmbientLight(  String^ info, float x, float y, float z );
+		void GetWorldSize( [Out] float% x, [Out] float% y );
 		void GetNrOfSelectedEntities([Out] int% x);
 		void SetEntityType(int value);
 		void CalculateAIGrid();

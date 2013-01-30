@@ -55,6 +55,7 @@ public:
 	void GetCameraInfo(char* info, float& x, float& y, float& z);
 	void GetAmbientLight(char* info, float& x, float& y, float& z);
 	void SetAmbientLight(char* info, float x, float y, float z);
+	void GetWorldSize( float& x, float& y );
 
 	void CalculateAIGrid();
 	float GetSunOnOff();

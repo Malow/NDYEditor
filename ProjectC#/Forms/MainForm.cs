@@ -12,7 +12,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace Example
+namespace Editor.Forms
 {
     enum MODE
     {
@@ -703,7 +703,6 @@ namespace Example
             if ((sender as TextBox).Enabled == true)
             {
                 string info = (sender as TextBox).AccessibleName;
-                string pattern = "^[-+]?[0-9]*\\.?[0-9]*$";
                 if (info == "pos")
                 {
                     float x, y, z;
@@ -847,6 +846,15 @@ namespace Example
                 shadowOnOffToolStripMenuItem.Checked = true;
             else
                 shadowOnOffToolStripMenuItem.Checked = false;
+        }
+
+        private void teleportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TeleportForm form = new TeleportForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+
+            }
         }
     }
 }

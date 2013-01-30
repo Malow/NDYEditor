@@ -121,7 +121,8 @@ public:
 	void ChangeCameraMode(char* cameraMode);
 	void LockMouseToCamera();
 	void MoveObjectToSurface();
-	
+	void GetWorldSize(float &x, float&y);
+
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo(char* info, float& x, float& y, float& z);
 	void GetSunInfo(char* info, float& x, float& y, float& z);

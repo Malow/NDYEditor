@@ -1205,3 +1205,17 @@ void GameEngine::SunOnOff(bool value)
 		zGraphics->SetSunLightDisabled();
 	}
 }
+
+void GameEngine::GetWorldSize( float &x, float&y )
+{
+	if ( zWorld ) 
+	{
+		x = zWorld->GetWorldSize().x;
+		y = zWorld->GetWorldSize().y;
+	}
+	else
+	{
+		x = 0.0f;
+		y = 0.0f;
+	}
+}

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Example
+namespace Editor.Forms
 {
     public partial class ExitForm : Form
     {

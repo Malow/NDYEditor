@@ -257,3 +257,8 @@ void GameEngineWrapper::SunOnOff( bool value )
 {
 	m_GameEngine->SunOnOff(value);
 }
+
+void GameEngineWrapper::GetWorldSize( float& x, float& y )
+{
+	m_GameEngine->GetWorldSize( x, y );
+}

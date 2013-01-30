@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Editor.Forms;
 
-namespace Example
+namespace Editor
 {
     static class Program
     {

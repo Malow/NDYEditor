@@ -1,4 +1,4 @@
-﻿namespace Example
+﻿namespace Editor.Forms
 {
     partial class ProjectProperties
     {

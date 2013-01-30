@@ -395,4 +395,13 @@ namespace System { namespace Windows { namespace Interop
 	{
 		m_GameEngine->SunOnOff(value);
 	}
+
+	void CppCLI::GetWorldSize( [Out] float% x, [Out] float% y )
+	{
+		float tx, ty;
+		m_GameEngine->GetWorldSize(tx, ty);
+		x = tx;
+		y = ty;
+	}
+
 }}}
