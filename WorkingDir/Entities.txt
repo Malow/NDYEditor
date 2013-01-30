@@ -18,6 +18,7 @@ Model:Media/Models/Fern_02.ani
 Number:5
 Name:Tree
 Model:Media/Models/Tree_02_v02_r.obj
+BlockRadius:0.5
 
 Number:6
 Name:Stone

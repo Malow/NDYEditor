@@ -793,35 +793,25 @@ float World::CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...)
 	float density = (float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1);
 
 	// Snap To Lower
-	float minX = floor(worldPos.x * density) / density;
-	float minY = floor(worldPos.y * density) / density;
+	float minX = floor(worldPos.x / density) * density;
+	float minY = floor(worldPos.y / density) * density;
 
 	// Snap To Lower
 	float maxX = minX + density;
 	float maxY = minY + density;
 
 	Vector3 a(minX, GetHeightAt(minX, minY), minY);
-	Vector3 b(minX, GetHeightAt(minX, maxY), maxY);
-	Vector3 c(maxX, GetHeightAt(maxX, minY), minY);
+	Vector3 b(maxX, GetHeightAt(maxX, minY), minY);
+	Vector3 c(minX, GetHeightAt(minX, maxY), maxY);
 	Vector3 d(maxX, GetHeightAt(maxX, maxY), maxY);
 
-	Vector4 proportions;
-	proportions.x = (worldPos - Vector2(a.x, a.y)).GetLength();
-	proportions.y = (worldPos - Vector2(b.x, b.y)).GetLength();
-	proportions.z = (worldPos - Vector2(c.x, c.y)).GetLength();
-	proportions.w = (worldPos - Vector2(d.x, d.y)).GetLength();
+	float s = (worldPos.x-a.x) / (b.x-a.x);
+	float t = (worldPos.y-a.z) / (c.z-a.z);
 
-	float total = proportions[0] + proportions[1] + proportions[2] + proportions[3];
-	for( unsigned int x=0; x<4; ++x )
-	{
-		proportions[x] /= total;
-	}
+	float y1 = a.y + s*(b.y-a.y);
+	float y2 = c.y + s*(d.y-c.y);
 
-	return ( 
-		a.y * proportions.x +
-		b.y * proportions.y +
-		c.y * proportions.z +
-		d.y * proportions.w );
+	return y1 + t*(y2-y1);
 }
 
 const Vector3& World::GetStartCamPos() const
