@@ -46,6 +46,16 @@ public:
 			(*this)[x] = ((*this)[x] - min) / (max - min);
 		}
 	}
+
+	BlendValuesT<T> operator+( const BlendValuesT<T>& val )
+	{
+		BlendValuesT<T> newVals;
+		for( unsigned int x=0; x<T; ++x )
+		{
+			newVals[x] = (*this)[x] + val[x];
+		}
+		return newVals;
+	}
 };
 
 typedef BlendValuesT<SECTOR_BLEND_CHANNELS> BlendValues;

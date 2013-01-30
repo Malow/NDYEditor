@@ -16,7 +16,6 @@ World::World( Observer* observer, const std::string& fileName) throw(...) :
 	zFile->ReadHeader();
 }
 
-
 World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight ) :
 	Observed(observer),
 	zNrOfSectorsWidth(nrOfSectorWidth),
@@ -51,7 +50,6 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 
 	NotifyObservers( &WorldLoadedEvent(this) );
 }
-
 
 World::~World()
 {
@@ -148,7 +146,6 @@ void World::SetHeightAt( float x, float y, float val )
 	}
 }
 
-
 float World::GetHeightAt( const Vector2& worldPos )
 {
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
@@ -163,7 +160,6 @@ float World::GetHeightAt( const Vector2& worldPos )
 
 	return GetSector(sectorX, sectorY)->GetHeightAt(snapX, snapY);
 }
-
 
 void World::SaveFile()
 {
@@ -269,7 +265,6 @@ void World::SaveFile()
 	}
 }
 
-
 void World::SaveFileAs( const std::string& fileName )
 {
 	if ( fileName.empty() )
@@ -306,19 +301,16 @@ void World::SaveFileAs( const std::string& fileName )
 	}
 }
 
-
 Sector* World::GetSectorAtWorldPos( const Vector2& pos )
 {
 	Vector2UINT sectorPos = WorldPosToSector(pos);
 	return GetSector( sectorPos.x, sectorPos.y );
 }
 
-
 Vector2UINT World::WorldPosToSector( const Vector2& pos ) const
 {
 	return Vector2UINT((unsigned int)pos.x / SECTOR_WORLD_SIZE, (unsigned int)pos.y / SECTOR_WORLD_SIZE);
 }
-
 
 Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 {
@@ -591,28 +583,28 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 {
 	unsigned int counter=0;
 
-	// Calculate Height Node Density
-	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_BLEND_SIZE );
+	// Calculate AI Node Density
+	float density = ( (float)SECTOR_WORLD_SIZE / (float)(SECTOR_BLEND_SIZE-1) );
 
-	// Snap Center To Closest Position
-	float centerSnapX = floor( center.x / density ) * density;
-	float centerSnapY = floor( center.y / density ) * density;
-
-	for( float x = centerSnapX - radius; x < centerSnapX + radius; x+=density )
+	for( float x = center.x-radius-density; x <= center.x+radius+density; x+=density )
 	{
 		// Outside World
-		if ( x < 0.0f || x > GetNumSectorsWidth() * SECTOR_WORLD_SIZE )
+		if ( x < 0.0f || x >= GetWorldSize().x )
 			continue;
 
-		for( float y = centerSnapY - radius; y < centerSnapY + radius; y+=density )
+		for( float y = center.y-radius-density; y <= center.y+radius+density; y+=density )
 		{
 			// Outside World
-			if ( y < 0.0f || y > GetNumSectorsHeight() * SECTOR_WORLD_SIZE )
+			if ( y < 0.0f || y >= GetWorldSize().y )
 				continue;
 
-			if ( Circle(Vector2(centerSnapX,centerSnapY),radius).IsInside(Vector2(x,y) ) )
+			Vector2 snap;
+			snap.x = floor(x / density) * density;
+			snap.y = floor(y / density) * density;
+
+			if (Circle(center,radius).IsInside(snap))
 			{
-				out.insert( Vector2(x,y) );
+				out.insert( Vector2(snap.x, snap.y) );
 				counter++;
 			}
 		}
@@ -623,30 +615,26 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 
 BlendValues World::GetBlendingAt( const Vector2& worldPos )
 {
+	// Sector Coordinates
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+
+	// Local Coordinates
 	Vector2 localPos;
 	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 
-	return GetSector(sectorX, sectorY)->GetBlendingAt( localPos );
+	// Snap Local Coordinates
+	Vector2 snapPos;
+	snapPos.x = floor(localPos.x * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+	snapPos.y = floor(localPos.y * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+
+	return GetSector(sectorX, sectorY)->GetBlendingAt( snapPos );
 }
 
 void World::ModifyBlendingAt( const Vector2& worldPos, const BlendValues& val )
 {
-	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
-	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
-	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
-
-	GetSector(sectorX, sectorY)->ModifyBlendingAt( localPos, val );
-
-	NotifyObservers( &SectorBlendMapChanged(this, 
-		worldPos.x/SECTOR_WORLD_SIZE,
-		worldPos.y/SECTOR_WORLD_SIZE,
-		fmod(worldPos.x,SECTOR_WORLD_SIZE),
-		fmod(worldPos.y,SECTOR_WORLD_SIZE)) );
+	SetBlendingAt( worldPos, GetBlendingAt(worldPos) + val );
 }
 
 void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
@@ -657,13 +645,42 @@ void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
 	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 
-	GetSector(sectorX, sectorY)->SetBlendingAt(localPos, val);
+	// Snap Local Coordinates
+	Vector2 snapPos;
+	snapPos.x = floor(localPos.x * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+	snapPos.y = floor(localPos.y * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+
+	GetSector(sectorX, sectorY)->SetBlendingAt(snapPos, val);
 
 	NotifyObservers(&SectorBlendMapChanged(this, 
 		worldPos.x/SECTOR_WORLD_SIZE,
 		worldPos.y/SECTOR_WORLD_SIZE,
 		localPos.x,
 		localPos.y ));
+	
+	// Overlap Left
+	if ( sectorX > 0 && snapPos.x == 0.0f )
+	{
+		float border = (float)(SECTOR_BLEND_SIZE-1)/(float)SECTOR_BLEND_SIZE;
+		GetSector(sectorX-1, sectorY)->SetBlendingAt(Vector2(border, snapPos.y), val);
+		NotifyObservers( &SectorBlendMapChanged(this, sectorX-1, sectorY, border, snapPos.y) );
+	}
+
+	// Overlap Up
+	if ( sectorY > 0 && snapPos.y == 0.0f )
+	{
+		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		GetSector(sectorX, sectorY-1)->SetBlendingAt(Vector2(snapPos.x, border), val);
+		NotifyObservers( &SectorBlendMapChanged(this, sectorX, sectorY-1, snapPos.x, border) );
+	}
+	
+	// Overlap Left Up Corner
+	if ( sectorY > 0 && snapPos.y == 0.0f && sectorX > 0 && snapPos.x == 0.0f )
+	{
+		float border = (float)(SECTOR_HEIGHT_SIZE-1)/(float)SECTOR_HEIGHT_SIZE;
+		GetSector(sectorX-1, sectorY-1)->SetBlendingAt(Vector2(border, border), val);
+		NotifyObservers( &SectorBlendMapChanged(this, sectorX-1, sectorY-1, border, border) );
+	}
 }
 
 WorldAnchor* World::CreateAnchor()
@@ -908,28 +925,28 @@ unsigned int World::GetAINodesInCircle( const Vector2& center, float radius, std
 {
 	unsigned int counter=0;
 
-	// Calculate Height Node Density
+	// Calculate AI Node Density
 	float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_AI_GRID_SIZE );
 
 	for( float x = center.x-radius-density; x <= center.x+radius+density; x+=density )
 	{
 		// Outside World
-		if ( x < 0.0f || x > GetWorldSize().x )
+		if ( x < 0.0f || x >= GetWorldSize().x )
 			continue;
 
 		for( float y = center.y-radius-density; y <= center.y+radius+density; y+=density )
 		{
 			// Outside World
-			if ( y < 0.0f || y > GetWorldSize().y )
+			if ( y < 0.0f || y >= GetWorldSize().y )
 				continue;
 
 			Vector2 snap;
 			snap.x = floor(x / density) * density;
 			snap.y = floor(y / density) * density;
 
-			Rect r(snap, Vector2(density,density));
+			Rect r(snap, Vector2(density, density));
 
-			if (DoesIntersect(r, Circle(center,radius)))
+			if (DoesIntersect(r, Circle(center, radius)))
 			{
 				out.insert( Vector2(snap.x, snap.y) );
 				counter++;
