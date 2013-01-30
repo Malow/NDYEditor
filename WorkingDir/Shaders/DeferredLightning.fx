@@ -24,7 +24,7 @@ SamplerState linearSampler
 };
 
 Texture2D ShadowMap[10];
-Texture2D CascadedShadowMap[10];
+Texture2D CascadedShadowMap[4];
 SamplerState shadowMapSampler
 {
 	Filter = MIN_MAG_MIP_POINT;
@@ -57,14 +57,13 @@ cbuffer ef
 	float SMAP_DX; 
 
 	//PCF sampling
-	bool usePCF;
 	float PCF_SIZE;
 	float PCF_SIZE_SQUARED;
 
 	//Multiple sampling
-	bool blendCascades;
+	bool blendCascades; //**ersätta med blenddistance
 	float blendDistance; //the number of pixels to blend.
-	float blendStrength; //How much to blend.
+	float blendStrength; //How much to blend. **to use?**
 
 	//Both/other
 	uint nrOfCascades;
@@ -179,13 +178,55 @@ uint FindCascadeToBlendWith(uint cascadeIndex, float pixelDepthCameraViewSpace)
 		return cascadeIndex - 1; //OBS! Can return -1! 
 	}
 }
+float BlendCascades(uint cascadeIndex, uint otherCascadeIndex, float2 pixelPosTexelSpace, float pixelDepth, float CSM_SHADOW_EPSILON)
+{
+	float shadow = 0.0f;
+
+	if(cascadeIndex == 0)
+	{
+		shadow += (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(cascadeIndex == 1)
+	{
+		shadow += (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(cascadeIndex == 2)
+	{
+		shadow += (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(cascadeIndex == 3)
+	{
+		shadow += (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+
+	if(otherCascadeIndex == 0)
+	{
+		shadow += (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(otherCascadeIndex == 1)
+	{
+		shadow += (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(otherCascadeIndex == 2)
+	{
+		shadow += (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+	else if(otherCascadeIndex == 3)
+	{
+		shadow += (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+	}
+
+	shadow *= 0.5f;
+						
+	return shadow;
+}
 //Return a floating point value representing the shadow factor. Range[0,1].
 float SampleCascades(uint cascadeIndex, uint otherCascadeIndex, float2 pixelPosTexelSpace, float pixelDepth) 
 {
 	//**
 	if(otherCascadeIndex < 0 || otherCascadeIndex > (nrOfCascades - 1))
 	{
-		//return 0.0f;
+		//return 0.0f; //Debug
 	}
 
 
@@ -193,59 +234,101 @@ float SampleCascades(uint cascadeIndex, uint otherCascadeIndex, float2 pixelPosT
 	
 	float CSM_SHADOW_EPSILON = 0.005f;// - (cascadeIndex * 0.0005f);// - (pixelDepth * 0.001f); //**finputsa, lägga till pixelDepth?**
 	float shadow = 0.0f; 
+	bool withinBlendingDistance = false;
 	if(blendCascades) //global variable
 	{
-		if(usePCF)
+		//**TILLMAN START OF BLENDING**
+
+		//Convert pixel depth to view space units.
+		/*float pixelDepthViewSpace = pixelDepth * cascadeFarPlanes[nrOfCascades - 1];
+		
+		//Check if otherCascadeIndex is less than cascadeIndex to know what plane to check the pixel with.
+		if(otherCascadeIndex < cascadeIndex)
 		{
-			for(float s = 0; s < PCF_SIZE; s++) // error X3511: forced to unroll loop, but unrolling failed.
+			//If the depth of the pixel is within blending distance of the far plane, sample both cascades and blend.
+			if(pixelDepthViewSpace > (cascadeFarPlanes[otherCascadeIndex] - 1.1f) && pixelDepthViewSpace < (cascadeFarPlanes[otherCascadeIndex] + 1.1f))
 			{
-				for(float q = 0; q < PCF_SIZE; q++)
-				{
-					//X3511: shadow += (CascadedShadowMap[cascadeIndex].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-					if(cascadeIndex == 0)
-					{
-						shadow += (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-					}
-					else if(cascadeIndex == 1) 
-					{
-						shadow += (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-					}
-					else if(cascadeIndex == 2)
-					{
-						shadow += (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-					}
-					else if(cascadeIndex == 3)
-					{
-						shadow += (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-					}
-				}
+				//**lerp result? eller djupdata?**
+				return -1.0f;
+				shadow = BlendCascades(cascadeIndex, otherCascadeIndex, pixelPosTexelSpace, pixelDepth, CSM_SHADOW_EPSILON);
+				withinBlendingDistance = true;
 			}
-			shadow *= PCF_SIZE_SQUARED;
 		}
 		else
 		{
-			//X3511: shadow = (CascadedShadowMap[cascadeIndex].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-			if(cascadeIndex == 0)
+			//If the depth of the pixel is within blending distance of the far plane, sample both cascades and blend.
+			/*if(pixelDepthViewSpace > (cascadeFarPlanes[cascadeIndex] - 1.1f) && pixelDepthViewSpace < (cascadeFarPlanes[cascadeIndex] + 1.1f))
 			{
-				shadow = (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				//**lerp result? eller djupdata?**
+				return -1.0f;
+				shadow = BlendCascades(cascadeIndex, otherCascadeIndex, pixelPosTexelSpace, pixelDepth, CSM_SHADOW_EPSILON);
+				withinBlendingDistance = true;
+			}*/
+		//}*/
+
+		//If pixel was not in blending distance (and therefore not blended), do normal PCF. //**kanske strunta i bool helt?**
+		//if(!withinBlendingDistance) //**kanske strunta i bool helt?**
+
+		//**TILLMAN END OF BLENDING**
+		{
+
+
+			//**todo CHECK** TILLMAN
+			//if true, sample both and lerp samples**
+			//else: kod under**
+
+			if(PCF_SIZE > 0) //**TILLMAN, ersätta med if PCF_SIZE != 0??**
+			{
+				for(float s = 0; s < PCF_SIZE; s++) // error X3511: forced to unroll loop, but unrolling failed.
+				{
+					for(float q = 0; q < PCF_SIZE; q++)
+					{
+						//X3511: shadow += (CascadedShadowMap[cascadeIndex].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+						if(cascadeIndex == 0)
+						{
+							shadow += (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+						}
+						else if(cascadeIndex == 1) 
+						{
+							shadow += (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+						}
+						else if(cascadeIndex == 2)
+						{
+							shadow += (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+						}
+						else if(cascadeIndex == 3)
+						{
+							shadow += (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX * (s - PCF_SIZE/2) , SMAP_DX * (q - PCF_SIZE/2)), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+						}
+					}
+				}
+				shadow *= PCF_SIZE_SQUARED;
 			}
-			else if(cascadeIndex == 1) 
+			else
 			{
-				shadow = (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-			}
-			else if(cascadeIndex == 2)
-			{
-				shadow = (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
-			}
-			else if(cascadeIndex == 3)
-			{
-				shadow = (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				//X3511: shadow = (CascadedShadowMap[cascadeIndex].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				if(cascadeIndex == 0)
+				{
+					shadow = (CascadedShadowMap[0].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				}
+				else if(cascadeIndex == 1) 
+				{
+					shadow = (CascadedShadowMap[1].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				}
+				else if(cascadeIndex == 2)
+				{
+					shadow = (CascadedShadowMap[2].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				}
+				else if(cascadeIndex == 3)
+				{
+					shadow = (CascadedShadowMap[3].SampleLevel(shadowMapSampler, pixelPosTexelSpace + float2(SMAP_DX, SMAP_DX), 0).r + CSM_SHADOW_EPSILON < pixelDepth) ? 0.0f : 1.0f;
+				}
 			}
 		}
 	}
 	else
 	{
-		if(usePCF)
+		if(PCF_SIZE > 0)
 		{
 			for(float s = 0; s < PCF_SIZE; s++) // error X3511: forced to unroll loop, but unrolling failed.
 			{
@@ -432,7 +515,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 
 		//Determine the second cascade to use if blending between cascades is enabled:
 		uint otherCascadeIndex = -1; //**TILLMAN TODO**
-		if(!blendCascades)
+		if(blendCascades)
 		{
 			otherCascadeIndex = FindCascadeToBlendWith(cascadeIndex, pixelDepthCameraViewSpace); 
 		}
@@ -458,12 +541,25 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		
 		
 		//**tillman end of CSM
-
+		
 		diffuseLighting += diffLight;
 		specLighting += specLight;
-
+		if(shadow == -1.0f)
+		{
+			diffuseLighting = 1.0f;
+		}
 		diffuseLighting = saturate(diffuseLighting);
 		specLighting = saturate(specLighting);
+
+		//**DEBUG**
+		/*if(otherCascadeIndex < cascadeIndex)
+		{
+			DiffuseColor = float3(1.0f, 0.0f, 0.0f);
+		}
+		else
+		{
+			DiffuseColor = float3(0.0f, 0.0f, 1.0f);
+		}*/
 	}
 
 	// Reduction of ambientlight if diffuse and spec is high to prevent oversaturation.
@@ -475,7 +571,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		SpecularColor.xyz * specLighting), 
 		1.0f);
 
-
+	
 	
 	// Haxfix, want it above but I lose 75% of my FPS then (??!?!? :S:S:S:S:S)
 	if(NormsAndDepth.w < -0.5f)		// All pixels that has a negative depth means that there is no geometry, therefor go without lightcalcs.

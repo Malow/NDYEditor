@@ -99,9 +99,9 @@ public:
 	Vector3 CalcNormalAt( const Vector2& worldPos ) throw(...);
 
 	// Modify Blend Functions
-	void ModifyBlendingAt( float x, float y, const Vector4& val );
-	Vector4 GetBlendingAt( float x, float y );
-	void SetBlendingAt( float x, float y, const Vector4& val );
+	void ModifyBlendingAt( const Vector2& worldPos, const BlendValues& val );
+	BlendValues GetBlendingAt( const Vector2& worldPos );
+	void SetBlendingAt( const Vector2& worldPos, const BlendValues& val );
 
 	// Entity Functions
 	Entity* CreateEntity(unsigned int entityType);

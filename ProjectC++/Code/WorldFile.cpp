@@ -98,9 +98,9 @@ void WorldFile::Open()
 	else if ( zMode == OPEN_EDIT )
 	{
 		// Check Size
-		std::streampos end = zFile->tellg();
-		zFile->seekg(0, std::ios::beg);
-		unsigned int size = (unsigned int)(end - zFile->tellg());
+		std::streampos end = zFile->tellp();
+		zFile->seekp(0, std::ios::beg);
+		unsigned int size = (unsigned int)(end - zFile->tellp());
 
 		if ( size == 0 )
 			throw("Empty File!");
@@ -109,10 +109,25 @@ void WorldFile::Open()
 			throw("File Doesn't Have Header!");
 
 		// Read File Header
+		zFile->seekg( 0, std::ios::beg );
 		zFile->read( reinterpret_cast<char*>(&zHeader), sizeof(WorldFileHeader) );
 
 		// Save number of sectors
 		zNumSectors = zHeader.width * zHeader.height;
+
+		if ( size < GetEnding() )
+		{
+			std::vector<unsigned char> v;
+			v.resize(10*1024*1024);
+			zFile->seekp(0, std::ios::end);
+			while( size < GetEnding() )
+			{
+				unsigned int missing = GetEnding() - size;
+				unsigned int thisTurn = ( missing > sizeof(v)? sizeof(v) : missing );
+				zFile->write(reinterpret_cast<char*>(&v[0]), thisTurn);
+				size += thisTurn;
+			}
+		}
 
 		// Header Loaded
 		NotifyObservers( &WorldHeaderLoadedEvent(this,zHeader) );
@@ -154,12 +169,10 @@ bool WorldFile::ReadSectorHeader( WorldFileSectorHeader& headerOut, unsigned int
 	return true;
 }
 
-
 unsigned int WorldFile::GetSectorTexturesBegin() const
 {
 	return GetSectorHeadersBegin() + zNumSectors * sizeof(WorldFileSectorHeader);
 }
-
 
 void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 {
@@ -172,7 +185,6 @@ void WorldFile::WriteTextureNames( const char* data, unsigned int sectorIndex )
 	}
 }
 
-
 bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
@@ -183,12 +195,10 @@ bool WorldFile::ReadTextureNames( char* data, unsigned int sectorIndex )
 	return true;
 }
 
-
 unsigned int WorldFile::GetHeightsBegin() const
 {
 	return GetSectorTexturesBegin() + zNumSectors * sizeof(TextureNamesStruct);
 }
-
 
 void WorldFile::WriteHeightMap( const float* const data, unsigned int sectorIndex )
 {
@@ -201,7 +211,6 @@ void WorldFile::WriteHeightMap( const float* const data, unsigned int sectorInde
 	}
 }
 
-
 bool WorldFile::ReadHeightMap( float* data, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
@@ -211,7 +220,6 @@ bool WorldFile::ReadHeightMap( float* data, unsigned int sectorIndex )
 	if ( !zFile->read((char*)data, sizeof(HeightMap)) ) return false;
 	return true;
 }
-
 
 unsigned int WorldFile::GetBlendsBegin() const
 {
@@ -230,7 +238,6 @@ void WorldFile::WriteBlendMap( const float* const data, unsigned int sectorIndex
 	}
 }
 
-
 bool WorldFile::ReadBlendMap( float* data, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
@@ -241,12 +248,10 @@ bool WorldFile::ReadBlendMap( float* data, unsigned int sectorIndex )
 	return true;
 }
 
-
 unsigned int WorldFile::GetEntitiesBegin() const
 {
 	return GetBlendsBegin() + zNumSectors * sizeof(BlendMap);
 }
-
 
 void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, unsigned int sectorIndex )
 {
@@ -259,7 +264,6 @@ void WorldFile::WriteEntities( const std::array<EntityStruct, 256>& entities, un
 	}
 }
 
-
 bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct, 256>& out )
 {
 	if ( !zFile ) Open();
@@ -270,12 +274,10 @@ bool WorldFile::ReadEntities( unsigned int sectorIndex, std::array<EntityStruct,
 	return true;
 }
 
-
 unsigned int WorldFile::GetAIGridBegin() const
 {
 	return GetEntitiesBegin() + zNumSectors * sizeof(EntityStruct) * 256;
 }
-
 
 void WorldFile::WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex )
 {
@@ -288,7 +290,6 @@ void WorldFile::WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex )
 	}
 }
 
-
 bool WorldFile::ReadAIGrid( AIGrid& grid, unsigned int sectorIndex )
 {
 	if ( !zFile ) Open();
@@ -299,12 +300,78 @@ bool WorldFile::ReadAIGrid( AIGrid& grid, unsigned int sectorIndex )
 	return true;
 }
 
-
-unsigned int WorldFile::GetEnding() const
+unsigned int WorldFile::GetBlendsBegin2() const
 {
 	return GetAIGridBegin() + zNumSectors * sizeof(AIGrid);
 }
 
+void WorldFile::WriteBlendMap2( const float* const data, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetBlendsBegin2() + sectorIndex * sizeof(BlendMap), std::ios::beg );
+		zFile->write((const char*)data, sizeof(BlendMap));
+	}
+}
+
+bool WorldFile::ReadBlendMap2( float* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetBlendsBegin2() + sectorIndex * sizeof(BlendMap), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read((char*)data, sizeof(BlendMap)) ) return false;
+
+	/*
+	// Try Data
+	for( unsigned int x=0; x<SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4; ++x )
+	{
+		if ( data[x] != 0.0 ) return true;
+	}
+	*/
+
+	return true;
+}
+
+unsigned int WorldFile::GetSectorTexturesBegin2() const
+{
+	return GetBlendsBegin2() + zNumSectors * sizeof(BlendMap);
+}
+
+void WorldFile::WriteTextureNames2( const char* data, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetSectorTexturesBegin2() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+		zFile->write(data, sizeof(TextureNamesStruct));
+	}
+}
+
+bool WorldFile::ReadTextureNames2( char* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetSectorTexturesBegin2() + sectorIndex * sizeof(TextureNamesStruct), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read(data, sizeof(TextureNamesStruct)) ) return false;
+	
+	// Try Data
+	for( unsigned int x=0; x<sizeof(TextureNamesStruct); ++x )
+	{
+		if ( data[x] != 0 ) return true;
+	}
+	
+	return false;
+}
+
+unsigned int WorldFile::GetEnding() const
+{
+	return GetSectorTexturesBegin2() + zNumSectors * sizeof(TextureNamesStruct);
+}
 
 void WorldFile::SetStartCamera( const Vector3& pos, const Vector3& rot )
 {

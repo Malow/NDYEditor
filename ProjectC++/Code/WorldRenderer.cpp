@@ -192,10 +192,11 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	{
 		unsigned int sectorIndex = i->y * zWorld->GetNumSectorsWidth() + i->x;
 
-		CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayTerrain(
+		CollisionData cd = zGraphics->GetPhysicsEngine()->GetSpecialCollisionRayTerrain(
 			zGraphics->GetCamera()->GetPosition(), 
 			zGraphics->GetCamera()->Get3DPickingRay(), 
-			zTerrain[sectorIndex]);
+			zTerrain[sectorIndex],
+			(float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1));
 
 		if(cd.collision)
 		{
@@ -231,7 +232,8 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 		if(cd.collision)
 		{
 			float thisDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
-			if(thisDistance < curDistance)
+
+			if( cam->Get3DPickingRay().GetDotProduct(Vector3(cd.posx,cd.posy,cd.posz) - camPos) > 0.0f && thisDistance < curDistance)
 			{
 				returnPointer = *i;
 				curDistance = thisDistance;
@@ -261,7 +263,14 @@ void WorldRenderer::UpdateSectorBlendMap( unsigned int x, unsigned int y )
 	if ( zWorld->IsSectorLoaded(x,y) )
 	{
 		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
-		zTerrain[tIndex]->SetBlendMap( SECTOR_BLEND_SIZE, zWorld->GetSector(x, y)->GetBlendMap() );
+
+		float* data[2] = { zWorld->GetSector(x, y)->GetBlendMap(), zWorld->GetSector(x, y)->GetBlendMap2()  };
+		unsigned int sizes[2] = { SECTOR_BLEND_SIZE, SECTOR_BLEND_SIZE };
+
+		zTerrain[tIndex]->SetBlendMaps( 
+			2,
+			&sizes[0],
+			&data[0] );
 	}
 }
 
@@ -300,9 +309,9 @@ void WorldRenderer::UpdateSectorTextures( unsigned int sectorX, unsigned int sec
 	{
 		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
 
-		const char* terrainTextures[4];
-		std::string files[4];
-		for( unsigned int x=0; x<4; ++x )
+		const char* terrainTextures[8];
+		std::string files[8];
+		for( unsigned int x=0; x<8; ++x )
 		{
 			files[x] = "Media/Textures/";
 			files[x] += zWorld->GetSector(sectorX, sectorY)->GetTextureName(x);

@@ -15,6 +15,9 @@ TextureNames
 HeightMaps
 BlendMaps
 Entities
+AIGrid
+BlendMaps2
+TextureNames2
 */
 
 enum WORLDFILE_OPENMODE
@@ -118,17 +121,21 @@ public:
 	// Texture names
 	void WriteTextureNames( const char* data, unsigned int x );
 	bool ReadTextureNames( char* data, unsigned int sectorIndex );
+	void WriteTextureNames2( const char* data, unsigned int x );
+	bool ReadTextureNames2( char* data, unsigned int sectorIndex );
 
 	// Writes blend map to file
 	void WriteBlendMap( const float* const data, unsigned int sectorIndex );
 	bool ReadBlendMap( float* data, unsigned int sectorIndex );
+	void WriteBlendMap2( const float* const data, unsigned int sectorIndex );
+	bool ReadBlendMap2( float* data, unsigned int sectorIndex );
 
 	// AI Grid
 	void WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex );
 	bool ReadAIGrid( AIGrid& grid, unsigned int sectorIndex );
 
 	// Read the world header
-	void ReadHeader( );
+	void ReadHeader();
 
 	// World Header
 	const WorldFileHeader& GetWorldHeader() const { return zHeader; }
@@ -152,5 +159,7 @@ private:
 	unsigned int GetSectorTexturesBegin() const;
 	unsigned int GetEntitiesBegin() const;
 	unsigned int GetAIGridBegin() const;
+	unsigned int GetBlendsBegin2() const;
+	unsigned int GetSectorTexturesBegin2() const;
 	unsigned int GetEnding() const;
 };

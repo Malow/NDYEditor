@@ -13,7 +13,7 @@ class BlendChangedAction : public Action
 	float zBrushSize;
 	float zBrushSizeExtra;
 	unsigned int zTexBrushSelectedTex;
-	std::vector< std::pair< Vector2, Vector4 > > zChangesMade;
+	std::vector< std::pair< Vector2, BlendValues > > zChangesMade;
 public:
 	BlendChangedAction( World* World, const Vector2& center, float brushStrength, float size, float sizeExtra, unsigned int selectedTex ) :
 		zWorld(World),
@@ -39,20 +39,22 @@ public:
 				{
 					factor = zBrushSizeExtra - ( distance - zBrushSize );
 					factor /= zBrushSizeExtra;
-					if ( factor <= 0.0 ) factor = 0;
+					if ( factor <= 0.0f ) factor = 0.0f;
 				}
 
-				Vector4 drawColor(0.0f, 0.0f, 0.0f, 0.0f);
-				drawColor[zTexBrushSelectedTex] = zBrushStrength * factor;
+				if ( factor > 0.0f )
+				{
+					BlendValues drawColor;
+					drawColor[zTexBrushSelectedTex] = zBrushStrength * factor;
 
-				try
-				{
-					Vector4 prevColor = zWorld->GetBlendingAt(i->x, i->y);
-					zWorld->ModifyBlendingAt(i->x, i->y, drawColor);
-					zChangesMade.push_back( std::pair<Vector2,Vector4>(*i,prevColor) );
-				}
-				catch(...)
-				{
+					try
+					{
+						zChangesMade.push_back( std::pair<Vector2,BlendValues>(*i, zWorld->GetBlendingAt(*i)) );
+						zWorld->ModifyBlendingAt(*i, drawColor);
+					}
+					catch(...)
+					{
+					}
 				}
 			}
 
@@ -64,7 +66,7 @@ public:
 	{
 		for( auto i = zChangesMade.rbegin(); i != zChangesMade.rend(); ++i )
 		{
-			zWorld->SetBlendingAt(i->first.x, i->first.y, i->second);
+			zWorld->SetBlendingAt(i->first, i->second);
 		}
 
 		zChangesMade.clear();

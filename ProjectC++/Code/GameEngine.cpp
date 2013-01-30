@@ -699,7 +699,8 @@ void GameEngine::KeyUp( int key )
 	}
 	else if ( key == 110 )
 	{
-		if ( zWorld )
+		// DISABLED UNTIL FIXED
+		if ( false && zWorld )
 		{
 			Vector3 startPos;
 			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5f;
@@ -997,7 +998,6 @@ void GameEngine::MoveObjectToSurface()
 
 void GameEngine::GetSunInfo(char* info, float& x, float& y, float& z )
 {
-
 	Vector3 temp(x,y,z);
 
 	if(string(info) == "Dir") // Returns the sunlight dir

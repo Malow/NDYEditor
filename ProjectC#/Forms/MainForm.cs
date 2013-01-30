@@ -281,6 +281,26 @@ namespace Example
                 this.ComboBox_Tex4.Text = temp;
                 this.ComboBox_Tex4.Enabled = true;
 
+                m_GameEngine.GetBrushAttr("Tex4", out temp);
+                this.ComboBox_Tex5.Enabled = false;
+                this.ComboBox_Tex5.Text = temp;
+                this.ComboBox_Tex5.Enabled = true;
+
+                m_GameEngine.GetBrushAttr("Tex5", out temp);
+                this.ComboBox_Tex6.Enabled = false;
+                this.ComboBox_Tex6.Text = temp;
+                this.ComboBox_Tex6.Enabled = true;
+
+                m_GameEngine.GetBrushAttr("Tex6", out temp);
+                this.ComboBox_Tex7.Enabled = false;
+                this.ComboBox_Tex7.Text = temp;
+                this.ComboBox_Tex7.Enabled = true;
+
+                m_GameEngine.GetBrushAttr("Tex7", out temp);
+                this.ComboBox_Tex8.Enabled = false;
+                this.ComboBox_Tex8.Text = temp;
+                this.ComboBox_Tex8.Enabled = true;
+
                 this.Panel_Textures.Show();
                 this.Panel_Textures.BringToFront();
             }
@@ -403,6 +423,10 @@ namespace Example
             this.ComboBox_Tex2.Enabled = false;
             this.ComboBox_Tex3.Enabled = false;
             this.ComboBox_Tex4.Enabled = false;
+            this.ComboBox_Tex5.Enabled = false;
+            this.ComboBox_Tex6.Enabled = false;
+            this.ComboBox_Tex7.Enabled = false;
+            this.ComboBox_Tex8.Enabled = false;
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -410,12 +434,20 @@ namespace Example
                 this.ComboBox_Tex2.Items.Add(files[i].ToString());
                 this.ComboBox_Tex3.Items.Add(files[i].ToString());
                 this.ComboBox_Tex4.Items.Add(files[i].ToString());
+                this.ComboBox_Tex5.Items.Add(files[i].ToString());
+                this.ComboBox_Tex6.Items.Add(files[i].ToString());
+                this.ComboBox_Tex7.Items.Add(files[i].ToString());
+                this.ComboBox_Tex8.Items.Add(files[i].ToString());
             }
 
             this.ComboBox_Tex1.Enabled = true;
             this.ComboBox_Tex2.Enabled = true;
             this.ComboBox_Tex3.Enabled = true;
             this.ComboBox_Tex4.Enabled = true;
+            this.ComboBox_Tex5.Enabled = true;
+            this.ComboBox_Tex6.Enabled = true;
+            this.ComboBox_Tex7.Enabled = true;
+            this.ComboBox_Tex8.Enabled = true;
         }
 
         private void hideAll()

@@ -5,25 +5,60 @@
 #include "Vector.h"
 #include <vector>
 #include <bitset>
+#include <array>
 
 static const unsigned int SECTOR_WORLD_SIZE = 32;
 static const unsigned int SECTOR_LENGTH = 64;
 static const unsigned int SECTOR_BLEND_SIZE = 64;
 static const unsigned int SECTOR_HEIGHT_SIZE = 64;
 static const unsigned int TEXTURE_NAME_LENGTH = 60;
+static const unsigned int SECTOR_BLEND_CHANNELS = 8;
 
 // AI Grid
 static const unsigned int SECTOR_AI_GRID_SIZE = 63;
 typedef std::bitset< SECTOR_AI_GRID_SIZE * SECTOR_AI_GRID_SIZE > AIGrid;
 
+template<unsigned int T>
+struct BlendValuesT : public std::array<float, T>
+{
+public:
+	BlendValuesT()
+	{
+		for( unsigned int x=0; x<T; ++x )
+		{
+			(*this)[x] = 0.0f;
+		}
+	}
 
+	void Normalize()
+	{
+		float min = std::numeric_limits<float>::max();
+		float max = 0.0f;
+
+		for( unsigned int x=0; x<T; ++x )
+		{
+			if ( (*this)[x] < min ) min = (*this)[x];
+			max += (*this)[x];
+		}
+
+		for( unsigned int x=0; x<T; ++x )
+		{
+			(*this)[x] = ((*this)[x] - min) / (max - min);
+		}
+	}
+};
+
+typedef BlendValuesT<SECTOR_BLEND_CHANNELS> BlendValues;
 
 class Sector
 {
 private:
 	float zHeightMap[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
+	float zBlendMap2[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	char zTextureNames[TEXTURE_NAME_LENGTH*4];
+	char zTextureNames2[TEXTURE_NAME_LENGTH*4];
+
 	float zAmbient[3];
 	AIGrid zAiGrid;
 
@@ -40,14 +75,21 @@ public:
 	// Returns the blend map as a float array where each pixel is 4 floats.
 	inline float* GetBlendMap() { return &zBlendMap[0]; }
 
+	// Returns the second blend map
+	inline float* GetBlendMap2() { return &zBlendMap2[0]; }
+	void ResetBlendMap2();
+
 	// Returns the height map as a float array.
 	inline float* GetHeightMap() { return &zHeightMap[0]; }
 
+	// Modifies blending
+	void ModifyBlendingAt( const Vector2& nodePos, const BlendValues& val );
+
 	// Sets texture blending at point
-	void SetBlendingAt( float x, float y, const Vector4& val );
+	void SetBlendingAt( const Vector2& pos, const BlendValues& val );
 
 	// Returns the texture blending at point
-	Vector4 GetBlendingAt( float x, float y ) const;
+	BlendValues GetBlendingAt( const Vector2& pos ) const;
 
 	// Ambient
 	inline Vector3 GetAmbient() const { return Vector3(zAmbient[0], zAmbient[1], zAmbient[2]); }
@@ -75,6 +117,7 @@ public:
 	const char* const GetTextureName( unsigned int index ) const;
 	void SetTextureName( unsigned int index, const std::string& name );
 	inline char* GetTextureNames() { return &zTextureNames[0]; }
+	inline char* GetTextureNames2() { return &zTextureNames2[0]; }
 
 	// Inline Functions
 	inline int GetSectorLength() { return SECTOR_LENGTH; }

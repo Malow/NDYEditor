@@ -92,16 +92,6 @@ World::~World()
 	}
 }
 
-
-void World::ModifyHeightAt( float x, float y, float val )
-{
-	if ( val != 0.0f )
-	{
-		SetHeightAt(x, y, GetHeightAt(x, y) + val);
-	}
-}
-
-
 Entity* World::CreateEntity( unsigned int entityType )
 {
 	Entity* temp = new Entity(entityType);
@@ -111,6 +101,10 @@ Entity* World::CreateEntity( unsigned int entityType )
 	return temp;
 }
 
+void World::ModifyHeightAt( float x, float y, float delta )
+{
+	SetHeightAt( x, y, GetHeightAt( x, y ) + delta );
+}
 
 void World::SetHeightAt( float x, float y, float val )
 {
@@ -197,6 +191,8 @@ void World::SaveFile()
 							zFile->WriteBlendMap(zSectors[x][y]->GetBlendMap(), sectorIndex);
 							zFile->WriteTextureNames(zSectors[x][y]->GetTextureNames(), sectorIndex);
 							zFile->WriteAIGrid(zSectors[x][y]->GetAIGrid(), sectorIndex);
+							zFile->WriteBlendMap2(zSectors[x][y]->GetBlendMap2(), sectorIndex);
+							zFile->WriteTextureNames2(zSectors[x][y]->GetTextureNames2(), sectorIndex);
 
 							// Write Sector Header
 							WorldFileSectorHeader header;
@@ -352,23 +348,47 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
 					MaloW::Debug( ss.str() );
 				}
-				else if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x) )
+
+				if ( !zFile->ReadBlendMap(s->GetBlendMap(), y * GetNumSectorsWidth() + x) )
 				{
 					std::stringstream ss;
 					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
 					MaloW::Debug( ss.str() );
 				}
-				else if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x) )
+
+				if ( !zFile->ReadTextureNames(s->GetTextureNames(), y * GetNumSectorsWidth() + x) )
 				{
 					std::stringstream ss;
 					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
 					MaloW::Debug( ss.str() );
 				}
-				else if ( !zFile->ReadAIGrid(s->GetAIGrid(), y * GetNumSectorsWidth() + x) )
+				
+				if ( !zFile->ReadAIGrid(s->GetAIGrid(), y * GetNumSectorsWidth() + x) )
 				{
 					std::stringstream ss;
 					ss << "Failed Loading AI For Sector: (" << x << ", " << y << ")";
 					MaloW::Debug( ss.str() );
+				}
+
+				if ( !zFile->ReadBlendMap2(s->GetBlendMap2(), y * GetNumSectorsWidth() + x) )
+				{
+					std::stringstream ss;
+					ss << "Failed Reading Second Blendmap For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
+
+					s->ResetBlendMap2();
+				}
+
+				if ( !zFile->ReadTextureNames2(s->GetTextureNames2(), y * GetNumSectorsWidth() + x) )
+				{
+					std::stringstream ss;
+					ss << "Failed Reading Second Blendmap Textures For Sector: (" << x << ", " << y << ")";
+					MaloW::Debug( ss.str() );
+
+					s->SetTextureName(4, s->GetTextureName(0));
+					s->SetTextureName(5, s->GetTextureName(1));
+					s->SetTextureName(6, s->GetTextureName(2));
+					s->SetTextureName(7, s->GetTextureName(3));
 				}
 			}
 			else
@@ -601,31 +621,49 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 	return counter;
 }
 
-Vector4 World::GetBlendingAt( float x, float y )
+BlendValues World::GetBlendingAt( const Vector2& worldPos )
 {
-	float fSize = (float)SECTOR_WORLD_SIZE;
-	Sector* sector = GetSector(x/fSize,y/fSize);
-	return sector->GetBlendingAt(fmod(x,fSize),fmod(y,fSize));
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+	Vector2 localPos;
+	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	return GetSector(sectorX, sectorY)->GetBlendingAt( localPos );
 }
 
-void World::ModifyBlendingAt( float x, float y, const Vector4& val )
+void World::ModifyBlendingAt( const Vector2& worldPos, const BlendValues& val )
 {
-	if ( val.GetLength() > 0.0f )
-	{
-		SetBlendingAt( x,y, GetBlendingAt(x,y) + val );
-	}
-}
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+	Vector2 localPos;
+	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
 
-void World::SetBlendingAt( float x, float y, const Vector4& val )
-{
-	Sector* sector = GetSector(x/SECTOR_WORLD_SIZE,y/SECTOR_WORLD_SIZE);
-	sector->SetBlendingAt(fmod(x,SECTOR_WORLD_SIZE),fmod(y,SECTOR_WORLD_SIZE),val);
+	GetSector(sectorX, sectorY)->ModifyBlendingAt( localPos, val );
 
 	NotifyObservers( &SectorBlendMapChanged(this, 
-		x/SECTOR_WORLD_SIZE,
-		y/SECTOR_WORLD_SIZE,
-		fmod(x,SECTOR_WORLD_SIZE),
-		fmod(y,SECTOR_WORLD_SIZE)) );
+		worldPos.x/SECTOR_WORLD_SIZE,
+		worldPos.y/SECTOR_WORLD_SIZE,
+		fmod(worldPos.x,SECTOR_WORLD_SIZE),
+		fmod(worldPos.y,SECTOR_WORLD_SIZE)) );
+}
+
+void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
+{
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+	Vector2 localPos;
+	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+
+	GetSector(sectorX, sectorY)->SetBlendingAt(localPos, val);
+
+	NotifyObservers(&SectorBlendMapChanged(this, 
+		worldPos.x/SECTOR_WORLD_SIZE,
+		worldPos.y/SECTOR_WORLD_SIZE,
+		localPos.x,
+		localPos.y ));
 }
 
 WorldAnchor* World::CreateAnchor()
