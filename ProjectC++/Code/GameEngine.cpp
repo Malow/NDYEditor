@@ -39,7 +39,8 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true),
 	currentActionIndex(0),
-	zCurrentActionGroup(0)
+	zCurrentActionGroup(0),
+	zHeightFromGround(1.7f)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -137,7 +138,7 @@ void GameEngine::ProcessFrame()
 			{
 				if ( !zWorld->IsBlockingAt(pos.GetXZ()) )
 				{
-					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + 1.7f;
+					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + this->zHeightFromGround;
 					zGraphics->GetCamera()->SetPosition( pos );
 				}
 			}
@@ -747,6 +748,19 @@ void GameEngine::KeyUp( int key )
 		if ( zGraphics->GetKeyListener()->IsPressed(17) )
 		{
 			RedoAction();
+		}
+	}
+	else if( key == (int)'J')
+	{
+		if(this->zHeightFromGround == 1.7f)
+		{
+			this->zHeightFromGround = 1.0f;
+			this->zMovementMulti = 1.5f;
+		}
+		else
+		{
+			this->zHeightFromGround = 1.7f;
+			this->zMovementMulti = 2.95f;
 		}
 	}
 }

@@ -42,6 +42,7 @@ private:
 	float zMovementMulti;
 	const float zMaxSpeed;
 	float zRTSHeightFromGround;
+	float zHeightFromGround;
 
 	// Current Tool
 	MODE zMode;
