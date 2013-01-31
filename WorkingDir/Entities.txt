@@ -67,6 +67,14 @@ Number:17
 Name:WaterGrass_02
 Model:Media/Models/WaterGrass_02.ani
 
+Number:18
+Name:WaterGrass_02
+Model:Media/Models/ShrubberyGrass_01_v01.obj
+
+Number:19
+Name:WaterGrass_02
+Model:Media/Models/Bush_02_v01.obj
+
 Number:200
 Name:Deer Spawnpoint
 Model:Media/Scale.obj
