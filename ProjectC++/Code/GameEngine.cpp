@@ -39,7 +39,8 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zRTSHeightFromGround(20),
 	zWorldSavedFlag(true),
 	currentActionIndex(0),
-	zCurrentActionGroup(0)
+	zCurrentActionGroup(0),
+	zHeightFromGround(1.7f)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -137,7 +138,7 @@ void GameEngine::ProcessFrame()
 			{
 				if ( !zWorld->IsBlockingAt(pos.GetXZ()) )
 				{
-					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + 1.7f;
+					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + this->zHeightFromGround;
 					zGraphics->GetCamera()->SetPosition( pos );
 				}
 			}
@@ -749,6 +750,19 @@ void GameEngine::KeyUp( int key )
 			RedoAction();
 		}
 	}
+	else if( key == (int)'J')
+	{
+		if(this->zHeightFromGround == 1.7f)
+		{
+			this->zHeightFromGround = 1.0f;
+			this->zMovementMulti = 1.5f;
+		}
+		else
+		{
+			this->zHeightFromGround = 1.7f;
+			this->zMovementMulti = 2.95f;
+		}
+	}
 }
 
 
@@ -1228,4 +1242,30 @@ void GameEngine::TeleportTo( float x, float y, float z )
 void GameEngine::ToggleShadows( bool flag )
 {
 	zGraphics->UseShadow(flag);
+}
+
+void GameEngine::IncSelectedObjectInfo( char* info, float x, float y, float z )
+{
+	if(zTargetedEntities.empty())
+		return;
+
+	string compareString(info);
+	auto i = zTargetedEntities.begin();
+
+	if(compareString == "pos")
+	{
+		Vector3 pos = (*i)->GetPosition();
+		(*i)->SetPosition(pos + Vector3(x, y, z));
+		zPrevPosOfSelected[(*i)] = (*i)->GetPosition();
+	}
+	else if(compareString == "rot")
+	{
+		Vector3 rot = (*i)->GetRotation();
+		(*i)->SetRotation(rot + Vector3(x, y, z));
+	}
+	else if(compareString == "scale")
+	{
+		Vector3 scale = (*i)->GetScale();
+		(*i)->SetScale(scale + Vector3(x, y, z));
+	}
 }

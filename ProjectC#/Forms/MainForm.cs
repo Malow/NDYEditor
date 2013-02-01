@@ -462,6 +462,7 @@ namespace Editor.Forms
             this.Panel_SmoothTool.Hide();
             this.panel_DeleteCircle.Hide();
             this.Panel_AIGrid.Hide();
+            this.Panel_SliderPropBars.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
@@ -472,6 +473,7 @@ namespace Editor.Forms
             this.Panel_SmoothTool.SendToBack();
             this.panel_DeleteCircle.SendToBack();
             this.Panel_AIGrid.SendToBack();
+            this.Panel_SliderPropBars.SendToBack();
         }
 
         private void switchMode()
@@ -487,6 +489,10 @@ namespace Editor.Forms
                 this.hideAll();
                 this.Panel_Info.Show();
                 this.Panel_Info.BringToFront();
+
+                this.Panel_SliderPropBars.Show();
+                this.Panel_SliderPropBars.SendToBack();
+
             }
             else if (m_mode == MODE.MOVE)
             {
@@ -494,6 +500,9 @@ namespace Editor.Forms
                 this.hideAll();
                 this.Panel_Info.Show();
                 this.Panel_Info.BringToFront();
+
+                this.Panel_SliderPropBars.Show();
+                this.Panel_SliderPropBars.SendToBack();
             }
             else if (this.m_mode == MODE.PLACE)
             {
@@ -834,18 +843,12 @@ namespace Editor.Forms
 
         private void shadowOnOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            shadowOnOffToolStripMenuItem.Checked = !shadowOnOffToolStripMenuItem.Checked;
-            m_GameEngine.SunOnOff(shadowOnOffToolStripMenuItem.Checked);
+
         }
 
         private void worldToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            float tempOnOff = 0;
-            m_GameEngine.GetSunOnOff(out tempOnOff);
-            if (tempOnOff > 0)
-                shadowOnOffToolStripMenuItem.Checked = true;
-            else
-                shadowOnOffToolStripMenuItem.Checked = false;
+
         }
 
         private void teleportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -867,6 +870,43 @@ namespace Editor.Forms
         {
             (sender as ToolStripMenuItem).Checked = !(sender as ToolStripMenuItem).Checked;
             m_GameEngine.ToggleShadows((sender as ToolStripMenuItem).Checked);
+        }
+
+        private void trackBar_ValueChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void trackBar_ValueChanged(object sender, MouseEventArgs e)
+        {
+            string info = "rot";
+            if (radioButton_pos_slider.Checked == true)
+                info = "pos";
+            else if (radioButton_scale_slider.Checked == true)
+                info = "scale";
+
+            m_GameEngine.IncSelectedObjectInfo(info, trackBar_x.Value, trackBar_y.Value, trackBar_z.Value);
+
+            trackBar_x.Value = 0;
+            trackBar_y.Value = 0;
+            trackBar_z.Value = 0;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            int x = 0;
+            if ((sender as TextBox).Text == "" || int.TryParse((sender as TextBox).Text, out x) == false)
+                return;
+            if (x == 0)
+                return;
+
+            trackBar_x.Maximum = int.Parse((sender as TextBox).Text);
+            trackBar_y.Maximum = int.Parse((sender as TextBox).Text);
+            trackBar_z.Maximum = int.Parse((sender as TextBox).Text);
+
+            trackBar_x.Minimum = 0 - int.Parse((sender as TextBox).Text);
+            trackBar_y.Minimum = 0 - int.Parse((sender as TextBox).Text);
+            trackBar_z.Minimum = 0 - int.Parse((sender as TextBox).Text);
         }
     }
 }
