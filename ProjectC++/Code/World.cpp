@@ -428,7 +428,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 	return s;
 }
 
-void World::onEvent( Event* e )
+void World::OnEvent( Event* e )
 {
 	if ( WorldHeaderLoadedEvent* WHL = dynamic_cast<WorldHeaderLoadedEvent*>(e) )
 	{

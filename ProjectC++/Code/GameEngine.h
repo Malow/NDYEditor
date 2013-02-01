@@ -140,5 +140,5 @@ public:
 	int HasWorldBeenSaved();
 
 protected:
-	virtual void onEvent( Event* e );
+	virtual void OnEvent( Event* e );
 };

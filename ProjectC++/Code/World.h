@@ -137,5 +137,5 @@ public:
 
 protected:
 	// Engine Events
-	virtual void onEvent( Event* e );
+	virtual void OnEvent( Event* e );
 };

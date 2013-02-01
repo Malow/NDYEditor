@@ -38,7 +38,7 @@ public:
 	void update();
 	void ToggleAIGrid( bool state );
 
-	virtual void onEvent( Event* e );
+	virtual void OnEvent( Event* e );
 
 protected:
 	void UpdateSectorTextures( unsigned int x, unsigned int y );

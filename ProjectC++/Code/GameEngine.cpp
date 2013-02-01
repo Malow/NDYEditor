@@ -834,7 +834,7 @@ void GameEngine::SetSelectedObjectInfo( char* info, float& x, float& y, float& z
 }
 
 
-void GameEngine::onEvent( Event* e )
+void GameEngine::OnEvent( Event* e )
 {
 	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
 	{

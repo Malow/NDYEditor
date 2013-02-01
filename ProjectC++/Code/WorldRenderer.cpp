@@ -51,7 +51,7 @@ WorldRenderer::~WorldRenderer()
 }
 
 
-void WorldRenderer::onEvent( Event* e )
+void WorldRenderer::OnEvent( Event* e )
 {
 	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
 	{
