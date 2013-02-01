@@ -414,4 +414,19 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->ToggleShadows(flag);
 	}
 
+	void CppCLI::IncSelectedObjectInfo( String^ info, float x, float y, float z )
+	{
+		char* lpText = nullptr;
+		// Konvertera String^ -> char*
+		try
+		{
+			lpText = (char*)Marshal::StringToHGlobalAnsi(info).ToPointer();
+			m_GameEngine->IncSelectedObjectInfo(lpText, x, y, z);
+		}
+		finally
+		{
+			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
+		}
+	}
+
 }}}

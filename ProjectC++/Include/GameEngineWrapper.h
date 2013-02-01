@@ -48,6 +48,7 @@ public:
 	void LockMouseToCamera();
 	void GetSelectedInfo(char* info, float& x, float& y, float& z);
 	void SetSelectedObjectInfo( char* info, float x, float y, float z );
+	void IncSelectedObjectInfo( char* info, float x, float y, float z );
 	void SetSunInfo(char* info, float x, float y, float z);
 	void GetSunInfo(char* info, float& x, float& y, float& z);
 	void GetNrOfSelectedEntities(int& x);

@@ -1243,3 +1243,29 @@ void GameEngine::ToggleShadows( bool flag )
 {
 	zGraphics->UseShadow(flag);
 }
+
+void GameEngine::IncSelectedObjectInfo( char* info, float x, float y, float z )
+{
+	if(zTargetedEntities.empty())
+		return;
+
+	string compareString(info);
+	auto i = zTargetedEntities.begin();
+
+	if(compareString == "pos")
+	{
+		Vector3 pos = (*i)->GetPosition();
+		(*i)->SetPosition(pos + Vector3(x, y, z));
+		zPrevPosOfSelected[(*i)] = (*i)->GetPosition();
+	}
+	else if(compareString == "rot")
+	{
+		Vector3 rot = (*i)->GetRotation();
+		(*i)->SetRotation(rot + Vector3(x, y, z));
+	}
+	else if(compareString == "scale")
+	{
+		Vector3 scale = (*i)->GetScale();
+		(*i)->SetScale(scale + Vector3(x, y, z));
+	}
+}

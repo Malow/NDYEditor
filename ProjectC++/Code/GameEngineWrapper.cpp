@@ -272,3 +272,8 @@ void GameEngineWrapper::ToggleShadows( bool flag )
 {
 	m_GameEngine->ToggleShadows(flag);
 }
+
+void GameEngineWrapper::IncSelectedObjectInfo( char* info, float x, float y, float z )
+{
+	m_GameEngine->IncSelectedObjectInfo(info, x, y, z);
+}
