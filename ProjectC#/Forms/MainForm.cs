@@ -945,6 +945,8 @@ namespace Editor.Forms
             trackBar_x.Value = 0;
             trackBar_y.Value = 0;
             trackBar_z.Value = 0;
+
+            GetAllSelectedInfo();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
