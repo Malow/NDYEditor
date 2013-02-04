@@ -3,7 +3,7 @@
 :: Copy Includes
 IF EXIST External\NDYGFX\Include rmdir /q /s External\NDYGFX\Include
 IF NOT EXIST External\NDYGFX\Include mkdir External\NDYGFX\Include
-xcopy /s /e ..\NDYGFX\Include External\NDYGFX\Include
+xcopy /s /e ..\NDYGFX\NDYGFX\Include External\NDYGFX\Include
 
 :: Copy Lib
 IF EXIST External\NDYGFX\Lib\NDYGFXD.lib del External\NDYGFX\Lib\NDYGFXD.lib
