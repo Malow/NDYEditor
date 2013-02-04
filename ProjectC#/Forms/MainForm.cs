@@ -393,30 +393,50 @@ namespace Editor.Forms
 
         private void Load_Settings()
         {
-            try
+            
+			string path = "EditorConfig.cfg";
+            
+            if (File.Exists(path))
             {
-                string[] lines = System.IO.File.ReadAllLines("EditorConfig.cfg");
-                if (lines.Length > 0)
-                {
-                    textBox_InnerCircle_Terrain.Text = lines[0];
-                    textBox_OuterCircle_Terrain.Text = lines[1];
-                    TextBox_Terrain_Strength.Text = lines[2];
-                    TextBox_InnerCircle_Smooth.Text = lines[3];
-                    TextBox_OuterCircle_Smooth.Text = lines[4];
-                    TextBox_Strength_Smooth.Text = lines[5];
-                    textBox1.Text = lines[6];
-                    TextBox_DeleteCircle_Inner.Text = lines[7];
-                    TextBox_AIGrid_Inner.Text = lines[8];
-                    TextBox_BrushPlace_Inner.Text = lines[9];
-                    TextBox_StrengthCircle.Text = lines[10];
-                    TextBox_BothCircles_Size.Text = lines[11];
-                    TextBox_Strength_RaiseLower.Text = lines[12];
-                }
+				string[] lines = System.IO.File.ReadAllLines("EditorConfig.cfg");
+                textBox_InnerCircle_Terrain.Text = lines[0];
+                textBox_OuterCircle_Terrain.Text = lines[1];
+                TextBox_Terrain_Strength.Text = lines[2];
+                TextBox_InnerCircle_Smooth.Text = lines[3];
+                TextBox_OuterCircle_Smooth.Text = lines[4];
+                TextBox_Strength_Smooth.Text = lines[5];
+                textBox1.Text = lines[6];
+                TextBox_DeleteCircle_Inner.Text = lines[7];
+                TextBox_AIGrid_Inner.Text = lines[8];
+                TextBox_BrushPlace_Inner.Text = lines[9];
+                TextBox_StrengthCircle.Text = lines[10];
+                TextBox_BothCircles_Size.Text = lines[11];
+                TextBox_Strength_RaiseLower.Text = lines[12];
             }
-            catch( Exception e )
+            else
             {
+                Save_Settings();
+            }
+        }
+        private void Save_Settings()
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter("EditorConfig.cfg");
 
-            }
+            file.WriteLine(textBox_InnerCircle_Terrain.Text);
+            file.WriteLine(textBox_OuterCircle_Terrain.Text);
+            file.WriteLine(TextBox_Terrain_Strength.Text);
+            file.WriteLine(TextBox_InnerCircle_Smooth.Text);
+            file.WriteLine(TextBox_OuterCircle_Smooth.Text);
+            file.WriteLine(TextBox_Strength_Smooth.Text);
+            file.WriteLine(textBox1.Text);
+            file.WriteLine(TextBox_DeleteCircle_Inner.Text);
+            file.WriteLine(TextBox_AIGrid_Inner.Text);
+            file.WriteLine(TextBox_BrushPlace_Inner.Text);
+            file.WriteLine(TextBox_StrengthCircle.Text);
+            file.WriteLine(TextBox_BothCircles_Size.Text);
+            file.WriteLine(TextBox_Strength_RaiseLower.Text);
+
+            file.Close();
         }
         private void Load_Models()
         {
@@ -717,23 +737,7 @@ namespace Editor.Forms
                     }
                 }
             }
-            System.IO.StreamWriter file = new System.IO.StreamWriter("EditorConfig.cfg");
-
-            file.WriteLine(textBox_InnerCircle_Terrain.Text);
-            file.WriteLine(textBox_OuterCircle_Terrain.Text);
-            file.WriteLine(TextBox_Terrain_Strength.Text);
-            file.WriteLine(TextBox_InnerCircle_Smooth.Text);
-            file.WriteLine(TextBox_OuterCircle_Smooth.Text);
-            file.WriteLine(TextBox_Strength_Smooth.Text);
-            file.WriteLine(textBox1.Text);
-            file.WriteLine(TextBox_DeleteCircle_Inner.Text);
-            file.WriteLine(TextBox_AIGrid_Inner.Text);
-            file.WriteLine(TextBox_BrushPlace_Inner.Text);
-            file.WriteLine(TextBox_StrengthCircle.Text);
-            file.WriteLine(TextBox_BothCircles_Size.Text);
-            file.WriteLine(TextBox_Strength_RaiseLower.Text);
-
-            file.Close();
+            Save_Settings();
         }
 
         private void NDYEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -941,6 +945,8 @@ namespace Editor.Forms
             trackBar_x.Value = 0;
             trackBar_y.Value = 0;
             trackBar_z.Value = 0;
+
+            GetAllSelectedInfo();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
