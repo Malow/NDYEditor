@@ -500,20 +500,35 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
 					x = cd.posx + (cos(theta) * length);
 					z = cd.posz + (sin(theta) * length);
-					if ( x > 0.0 && z > 0.0 )
+					if ( x > 0.0 && z > 0.0 && x < zWorld->GetWorldSize().x && z < zWorld->GetWorldSize().y )
 					{
 						Vector2UINT sp = zWorld->WorldPosToSector(Vector2(x,z));
 						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
 						{
-							Entity* ent = zWorld->CreateEntity(this->zCreateEntityType);
-							ent->SetPosition( Vector3(x, zWorldRenderer->GetYPosFromHeightMap(x, z), z) );
+							EntityPlacedAction *EPA = new EntityPlacedAction(
+								zWorld, 
+								zCreateEntityType,
+								Vector3(x, zWorld->GetHeightAt(Vector2(x, z)), z),
+								Vector3(0.0f, (float)rand()/float(RAND_MAX)*360.0f, 0.0f),
+								Vector3(1.0f, 1.0f, 1.0f)
+								);
+
+							EPA->Execute();
+
+							if ( !zCurrentActionGroup )
+							{
+								zCurrentActionGroup = new ActionGroup();
+								ApplyAction(zCurrentActionGroup);
+							}
+
+							zCurrentActionGroup->zActions.push_back( EPA );
+							zWorldSavedFlag = false;
 						}
-					}		
+					}
 				}
 				zBrushLastPos = Vector2(cd.posx, cd.posz);
-				zLeftMouseDown = true;
-				zWorldSavedFlag = false;
 			}
+			zLeftMouseDown = true;
 		}
 		else if ( zMode == MODE::SMOOTH )
 		{
