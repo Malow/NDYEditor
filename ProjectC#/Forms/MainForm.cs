@@ -597,6 +597,8 @@ namespace Editor.Forms
 
                 if(TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
             else if (this.m_mode == MODE.RESETGROUND)
             {
@@ -608,6 +610,8 @@ namespace Editor.Forms
 
                 if (TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
             else if (this.m_mode == MODE.AIGRID)
             {
@@ -619,6 +623,8 @@ namespace Editor.Forms
 
                 if (TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_AIGrid_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
         }
         private void setDrawTex(object sender, EventArgs e)

@@ -934,7 +934,7 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 }
 
 
-void GameEngine::MouseMove( int, int )
+void GameEngine::MouseMove( int x, int y )
 {
 	zMouseMoved = true;
 }
