@@ -393,12 +393,12 @@ namespace Editor.Forms
 
         private void Load_Settings()
         {
-            string path = "EditorConfig.cfg";
+            
+			string path = "EditorConfig.cfg";
             
             if (File.Exists(path))
             {
-                string[] lines = System.IO.File.ReadAllLines(path);
-
+				string[] lines = System.IO.File.ReadAllLines("EditorConfig.cfg");
                 textBox_InnerCircle_Terrain.Text = lines[0];
                 textBox_OuterCircle_Terrain.Text = lines[1];
                 TextBox_Terrain_Strength.Text = lines[2];
@@ -645,6 +645,8 @@ namespace Editor.Forms
 
                 if(TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
             else if (this.m_mode == MODE.RESETGROUND)
             {
@@ -656,6 +658,8 @@ namespace Editor.Forms
 
                 if (TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_DeleteCircle_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
             else if (this.m_mode == MODE.AIGRID)
             {
@@ -667,6 +671,8 @@ namespace Editor.Forms
 
                 if (TextBox_DeleteCircle_Inner.Text != "")
                     m_GameEngine.SetBrushAttr("InnerCircle", float.Parse(TextBox_AIGrid_Inner.Text));
+
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
         }
         private void setDrawTex(object sender, EventArgs e)
