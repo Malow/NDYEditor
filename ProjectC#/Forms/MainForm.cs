@@ -393,9 +393,12 @@ namespace Editor.Forms
 
         private void Load_Settings()
         {
-            string[] lines = System.IO.File.ReadAllLines("EditorConfig.cfg");
-            if (lines.Length > 0)
+            string path = "EditorConfig.cfg";
+            
+            if (File.Exists(path))
             {
+                string[] lines = System.IO.File.ReadAllLines(path);
+
                 textBox_InnerCircle_Terrain.Text = lines[0];
                 textBox_OuterCircle_Terrain.Text = lines[1];
                 TextBox_Terrain_Strength.Text = lines[2];
@@ -410,6 +413,30 @@ namespace Editor.Forms
                 TextBox_BothCircles_Size.Text = lines[11];
                 TextBox_Strength_RaiseLower.Text = lines[12];
             }
+            else
+            {
+                Save_Settings();
+            }
+        }
+        private void Save_Settings()
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter("EditorConfig.cfg");
+
+            file.WriteLine(textBox_InnerCircle_Terrain.Text);
+            file.WriteLine(textBox_OuterCircle_Terrain.Text);
+            file.WriteLine(TextBox_Terrain_Strength.Text);
+            file.WriteLine(TextBox_InnerCircle_Smooth.Text);
+            file.WriteLine(TextBox_OuterCircle_Smooth.Text);
+            file.WriteLine(TextBox_Strength_Smooth.Text);
+            file.WriteLine(textBox1.Text);
+            file.WriteLine(TextBox_DeleteCircle_Inner.Text);
+            file.WriteLine(TextBox_AIGrid_Inner.Text);
+            file.WriteLine(TextBox_BrushPlace_Inner.Text);
+            file.WriteLine(TextBox_StrengthCircle.Text);
+            file.WriteLine(TextBox_BothCircles_Size.Text);
+            file.WriteLine(TextBox_Strength_RaiseLower.Text);
+
+            file.Close();
         }
         private void Load_Models()
         {
@@ -704,23 +731,7 @@ namespace Editor.Forms
                     }
                 }
             }
-            System.IO.StreamWriter file = new System.IO.StreamWriter("EditorConfig.cfg");
-
-            file.WriteLine(textBox_InnerCircle_Terrain.Text);
-            file.WriteLine(textBox_OuterCircle_Terrain.Text);
-            file.WriteLine(TextBox_Terrain_Strength.Text);
-            file.WriteLine(TextBox_InnerCircle_Smooth.Text);
-            file.WriteLine(TextBox_OuterCircle_Smooth.Text);
-            file.WriteLine(TextBox_Strength_Smooth.Text);
-            file.WriteLine(textBox1.Text);
-            file.WriteLine(TextBox_DeleteCircle_Inner.Text);
-            file.WriteLine(TextBox_AIGrid_Inner.Text);
-            file.WriteLine(TextBox_BrushPlace_Inner.Text);
-            file.WriteLine(TextBox_StrengthCircle.Text);
-            file.WriteLine(TextBox_BothCircles_Size.Text);
-            file.WriteLine(TextBox_Strength_RaiseLower.Text);
-
-            file.Close();
+            Save_Settings();
         }
 
         private void NDYEditor_FormClosed(object sender, FormClosedEventArgs e)
