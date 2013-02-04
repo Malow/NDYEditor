@@ -69,15 +69,23 @@ Name:WaterGrass_02
 Model:Media/Models/WaterGrass_02.ani
 
 Number:18
-Name:WaterGrass_02
+Name:ShrubberyGrass_01
 Model:Media/Models/ShrubberyGrass_01_v01.obj
 
 Number:19
-Name:WaterGrass_02
+Name:Bush_02
 Model:Media/Models/Bush_02_v01.obj
 
 Number:20
+Name:Tree
+Model:Media/Models/Tree_03_v03.obj
+BlockRadius:0.5
+
+
+
+Number:20
 Name:Water
+Model:Water
 
 Number:200
 Name:Deer Spawnpoint

@@ -107,7 +107,20 @@ void WorldRenderer::OnEvent( Event* e )
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
 		const std::string& model = GetEntModel(ELE->entity->GetType());
-		zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
+		if ( model == "water" )
+		{
+			zEntities[ELE->entity] = zGraphics->CreateWaterPlane(ELE->entity->GetPosition(), "Media/WaterTexture.png");
+		}
+		else
+		{
+			zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
+		}
+
+		zEntities[ELE->entity]->SetQuaternion(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		zEntities[ELE->entity]->RotateAxis(Vector3(1.0f, 0.0f, 0.0f), ELE->entity->GetRotation().x * (3.1415f / 180.0f));
+		zEntities[ELE->entity]->RotateAxis(Vector3(0.0f, 1.0f, 0.0f), ELE->entity->GetRotation().y * (3.1415f / 180.0f));
+		zEntities[ELE->entity]->RotateAxis(Vector3(0.0f, 0.0f, 1.0f), ELE->entity->GetRotation().z * (3.1415f / 180.0f));
+
 		zEntities[ELE->entity]->Scale(ELE->entity->GetScale());
 		ELE->entity->AddObserver(this);
 	}

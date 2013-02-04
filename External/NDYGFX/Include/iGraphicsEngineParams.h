@@ -17,23 +17,25 @@ extern "C"
 {
 	class DECLDIR iGraphicsEngineParams
 	{	
-	public:
-		iGraphicsEngineParams() {};
-		virtual ~iGraphicsEngineParams() {};
-		
-		static int windowWidth;
-		static int windowHeight;
-		static bool Maximized;
-		static int ShadowMapSettings;
-		static int FXAAQuality;
-		static CameraType CamType;
-		static float FOV;
-		static float NearClip;
-		static float FarClip;
-		static int RefreshRate;
-		static int MaxFPS;
-		static int ShadowFit;
+	protected:
+		iGraphicsEngineParams() {}
+		virtual ~iGraphicsEngineParams() {}
 
+	public:
+		int WindowWidth;
+		int WindowHeight;
+		bool Maximized;
+		int ShadowMapSettings;
+		int FXAAQuality;
+		CameraType CamType;
+		float FOV;
+		float NearClip;
+		float FarClip;
+		int RefreshRate;
+		int MaxFPS;
+		int ShadowFit;
+
+		virtual void LoadFromFile(const char* file) = 0;
 		virtual void SaveToFile(const char* file) = 0;
 	};
 }

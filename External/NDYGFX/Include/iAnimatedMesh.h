@@ -12,20 +12,21 @@ extern "C"
 {
 	class DECLDIR iAnimatedMesh : public virtual iMesh
 	{	
-		public:
-			iAnimatedMesh() {};
-			virtual ~iAnimatedMesh() {};
+	protected:
+		iAnimatedMesh() {};
+		virtual ~iAnimatedMesh() {};
 
-			virtual unsigned int	GetNrOfTimesLooped()	const = 0;
-			virtual bool			IsLooping()				const = 0;
-			virtual bool			IsLoopingNormal()		const = 0;
-			virtual bool			IsLoopingSeamless()		const = 0;
-			/*! Prevents looping. */
-			virtual void NoLooping() = 0;
-			/*! Loops by returning to the first keyframe when last keyframe is reached. Note that this kind of looping is not seamless. */
-			virtual void LoopNormal() = 0;
-			/*! Loops by adding the first keyframe as the last keyframe to prevent seamed(normal) looping */
-			virtual void LoopSeamless() = 0; 
+	public:
+		virtual unsigned int	GetNrOfTimesLooped()	const = 0;
+		virtual bool			IsLooping()				const = 0;
+		virtual bool			IsLoopingNormal()		const = 0;
+		virtual bool			IsLoopingSeamless()		const = 0;
+		/*! Prevents looping. */
+		virtual void NoLooping() = 0;
+		/*! Loops by returning to the first keyframe when last keyframe is reached. Note that this kind of looping is not seamless. */
+		virtual void LoopNormal() = 0;
+		/*! Loops by adding the first keyframe as the last keyframe to prevent seamed(normal) looping */
+		virtual void LoopSeamless() = 0; 
 
 	};
 }
