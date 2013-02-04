@@ -13,10 +13,14 @@ IF EXIST ..\NDYGFX\Build\Debug\NDYGFXD.lib copy ..\NDYGFX\Build\Debug\NDYGFXD.li
 IF EXIST ..\NDYGFX\Build\Release\NDYGFX.lib copy ..\NDYGFX\Build\Release\NDYGFX.lib External\NDYGFX\Lib\NDYGFX.lib
 
 :: Copy DLL
+IF EXIST Bin\Debug\BTHFBXD.dll del Bin\Debug\BTHFBXD.dll
+IF EXIST Bin\Release\BTHFBX.dll del Bin\Release\BTHFBX.dll
 IF EXIST Bin\Debug\NDYGFXD.dll del Bin\Debug\NDYGFXD.dll
 IF EXIST Bin\Release\NDYGFX.dll del Bin\Release\NDYGFX.dll
 IF NOT EXIST Bin\Debug mkdir Bin\Debug
 IF NOT EXIST Bin\Release mkdir Bin\Release
+IF EXIST ..\NDYGFX\Build\Debug\BTHFBXD.dll copy ..\NDYGFX\Build\Debug\BTHFBXD.dll Bin\Debug\BTHFBXD.dll
+IF EXIST ..\NDYGFX\Build\Release\BTHFBX.dll copy ..\NDYGFX\Build\Release\BTHFBX.dll Bin\Release\BTHFBX.dll
 IF EXIST ..\NDYGFX\Build\Debug\NDYGFXD.dll copy ..\NDYGFX\Build\Debug\NDYGFXD.dll Bin\Debug\NDYGFXD.dll
 IF EXIST ..\NDYGFX\Build\Release\NDYGFX.dll copy ..\NDYGFX\Build\Release\NDYGFX.dll Bin\Release\NDYGFX.dll
 
