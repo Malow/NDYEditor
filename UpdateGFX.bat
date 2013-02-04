@@ -15,8 +15,8 @@ IF EXIST ..\NDYGFX\Build\Release\NDYGFX.lib copy ..\NDYGFX\Build\Release\NDYGFX.
 :: Copy DLL
 IF EXIST Bin\Debug\NDYGFXD.dll del Bin\Debug\NDYGFXD.dll
 IF EXIST Bin\Release\NDYGFX.dll del Bin\Release\NDYGFX.dll
-IF NOT EXIST C:\notdeadyet\editor\Bin\Debug mkdir C:\notdeadyet\editor\Bin\Debug
-IF NOT EXIST C:\notdeadyet\editor\Bin\Release mkdir C:\notdeadyet\editor\Bin\Release
+IF NOT EXIST Bin\Debug mkdir Bin\Debug
+IF NOT EXIST Bin\Release mkdir Bin\Release
 IF EXIST ..\NDYGFX\Build\Debug\NDYGFXD.dll copy ..\NDYGFX\Build\Debug\NDYGFXD.dll Bin\Debug\NDYGFXD.dll
 IF EXIST ..\NDYGFX\Build\Release\NDYGFX.dll copy ..\NDYGFX\Build\Release\NDYGFX.dll Bin\Release\NDYGFX.dll
 
