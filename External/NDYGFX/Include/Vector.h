@@ -15,6 +15,7 @@
 // EDIT 2013-01-11 by Tillman - Added the class Vector2UINT.
 // EDIT 2013-01-22 by Alexivan - Vector2 Multiply.
 // EDIT 2013-01-30 by Alexivan - Explicit Constructors, scalar addition and substraction
+// EDIT 2013-01-30 by Crant	- Added Vector3 == Operator
 
 #pragma warning ( push ) 
 #pragma warning ( disable : 4201 ) // nonstandard extension used : nameless struct/union
@@ -163,6 +164,11 @@ public:
 	inline Vector2 operator+( const float& scalar ) const
 	{
 		return Vector2( x + scalar, y + scalar );
+	}
+
+	inline bool operator==( const Vector2& v) const
+	{
+		return ( x == v.x && y == v.y );
 	}
 
 	inline float& operator[]( unsigned int i ) throw(...)
@@ -322,6 +328,10 @@ public:
         y *= scalar;
         z *= scalar;
     }
+	inline bool operator==(const Vector3& v)
+	{
+		return (x == v.x && y == v.y && z == v.z);
+	}
 
 	inline float GetLengthSquared()
 	{

@@ -21,6 +21,8 @@
 #include "iTerrain.h"
 #include "iGraphicsEngineParams.h"
 #include "iPhysicsEngine.h"
+#include "iWaterPlane.h"
+#include "iFBXMesh.h"
 
 extern "C"
 {
@@ -32,22 +34,24 @@ extern "C"
 
 		virtual iMesh* CreateMesh(const char* filename, const Vector3& pos) = 0;
 		virtual void DeleteMesh(iMesh* &delMesh) = 0;
-
-		virtual iLight* CreateLight(Vector3 pos) = 0;
-		virtual void DeleteLight(iLight* light) = 0;
-
-		virtual iImage* CreateImage(Vector2 pos, Vector2 dimensions, const char* texture) = 0;
-		virtual void DeleteImage(iImage* delImg) = 0;
-
-		/*! fontTexturePath shall not contain the file type. */
-		virtual iText* CreateText(const char* text, Vector2 pos, float size, const char* fontTexturePath) = 0;
-		virtual void DeleteText(iText* deltxt) = 0;
-
 		virtual iMesh* CreateStaticMesh(const char* filename, const Vector3& pos) = 0;
 		virtual iAnimatedMesh* CreateAnimatedMesh(const char* filename, const Vector3& pos) = 0;
 
+		virtual iLight* CreateLight(Vector3 pos) = 0;
+		virtual void DeleteLight(iLight* &light) = 0;
+
+		virtual iImage* CreateImage(Vector2 pos, Vector2 dimensions, const char* texture) = 0;
+		virtual void DeleteImage(iImage* &delImg) = 0;
+
+		/*! fontTexturePath shall not contain the file type. */
+		virtual iText* CreateText(const char* text, Vector2 pos, float size, const char* fontTexturePath) = 0;
+		virtual void DeleteText(iText* &deltxt) = 0;
+
 		virtual iTerrain* CreateTerrain(const Vector3& pos, const Vector3& scale, const unsigned int& size) = 0;
 		virtual void DeleteTerrain( iTerrain*& terrain ) = 0;
+
+		virtual iFBXMesh* CreateFBXMesh(const char* filename, Vector3 pos) = 0;
+		virtual void DeleteFBXMesh(iFBXMesh* mesh) = 0;
 
 		virtual iCamera* GetCamera() const = 0;
 
@@ -58,7 +62,7 @@ extern "C"
 
 		virtual bool IsRunning() = 0;
 
-		virtual iGraphicsEngineParams* GetEngineParameters() const = 0;
+		virtual const iGraphicsEngineParams& GetEngineParameters() const = 0;
 
 		virtual void CreateSkyBox(const char* texture) = 0;
 
@@ -66,6 +70,14 @@ extern "C"
 
 		/*! OBS! InnerRadius has to be greater than zero. */
 		virtual void SetSpecialCircle(float innerRadius, float outerRadius, Vector2& targetPos) const = 0;
+
+		//Resource manager
+		/*
+			Texture resources are created with the default format (CreateTextureResourceFromFile(..)).
+			Buffer resources are not supported.
+			Supported resources are object data resources(.obj & .ani), Texture resources(default format)(.png && .dds).
+		*/
+		virtual void PreLoadResources(unsigned int nrOfResources, char const* const* const resourcesFileNames) = 0;
 
 		virtual void StartRendering() = 0;
 
@@ -88,9 +100,12 @@ extern "C"
 
 		virtual void ResizeGraphicsEngine(unsigned int width, unsigned int height) = 0;
 
-		virtual void DebugDummyFunction(Vector3* arr) = 0;
+		virtual void LoadingScreen(const char* BackgroundTexture = "", const char* ProgressBarTexture = "", 
+			float FadeBlackInInTime = 0.0f, float FadeBlackInOutTime = 0.0f, float FadeBlackOutInTime = 0.0f, 
+			float FadeBlackOutOutTime = 0.0f) = 0;
 
-		virtual void LoadingScreen(const char* BackgroundTexture = "", const char* ProgressBarTexture = "", float FadeBlackInInTime = 0.0f, float FadeBlackInOutTime = 0.0f, float FadeBlackOutInTime = 0.0f, float FadeBlackOutOutTime = 0.0f) = 0;
+		virtual iWaterPlane* CreateWaterPlane(Vector3& pos, const char* texture) = 0;
+		virtual void DeleteWaterPlane(iWaterPlane* del) = 0;
 	};
 
 	/*

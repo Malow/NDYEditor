@@ -78,6 +78,7 @@ Model:Media/Models/Bush_02_v01.obj
 
 Number:20
 Name:Water
+Model:Water
 
 Number:200
 Name:Deer Spawnpoint
