@@ -727,13 +727,11 @@ void GameEngine::KeyUp( int key )
 	}
 	else if( key == VK_SUBTRACT)
 	{
-		if (zMovementMulti / 2.0f)
-			zMovementMulti /= 2.0f;
+		zMovementMulti /= 2.0f;
 	}
 	else if( key == VK_ADD)
 	{
-		if((zMovementMulti * 2.0f) < zMaxSpeed)
-			zMovementMulti *= 2.0f;
+		zMovementMulti *= 2.0f;
 	}
 	else if( key == 220)
 	{

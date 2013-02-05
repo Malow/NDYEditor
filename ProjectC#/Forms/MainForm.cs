@@ -940,7 +940,10 @@ namespace Editor.Forms
             else if (radioButton_scale_slider.Checked == true)
                 info = "scale";
 
-            m_GameEngine.IncSelectedObjectInfo(info, trackBar_x.Value, trackBar_y.Value, trackBar_z.Value);
+            m_GameEngine.IncSelectedObjectInfo(info,
+                float.Parse(textBox1.Text) * ((float)trackBar_x.Value / (float)trackBar_x.Maximum),
+                float.Parse(textBox1.Text) * ((float)trackBar_y.Value / (float)trackBar_y.Maximum),
+                float.Parse(textBox1.Text) * ((float)trackBar_z.Value / (float)trackBar_z.Maximum));
 
             trackBar_x.Value = 0;
             trackBar_y.Value = 0;
@@ -949,7 +952,7 @@ namespace Editor.Forms
             GetAllSelectedInfo();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+       /* private void textBox1_TextChanged(object sender, EventArgs e)
         {
             int x = 0;
             if ((sender as TextBox).Text == "" || int.TryParse((sender as TextBox).Text, out x) == false)
@@ -964,6 +967,6 @@ namespace Editor.Forms
             trackBar_x.Minimum = 0 - int.Parse((sender as TextBox).Text);
             trackBar_y.Minimum = 0 - int.Parse((sender as TextBox).Text);
             trackBar_z.Minimum = 0 - int.Parse((sender as TextBox).Text);
-        }
+        }*/
     }
 }

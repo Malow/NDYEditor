@@ -1261,7 +1261,6 @@
             this.textBox1.Size = new System.Drawing.Size(100, 22);
             this.textBox1.TabIndex = 7;
             this.textBox1.Text = "10";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NoNumberKeyPress);
             // 
             // Label_Z_Slider
@@ -1276,7 +1275,8 @@
             // trackBar_z
             // 
             this.trackBar_z.Location = new System.Drawing.Point(43, 237);
-            this.trackBar_z.Minimum = -10;
+            this.trackBar_z.Maximum = 100;
+            this.trackBar_z.Minimum = -100;
             this.trackBar_z.Name = "trackBar_z";
             this.trackBar_z.Size = new System.Drawing.Size(139, 56);
             this.trackBar_z.TabIndex = 5;
@@ -1294,7 +1294,8 @@
             // trackBar_y
             // 
             this.trackBar_y.Location = new System.Drawing.Point(43, 185);
-            this.trackBar_y.Minimum = -10;
+            this.trackBar_y.Maximum = 100;
+            this.trackBar_y.Minimum = -100;
             this.trackBar_y.Name = "trackBar_y";
             this.trackBar_y.Size = new System.Drawing.Size(139, 56);
             this.trackBar_y.TabIndex = 3;
@@ -1312,7 +1313,8 @@
             // trackBar_x
             // 
             this.trackBar_x.Location = new System.Drawing.Point(43, 137);
-            this.trackBar_x.Minimum = -10;
+            this.trackBar_x.Maximum = 100;
+            this.trackBar_x.Minimum = -100;
             this.trackBar_x.Name = "trackBar_x";
             this.trackBar_x.Size = new System.Drawing.Size(139, 56);
             this.trackBar_x.TabIndex = 1;
