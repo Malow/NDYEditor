@@ -74,7 +74,7 @@ Model:Media/Models/ShrubberyGrass_01_v01.obj
 
 Number:19
 Name:Bush_02
-Model:Media/Models/Bush_02_v01.obj
+Model:Media/Models/Bush_02_v02.obj
 
 Number:20
 Name:Tree
