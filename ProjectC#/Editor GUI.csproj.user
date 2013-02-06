@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup>
-    <ReferencePath>C:\Users\Administrator\Desktop\NotDeadYet\NDYGFX\Build\Debug\</ReferencePath>
+    <ReferencePath>
+    </ReferencePath>
   </PropertyGroup>
 </Project>

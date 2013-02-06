@@ -4,6 +4,8 @@
 #include "WorldRenderer.h"
 #include "Action.h"
 
+class NavArrows;
+
 #ifdef _DEBUG
 #include <vld.h>
 #endif // _DEBUG
@@ -44,6 +46,10 @@ private:
 	float zRTSHeightFromGround;
 	float zHeightFromGround;
 
+	// Navigation Arrows
+	NavArrows* zArrows;
+	bool zShowArrowsFlag;
+
 	// Current Tool
 	MODE zMode;
 	float zBrushSize;
@@ -76,7 +82,7 @@ private:
 	unsigned int currentActionIndex;
 	ActionGroup *zCurrentActionGroup;
 
-	//Walking on ground
+	// Walking on ground
 	bool zRightMouseDown;
 public:
 	GameEngine( GraphicsEngine* GE );
@@ -105,6 +111,7 @@ public:
 	void CalculateAIGrid();
 	float GetSunOnOff();
 	void SunOnOff(bool value);
+	void ToggleArrows();
 
 	// Action History
 	void ApplyAction( Action* a );

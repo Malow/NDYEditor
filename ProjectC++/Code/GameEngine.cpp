@@ -11,6 +11,7 @@
 #include "SmoothAction.h"
 #include <math.h>
 #include <time.h>
+#include "NavArrows.h"
 
 const float M_PI = 3.141592f;
 
@@ -40,7 +41,9 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zWorldSavedFlag(true),
 	currentActionIndex(0),
 	zCurrentActionGroup(0),
-	zHeightFromGround(1.7f)
+	zHeightFromGround(1.7f),
+	zShowArrowsFlag(false),
+	zArrows(0)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -48,6 +51,10 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	zGraphics->StartRendering();
 	prevSunDir = Vector3(0, -1, 0);
+
+	// Direction Arrows
+	zArrows = new NavArrows(zGraphics);
+
 	// Entities
 	LoadEntList("Entities.txt");
 
@@ -63,6 +70,8 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 GameEngine::~GameEngine()
 {
 	ClearActionHistory();
+
+	if ( zArrows ) delete zArrows;
 	if ( zWorld ) delete zWorld;
 }
 
@@ -71,6 +80,20 @@ void GameEngine::ProcessFrame()
 {
 	iCamera *camera = zGraphics->GetCamera();
 	float dt = zGraphics->Update();
+
+	if ( zShowArrowsFlag )
+	{
+		if ( zWorld ) 
+		{
+			Vector3 spawn;
+			spawn.x = zWorld->GetWorldSize().x / 2.0f;
+			spawn.z = zWorld->GetWorldSize().y / 2.0f;
+			spawn.y = 0.0f;
+			zArrows->SetSpawnPos( spawn );
+		}
+
+		zArrows->Update( zGraphics->GetCamera()->GetPosition(), zGraphics->GetCamera()->GetForward() );
+	}
 
 	if ( zWorld ) 
 	{
@@ -713,18 +736,6 @@ void GameEngine::KeyUp( int key )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
 	}
-	else if ( key == 110 )
-	{
-		// DISABLED UNTIL FIXED
-		if ( false && zWorld )
-		{
-			Vector3 startPos;
-			startPos.x = zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE * 0.5f;
-			startPos.z = zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE * 0.5f;
-			startPos.y = zWorld->GetHeightAt(startPos.GetXZ()) + 1.7f; 
-			zGraphics->GetCamera()->SetPosition(startPos);
-		}
-	}
 	else if( key == VK_SUBTRACT)
 	{
 		if (zMovementMulti / 2.0f)
@@ -777,6 +788,10 @@ void GameEngine::KeyUp( int key )
 			this->zHeightFromGround = 1.7f;
 			this->zMovementMulti = 2.95f;
 		}
+	}
+	else if ( key == (int)'E' )
+	{
+		ToggleArrows();
 	}
 }
 
@@ -1282,5 +1297,15 @@ void GameEngine::IncSelectedObjectInfo( char* info, float x, float y, float z )
 	{
 		Vector3 scale = (*i)->GetScale();
 		(*i)->SetScale(scale + Vector3(x, y, z));
+	}
+}
+
+void GameEngine::ToggleArrows()
+{
+	zShowArrowsFlag = !zShowArrowsFlag;
+
+	if ( zShowArrowsFlag ) 
+	{
+		zArrows->Show(zShowArrowsFlag);
 	}
 }
