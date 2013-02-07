@@ -19,6 +19,8 @@ Number:5
 Name:Tree
 Model:Media/Models/Tree_02_v02_r.obj
 BlockRadius:0.5
+Billboard:Media/TreeBillboard.png
+BillboardDistance:50
 
 Number:6
 Name:Stone
@@ -80,8 +82,6 @@ Number:20
 Name:Tree
 Model:Media/Models/Tree_03_v03.obj
 BlockRadius:0.5
-
-
 
 Number:21
 Name:Water

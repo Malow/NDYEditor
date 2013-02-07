@@ -1,7 +1,7 @@
 // EDIT 2013-01-23 by Tillman: Added transparency.
 #include "stdafx.fx"
 Texture2D diffuseMap0;
-Texture2D diffuseMap1;
+//Texture2D diffuseMap1; //Only need one diffuse map if no blending is one.
 
 cbuffer PerObject
 {
@@ -43,13 +43,13 @@ PSIn VS(VSIn input)
 }
 float4 PS(PSIn input) : SV_TARGET
 {
-	if(textured)
+	/*if(textured)
 	{
 		if(diffuseMap0.Sample(PointWrapSampler, input.Tex).a == 0.0f) //texturerna är alltid null
 		{
 			discard;
 		}
-	}
+	}*/
 
 	return input.Pos;
 }

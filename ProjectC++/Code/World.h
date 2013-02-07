@@ -62,10 +62,13 @@ public:
 	// Save World To File
 	void SaveFile();
 	void SaveFileAs( const std::string& fileName );
+	const std::string& GetFileName() const;
 
 	// World Settings
 	unsigned int GetNumSectorsWidth() const;
 	unsigned int GetNumSectorsHeight() const;
+	Vector2 GetWorldCenter() const;
+
 	Vector2 GetWorldSize() const;
 	bool IsInside( const Vector2& worldPos );
 
@@ -130,8 +133,8 @@ public:
 
 	// Data Access
 	unsigned int GetAINodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;
-	unsigned int GetEntitiesInRect(const Rect& rect, std::set<Entity*>& out) const;
-	unsigned int GetEntitiesInCircle(const Vector2& center, float radius, std::set<Entity*>& out) const;
+	unsigned int GetEntitiesInRect(const Rect& rect, std::set<Entity*>& out, unsigned int typeFilter=0) const;
+	unsigned int GetEntitiesInCircle(const Vector2& center, float radius, std::set<Entity*>& out, unsigned int typeFilter=0) const;
 	unsigned int GetSectorsInCicle(const Vector2& center, float radius, std::set<Vector2UINT>& out) const;
 	unsigned int GetHeightNodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;
 	unsigned int GetTextureNodesInCircle(const Vector2& center, float radius, std::set<Vector2>& out) const;

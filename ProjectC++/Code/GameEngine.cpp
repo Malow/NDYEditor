@@ -289,11 +289,10 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 						(*it)->SetSelected(false);
 
 						newPos = zPrevPosOfSelected[(*it)] + zMoveOffSet;
-						if(newPos.x < 0.0f) continue;
-						else if(newPos.x > (this->zWorld->GetNumSectorsWidth() * SECTOR_WORLD_SIZE)) continue;
-						if(newPos.z < 0.0f) continue;
-						else if(newPos.z > (this->zWorld->GetNumSectorsHeight() * SECTOR_WORLD_SIZE)) continue;
-						
+
+						if ( !zWorld->IsInside(newPos.GetXZ()) )
+							continue;
+
 						tempY = zWorldRenderer->GetYPosFromHeightMap((*it)->GetPosition().x, (*it)->GetPosition().z);
 						(*it)->SetPosition(zPrevPosOfSelected[(*it)] + zMoveOffSet + Vector3(0, tempY, 0));
 					}
@@ -515,12 +514,12 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				double length;
 				double theta;
 				std::set<Entity*> insideCircle;
-				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle) < zBrushStrength )
+				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle, zCreateEntityType) < zBrushStrength )
 				{
 					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
 					Vector2 pos = Vector2(cd.posx, cd.posz) + Vector2(cos(theta), sin(theta)) * length;
-					if ( zWorld->IsInside(pos) );
+					if ( zWorld->IsInside(pos) )
 					{
 						if ( zWorld->IsSectorLoaded(zWorld->WorldPosToSector(pos)) )
 						{

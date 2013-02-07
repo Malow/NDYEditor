@@ -7,14 +7,19 @@
 struct EntInfo
 {
 	std::string entName;
-	std::string entModel;
 	float blockRadius;
+	float billboardDistance;
+	std::vector< std::string > billboards;
+	std::vector< std::string > models;
 };
 
 static std::vector<EntInfo> entities;
 
 void LoadEntList( const std::string& fileName ) throw(...)
 {
+	// Clear Old Info
+	entities.clear();
+
 	std::ifstream file(fileName);
 	if ( !file.is_open() ) throw("File Not Found!");
 
@@ -30,20 +35,28 @@ void LoadEntList( const std::string& fileName ) throw(...)
 			curLine[x] = tolower(curLine[x]);
 		}
 
-		if ( curLine.substr(0,7) == "number:" )
+		if ( curLine.find("number:") == 0 )
 		{
 			curNumber = atoi(curLine.substr(7, curLine.length() - 7).c_str());
 			if ( entities.size() < curNumber ) entities.resize(curNumber);
 		}
-		else if ( curLine.substr(0,5) == "name:" )
+		else if ( curLine.find("name:") == 0 )
 		{
 			entities[curNumber-1].entName = curLine.substr(5, curLine.length() - 5);
 		}
-		else if ( curLine.substr(0,6) == "model:" )
+		else if ( curLine.find("model:") == 0 )
 		{
-			entities[curNumber-1].entModel = curLine.substr(6, curLine.length() - 6);
+			entities[curNumber-1].models.push_back(curLine.substr(6, curLine.length() - 6));
 		}
-		else if ( curLine.substr(0,12) == "blockradius:" )
+		else if ( curLine.find("billboarddistance:") == 0 )
+		{
+			sscanf_s(curLine.c_str(), "billboarddistance:%f", &entities[curNumber-1].billboardDistance);
+		}
+		else if ( curLine.find("billboard:") == 0 )
+		{
+			entities[curNumber-1].billboards.push_back(curLine.substr(10, curLine.length() - 10));
+		}
+		else if ( curLine.find("blockradius:") == 0 )
 		{
 			sscanf_s(curLine.c_str(), "blockradius:%f", &entities[curNumber-1].blockRadius);
 		}
@@ -61,7 +74,11 @@ const std::string& GetEntName( unsigned int entIndex ) throw(...)
 const std::string& GetEntModel( unsigned int entIndex ) throw(...)
 {
 	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
-	return entities[entIndex-1].entModel;
+	if ( entities[entIndex-1].models.empty() )
+		return "";
+
+	unsigned int r = rand()%entities[entIndex-1].models.size();
+	return entities[entIndex-1].models[r];
 }
 
 const float& GetEntBlockRadius( unsigned int entIndex ) throw(...)
@@ -70,7 +87,23 @@ const float& GetEntBlockRadius( unsigned int entIndex ) throw(...)
 	return entities[entIndex-1].blockRadius;
 }
 
+const float& GetEntBillboardDistance( unsigned int entIndex ) throw(...)
+{
+	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
+	return entities[entIndex-1].billboardDistance;
+}
+
 unsigned int GetEntListSize()
 {
 	return entities.size();
+}
+
+const std::string& GetEntBillboard( unsigned int entIndex ) throw(...)
+{
+	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
+	if ( entities[entIndex-1].billboards.empty() )
+		return "";
+
+	unsigned int r = rand()%entities[entIndex-1].billboards.size();
+	return entities[entIndex-1].billboards[r];
 }

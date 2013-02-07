@@ -478,17 +478,20 @@ void World::LoadAllSectors()
 	}
 }
 
-unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out) const
+unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out, unsigned int typeFilter) const
 {
 	unsigned int counter=0;
 
 	for(auto i = zEntities.cbegin(); i != zEntities.cend(); i++)
 	{
-		Vector2 pos( (*i)->GetPosition().x, (*i)->GetPosition().z );
-		if( Vector2(center-pos).GetLength() < radius)
+		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
 		{
-			out.insert(*i);
-			counter++;
+			Vector2 pos( (*i)->GetPosition().x, (*i)->GetPosition().z );
+			if( Vector2(center-pos).GetLength() < radius)
+			{
+				out.insert(*i);
+				counter++;
+			}
 		}
 	}
 
@@ -787,16 +790,19 @@ const char* const World::GetSectorTexture( unsigned int x, unsigned int y, unsig
 	return s->GetTextureName(index);
 }
 
-unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out ) const
+unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out, unsigned int typeFilter ) const
 {
 	unsigned int counter=0;
 
 	for( auto i = zEntities.begin(); i != zEntities.end(); ++i )
 	{
-		if ( rect.IsInside( (*i)->GetPosition().GetXZ() ) )
+		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
 		{
-			out.insert(*i);
-			counter++;
+			if ( rect.IsInside( (*i)->GetPosition().GetXZ() ) )
+			{
+				out.insert(*i);
+				counter++;
+			}
 		}
 	}
 
@@ -973,4 +979,16 @@ bool World::IsInside( const Vector2& worldPos )
 	if ( worldPos.x >= GetWorldSize().x ) return false;
 	if ( worldPos.y >= GetWorldSize().y ) return false;
 	return true;
+}
+
+Vector2 World::GetWorldCenter() const
+{
+	Vector2 WorldSize = GetWorldSize();
+	return Vector2( WorldSize.x / 2.0f, WorldSize.y / 2.0f );
+}
+
+const std::string& World::GetFileName() const
+{
+	if ( !zFile ) return "";
+	return zFile->GetFileName();
 }

@@ -109,7 +109,7 @@ void Sector::ModifyBlendingAt( const Vector2& pos, const BlendValues& val )
 		curValues[x] += val[x];
 	}
 
-	curValues.Normalize();
+	curValues.Saturate();
 
 	// Set Values
 	for( unsigned int i=0; i<4; ++i )

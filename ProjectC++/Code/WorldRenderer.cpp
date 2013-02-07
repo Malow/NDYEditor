@@ -109,7 +109,21 @@ void WorldRenderer::OnEvent( Event* e )
 		}
 		else
 		{
-			zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
+			float billboardDistance = GetEntBillboardDistance(ELE->entity->GetType());
+
+			if ( billboardDistance > 0.0f )
+			{
+				zEntities[ELE->entity] = zGraphics->CreateMesh(
+					model.c_str(), 
+					ELE->entity->GetPosition(), 
+					GetEntBillboard(ELE->entity->GetType()).c_str(),
+					billboardDistance);
+
+			}
+			else
+			{
+				zEntities[ELE->entity] = zGraphics->CreateMesh(model.c_str(), ELE->entity->GetPosition());
+			}
 		}
 
 		zEntities[ELE->entity]->SetQuaternion(Vector4(0.0f, 0.0f, 0.0f, 1.0f));

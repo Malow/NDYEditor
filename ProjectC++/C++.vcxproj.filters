@@ -49,9 +49,6 @@
     <ClInclude Include="Code\WorldRenderer.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Code\EntityList.h">
-      <Filter>Source Files\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Code\HeightChangedAction.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
@@ -85,6 +82,9 @@
     <ClInclude Include="Code\BlendValues.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="Code\EntityList.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">
@@ -111,11 +111,11 @@
     <ClCompile Include="Code\WorldRenderer.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Code\EntityList.cpp">
-      <Filter>Source Files\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Code\NavArrows.cpp">
       <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\EntityList.cpp">
+      <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
