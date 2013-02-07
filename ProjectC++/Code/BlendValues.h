@@ -4,6 +4,9 @@
 #pragma push_macro("min")
 #pragma push_macro("max")
 
+#undef min
+#undef max
+
 #include <array>
 
 template<unsigned int T>
