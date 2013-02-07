@@ -6,58 +6,29 @@
 #include <vector>
 #include <bitset>
 #include <array>
+#include "BlendValues.h"
 
 static const unsigned int SECTOR_WORLD_SIZE = 32;
+static const float FSECTOR_WORLD_SIZE = (float)SECTOR_WORLD_SIZE;
+
 static const unsigned int SECTOR_LENGTH = 64;
+static const float FSECTOR_LENGTH = (float)SECTOR_LENGTH;
+
 static const unsigned int SECTOR_BLEND_SIZE = 64;
+static const float FSECTOR_BLEND_SIZE = (float)SECTOR_BLEND_SIZE;
+
 static const unsigned int SECTOR_HEIGHT_SIZE = 64;
-static const unsigned int TEXTURE_NAME_LENGTH = 60;
+static const float FSECTOR_HEIGHT_SIZE = (float)SECTOR_HEIGHT_SIZE;
+
 static const unsigned int SECTOR_BLEND_CHANNELS = 8;
+static const unsigned int TEXTURE_NAME_LENGTH = 60;
 
 // AI Grid
 static const unsigned int SECTOR_AI_GRID_SIZE = 63;
-typedef std::bitset< SECTOR_AI_GRID_SIZE * SECTOR_AI_GRID_SIZE > AIGrid;
+static const float FSECTOR_AI_GRID_SIZE = (float)SECTOR_AI_GRID_SIZE;
 
-template<unsigned int T>
-struct BlendValuesT : public std::array<float, T>
-{
-public:
-	BlendValuesT()
-	{
-		for( unsigned int x=0; x<T; ++x )
-		{
-			(*this)[x] = 0.0f;
-		}
-	}
-
-	void Normalize()
-	{
-		float min = std::numeric_limits<float>::max();
-		float max = 0.0f;
-
-		for( unsigned int x=0; x<T; ++x )
-		{
-			if ( (*this)[x] < min ) min = (*this)[x];
-			max += (*this)[x];
-		}
-
-		for( unsigned int x=0; x<T; ++x )
-		{
-			(*this)[x] = ((*this)[x] - min) / (max - min);
-		}
-	}
-
-	BlendValuesT<T> operator+( const BlendValuesT<T>& val )
-	{
-		BlendValuesT<T> newVals;
-		for( unsigned int x=0; x<T; ++x )
-		{
-			newVals[x] = (*this)[x] + val[x];
-		}
-		return newVals;
-	}
-};
-
+// Data Types
+typedef std::bitset<SECTOR_AI_GRID_SIZE * SECTOR_AI_GRID_SIZE> AIGrid;
 typedef BlendValuesT<SECTOR_BLEND_CHANNELS> BlendValues;
 
 class Sector

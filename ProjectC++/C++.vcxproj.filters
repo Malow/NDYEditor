@@ -82,6 +82,9 @@
     <ClInclude Include="Code\NavArrows.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\BlendValues.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">

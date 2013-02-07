@@ -14,6 +14,7 @@
     <ClInclude Include="Code\Action.h" />
     <ClInclude Include="Code\AIGridChangeAction.h" />
     <ClInclude Include="Code\BlendChangedAction.h" />
+    <ClInclude Include="Code\BlendValues.h" />
     <ClInclude Include="Code\CircleAndRect.h" />
     <ClInclude Include="Code\Debug.h" />
     <ClInclude Include="Code\Entity.h" />

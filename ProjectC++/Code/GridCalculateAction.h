@@ -77,7 +77,7 @@ public:
 		}
 
 		std::set<Entity*> ents;
-		if ( zWorld->GetEntitiesInRect(Rect(Vector2(zSector.x, zSector.y)*SECTOR_WORLD_SIZE, Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE)), ents) )
+		if ( zWorld->GetEntitiesInRect(Rect(Vector2(zSector.x, zSector.y)*FSECTOR_WORLD_SIZE, Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE)), ents) )
 		{
 			for( auto e = ents.cbegin(); e != ents.cend(); ++e )
 			{

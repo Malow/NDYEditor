@@ -4,6 +4,9 @@
 #include "WorldRenderer.h"
 #include "Action.h"
 
+#pragma warning ( push )
+#pragma warning ( disable : 4512 )	// The GameEngine is not meant to have a assignment operator
+
 class NavArrows;
 
 #ifdef _DEBUG
@@ -151,3 +154,5 @@ public:
 protected:
 	virtual void OnEvent( Event* e );
 };
+
+#pragma warning ( pop )

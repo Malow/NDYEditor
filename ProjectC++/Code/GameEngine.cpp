@@ -107,7 +107,7 @@ void GameEngine::ProcessFrame()
 
 		if ( zWorldRenderer )
 		{
-			zWorldRenderer->update();
+			zWorldRenderer->Update();
 		}
 
 		zGraphics->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
@@ -514,24 +514,20 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			{
 				double length;
 				double theta;
-				double x;
-				double z;
 				std::set<Entity*> insideCircle;
 				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle) < zBrushStrength )
 				{
 					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
-					x = cd.posx + (cos(theta) * length);
-					z = cd.posz + (sin(theta) * length);
-					if ( x > 0.0 && z > 0.0 && x < zWorld->GetWorldSize().x && z < zWorld->GetWorldSize().y )
+					Vector2 pos = Vector2(cd.posx, cd.posz) + Vector2(cos(theta), sin(theta)) * length;
+					if ( zWorld->IsInside(pos) );
 					{
-						Vector2UINT sp = zWorld->WorldPosToSector(Vector2(x,z));
-						if ( zWorld->IsSectorLoaded(sp.x, sp.y) )
+						if ( zWorld->IsSectorLoaded(zWorld->WorldPosToSector(pos)) )
 						{
 							EntityPlacedAction *EPA = new EntityPlacedAction(
 								zWorld, 
 								zCreateEntityType,
-								Vector3(x, zWorld->GetHeightAt(Vector2(x, z)), z),
+								Vector3(pos.x, zWorld->GetHeightAt(pos), pos.y),
 								Vector3(0.0f, (float)rand()/float(RAND_MAX)*360.0f, 0.0f),
 								Vector3(1.0f, 1.0f, 1.0f)
 								);

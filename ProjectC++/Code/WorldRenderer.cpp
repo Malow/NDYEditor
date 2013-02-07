@@ -22,7 +22,7 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 		zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
 		for( auto i = loadedSectors.cbegin(); i != loadedSectors.cend(); ++i )
 		{
-			UpdateSector(i->x, i->y);
+			CreateTerrain(*i);
 		}
 	}
 }
@@ -89,11 +89,7 @@ void WorldRenderer::OnEvent( Event* e )
 	{
 		if ( SLE->world == zWorld )
 		{
-			if ( !zTerrain.size() )
-			{
-				zTerrain.resize( SLE->world->GetNumSectorsWidth() * SLE->world->GetNumSectorsHeight() );
-			}
-			UpdateSector(SLE->x, SLE->y);
+			CreateTerrain(Vector2UINT(SLE->x, SLE->y));
 		}
 	}
 	else if ( SectorHeightMapChanged* SHMC = dynamic_cast<SectorHeightMapChanged*>(e) )
@@ -259,29 +255,23 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 }
 
 
-void WorldRenderer::UpdateSectorHeightMap( unsigned int x, unsigned int y )
+void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
 {
-	if ( zWorld->IsSectorLoaded(x,y) )
-	{
-		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
-		if ( zTerrain[tIndex] )
-		{
-			zTerrain[tIndex]->SetHeightMap( zWorld->GetSector(x, y)->GetHeightMap() );
-		}
-	}
+	if ( iTerrain* T = GetTerrain(sectorCoords) )
+		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
 }
 
 
-void WorldRenderer::UpdateSectorBlendMap( unsigned int x, unsigned int y )
+void WorldRenderer::UpdateSectorBlendMap( const Vector2UINT& sectorCoords )
 {
-	if ( zWorld->IsSectorLoaded(x,y) )
+	if ( iTerrain* T = GetTerrain(sectorCoords) )
 	{
-		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
+		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
 
-		float* data[2] = { zWorld->GetSector(x, y)->GetBlendMap(), zWorld->GetSector(x, y)->GetBlendMap2()  };
+		float* data[2] = { zWorld->GetSector(sectorCoords)->GetBlendMap(), zWorld->GetSector(sectorCoords)->GetBlendMap2()  };
 		unsigned int sizes[2] = { SECTOR_BLEND_SIZE, SECTOR_BLEND_SIZE };
 
-		zTerrain[tIndex]->SetBlendMaps( 
+		T->SetBlendMaps( 
 			2,
 			&sizes[0],
 			&data[0] );
@@ -289,70 +279,40 @@ void WorldRenderer::UpdateSectorBlendMap( unsigned int x, unsigned int y )
 }
 
 
-void WorldRenderer::UpdateSector( unsigned int sectorX, unsigned int sectorY )
+void WorldRenderer::UpdateSectorTextures( const Vector2UINT& sectorCoords )
 {
-	if ( zWorld->IsSectorLoaded(sectorX,sectorY) )
+	if ( iTerrain* T = GetTerrain(sectorCoords) )
 	{
-		// Create if it doesn't exist
-		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
-		if ( !zTerrain[tIndex] )
-		{
-			Vector3 pos(sectorX * SECTOR_WORLD_SIZE + SECTOR_WORLD_SIZE/2, 0.0f, sectorY * SECTOR_WORLD_SIZE + SECTOR_WORLD_SIZE/2);
-			zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(SECTOR_WORLD_SIZE, 1.0f, SECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
-			zTerrain[tIndex]->SetTextureScale(10.0f);
-		}
-
-		// Update Textures
-		UpdateSectorTextures(sectorX, sectorY);
-
-		// Update Blend Map
-		UpdateSectorBlendMap(sectorX, sectorY);
-
-		// Update Height Map
-		UpdateSectorHeightMap(sectorX, sectorY);
-
-		// Update AI Grid
-		UpdateSectorAIGrid(sectorX, sectorY);
-	}
-}
-
-
-void WorldRenderer::UpdateSectorTextures( unsigned int sectorX, unsigned int sectorY )
-{
-	if ( zWorld->IsSectorLoaded(sectorX, sectorY) )
-	{
-		unsigned int tIndex = sectorY * zWorld->GetNumSectorsWidth() + sectorX;
-
 		const char* terrainTextures[8];
 		std::string files[8];
 		for( unsigned int x=0; x<8; ++x )
 		{
 			files[x] = "Media/Textures/";
-			files[x] += zWorld->GetSector(sectorX, sectorY)->GetTextureName(x);
+			files[x] += zWorld->GetSector(sectorCoords)->GetTextureName(x);
 			terrainTextures[x] = &files[x][0];
 		}
-		zTerrain[tIndex]->SetTextures(terrainTextures);
+		T->SetTextures(terrainTextures);
 	}
 }
 
 
-void WorldRenderer::update()
+void WorldRenderer::Update()
 {
 	while ( !zUpdatesRequired.empty() )
 	{
 		auto i = zUpdatesRequired.begin();
 
 		if ( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP )
-			UpdateSectorBlendMap(i->first.x, i->first.y);
+			UpdateSectorBlendMap(i->first);
 
 		if ( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
-			UpdateSectorHeightMap(i->first.x, i->first.y);
+			UpdateSectorHeightMap(i->first);
 
 		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
-			UpdateSectorTextures(i->first.x, i->first.y);
+			UpdateSectorTextures(i->first);
 
 		if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
-			UpdateSectorAIGrid(i->first.x, i->first.y);
+			UpdateSectorAIGrid(i->first);
 
 		zUpdatesRequired.erase(i);
 	}
@@ -375,15 +335,13 @@ void WorldRenderer::ToggleAIGrid( bool state )
 	}
 }
 
-void WorldRenderer::UpdateSectorAIGrid( unsigned int x, unsigned int y )
+void WorldRenderer::UpdateSectorAIGrid( const Vector2UINT& sectorCoords )
 {
-	if ( zWorld->IsSectorLoaded(x,y) )
+	if ( iTerrain* T = GetTerrain(sectorCoords) )
 	{
-		unsigned int tIndex = y * zWorld->GetNumSectorsWidth() + x;
-
 		// Data Access
-		AIGrid& sectorGrid = zWorld->GetSector(x,y)->GetAIGrid();
-		std::vector<unsigned char> &graphicsGrid = zAIGrids[zTerrain[tIndex]];
+		AIGrid& sectorGrid = zWorld->GetSector(sectorCoords)->GetAIGrid();
+		std::vector<unsigned char> &graphicsGrid = zAIGrids[T];
 		graphicsGrid.resize(SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE);
 
 		// Bit To Byte
@@ -392,8 +350,37 @@ void WorldRenderer::UpdateSectorAIGrid( unsigned int x, unsigned int y )
 			graphicsGrid[x] = sectorGrid[x] * 255;
 		}
 
-		zTerrain[tIndex]->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
-		zTerrain[tIndex]->SetAIGridThickness();
-		zTerrain[tIndex]->UseAIMap(zShowAIMap);
+		T->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
+		T->SetAIGridThickness();
+		T->UseAIMap(zShowAIMap);
+	}
+}
+
+iTerrain* WorldRenderer::GetTerrain( const Vector2UINT& sectorCoords )
+{
+	if ( zTerrain.empty() ) return 0;
+	unsigned int tIndex = sectorCoords.y * zWorld->GetNumSectorsWidth() + sectorCoords.x;
+	return zTerrain[tIndex];
+}
+
+void WorldRenderer::CreateTerrain( const Vector2UINT& sectorCoords )
+{
+	if ( zTerrain.empty() )
+		zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
+
+	// Create if it doesn't exist
+	unsigned int tIndex = sectorCoords.y * zWorld->GetNumSectorsWidth() + sectorCoords.x;
+	if ( !zTerrain[tIndex] )
+	{
+		Vector3 pos;
+		pos.x = sectorCoords.x * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+		pos.y = 0.0f;
+		pos.z = sectorCoords.y * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+
+		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(FSECTOR_WORLD_SIZE, 1.0f, FSECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
+		zTerrain[tIndex]->SetTextureScale(10.0f);
+
+		UPDATEENUM& u = zUpdatesRequired[sectorCoords];
+		u = (UPDATEENUM)(u | UPDATE_ALL);
 	}
 }

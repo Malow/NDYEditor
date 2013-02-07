@@ -85,8 +85,9 @@ class SectorBlendMapChanged : public Event
 {
 public:
 	World* world;
-	unsigned int sectorx, sectory, localx, localy;
-	SectorBlendMapChanged( World* world, unsigned int sectorx, unsigned int sectory, unsigned int localx, unsigned int localy ) :
+	unsigned int sectorx, sectory;
+	float localx, localy;
+	SectorBlendMapChanged( World* world, unsigned int sectorx, unsigned int sectory, const float& localx, const float& localy ) :
 		world(world),
 		sectorx(sectorx),
 		sectory(sectory),

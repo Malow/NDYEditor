@@ -11,7 +11,8 @@ enum UPDATEENUM
 	UPDATE_HEIGHTMAP=1,
 	UPDATE_BLENDMAP=2,
 	UPDATE_TEXTURES=4,
-	UPDATE_AIGRID=8
+	UPDATE_AIGRID=8,
+	UPDATE_ALL=15
 };
 
 class WorldRenderer : Observer
@@ -35,15 +36,17 @@ public:
 	Entity* Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);
 
-	void update();
+	void Update();
 	void ToggleAIGrid( bool state );
 
 	virtual void OnEvent( Event* e );
 
 protected:
-	void UpdateSectorTextures( unsigned int x, unsigned int y );
-	void UpdateSectorHeightMap( unsigned int x, unsigned int y );
-	void UpdateSector( unsigned int x, unsigned int y );
-	void UpdateSectorBlendMap( unsigned int x, unsigned int y );
-	void UpdateSectorAIGrid( unsigned int x, unsigned int y );
+	void UpdateSectorTextures( const Vector2UINT& sectorCoords );
+	void UpdateSectorHeightMap( const Vector2UINT& sectorCoords );
+	void UpdateSector( const Vector2UINT& sectorCoords );
+	void UpdateSectorBlendMap( const Vector2UINT& sectorCoords );
+	void UpdateSectorAIGrid( const Vector2UINT& sectorCoords );
+	void CreateTerrain( const Vector2UINT& sectorCoords );
+	iTerrain* GetTerrain( const Vector2UINT& sectorCoords );
 };

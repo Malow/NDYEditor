@@ -86,6 +86,9 @@ namespace Editor.Forms
                 MessageBox.Show("One of the 3 values isnt defined", "Value Error!");
                 return;
             }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private void btn_Cancel_Click(object sender, EventArgs e)
