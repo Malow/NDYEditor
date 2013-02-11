@@ -19,8 +19,8 @@ Number:5
 Name:Tree
 Model:Media/Models/Tree_02_v02_r.obj
 BlockRadius:0.5
-Billboard:Media/TreeBillboard.png
-BillboardDistance:50
+Billboard:
+BillboardDistance:-1
 
 Number:6
 Name:Stone
