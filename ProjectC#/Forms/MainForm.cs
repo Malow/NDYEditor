@@ -27,7 +27,8 @@ namespace Editor.Forms
         SMOOTH = 8,
         DELETEENTITIES = 9,
         RESETGROUND = 10,
-        AIGRID = 11
+        AIGRID = 11,
+        SHUFFLE = 12
     }
 
     public partial class NDYEditor : Form
@@ -674,6 +675,14 @@ namespace Editor.Forms
 
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
+            else if (this.m_mode == MODE.SHUFFLE)
+            {
+                this.btn_Shuffle.Focus();
+                this.hideAll();
+
+                m_GameEngine.SetBrushAttr("InnerCircle", 1.0f);
+                m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
+            }
         }
         private void setDrawTex(object sender, EventArgs e)
         {
@@ -708,7 +717,10 @@ namespace Editor.Forms
             {
                 m_GameEngine.OnRightMouseUp((uint)e.X, (uint)e.Y);
             }
-            
+            else if (e.Button == MouseButtons.Middle)
+            {
+                m_GameEngine.OnMiddleMouseUp((uint)e.X, (uint)e.Y);
+            }
         }
 
         private void NDYEditor_FormClosing(object sender, FormClosingEventArgs e)

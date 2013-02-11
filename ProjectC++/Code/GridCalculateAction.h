@@ -25,12 +25,12 @@ public:
 		float density = ( (float)SECTOR_WORLD_SIZE / (float)SECTOR_AI_GRID_SIZE );
 
 		Vector2 beginCorner;
-		beginCorner.x = zSector.x * SECTOR_WORLD_SIZE;
-		beginCorner.y = zSector.y * SECTOR_WORLD_SIZE;
+		beginCorner.x = zSector.x * FSECTOR_WORLD_SIZE;
+		beginCorner.y = zSector.y * FSECTOR_WORLD_SIZE;
 
 		Vector2 endCorner;
-		endCorner.x = beginCorner.x + (float)(SECTOR_AI_GRID_SIZE) * density;
-		endCorner.y = beginCorner.y + (float)(SECTOR_AI_GRID_SIZE) * density;
+		endCorner.x = beginCorner.x + FSECTOR_AI_GRID_SIZE * density;
+		endCorner.y = beginCorner.y + FSECTOR_AI_GRID_SIZE * density;
 
 		// Record
 		for( float x=beginCorner.x; x<endCorner.x; x+=density )
@@ -77,7 +77,9 @@ public:
 		}
 
 		std::set<Entity*> ents;
-		if ( zWorld->GetEntitiesInRect(Rect(Vector2(zSector.x, zSector.y)*FSECTOR_WORLD_SIZE, Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE)), ents) )
+		Rect sectorRect(Vector2((float)zSector.x, (float)zSector.y)*FSECTOR_WORLD_SIZE, Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
+
+		if ( zWorld->GetEntitiesInRect(sectorRect, ents) )
 		{
 			for( auto e = ents.cbegin(); e != ents.cend(); ++e )
 			{

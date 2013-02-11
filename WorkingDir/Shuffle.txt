@@ -1,0 +1,7 @@
+Name:Trees
+Find:5
+Replace:20,0.5
+
+Name:Barrskog
+Find:5
+Replace:21,1.0

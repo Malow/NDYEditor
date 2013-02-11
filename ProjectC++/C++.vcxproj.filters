@@ -85,6 +85,9 @@
     <ClInclude Include="Code\EntityList.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Shuffle.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">
@@ -116,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Code\EntityList.cpp">
       <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Shuffle.cpp">
+      <Filter>Source Files\Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

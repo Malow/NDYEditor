@@ -67,6 +67,12 @@ void GameEngineWrapper::OnLeftMouseDown( unsigned int x, unsigned int y )
 	m_GameEngine->OnLeftMouseDown(x,y);
 }
 
+void GameEngineWrapper::OnMiddleMouseUp( unsigned int x, unsigned int y )
+{
+	m_GameEngine->OnMiddleMouseUp(x,y);
+}
+
+
 
 void GameEngineWrapper::ChangeMode( int mode )
 {

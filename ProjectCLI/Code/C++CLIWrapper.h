@@ -28,6 +28,7 @@ namespace System { namespace Windows { namespace Interop
 	public:
 		CppCLI(IntPtr deviceContext);
 		!CppCLI();
+		~CppCLI();
 
 		void ProcessFrame();
 		void OnResize(int width, int height);
@@ -38,6 +39,7 @@ namespace System { namespace Windows { namespace Interop
 		void OnLeftMouseDown( unsigned int x, unsigned int y );
 		void OnRightMouseDown( unsigned int x, unsigned int y );
 		void OnRightMouseUp( unsigned int x, unsigned int y );
+		void OnMiddleMouseUp( unsigned int x, unsigned int y );
 		void CreateWorld(int x, int y);
 		void SaveWorldAs( String^ filePath );
 		void SaveWorld();

@@ -28,6 +28,7 @@
     <ClInclude Include="Code\NavArrows.h" />
     <ClInclude Include="Code\Observer.h" />
     <ClInclude Include="Code\Sector.h" />
+    <ClInclude Include="Code\Shuffle.h" />
     <ClInclude Include="Code\SmoothAction.h" />
     <ClInclude Include="Code\TerrainSetHeightAction.h" />
     <ClInclude Include="Code\World.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="Code\Graphics.cpp" />
     <ClCompile Include="Code\NavArrows.cpp" />
     <ClCompile Include="Code\Sector.cpp" />
+    <ClCompile Include="Code\Shuffle.cpp" />
     <ClCompile Include="Code\World.cpp" />
     <ClCompile Include="Code\WorldFile.cpp" />
     <ClCompile Include="Code\WorldRenderer.cpp" />

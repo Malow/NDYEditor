@@ -3,7 +3,7 @@
 #include <windows.h>
 #include "MaloWFileDebug.h"
 #include <sstream>
-
+#include <math.h>
 
 
 World::World( Observer* observer, const std::string& fileName) throw(...) : 
@@ -500,6 +500,12 @@ unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, st
 
 unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const
 {
+	if ( radius == 0.0f )
+	{
+		out.insert(this->WorldPosToSector(center));
+		return 1;
+	}
+
 	unsigned int counter=0;
 	
 	unsigned int xMin = ( ( center.x - radius ) < 0 ? 0 : center.x - radius  ) / FSECTOR_WORLD_SIZE;
@@ -975,6 +981,10 @@ Vector2 World::GetWorldSize() const
 
 bool World::IsInside( const Vector2& worldPos )
 {
+	// Invalid Floats
+	if ( worldPos.x != worldPos.x ) return false;
+	if ( worldPos.y != worldPos.y ) return false;
+
 	if ( worldPos.x < 0.0f || worldPos.y < 0.0f ) return false;
 	if ( worldPos.x >= GetWorldSize().x ) return false;
 	if ( worldPos.y >= GetWorldSize().y ) return false;
@@ -989,6 +999,7 @@ Vector2 World::GetWorldCenter() const
 
 const std::string& World::GetFileName() const
 {
-	if ( !zFile ) return "";
+	static const std::string empty = "";
+	if ( !zFile ) return empty;
 	return zFile->GetFileName();
 }

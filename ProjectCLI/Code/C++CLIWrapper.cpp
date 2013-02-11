@@ -15,6 +15,10 @@ namespace System { namespace Windows { namespace Interop
 		delete m_GameEngine;
 	}
 
+	CppCLI::~CppCLI()
+	{
+	}
+
 	void CppCLI::ProcessFrame()
 	{
 		m_GameEngine->ProcessFrame();
@@ -427,6 +431,11 @@ namespace System { namespace Windows { namespace Interop
 		{
 			Marshal::FreeHGlobal((IntPtr) const_cast<char*>(lpText)); // Free memory
 		}
+	}
+
+	void CppCLI::OnMiddleMouseUp( unsigned int x, unsigned int y )
+	{
+		m_GameEngine->OnMiddleMouseUp(x,y);
 	}
 
 }}}

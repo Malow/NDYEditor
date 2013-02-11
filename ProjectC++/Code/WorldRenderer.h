@@ -19,7 +19,7 @@ class WorldRenderer : Observer
 {
 	std::vector< iTerrain* > zTerrain;
 	std::map< iTerrain*, std::vector<unsigned char> > zAIGrids;
-	std::map< iTerrain*, std::vector<Vector3> > zNormals;
+	std::map< iTerrain*, std::vector<Vector3>> zNormals;
 
 	World* zWorld;
 	GraphicsEngine* zGraphics;

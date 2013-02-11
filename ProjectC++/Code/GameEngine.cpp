@@ -518,7 +518,7 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 				{
 					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
 					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
-					Vector2 pos = Vector2(cd.posx, cd.posz) + Vector2(cos(theta), sin(theta)) * length;
+					Vector2 pos = Vector2(cd.posx, cd.posz) + Vector2(cosf(theta), sinf(theta)) * length;
 					if ( zWorld->IsInside(pos) )
 					{
 						if ( zWorld->IsSectorLoaded(zWorld->WorldPosToSector(pos)) )
@@ -957,7 +957,7 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 }
 
 
-void GameEngine::MouseMove( int x, int y )
+void GameEngine::MouseMove( int, int )
 {
 	zMouseMoved = true;
 }
@@ -1185,7 +1185,7 @@ void GameEngine::CalculateAIGrid()
 	}
 }
 
-void GameEngine::OnRightMouseDown( unsigned int x, unsigned int y )
+void GameEngine::OnRightMouseDown( unsigned int, unsigned int )
 {
 	if (this->zMode == MODE::AIGRIDBRUSH)
 	{
@@ -1217,7 +1217,7 @@ void GameEngine::OnRightMouseDown( unsigned int x, unsigned int y )
 	
 }
 
-void GameEngine::OnRightMouseUp( unsigned int x, unsigned int y )
+void GameEngine::OnRightMouseUp( unsigned int, unsigned int )
 {
 	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH ) )
 		zCurrentActionGroup = 0;
@@ -1300,5 +1300,25 @@ void GameEngine::ToggleArrows()
 	if ( zShowArrowsFlag ) 
 	{
 		zArrows->Show(zShowArrowsFlag);
+	}
+}
+
+void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
+{
+	if ( zMode == MODE::AIGRIDBRUSH )
+	{
+		if ( zWorldRenderer )
+		{
+			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if ( coll.collision )
+			{
+				GridCalculateAction* GCA = new GridCalculateAction(zWorld, zWorld->WorldPosToSector(Vector2(coll.posx, coll.posz)));
+
+				// Halt Group
+				if ( zCurrentActionGroup ) zCurrentActionGroup = 0;
+				ApplyAction(GCA);
+				zWorldSavedFlag = false;
+			}
+		}
 	}
 }

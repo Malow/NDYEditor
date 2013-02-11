@@ -26,7 +26,8 @@ enum MODE
 	SMOOTH = 8,
 	DELETEBRUSH = 9,
 	RESETBRUSH = 10,
-	AIGRIDBRUSH = 11
+	AIGRIDBRUSH = 11,
+	SHUFFLE = 12
 };
 
 
@@ -103,6 +104,7 @@ public:
 	void OnLeftMouseDown( unsigned int x, unsigned int y );
 	void OnRightMouseDown( unsigned int x, unsigned int y );
 	void OnRightMouseUp( unsigned int x, unsigned int y );
+	void OnMiddleMouseUp( unsigned int x, unsigned int y );
 
 	void CreateWorld(int x, int y);
 	void SaveWorldAs(char* msg);
