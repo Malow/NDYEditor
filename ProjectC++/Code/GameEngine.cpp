@@ -100,7 +100,7 @@ void GameEngine::ProcessFrame()
 		if ( zAnchor )
 		{
 			zAnchor->position = camera->GetPosition().GetXZ();
-			zAnchor->radius = zGraphics->GetEngineParameters().FarClip;
+			zAnchor->radius = zGraphics->GetEngineParameters()->FarClip;
 		}
 
 		zWorld->Update();

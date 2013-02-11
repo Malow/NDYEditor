@@ -75,6 +75,11 @@ void WorldRenderer::OnEvent( Event* e )
 			if ( grid != zAIGrids.end() )
 				zAIGrids.erase(grid);
 
+			// Remove Normals
+			auto normals = zNormals.find(zTerrain[tIndex]);
+			if ( normals != zNormals.end() )
+				zNormals.erase(normals);
+
 			zTerrain[tIndex] = 0;
 		}
 	}
@@ -209,7 +214,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
 	std::set< Vector2UINT > sectors;
-	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), 100.0f, sectors );
+	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters()->FarClip, sectors );
 
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )
@@ -243,7 +248,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	std::set<Entity*> closeEntities;
 	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
 
-	float curDistance = 100000.0f;
+	float curDistance = std::numeric_limits<float>::max();
 	returnPointer = 0;
 
 	for( auto i = closeEntities.begin(); i != closeEntities.end(); ++i )
@@ -272,7 +277,41 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
 {
 	if ( iTerrain* T = GetTerrain(sectorCoords) )
+	{
+		// Set Heightmap
 		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
+
+		// Retrieve Normals
+		std::vector< Vector3 >& normals = zNormals[T];
+
+		// Density
+		float density = FSECTOR_WORLD_SIZE / FSECTOR_HEIGHT_SIZE;
+
+		// Sector Corner
+		Vector2 mapCorner;
+		mapCorner.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
+		mapCorner.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
+
+		// Generate Normals
+		normals.resize(SECTOR_HEIGHT_SIZE * SECTOR_HEIGHT_SIZE);
+		for( unsigned int x=0; x < SECTOR_HEIGHT_SIZE; ++x )
+		{
+			for( unsigned int y=0; y < SECTOR_HEIGHT_SIZE; ++y )
+			{
+				try
+				{
+					normals[ y * SECTOR_HEIGHT_SIZE + x ] = zWorld->CalcNormalAt(mapCorner + Vector2((float)x, (float)y) * density + density * 0.5f);
+				}
+				catch(...)
+				{
+					normals[ y * SECTOR_HEIGHT_SIZE + x ] = Vector3(0.0f, 1.0f, 0.0f);
+				}
+			}
+		}
+
+		// Set Normals
+		T->SetNormals(&normals[0][0]);
+	}
 }
 
 
