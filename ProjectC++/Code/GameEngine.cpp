@@ -1336,7 +1336,7 @@ void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if ( coll.collision )
 			{
-				Vector2UINT sectorCoords = zWorld->WorldPosToSector(Vector2(coll.posx, coll.posy));
+				Vector2UINT sectorCoords = zWorld->WorldPosToSector(Vector2(coll.posx, coll.posz));
 
 				Rect sectorRect;
 				sectorRect.topLeft.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;

@@ -211,6 +211,9 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	std::set< Vector2UINT > sectors;
 	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, sectors );
 
+	CollisionData returnData;
+	returnData.distance = std::numeric_limits<float>::max();
+
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )
 	{
@@ -221,15 +224,12 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 			zGraphics->GetCamera()->Get3DPickingRay(), 
 			zTerrain[sectorIndex],
 			(float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1));
-
-		if(cd.collision)
-		{
-			return cd;
-		}
+		
+		if ( cd.collision && cd.distance < returnData.distance ) returnData = cd;
 	}
 
 	// Return default collision
-	return CollisionData();
+	return returnData;
 }
 
 
