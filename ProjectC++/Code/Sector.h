@@ -23,6 +23,9 @@ static const float FSECTOR_HEIGHT_SIZE = (float)SECTOR_HEIGHT_SIZE;
 static const unsigned int SECTOR_BLEND_CHANNELS = 8;
 static const unsigned int TEXTURE_NAME_LENGTH = 60;
 
+static const unsigned int SECTOR_NORMALS_SIZE = 64;
+static const float FSECTOR_NORMALS_SIZE = (float)SECTOR_NORMALS_SIZE;
+
 // AI Grid
 static const unsigned int SECTOR_AI_GRID_SIZE = 63;
 static const float FSECTOR_AI_GRID_SIZE = (float)SECTOR_AI_GRID_SIZE;
@@ -37,6 +40,8 @@ private:
 	float zHeightMap[SECTOR_HEIGHT_SIZE*SECTOR_HEIGHT_SIZE];
 	float zBlendMap[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 	float zBlendMap2[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
+	float zNormals[SECTOR_NORMALS_SIZE*SECTOR_NORMALS_SIZE*3];
+
 	char zTextureNames[TEXTURE_NAME_LENGTH*4];
 	char zTextureNames2[TEXTURE_NAME_LENGTH*4];
 
@@ -55,6 +60,10 @@ public:
 
 	// Returns the blend map as a float array where each pixel is 4 floats.
 	inline float* GetBlendMap() { return &zBlendMap[0]; }
+
+	// Returns The World Normal map
+	inline float* GetNormals() { return &zNormals[0]; }
+	void ResetNormals();
 
 	// Returns the second blend map
 	inline float* GetBlendMap2() { return &zBlendMap2[0]; }

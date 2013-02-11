@@ -8,10 +8,12 @@
 #include "EntityRemovedAction.h"
 #include "AIGridChangeAction.h"
 #include "GridCalculateAction.h"
+#include "ReplaceEntityAction.h"
 #include "SmoothAction.h"
 #include <math.h>
 #include <time.h>
 #include "NavArrows.h"
+#include "Shuffle.h"
 
 const float M_PI = 3.141592f;
 
@@ -43,7 +45,9 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zCurrentActionGroup(0),
 	zHeightFromGround(1.7f),
 	zShowArrowsFlag(false),
-	zArrows(0)
+	zArrows(0),
+	zShuffleList(0),
+	zShuffleGroup(1)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -58,6 +62,9 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	// Entities
 	LoadEntList("Entities.txt");
 
+	// Shuffle Groups
+	zShuffleList = new ShuffleList("Shuffle.txt");
+
 	// Start Camera
 	ChangeCameraMode("FPS");
 	LockMouseToCamera();
@@ -71,6 +78,7 @@ GameEngine::~GameEngine()
 {
 	ClearActionHistory();
 
+	if ( zShuffleList ) delete zShuffleList;
 	if ( zArrows ) delete zArrows;
 	if ( zWorld ) delete zWorld;
 }
@@ -1318,6 +1326,47 @@ void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 				if ( zCurrentActionGroup ) zCurrentActionGroup = 0;
 				ApplyAction(GCA);
 				zWorldSavedFlag = false;
+			}
+		}
+	}
+	else if ( zMode == MODE::SHUFFLE )
+	{
+		if ( zWorldRenderer )
+		{
+			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if ( coll.collision )
+			{
+				Vector2UINT sectorCoords = zWorld->WorldPosToSector(Vector2(coll.posx, coll.posy));
+
+				Rect sectorRect;
+				sectorRect.topLeft.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
+				sectorRect.topLeft.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
+				sectorRect.size = Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE);
+
+				std::set<Entity*> ents;
+				if ( zWorld->GetEntitiesInRect(sectorRect, ents) > 0 )
+				{
+					zCurrentActionGroup = 0;
+
+					for( auto i = ents.begin(); i != ents.end(); ++i )
+					{
+						if ( zShuffleList->IsPartOfGround(zShuffleGroup, (*i)->GetType()) )
+						{
+							if ( !zCurrentActionGroup )
+							{
+								zCurrentActionGroup = new ActionGroup();
+							}
+
+							ReplaceEntityAction* REA = new ReplaceEntityAction(zWorld, *i, zShuffleList->RandomizeNewType(zShuffleGroup) );
+
+							REA->Execute();
+							zCurrentActionGroup->zActions.push_back(REA);
+							zWorldSavedFlag = false;
+						}
+					}
+
+					if ( zCurrentActionGroup ) ApplyAction(zCurrentActionGroup);
+				}
 			}
 		}
 	}

@@ -14,6 +14,11 @@ struct BlendMap
 	float blend[SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE*4];
 };
 
+struct NormalsStruct
+{
+	float normal[SECTOR_NORMALS_SIZE*SECTOR_NORMALS_SIZE*3];
+};
+
 
 struct TextureNamesStruct
 {
@@ -368,9 +373,42 @@ bool WorldFile::ReadTextureNames2( char* data, unsigned int sectorIndex )
 	return false;
 }
 
-unsigned int WorldFile::GetEnding() const
+
+unsigned int WorldFile::GetNormalsBegin() const
 {
 	return GetSectorTexturesBegin2() + zNumSectors * sizeof(TextureNamesStruct);
+}
+
+
+void WorldFile::WriteNormals( const float* const data, unsigned int sectorIndex )
+{
+	if ( zMode != OPEN_LOAD )
+	{
+		if ( !zFile ) Open();
+		if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+		zFile->seekp( GetNormalsBegin() + sectorIndex * sizeof(NormalsStruct), std::ios::beg );
+		zFile->write((const char*)data, sizeof(NormalsStruct));
+	}
+}
+
+bool WorldFile::ReadNormals( float* data, unsigned int sectorIndex )
+{
+	if ( !zFile ) Open();
+	if ( sectorIndex >= zNumSectors ) throw("Sector Index out of range!");
+	zFile->seekg( GetNormalsBegin() + sectorIndex * sizeof(NormalsStruct), std::ios::beg );
+	if ( zFile->eof() ) return false;
+	if ( !zFile->read((char*)data, sizeof(NormalsStruct))) return false;
+	
+	// Test Data
+	if ( data[0] == 0.0f && data[1] == 0.0f && data[2] == 0.0f ) return false;
+	
+	return true;
+}
+
+
+unsigned int WorldFile::GetEnding() const
+{
+	return GetNormalsBegin() + zNumSectors * sizeof(NormalsStruct);
 }
 
 void WorldFile::SetStartCamera( const Vector3& pos, const Vector3& rot )

@@ -1,7 +1,10 @@
+Number:1
 Name:Trees
 Find:5
-Replace:20,0.5
+Replace:20,1.0
 
+Number:2
 Name:Barrskog
 Find:5
 Replace:21,1.0
+Replace:22,2.0

@@ -45,6 +45,8 @@ void Sector::Reset()
 	zAmbient[1] = 0.0f;
 	zAmbient[2] = 0.0f;
 
+	ResetNormals();
+
 	SetEdited(false);
 }
 
@@ -103,7 +105,6 @@ void Sector::ModifyBlendingAt( const Vector2& pos, const BlendValues& val )
 		curValues[i+4] = zBlendMap2[ (scaledY * (SECTOR_BLEND_SIZE) + scaledX) * 4 + i ];
 	}
 
-	float total = 0.0f;
 	for( unsigned int x=0; x<SECTOR_BLEND_CHANNELS; ++x )
 	{
 		curValues[x] += val[x];
@@ -266,6 +267,14 @@ void Sector::ResetBlendMap2()
 		zBlendMap2[x*4+2] = 0.0f;
 		zBlendMap2[x*4+3] = 0.0f;
 	}
+}
 
-	SetEdited(true);
+void Sector::ResetNormals()
+{
+	for( unsigned int x=0; x<SECTOR_NORMALS_SIZE*SECTOR_NORMALS_SIZE; ++x )
+	{
+		zNormals[x*3+0] = 0.0f;
+		zNormals[x*3+1] = 1.0f;
+		zNormals[x*3+2] = 0.0f;
+	}
 }

@@ -27,6 +27,7 @@
     <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\NavArrows.h" />
     <ClInclude Include="Code\Observer.h" />
+    <ClInclude Include="Code\ReplaceEntityAction.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\Shuffle.h" />
     <ClInclude Include="Code\SmoothAction.h" />

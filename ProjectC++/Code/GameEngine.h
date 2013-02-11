@@ -8,6 +8,7 @@
 #pragma warning ( disable : 4512 )	// The GameEngine is not meant to have a assignment operator
 
 class NavArrows;
+class ShuffleList;
 
 #ifdef _DEBUG
 #include <vld.h>
@@ -68,6 +69,9 @@ private:
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
 
+	// Shuffle Brush
+	unsigned int zShuffleGroup;
+
 	// Brush
 	bool zDrawBrush;
 	bool zMouseMoved;
@@ -85,6 +89,9 @@ private:
 	std::vector< Action* > zActionHistory;
 	unsigned int currentActionIndex;
 	ActionGroup *zCurrentActionGroup;
+
+	// Shuffle Groups
+	ShuffleList* zShuffleList;
 
 	// Walking on ground
 	bool zRightMouseDown;

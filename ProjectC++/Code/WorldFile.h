@@ -130,6 +130,10 @@ public:
 	void WriteBlendMap2( const float* const data, unsigned int sectorIndex );
 	bool ReadBlendMap2( float* data, unsigned int sectorIndex );
 
+	// Normals
+	void WriteNormals( const float* const data, unsigned int sectorIndex );
+	bool ReadNormals( float* data, unsigned int sectorIndex );
+
 	// AI Grid
 	void WriteAIGrid( const AIGrid& grid, unsigned int sectorIndex );
 	bool ReadAIGrid( AIGrid& grid, unsigned int sectorIndex );
@@ -161,5 +165,6 @@ private:
 	unsigned int GetAIGridBegin() const;
 	unsigned int GetBlendsBegin2() const;
 	unsigned int GetSectorTexturesBegin2() const;
+	unsigned int GetNormalsBegin() const;
 	unsigned int GetEnding() const;
 };

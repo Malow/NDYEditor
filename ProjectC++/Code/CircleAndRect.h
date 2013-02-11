@@ -29,7 +29,7 @@ public:
 	Vector2 topLeft;
 	Vector2 size;	// x = width, y = height
 
-	Rect( const Vector2& topLeft, const Vector2& size ) :
+	Rect( const Vector2& topLeft=Vector2(0.0f, 0.0f), const Vector2& size=Vector2(0.0f, 0.0f) ) :
 		topLeft(topLeft),
 		size(size)
 	{

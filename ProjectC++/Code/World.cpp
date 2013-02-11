@@ -189,6 +189,7 @@ void World::SaveFile()
 							zFile->WriteAIGrid(zSectors[x][y]->GetAIGrid(), sectorIndex);
 							zFile->WriteBlendMap2(zSectors[x][y]->GetBlendMap2(), sectorIndex);
 							zFile->WriteTextureNames2(zSectors[x][y]->GetTextureNames2(), sectorIndex);
+							zFile->WriteNormals(zSectors[x][y]->GetNormals(), sectorIndex);
 
 							// Write Sector Header
 							WorldFileSectorHeader header;
@@ -387,12 +388,14 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 					s->SetTextureName(6, s->GetTextureName(2));
 					s->SetTextureName(7, s->GetTextureName(3));
 				}
+
+				if ( !zFile->ReadNormals(s->GetNormals(), y * GetNumSectorsWidth() + x) )
+				{
+					s->ResetNormals();
+				}
 			}
 			else
 			{
-				std::stringstream ss;
-				ss << "Failed Loading Header For Sector: (" << x << ", " << y << ")";
-				MaloW::Debug( ss.str() );
 				s->Reset();
 			}
 

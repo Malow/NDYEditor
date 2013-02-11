@@ -74,8 +74,10 @@ const std::string& GetEntName( unsigned int entIndex ) throw(...)
 const std::string& GetEntModel( unsigned int entIndex ) throw(...)
 {
 	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
+	
+	static const std::string noModel = "";
 	if ( entities[entIndex-1].models.empty() )
-		return "";
+		return noModel;
 
 	unsigned int r = rand()%entities[entIndex-1].models.size();
 	return entities[entIndex-1].models[r];
@@ -101,8 +103,10 @@ unsigned int GetEntListSize()
 const std::string& GetEntBillboard( unsigned int entIndex ) throw(...)
 {
 	if ( entIndex-1 >= entities.size() ) throw("Index Out Of Bounds!");
+
+	static const std::string emptyString = "";
 	if ( entities[entIndex-1].billboards.empty() )
-		return "";
+		return emptyString;
 
 	unsigned int r = rand()%entities[entIndex-1].billboards.size();
 	return entities[entIndex-1].billboards[r];

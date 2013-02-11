@@ -75,11 +75,6 @@ void WorldRenderer::OnEvent( Event* e )
 			if ( grid != zAIGrids.end() )
 				zAIGrids.erase(grid);
 
-			// Remove Normals
-			auto normals = zNormals.find(zTerrain[tIndex]);
-			if ( normals != zNormals.end() )
-				zNormals.erase(normals);
-
 			zTerrain[tIndex] = 0;
 		}
 	}
@@ -281,36 +276,8 @@ void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
 		// Set Heightmap
 		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
 
-		// Retrieve Normals
-		std::vector< Vector3 >& normals = zNormals[T];
-
-		// Density
-		float density = FSECTOR_WORLD_SIZE / FSECTOR_HEIGHT_SIZE;
-
-		// Sector Corner
-		Vector2 mapCorner;
-		mapCorner.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
-		mapCorner.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
-
-		// Generate Normals
-		normals.resize(SECTOR_HEIGHT_SIZE * SECTOR_HEIGHT_SIZE);
-		for( unsigned int x=0; x < SECTOR_HEIGHT_SIZE; ++x )
-		{
-			for( unsigned int y=0; y < SECTOR_HEIGHT_SIZE; ++y )
-			{
-				try
-				{
-					normals[ y * SECTOR_HEIGHT_SIZE + x ] = zWorld->CalcNormalAt(mapCorner + Vector2((float)x, (float)y) * density + density * 0.5f);
-				}
-				catch(...)
-				{
-					normals[ y * SECTOR_HEIGHT_SIZE + x ] = Vector3(0.0f, 1.0f, 0.0f);
-				}
-			}
-		}
-
 		// Set Normals
-		T->SetNormals(&normals[0][0]);
+		T->SetNormals(zWorld->GetSector(sectorCoords)->GetNormals());
 	}
 }
 

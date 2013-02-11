@@ -3,18 +3,23 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <set>
 
 
 class ShuffleList
 {
 	struct ListData
 	{
-		std::vector< unsigned int > zFindIDs;
-		std::vector< std::pair< unsigned int, float > > zNewIDs;
+		std::set< unsigned int > zFindIDs;
+		std::map< unsigned int, float > zNewIDs;
+		std::string zName;
 	};
 
-	std::map< unsigned int, ListData > zLists;
+	std::map< unsigned int, ListData > zGroups;
 
 public:
 	ShuffleList( const std::string& fileName );
+
+	bool IsPartOfGround( unsigned int groupNum, unsigned int entType );
+	unsigned int RandomizeNewType( unsigned int groupNum );
 };

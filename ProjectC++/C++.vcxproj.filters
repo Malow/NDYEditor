@@ -88,6 +88,9 @@
     <ClInclude Include="Code\Shuffle.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ReplaceEntityAction.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\WorldFile.cpp">

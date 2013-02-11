@@ -7,6 +7,11 @@ namespace {
 bool InitGraphics( unsigned int hWnd )
 {
 	engine = CreateGraphicsEngineInWindow(hWnd, "Config.cfg");
+
+	// Special Editor Config
+	if ( engine->GetEngineParameters().MaxFPS == 0 )
+		engine->GetEngineParameters().MaxFPS = 30;
+
 	return (engine != 0);
 }
 
