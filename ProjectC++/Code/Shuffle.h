@@ -20,6 +20,6 @@ class ShuffleList
 public:
 	ShuffleList( const std::string& fileName );
 
-	bool IsPartOfGround( unsigned int groupNum, unsigned int entType );
+	bool IsPartOfGroup( unsigned int groupNum, unsigned int entType );
 	unsigned int RandomizeNewType( unsigned int groupNum );
 };

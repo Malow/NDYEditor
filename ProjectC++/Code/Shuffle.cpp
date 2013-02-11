@@ -36,7 +36,7 @@ ShuffleList::ShuffleList( const std::string& fileName )
 			sscanf_s(curLine.c_str(), "find:%d", &eID);
 
 			// Insert
-			zGroups[curGroupNumber-1].zFindIDs.insert(eID);
+			zGroups[curGroupNumber].zFindIDs.insert(eID);
 		}
 		else if ( curLine.find("replace:") == 0 )
 		{
@@ -48,14 +48,14 @@ ShuffleList::ShuffleList( const std::string& fileName )
 			sscanf_s(curLine.c_str(), "replace:%d,%f", &eID, &chance);
 
 			// Insert
-			zGroups[curGroupNumber-1].zNewIDs[eID] = chance;
+			zGroups[curGroupNumber].zNewIDs[eID] = chance;
 		}
 	}
 
 	file.close();
 }
 
-bool ShuffleList::IsPartOfGround( unsigned int groupNum, unsigned int entType )
+bool ShuffleList::IsPartOfGroup( unsigned int groupNum, unsigned int entType )
 {
 	if ( groupNum == 0 ) return false;
 

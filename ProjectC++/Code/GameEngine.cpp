@@ -1350,7 +1350,7 @@ void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 
 					for( auto i = ents.begin(); i != ents.end(); ++i )
 					{
-						if ( zShuffleList->IsPartOfGround(zShuffleGroup, (*i)->GetType()) )
+						if ( zShuffleList->IsPartOfGroup(zShuffleGroup, (*i)->GetType()) )
 						{
 							if ( !zCurrentActionGroup )
 							{
@@ -1359,13 +1359,15 @@ void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 
 							ReplaceEntityAction* REA = new ReplaceEntityAction(zWorld, *i, zShuffleList->RandomizeNewType(zShuffleGroup) );
 
-							REA->Execute();
 							zCurrentActionGroup->zActions.push_back(REA);
-							zWorldSavedFlag = false;
 						}
 					}
 
-					if ( zCurrentActionGroup ) ApplyAction(zCurrentActionGroup);
+					if ( zCurrentActionGroup )
+					{
+						ApplyAction(zCurrentActionGroup);
+						zWorldSavedFlag = false;
+					}
 				}
 			}
 		}

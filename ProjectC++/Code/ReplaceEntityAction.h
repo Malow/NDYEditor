@@ -27,6 +27,8 @@ public:
 
 	void Execute()
 	{
+		// TODO: No New Entity, Just Change Type
+		/*
 		zOldType = zEntity->GetType();
 
 		zNewEntity = zWorld->CreateEntity(zNewType);
@@ -35,15 +37,18 @@ public:
 		zNewEntity->SetScale(zEntity->GetScale());
 
 		zWorld->RemoveEntity(zEntity);
+		*/
 	}
 
 	void Undo()
 	{
+		/*
 		zEntity = zWorld->CreateEntity(zOldType);
 		zEntity->SetPosition(zNewEntity->GetPosition());
 		zEntity->SetRotation(zNewEntity->GetRotation());
 		zEntity->SetScale(zNewEntity->GetScale());
 
 		zWorld->RemoveEntity(zNewEntity);
+		*/
 	}
 };

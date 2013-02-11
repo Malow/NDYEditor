@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor GUI", "ProjectC#\Editor GUI.csproj", "{3FA172C1-3DD7-488F-BEFC-57B88937D020}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AFB3E492-F2A0-4B10-BF40-BD346C839D94} = {AFB3E492-F2A0-4B10-BF40-BD346C839D94}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "C++", "ProjectC++\C++.vcxproj", "{EE71C2BC-BC4B-4FF4-B197-9FF385991C64}"
 EndProject
