@@ -214,7 +214,7 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
 	std::set< Vector2UINT > sectors;
-	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters()->FarClip, sectors );
+	zWorld->GetSectorsInCicle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, sectors );
 
 	// Check For Collision
 	for( auto i = sectors.begin(); i != sectors.end(); ++i )
