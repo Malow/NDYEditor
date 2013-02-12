@@ -924,16 +924,19 @@ void GameEngine::GetBrushAttr( char* info, char* SChar )
 	std::string tempString = "";
 	if( strlen(info) == 4 && info[0] == 'T' && info[1] == 'e' && info[2] == 'x')
 	{
-		CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
-		if(cd.collision)
+		unsigned int texID = info[3] - 48;
+		if ( texID == 0 )
 		{
-			Vector2 worldPos( cd.posx, cd.posz );
-			zSelectedSectorX = zWorld->WorldPosToSector( worldPos ).x;
-			zSelectedSectorY = zWorld->WorldPosToSector( worldPos ).y;
-
-			unsigned int texID = info[3] - 48;
-			tempString = zWorld->GetSectorTexture(zSelectedSectorX, zSelectedSectorY, texID);
+			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if(cd.collision)
+			{
+				Vector2 worldPos( cd.posx, cd.posz );
+				zSelectedSectorX = zWorld->WorldPosToSector( worldPos ).x;
+				zSelectedSectorY = zWorld->WorldPosToSector( worldPos ).y;
+			}
 		}
+
+		tempString = zWorld->GetSectorTexture(zSelectedSectorX, zSelectedSectorY, texID);
 	}
 
 	// Fill Output String
