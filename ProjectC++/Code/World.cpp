@@ -4,15 +4,24 @@
 #include "MaloWFileDebug.h"
 #include <sstream>
 #include <math.h>
+#include "Entity.h"
 
 
-World::World( Observer* observer, const std::string& fileName) throw(...) : 
+World::World( Observer* observer, const std::string& fileName, bool readOnly) throw(...) : 
 	Observed(observer),
 	zSectors(NULL), 
 	zNrOfSectorsWidth(0), 
 	zNrOfSectorsHeight(0)
 {
-	zFile = new WorldFile(this, fileName, OPEN_EDIT);
+	if ( readOnly )
+	{
+		zFile = new WorldFile(this, fileName, OPEN_LOAD);
+	}
+	else
+	{
+		zFile = new WorldFile(this, fileName, OPEN_EDIT);
+	}
+
 	zFile->ReadHeader();
 }
 
@@ -286,7 +295,6 @@ void World::SaveFileAs( const std::string& fileName )
 
 			if ( !CopyFile( filePath.c_str(), fileName.c_str(), false ) )
 			{
-				int err = GetLastError();
 				throw("Failed Copy!");
 			}
 
@@ -414,7 +422,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 					ent->SetEdited(false);
 					zEntities.push_back(ent);
 					NotifyObservers( &EntityLoadedEvent(this,ent) );
-					NotifyObservers( &EntityUpdatedEvent(ent) );
+
 					counter++;
 				}
 				zLoadedEntityCount[zSectors[x][y]] = counter;
@@ -638,8 +646,8 @@ BlendValues World::GetBlendingAt( const Vector2& worldPos )
 
 	// Local Coordinates
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
@@ -659,8 +667,8 @@ void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, SECTOR_WORLD_SIZE)/SECTOR_WORLD_SIZE;
+	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
@@ -670,8 +678,8 @@ void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
 	GetSector(sectorX, sectorY)->SetBlendingAt(snapPos, val);
 
 	NotifyObservers(&SectorBlendMapChanged(this, 
-		worldPos.x / FSECTOR_WORLD_SIZE,
-		worldPos.y / FSECTOR_WORLD_SIZE,
+		sectorX,
+		sectorY,
 		localPos.x,
 		localPos.y ));
 	
@@ -736,7 +744,7 @@ void World::Update()
 			if ( !GetSector( i->x, i->y )->IsEdited() )
 			{
 				// Does Sector have edited entities?
-				Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+				Rect sectorRect(Vector2(i->x * FSECTOR_WORLD_SIZE, i->y * FSECTOR_WORLD_SIZE), Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
 				std::set< Entity* > entitiesInArea;
 				bool unsavedEntities = false;
 
@@ -763,7 +771,7 @@ void World::Update()
 	for( auto i = sectorsToUnload.begin(); i != sectorsToUnload.end(); ++i )
 	{
 		// Delete Entities
-		Rect sectorRect(Vector2(i->x * SECTOR_WORLD_SIZE, i->y * SECTOR_WORLD_SIZE), Vector2(SECTOR_WORLD_SIZE, SECTOR_WORLD_SIZE));
+		Rect sectorRect(Vector2(i->x * FSECTOR_WORLD_SIZE, i->y * FSECTOR_WORLD_SIZE), Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
 		std::set< Entity* > entitiesInArea;
 		GetEntitiesInRect(sectorRect, entitiesInArea);
 		for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )

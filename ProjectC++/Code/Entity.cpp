@@ -13,32 +13,59 @@ Entity::Entity( unsigned int type, const Vector3& pos, const Vector3& rot, const
 
 Entity::~Entity()
 {
+	EntityDeletedEvent EDE;
+	EDE.entity = this;
+	NotifyObservers( &EDE );
 }
 
 void Entity::SetPosition( const Vector3& pos )
 {
 	SetEdited(true);
 	zPosition = pos;
-	NotifyObservers( &EntityUpdatedEvent(this) );
+
+	EntityUpdatedEvent EUE;
+	EUE.entity = this;
+	NotifyObservers( &EUE );
 }
 
 void Entity::SetRotation( const Vector3& rot )
 {
 	SetEdited(true);
 	zRotation = rot;
-	NotifyObservers(&EntityUpdatedEvent(this));
+	
+	EntityUpdatedEvent EUE;
+	EUE.entity = this;
+	NotifyObservers( &EUE );
 }
 
 void Entity::SetScale( const Vector3& scale )
 {
 	SetEdited(true);
 	zScale = scale;
-	NotifyObservers(&EntityUpdatedEvent(this));
+
+	EntityUpdatedEvent EUE;
+	EUE.entity = this;
+	NotifyObservers( &EUE );
 }
 
 void Entity::SetSelected( bool selected )
 {
 	zSelected = selected;
-	NotifyObservers(&EntityUpdatedEvent(this));
+
+	EntitySelectedEvent ESE;
+	ESE.entity = this;
+	NotifyObservers( &ESE );
 }
 
+void Entity::SetType( unsigned int& newType )
+{
+	if ( newType != zType )
+	{
+		SetEdited(true);
+		zType = newType;
+
+		EntityChangedTypeEvent ECTE;
+		ECTE.entity = this;
+		NotifyObservers(&ECTE);
+	}
+}

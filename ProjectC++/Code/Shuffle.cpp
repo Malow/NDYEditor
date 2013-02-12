@@ -16,7 +16,7 @@ ShuffleList::ShuffleList( const std::string& fileName )
 		// Force lowercase
 		for( unsigned int x=0; x<curLine.size(); ++x )
 		{
-			curLine[x] = tolower(curLine[x]);
+			curLine[x] = (char)tolower(curLine[x]);
 		}
 
 		if ( curLine.find("number:") == 0 )

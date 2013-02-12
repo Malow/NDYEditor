@@ -49,4 +49,9 @@ protected:
 	void UpdateSectorAIGrid( const Vector2UINT& sectorCoords );
 	void CreateTerrain( const Vector2UINT& sectorCoords );
 	iTerrain* GetTerrain( const Vector2UINT& sectorCoords );
+
+	void CreateEntity( Entity* e );
+	void SetEntityGraphics( Entity* e );
+	void SetEntityTransformation( Entity* e );
+	void DeleteEntity( Entity* e );
 };

@@ -1,9 +1,34 @@
 #pragma once
 
-#include "Vector.h"
+#include <Vector.h>
 #include "Observer.h"
-#include "World.h"
 
+class Entity;
+class World;
+
+class EntityDeletedEvent : public Event
+{
+public:
+	Entity* entity;
+};
+
+class EntityChangedTypeEvent : public Event
+{
+public:
+	Entity* entity;
+};
+
+class EntityUpdatedEvent : public Event
+{
+public:
+	Entity* entity;
+};
+
+class EntitySelectedEvent : public Event
+{
+public:
+	Entity* entity;
+};
 
 class Entity : public Observed
 {
@@ -35,15 +60,8 @@ public:
 	inline void SetEdited(bool flag) { zEdited=flag; }
 	inline bool IsEdited() const { return zEdited; }
 
+	void SetType( unsigned int& newType );
 	inline unsigned int GetType() const { return zType; }
 
 	friend class World;
-};
-
-
-class EntityUpdatedEvent : public Event
-{
-public:
-	Entity* entity;
-	EntityUpdatedEvent(Entity* entity) : entity(entity){}
 };

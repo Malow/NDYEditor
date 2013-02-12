@@ -2,6 +2,7 @@
 
 #include "Action.h"
 #include "World.h"
+#include "Entity.h"
 #include <Vector.h>
 
 

@@ -5,10 +5,9 @@
 #include "Sector.h"
 #include "Observer.h"
 #include "WorldFile.h"
-#include "Entity.h"
 #include "CircleAndRect.h"
 
-
+class Entity;
 class World;
 
 class WorldAnchor
@@ -55,7 +54,7 @@ private:
 	std::set<WorldAnchor*> zAnchors;
 
 public:
-	World( Observer* observer, const std::string& fileName="" ) throw(...);
+	World( Observer* observer, const std::string& fileName="", bool readOnly=true ) throw(...);
 	World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight);
 	virtual ~World();
 

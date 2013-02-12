@@ -14,6 +14,8 @@
 #include <time.h>
 #include "NavArrows.h"
 #include "Shuffle.h"
+#include "Entity.h"
+
 
 const float M_PI = 3.141592f;
 
@@ -519,13 +521,13 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			CollisionData cd = zWorldRenderer->Get3DRayCollisionDataWithGround();
 			if( cd.collision )
 			{
-				double length;
-				double theta;
+				float length;
+				float theta;
 				std::set<Entity*> insideCircle;
 				if( zWorld->GetEntitiesInCircle(Vector2(cd.posx, cd.posz), zBrushSize, insideCircle, zCreateEntityType) < zBrushStrength )
 				{
-					theta = ((double)rand() / (double)RAND_MAX) * M_PI * 2.0;
-					length = ((double)rand() / (double)RAND_MAX) * zBrushSize;
+					theta = ((float)rand() / (float)RAND_MAX) * M_PI * 2.0f;
+					length = ((float)rand() / (float)RAND_MAX) * zBrushSize;
 					Vector2 pos = Vector2(cd.posx, cd.posz) + Vector2(cosf(theta), sinf(theta)) * length;
 					if ( zWorld->IsInside(pos) )
 					{
@@ -585,15 +587,19 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 	}
 }
 
-
 void GameEngine::CreateWorld( int width, int height )
 {
+	// Clear History
+	ClearActionHistory();
+
+	// Free World
 	if ( zWorld ) delete zWorld, zWorld=0;
+	
+	// Create New World
 	this->zWorld = new World(this, width, height);
 	this->zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
 	zWorldSavedFlag = false;
 }
-
 
 void GameEngine::ChangeMode( unsigned int mode )
 {

@@ -11,9 +11,9 @@ NavArrows::NavArrows( GraphicsEngine* gfx ) :
 	zNavArrowZ = zGraphics->CreateMesh("Media/Models/Arrow/BlueArrow.obj", Vector3(-7.5f * zArrowScale, 0, 7.5f * zArrowScale));
 	zNavArrowSpawn = zGraphics->CreateMesh("Media/Models/Arrow/BlackArrow.obj", Vector3(0, 0, 0));
 
-	zNavArrowX->RotateAxis(Vector3(0, 0, 1), 3.14159265359 * 0.5f); // Point down x-axis
-	zNavArrowZ->RotateAxis(Vector3(1, 0, 0), -3.14159265359 * 0.5f); // Point down z-axis
-	zNavArrowSpawn->RotateAxis(Vector3(0, 0, 1), 3.14159265359 * 0.5f); // Point down x-axis
+	zNavArrowX->RotateAxis(Vector3(0, 0, 1), 3.14159265359f * 0.5f); // Point down x-axis
+	zNavArrowZ->RotateAxis(Vector3(1, 0, 0), -3.14159265359f * 0.5f); // Point down z-axis
+	zNavArrowSpawn->RotateAxis(Vector3(0, 0, 1), 3.14159265359f * 0.5f); // Point down x-axis
 	zNavArrowX->Scale(zArrowScale);
 	zNavArrowZ->Scale(zArrowScale);
 	zNavArrowSpawn->Scale(zArrowScale);
@@ -48,7 +48,7 @@ void NavArrows::Update( const Vector3& camPos, const Vector3& camDir )
 	zNavArrowSpawn->RotateAxis(around, angle);
 }
 
-void NavArrows::Show( bool flag )
+void NavArrows::Show( bool )
 {
 	
 }

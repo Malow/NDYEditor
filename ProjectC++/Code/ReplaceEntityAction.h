@@ -2,19 +2,17 @@
 
 #include "Action.h"
 #include "World.h"
+#include "Entity.h"
 
 
-class ReplaceEntityAction : public Action
+class ReplaceEntityAction : public Action, public Observer
 {
 	// Parameters
 	Entity* zEntity;
 	World* zWorld;
 	unsigned int zNewType;
 
-	// New Entity
-	Entity* zNewEntity;
-
-	// Old Entity 
+	// Undo Data
 	unsigned int zOldType;
 
 public:
@@ -23,32 +21,34 @@ public:
 		zEntity(ent),
 		zNewType(newType)
 	{
+		if ( zEntity ) zEntity->AddObserver(this);
+	}
+
+	ReplaceEntityAction::~ReplaceEntityAction()
+	{
+		if ( zEntity ) zEntity->RemoveObserver(this);
 	}
 
 	void Execute()
 	{
-		// TODO: No New Entity, Just Change Type
-		/*
-		zOldType = zEntity->GetType();
-
-		zNewEntity = zWorld->CreateEntity(zNewType);
-		zNewEntity->SetPosition(zEntity->GetPosition());
-		zNewEntity->SetRotation(zEntity->GetRotation());
-		zNewEntity->SetScale(zEntity->GetScale());
-
-		zWorld->RemoveEntity(zEntity);
-		*/
+		if ( zEntity )
+		{
+			zOldType = zEntity->GetType();
+			zEntity->SetType(zNewType);
+		}
 	}
 
 	void Undo()
 	{
-		/*
-		zEntity = zWorld->CreateEntity(zOldType);
-		zEntity->SetPosition(zNewEntity->GetPosition());
-		zEntity->SetRotation(zNewEntity->GetRotation());
-		zEntity->SetScale(zNewEntity->GetScale());
+		if ( zEntity ) zEntity->SetType(zOldType);
+	}
 
-		zWorld->RemoveEntity(zNewEntity);
-		*/
+protected:
+	virtual void OnEvent( Event* e )
+	{
+		if ( EntityDeletedEvent* ERE = dynamic_cast<EntityDeletedEvent*>(e) )
+		{
+			if ( ERE->entity == zEntity ) zEntity = 0;
+		}
 	}
 };
