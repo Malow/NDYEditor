@@ -100,6 +100,29 @@ void WorldFile::Open()
 		// Switch Directly To Edit Move
 		zMode = OPEN_EDIT;
 	}
+	else if ( zMode == OPEN_LOAD )
+	{
+		// Check Size
+		std::streampos beg = zFile->tellg();
+		zFile->seekp(0, std::ios::end);
+		unsigned int size = (unsigned int)(zFile->tellg() - beg);
+
+		if ( size == 0 )
+			throw("Empty File!");
+
+		if ( size < sizeof(WorldFileHeader) )
+			throw("File Doesn't Have Header!");
+
+		// Read File Header
+		zFile->seekg( 0, std::ios::beg );
+		zFile->read( reinterpret_cast<char*>(&zHeader), sizeof(WorldFileHeader) );
+
+		// Save number of sectors
+		zNumSectors = zHeader.width * zHeader.height;
+
+		// Header Loaded
+		NotifyObservers( &WorldHeaderLoadedEvent(this,zHeader) );
+	}
 	else if ( zMode == OPEN_EDIT )
 	{
 		// Check Size

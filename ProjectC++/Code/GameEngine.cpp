@@ -672,7 +672,7 @@ void GameEngine::SaveWorldAs( char* msg )
 void GameEngine::OpenWorld( char* msg )
 {
 	if ( zWorld ) delete zWorld, zWorld = 0;
-	zWorld = new World(this, msg);
+	zWorld = new World(this, msg, false);
 	zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
 	zWorldSavedFlag = true;
 }
