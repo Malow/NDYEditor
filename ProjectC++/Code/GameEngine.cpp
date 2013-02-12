@@ -1379,3 +1379,8 @@ void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 		}
 	}
 }
+
+void GameEngine::SetShuffleGroup( unsigned int index )
+{
+	zShuffleGroup = index;
+}

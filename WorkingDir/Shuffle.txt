@@ -1,9 +1,11 @@
 Number:1
 Name:Trees
 Find:5
+Find:20
+Replace:5,1.0
 Replace:20,1.0
 
 Number:2
-Name:Trees2
+Name:Stones
 Find:5
-Replace:5,1.0
+Replace:6,1.0

@@ -283,3 +283,8 @@ void GameEngineWrapper::IncSelectedObjectInfo( char* info, float x, float y, flo
 {
 	m_GameEngine->IncSelectedObjectInfo(info, x, y, z);
 }
+
+void GameEngineWrapper::SetShuffleGroup(unsigned int index)
+{
+	m_GameEngine->SetShuffleGroup(index);
+}

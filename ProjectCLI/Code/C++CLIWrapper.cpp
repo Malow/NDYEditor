@@ -438,4 +438,9 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->OnMiddleMouseUp(x,y);
 	}
 
+	void CppCLI::SetShuffleGroup( unsigned int num )
+	{
+		m_GameEngine->SetShuffleGroup(num);
+	}
+
 }}}

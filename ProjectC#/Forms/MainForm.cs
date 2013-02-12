@@ -445,38 +445,26 @@ namespace Editor.Forms
             StreamReader sr = new StreamReader("Shuffle.txt");
             String line = "";
             String nr = "";
-            String name = "";
-            String find = "";
-            String replaceTemp = "";
             while (!sr.EndOfStream)
             {
                 line = sr.ReadLine();
-                if (line.StartsWith("Number"))
+                if (line.StartsWith("Number:"))
                 {
                     string[] lineSplit = line.Split(':');
                     nr = lineSplit[lineSplit.Length - 1];
                 }
-                if (line.StartsWith("Name"))
+                else if (line.StartsWith("Name:"))
                 {
                     string[] lineSplit = line.Split(':');
-                    name = lineSplit[lineSplit.Length - 1].ToString();
+                    string name = lineSplit[lineSplit.Length - 1].ToString();
+                    comboBox_shuffle.Items.Add(nr + ": " + name);
                 }
-                if (line.StartsWith("Find"))
-                {
-                    string[] lineSplit = line.Split(':');
-                    find = lineSplit[lineSplit.Length - 1].ToString();
-                }
-                if (line.StartsWith("Replace"))
-                {
-                    string[] lineSplit = line.Split(':');
-                    replaceTemp = lineSplit[lineSplit.Length - 1].ToString();
-
-                    comboBox_shuffle.Items.Add(nr + ":" + name + ":" + find + ":" + replaceTemp);
-                }
-                this.comboBox_shuffle.SelectedIndex = 0;
             }
 
+            sr.Close();
+            this.comboBox_shuffle.SelectedIndex = 0;
         }
+
         private void Load_Models()
         {
             StreamReader sr = new StreamReader("Entities.txt");
@@ -485,18 +473,19 @@ namespace Editor.Forms
             while (!sr.EndOfStream)
             {
                 line = sr.ReadLine();
-                if (line.StartsWith("Number"))
+                if (line.StartsWith("Number:"))
                 {
                     string[] lineSplit = line.Split(':');
                     nr = lineSplit[lineSplit.Length - 1];
                 }
-                if (line.StartsWith("Name"))
+                else if (line.StartsWith("Name:"))
                 {
                     string[] lineSplit = line.Split(':');
                     this.Combo_Model.Items.Add(nr + ": " + lineSplit[lineSplit.Length-1].ToString());
                     this.ComboBox_Model_Brush.Items.Add(nr + ": " + lineSplit[lineSplit.Length - 1].ToString());
                 }
             }
+            sr.Close();
             this.Combo_Model.SelectedIndex = 0;
             this.ComboBox_Model_Brush.SelectedIndex = 0;
         }
@@ -1010,6 +999,11 @@ namespace Editor.Forms
         private void Shuffle(object sender, EventArgs e)
         {
             string[] parameters = comboBox_shuffle.SelectedItem.ToString().Split(':');
+        }
+
+        private void comboBox_shuffle_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            this.m_GameEngine.SetShuffleGroup(uint.Parse(this.comboBox_shuffle.Text.Split(':')[0]));
         }
 
        /* private void textBox1_TextChanged(object sender, EventArgs e)
