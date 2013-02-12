@@ -390,6 +390,7 @@ namespace Editor.Forms
             this.Load_Settings();
             this.Load_Models();
             this.Load_Textures();
+            this.Load_Shuffle();
         }
 
         private void Load_Settings()
@@ -438,6 +439,43 @@ namespace Editor.Forms
             file.WriteLine(TextBox_Strength_RaiseLower.Text);
 
             file.Close();
+        }
+        private void Load_Shuffle()
+        {
+            StreamReader sr = new StreamReader("Shuffle.txt");
+            String line = "";
+            String nr = "";
+            String name = "";
+            String find = "";
+            String replaceTemp = "";
+            while (!sr.EndOfStream)
+            {
+                line = sr.ReadLine();
+                if (line.StartsWith("Number"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    nr = lineSplit[lineSplit.Length - 1];
+                }
+                if (line.StartsWith("Name"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    name = lineSplit[lineSplit.Length - 1].ToString();
+                }
+                if (line.StartsWith("Find"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    find = lineSplit[lineSplit.Length - 1].ToString();
+                }
+                if (line.StartsWith("Replace"))
+                {
+                    string[] lineSplit = line.Split(':');
+                    replaceTemp = lineSplit[lineSplit.Length - 1].ToString();
+
+                    comboBox_shuffle.Items.Add(nr + ":" + name + ":" + find + ":" + replaceTemp);
+                }
+                this.comboBox_shuffle.SelectedIndex = 0;
+            }
+
         }
         private void Load_Models()
         {
@@ -512,6 +550,7 @@ namespace Editor.Forms
             this.panel_DeleteCircle.Hide();
             this.Panel_AIGrid.Hide();
             this.Panel_SliderPropBars.Hide();
+            this.Panel_Switch.Hide();
             this.Panel_Info.SendToBack();
             this.Panel_ObjectInfo.SendToBack();
             this.Panel_PlaceObject.SendToBack();
@@ -523,6 +562,7 @@ namespace Editor.Forms
             this.panel_DeleteCircle.SendToBack();
             this.Panel_AIGrid.SendToBack();
             this.Panel_SliderPropBars.SendToBack();
+            this.Panel_Switch.SendToBack();
         }
 
         private void switchMode()
@@ -679,6 +719,9 @@ namespace Editor.Forms
             {
                 this.btn_Shuffle.Focus();
                 this.hideAll();
+
+                this.Panel_Switch.Show();
+                this.Panel_Switch.BringToFront();
 
                 m_GameEngine.SetBrushAttr("InnerCircle", 1.0f);
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
@@ -962,6 +1005,11 @@ namespace Editor.Forms
             trackBar_z.Value = 0;
 
             GetAllSelectedInfo();
+        }
+
+        private void Shuffle(object sender, EventArgs e)
+        {
+            string[] parameters = comboBox_shuffle.SelectedItem.ToString().Split(':');
         }
 
        /* private void textBox1_TextChanged(object sender, EventArgs e)
