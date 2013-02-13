@@ -93,7 +93,7 @@ Model:Media/Models/Stone_03_v01.obj
 
 Number:200
 Name:Deer Spawnpoint
-Model:Media/Scale.obj
+Model:Media/Models/DEEEEER.obj
 
 Number:201
 Name:Wolf Spawnpoint
