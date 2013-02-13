@@ -87,6 +87,10 @@ Number:21
 Name:Water
 Model:Water
 
+Number:22
+Name:WaterStones	
+Model:Media/Models/Stone_03_v01.obj
+
 Number:200
 Name:Deer Spawnpoint
 Model:Media/Scale.obj
