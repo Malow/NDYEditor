@@ -11,9 +11,10 @@ World::World( Observer* observer, const std::string& fileName, bool readOnly) th
 	Observed(observer),
 	zSectors(NULL), 
 	zNrOfSectorsWidth(0), 
-	zNrOfSectorsHeight(0)
+	zNrOfSectorsHeight(0),
+	zReadOnly(readOnly)
 {
-	if ( readOnly )
+	if ( zReadOnly )
 	{
 		zFile = new WorldFile(this, fileName, OPEN_LOAD);
 	}
@@ -29,7 +30,8 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 	Observed(observer),
 	zNrOfSectorsWidth(nrOfSectorWidth),
 	zNrOfSectorsHeight(nrOfSectorHeight),
-	zFile(0)
+	zFile(0),
+	zReadOnly(false)
 {
 	this->zSectors = new Sector**[this->zNrOfSectorsWidth];
 	for(unsigned int i = 0; i < this->zNrOfSectorsWidth; i++)
@@ -947,6 +949,76 @@ Vector3 World::CalcNormalAt( const Vector2& worldPos ) throw(...)
 	Vector3 normal = (c-b).GetCrossProduct(d-a);
 	normal.Normalize();
 	return normal;
+}
+
+void World::SetNormalAt( const Vector2& worldPos, const Vector3& val ) throw(...)
+{
+	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
+	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
+	Vector2 localPos;
+	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+
+	// Snap Local Coordinates
+	Vector2 snapPos;
+	snapPos.x = floor(localPos.x * (FSECTOR_NORMALS_SIZE-1.0f)) / (FSECTOR_NORMALS_SIZE-1.0f);
+	snapPos.y = floor(localPos.y * (FSECTOR_NORMALS_SIZE-1.0f)) / (FSECTOR_NORMALS_SIZE-1.0f);
+
+	GetSector(sectorX, sectorY)->SetNormalAt(snapPos, val);
+
+	NotifyObservers(&SectorNormalChanged(this, 
+		sectorX,
+		sectorY,
+		localPos.x,
+		localPos.y ));
+	
+	// Overlap Left
+	if ( sectorX > 0 && snapPos.x == 0.0f )
+	{
+		float border = (float)(FSECTOR_NORMALS_SIZE-1)/(float)FSECTOR_NORMALS_SIZE;
+		GetSector(sectorX-1, sectorY)->SetNormalAt(Vector2(border, snapPos.y), val);
+		NotifyObservers( &SectorNormalChanged(this, sectorX-1, sectorY, border, snapPos.y) );
+	}
+
+	// Overlap Up
+	if ( sectorY > 0 && snapPos.y == 0.0f )
+	{
+		float border = (float)(FSECTOR_NORMALS_SIZE-1)/(float)FSECTOR_NORMALS_SIZE;
+		GetSector(sectorX, sectorY-1)->SetNormalAt(Vector2(snapPos.x, border), val);
+		NotifyObservers( &SectorNormalChanged(this, sectorX, sectorY-1, snapPos.x, border) );
+	}
+	
+	// Overlap Left Up Corner
+	if ( sectorY > 0 && snapPos.y == 0.0f && sectorX > 0 && snapPos.x == 0.0f )
+	{
+		float border = (float)(FSECTOR_NORMALS_SIZE-1)/(float)FSECTOR_NORMALS_SIZE;
+		GetSector(sectorX-1, sectorY-1)->SetNormalAt(Vector2(border, border), val);
+		NotifyObservers( &SectorNormalChanged(this, sectorX-1, sectorY-1, border, border) );
+	}
+}
+
+void World::GenerateSectorNormals( const Vector2UINT& sectorCoords )
+{
+	// Density
+	float density = FSECTOR_WORLD_SIZE / FSECTOR_WORLD_SIZE;
+
+	// Sector Cornera
+	Vector2 start;
+	start.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
+	start.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
+
+	Vector2 end;
+	start.x = (float)(sectorCoords.x+1) * FSECTOR_WORLD_SIZE;
+	start.y = (float)(sectorCoords.y+1) * FSECTOR_WORLD_SIZE;
+
+	Vector2 current;
+	for( current.x = start.x; current.x < end.x; current.x += density )
+	{
+		for( current.y = start.y; current.y < end.y; current.y += density )
+		{
+			SetNormalAt( current, CalcNormalAt(current) );
+		}
+	}
 }
 
 unsigned int World::GetAINodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const

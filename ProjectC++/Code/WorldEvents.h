@@ -97,6 +97,23 @@ public:
 	}
 };
 
+
+class SectorNormalChanged : public Event
+{
+public:
+	World* world;
+	unsigned int sectorx, sectory;
+	float localx, localy;
+	SectorNormalChanged( World* world, unsigned int sectorx, unsigned int sectory, const float& localx, const float& localy ) :
+		world(world),
+		sectorx(sectorx),
+		sectory(sectory),
+		localx(localx),
+		localy(localy)
+	{
+	}
+};
+
 class SectorBlendTexturesChanged : public Event
 {
 public:

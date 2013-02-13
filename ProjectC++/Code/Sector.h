@@ -90,6 +90,9 @@ public:
 	void SetBlocking( const Vector2& pos, bool flag );
 	bool GetBlocking( const Vector2& pos ) const;
 
+	// Normals
+	void SetNormalAt( const Vector2& pos, const Vector3& val );
+
 	/*
 	Get the value at point
 	Throws when out of bounds 

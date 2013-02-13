@@ -258,6 +258,27 @@ bool Sector::GetBlocking( const Vector2& pos ) const
 	return zAiGrid[ scaledY * SECTOR_AI_GRID_SIZE + scaledX ];
 }
 
+void Sector::SetNormalAt( const Vector2& pos, const Vector3& val )
+{
+	if ( pos.x < 0.0f || pos.x >= 1.0f || pos.y < 0.0f || pos.y >= 1.0f )
+		throw("Out Of Bounds!");
+
+	// Find pixel
+	float snapX = floor(pos.x * FSECTOR_NORMALS_SIZE) / FSECTOR_NORMALS_SIZE;
+	float snapY = floor(pos.y * FSECTOR_NORMALS_SIZE) / FSECTOR_NORMALS_SIZE;
+
+	unsigned int scaledX = (unsigned int)(snapX * FSECTOR_NORMALS_SIZE);
+	unsigned int scaledY = (unsigned int)(snapY * FSECTOR_NORMALS_SIZE);
+
+	// Set Values
+	for( unsigned int i=0; i<3; ++i )
+	{
+		zNormals[ (scaledY * SECTOR_NORMALS_SIZE + scaledX) * 3 + i ] = val[i];
+	}
+
+	SetEdited(true);
+}
+
 void Sector::ResetBlendMap2()
 {
 	for( unsigned int x=0; x<SECTOR_BLEND_SIZE*SECTOR_BLEND_SIZE; ++x )

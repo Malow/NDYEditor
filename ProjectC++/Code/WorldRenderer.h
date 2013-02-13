@@ -12,7 +12,8 @@ enum UPDATEENUM
 	UPDATE_BLENDMAP=2,
 	UPDATE_TEXTURES=4,
 	UPDATE_AIGRID=8,
-	UPDATE_ALL=15
+	UPDATE_NORMALS=16,
+	UPDATE_ALL=31
 };
 
 class WorldRenderer : Observer
@@ -44,6 +45,7 @@ public:
 protected:
 	void UpdateSectorTextures( const Vector2UINT& sectorCoords );
 	void UpdateSectorHeightMap( const Vector2UINT& sectorCoords );
+	void UpdateSectorNormals( const Vector2UINT& sectorCoords );
 	void UpdateSector( const Vector2UINT& sectorCoords );
 	void UpdateSectorBlendMap( const Vector2UINT& sectorCoords );
 	void UpdateSectorAIGrid( const Vector2UINT& sectorCoords );

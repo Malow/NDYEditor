@@ -101,6 +101,14 @@ void WorldRenderer::OnEvent( Event* e )
 			u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
 		}
 	}
+	else if ( SectorNormalChanged* SNC = dynamic_cast<SectorNormalChanged*>(e) )
+	{
+		if ( SNC->world == zWorld )
+		{
+			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SNC->sectorx, SNC->sectory) ];
+			u = (UPDATEENUM)(u | UPDATE_NORMALS);
+		}
+	}
 	else if ( EntityChangedTypeEvent* ECTE = dynamic_cast<EntityChangedTypeEvent*>(e) )
 	{
 		SetEntityGraphics(ECTE->entity);
@@ -240,12 +248,17 @@ void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
 	{
 		// Set Heightmap
 		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
+	}
+}
 
+void WorldRenderer::UpdateSectorNormals( const Vector2UINT& sectorCoords )
+{
+	if ( iTerrain* T = GetTerrain(sectorCoords) )
+	{
 		// Set Normals
 		T->SetNormals(zWorld->GetSector(sectorCoords)->GetNormals());
 	}
 }
-
 
 void WorldRenderer::UpdateSectorBlendMap( const Vector2UINT& sectorCoords )
 {
@@ -292,6 +305,9 @@ void WorldRenderer::Update()
 
 		if ( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
 			UpdateSectorHeightMap(i->first);
+
+		if ( ( i->second & UPDATE_NORMALS ) == UPDATE_NORMALS )
+			UpdateSectorNormals(i->first);
 
 		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
 			UpdateSectorTextures(i->first);

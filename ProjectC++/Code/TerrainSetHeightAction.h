@@ -39,6 +39,17 @@ public:
 			zPrevHeights.push_back(std::pair<Vector2,float>(*i, zWorld->GetHeightAt(*i)));
 			zWorld->SetHeightAt( i->x, i->y, zHeight );
 		}
+
+		for( auto i = zPrevHeights.begin(); i != zPrevHeights.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
+			}
+			catch(...)
+			{
+			}
+		}
 	}
 
 
@@ -47,6 +58,17 @@ public:
 		for( auto i = zPrevHeights.rbegin(); i != zPrevHeights.rend(); ++i )
 		{
 			zWorld->SetHeightAt( i->first.x, i->first.y, i->second );
+		}
+
+		for( auto i = zPrevHeights.begin(); i != zPrevHeights.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
+			}
+			catch(...)
+			{
+			}
 		}
 
 		zPrevHeights.clear();

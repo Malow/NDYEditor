@@ -31,7 +31,9 @@ public:
 class World : public Observed, public Observer
 {
 private:
+	// File
 	WorldFile* zFile;
+	bool zReadOnly;
 
 	// Sectors
 	Sector*** zSectors;
@@ -100,6 +102,8 @@ public:
 
 	// Normals
 	Vector3 CalcNormalAt( const Vector2& worldPos ) throw(...);
+	void SetNormalAt( const Vector2& worldPos, const Vector3& val ) throw(...);
+	void GenerateSectorNormals( const Vector2UINT& sectorCoords );
 
 	// Modify Blend Functions
 	void ModifyBlendingAt( const Vector2& worldPos, const BlendValues& val );
