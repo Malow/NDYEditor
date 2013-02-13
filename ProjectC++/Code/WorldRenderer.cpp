@@ -106,7 +106,7 @@ void WorldRenderer::OnEvent( Event* e )
 		if ( SNC->world == zWorld )
 		{
 			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SNC->sectorx, SNC->sectory) ];
-			u = (UPDATEENUM)(u | UPDATE_NORMALS);
+			u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
 		}
 	}
 	else if ( EntityChangedTypeEvent* ECTE = dynamic_cast<EntityChangedTypeEvent*>(e) )
@@ -158,7 +158,6 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 }
 
-
 float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 {
 	if(zWorld == NULL)
@@ -176,7 +175,6 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	
 	return std::numeric_limits<float>::infinity();
 }
-
 
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
@@ -204,7 +202,6 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	// Return default collision
 	return returnData;
 }
-
 
 Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 {
@@ -241,20 +238,13 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	return returnPointer;
 }
 
-
 void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
 {
 	if ( iTerrain* T = GetTerrain(sectorCoords) )
 	{
 		// Set Heightmap
 		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
-	}
-}
 
-void WorldRenderer::UpdateSectorNormals( const Vector2UINT& sectorCoords )
-{
-	if ( iTerrain* T = GetTerrain(sectorCoords) )
-	{
 		// Set Normals
 		T->SetNormals(zWorld->GetSector(sectorCoords)->GetNormals());
 	}
@@ -275,7 +265,6 @@ void WorldRenderer::UpdateSectorBlendMap( const Vector2UINT& sectorCoords )
 			&data[0] );
 	}
 }
-
 
 void WorldRenderer::UpdateSectorTextures( const Vector2UINT& sectorCoords )
 {
@@ -303,11 +292,8 @@ void WorldRenderer::Update()
 		if ( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP )
 			UpdateSectorBlendMap(i->first);
 
-		if ( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
+		if ( ( i->second & UPDATE_HEIGHTMAP ) )
 			UpdateSectorHeightMap(i->first);
-
-		if ( ( i->second & UPDATE_NORMALS ) == UPDATE_NORMALS )
-			UpdateSectorNormals(i->first);
 
 		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
 			UpdateSectorTextures(i->first);

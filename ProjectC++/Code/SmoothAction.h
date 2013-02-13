@@ -62,6 +62,18 @@ public:
 				}
 			}
 		}
+
+		// Update Normals
+		for ( auto i = zPrevChanges.begin(); i != zPrevChanges.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
+			}
+			catch(...)
+			{
+			}
+		}
 	}
 
 	void Undo()
@@ -70,6 +82,19 @@ public:
 		{
 			zWorld->SetHeightAt(i->first.x, i->first.y, i->second);
 		}
+
+		// Update Normals
+		for ( auto i = zPrevChanges.begin(); i != zPrevChanges.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
+			}
+			catch(...)
+			{
+			}
+		}
+
 		zPrevChanges.clear();
 	}
 };

@@ -1322,7 +1322,19 @@ void GameEngine::ToggleArrows()
 
 void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 {
-	if ( zMode == MODE::AIGRIDBRUSH )
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
+	{
+		if ( zWorldRenderer )
+		{
+			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if ( coll.collision )
+			{
+				zWorld->GenerateSectorNormals(zWorld->WorldPosToSector(Vector2(coll.posx, coll.posz)));
+				zWorldSavedFlag = false;
+			}
+		}
+	}
+	else if ( zMode == MODE::AIGRIDBRUSH )
 	{
 		if ( zWorldRenderer )
 		{

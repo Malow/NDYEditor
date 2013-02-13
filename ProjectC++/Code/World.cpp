@@ -938,16 +938,26 @@ Vector3 World::CalcNormalAt( const Vector2& worldPos ) throw(...)
 		worldPos.x < 0 ||
 		worldPos.y < 0 ) throw("Out Of Bounds!");
 
-	// Density
+	// Densityx
 	float density = FSECTOR_WORLD_SIZE / (FSECTOR_HEIGHT_SIZE - 1.0f);
 
-	Vector3 a(worldPos.x, GetHeightAt(worldPos), worldPos.y);
-	Vector3 b(worldPos.x+density, GetHeightAt(worldPos+Vector2(density, 0.0f)), worldPos.y);
-	Vector3 c(worldPos.x, GetHeightAt(worldPos+Vector2(0.0f, density)), worldPos.y+density);
-	Vector3 d(worldPos.x+density, GetHeightAt(worldPos+density), worldPos.y+density);
+	Vector3 vertices[4];
 
-	Vector3 normal = (c-b).GetCrossProduct(d-a);
+	vertices[0] = Vector3(worldPos.x, CalcHeightAtWorldPos(worldPos), worldPos.y);
+	vertices[1] = Vector3(worldPos.x+density, CalcHeightAtWorldPos(worldPos+Vector2(density, 0.0f)), worldPos.y);
+	vertices[2] = Vector3(worldPos.x+density, CalcHeightAtWorldPos(worldPos+density), worldPos.y+density);
+	vertices[3] = Vector3(worldPos.x, CalcHeightAtWorldPos(worldPos+Vector2(0.0f, density)), worldPos.y+density);
+	
+	Vector3 normal(0.0f, 0.0f, 0.0f);
+
+	for (int i=0; i<4; i++)
+	{
+		Vector3 first = vertices[(i+1)%4] - vertices[i];
+		Vector3 second = vertices[(i+3)%4] - vertices[i]; 
+		normal += second.GetCrossProduct(first);
+	}
 	normal.Normalize();
+
 	return normal;
 }
 
@@ -1000,7 +1010,7 @@ void World::SetNormalAt( const Vector2& worldPos, const Vector3& val ) throw(...
 void World::GenerateSectorNormals( const Vector2UINT& sectorCoords )
 {
 	// Density
-	float density = FSECTOR_WORLD_SIZE / FSECTOR_WORLD_SIZE;
+	float density = FSECTOR_WORLD_SIZE / (FSECTOR_NORMALS_SIZE-1.0);
 
 	// Sector Cornera
 	Vector2 start;
@@ -1008,15 +1018,21 @@ void World::GenerateSectorNormals( const Vector2UINT& sectorCoords )
 	start.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
 
 	Vector2 end;
-	start.x = (float)(sectorCoords.x+1) * FSECTOR_WORLD_SIZE;
-	start.y = (float)(sectorCoords.y+1) * FSECTOR_WORLD_SIZE;
+	end.x = (float)(sectorCoords.x+1) * FSECTOR_WORLD_SIZE;
+	end.y = (float)(sectorCoords.y+1) * FSECTOR_WORLD_SIZE;
 
 	Vector2 current;
 	for( current.x = start.x; current.x < end.x; current.x += density )
 	{
 		for( current.y = start.y; current.y < end.y; current.y += density )
 		{
-			SetNormalAt( current, CalcNormalAt(current) );
+			try
+			{
+				SetNormalAt( current, CalcNormalAt(current) );
+			}
+			catch(...)
+			{
+			}
 		}
 	}
 }

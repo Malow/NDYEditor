@@ -38,11 +38,21 @@ public:
 				try 
 				{
 					zWorld->ModifyHeightAt(i->x, i->y, zBrushStrength * distanceFactor);
-					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
 				}
 				catch(...)
 				{
 				}
+			}
+		}
+
+		for( auto i = nodes.begin(); i != nodes.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+			}
+			catch(...)
+			{
 			}
 		}
 	}
@@ -62,11 +72,21 @@ public:
 				try 
 				{
 					zWorld->ModifyHeightAt(i->x, i->y, -zBrushStrength * distanceFactor);
-					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
 				}
 				catch(...)
 				{
 				}
+			}
+		}
+
+		for( auto i = nodes.begin(); i != nodes.end(); ++i )
+		{
+			try
+			{
+				zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+			}
+			catch(...)
+			{
 			}
 		}
 	}
