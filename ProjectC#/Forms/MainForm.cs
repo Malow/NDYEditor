@@ -368,12 +368,18 @@ namespace Editor.Forms
 
         private void NDYEditor_Activated(object sender, EventArgs e)
         {
-            this.m_GameEngine.SetWindowFocused(false);
+            if (this.m_GameEngine != null)
+            {
+                this.m_GameEngine.SetWindowFocused(false);
+            }
         }
 
         private void NDYEditor_Deactivate(object sender, EventArgs e)
         {
-            this.m_GameEngine.SetWindowFocused(true);
+            if (this.m_GameEngine != null)
+            {
+                this.m_GameEngine.SetWindowFocused(true);
+            }
         }
 
         private void btnSelect_KeyPress(object sender, KeyPressEventArgs e)
