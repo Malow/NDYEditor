@@ -91,6 +91,10 @@ Number:22
 Name:WaterStones	
 Model:Media/Models/Stone_03_v01.obj
 
+Number:23
+Name:Bush_misc_01	
+Model:Media/Models/Bush_misc_01.obj
+
 Number:200
 Name:Deer Spawnpoint
 Model:Media/Models/DEEEEER.obj
