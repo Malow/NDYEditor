@@ -45,14 +45,18 @@ public:
 			}
 		}
 
-		for( auto i = nodes.begin(); i != nodes.end(); ++i )
+		std::set<Vector2> nodes2;
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+1, nodes2) )
 		{
-			try
+			for( auto i = nodes2.begin(); i != nodes2.end(); ++i )
 			{
-				zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
-			}
-			catch(...)
-			{
+				try
+				{
+					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+				}
+				catch(...)
+				{
+				}
 			}
 		}
 	}
@@ -79,14 +83,18 @@ public:
 			}
 		}
 
-		for( auto i = nodes.begin(); i != nodes.end(); ++i )
+		std::set<Vector2> nodes2;
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+1.0, nodes2) )
 		{
-			try
+			for( auto i = nodes2.begin(); i != nodes2.end(); ++i )
 			{
-				zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
-			}
-			catch(...)
-			{
+				try
+				{
+					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+				}
+				catch(...)
+				{
+				}
 			}
 		}
 	}

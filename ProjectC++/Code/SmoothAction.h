@@ -64,14 +64,18 @@ public:
 		}
 
 		// Update Normals
-		for ( auto i = zPrevChanges.begin(); i != zPrevChanges.end(); ++i )
+		std::set<Vector2> nodes2;
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+zBrushSizeExtra+1.0f, nodes2) )
 		{
-			try
+			for ( auto i = nodes2.begin(); i != nodes2.end(); ++i )
 			{
-				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
-			}
-			catch(...)
-			{
+				try
+				{
+					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+				}
+				catch(...)
+				{
+				}
 			}
 		}
 	}
@@ -84,14 +88,18 @@ public:
 		}
 
 		// Update Normals
-		for ( auto i = zPrevChanges.begin(); i != zPrevChanges.end(); ++i )
+		std::set<Vector2> nodes2;
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+zBrushSizeExtra+1.0f, nodes2) )
 		{
-			try
+			for ( auto i = nodes2.begin(); i != nodes2.end(); ++i )
 			{
-				zWorld->SetNormalAt(i->first, zWorld->CalcNormalAt(i->first));
-			}
-			catch(...)
-			{
+				try
+				{
+					zWorld->SetNormalAt(*i, zWorld->CalcNormalAt(*i));
+				}
+				catch(...)
+				{
+				}
 			}
 		}
 

@@ -25,7 +25,6 @@ public:
 		zRadius(radius),
 		zHeight(height)
 	{
-
 	}
 
 
@@ -55,7 +54,7 @@ public:
 
 	virtual void Undo()
 	{
-		for( auto i = zPrevHeights.rbegin(); i != zPrevHeights.rend(); ++i )
+		for( auto i = zPrevHeights.begin(); i != zPrevHeights.end(); ++i )
 		{
 			zWorld->SetHeightAt( i->first.x, i->first.y, i->second );
 		}
