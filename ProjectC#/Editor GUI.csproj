@@ -59,9 +59,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C++CLI, Version=1.0.4798.22619, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="C++CLID, Version=1.0.4801.30390, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\Release\C++CLI.dll</HintPath>
+      <HintPath>..\Bin\Debug\C++CLID.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />

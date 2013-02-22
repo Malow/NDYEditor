@@ -190,13 +190,16 @@ CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 	{
 		unsigned int sectorIndex = i->y * zWorld->GetNumSectorsWidth() + i->x;
 
-		CollisionData cd = zGraphics->GetPhysicsEngine()->GetSpecialCollisionRayTerrain(
-			zGraphics->GetCamera()->GetPosition(), 
-			zGraphics->GetCamera()->Get3DPickingRay(), 
-			zTerrain[sectorIndex],
-			(float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1));
-		
-		if ( cd.collision && cd.distance < returnData.distance ) returnData = cd;
+		if ( zTerrain[sectorIndex] )
+		{
+			CollisionData cd = zGraphics->GetPhysicsEngine()->GetSpecialCollisionRayTerrain(
+				zGraphics->GetCamera()->GetPosition(), 
+				zGraphics->GetCamera()->Get3DPickingRay(), 
+				zTerrain[sectorIndex],
+				(float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1));
+			
+			if ( cd.collision && cd.distance < returnData.distance ) returnData = cd;
+		}
 	}
 
 	// Return default collision
