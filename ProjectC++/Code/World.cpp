@@ -70,6 +70,12 @@ World::~World()
 	// Close File
 	if ( zFile ) delete zFile, zFile=0;
 
+	// Delete Anchors
+	for( auto i = zAnchors.begin(); i != zAnchors.end(); ++i )
+	{
+		delete *i;
+	}
+
 	// Delete Entities
 	for( auto i = zEntities.begin(); i != zEntities.end(); )
 	{
