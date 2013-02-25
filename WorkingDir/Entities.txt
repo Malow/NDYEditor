@@ -17,7 +17,7 @@ Model:Media/Models/Fern_02.ani
 
 Number:5
 Name:Tree
-Model:Media/Models/Tree_02_v02_r.obj
+Model:Media/Models/Tree_02.ani
 BlockRadius:0.5
 Billboard:Media/TreeBillboard.png
 BillboardDistance:100
