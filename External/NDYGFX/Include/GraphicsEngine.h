@@ -58,7 +58,7 @@ extern "C"
 		virtual iFBXMesh* CreateFBXMesh(const char* filename, Vector3 pos) = 0;
 		virtual void DeleteFBXMesh(iFBXMesh* mesh) = 0;
 
-		virtual iDecal* CreateDecal(Vector3 pos, const char* texture) = 0;
+		virtual iDecal* CreateDecal(Vector3 pos, const char* texture, Vector3 direction, Vector3 up) = 0;
 		virtual void DeleteDecal(iDecal* decal) = 0;
 
 		virtual iCamera* GetCamera() const = 0;
@@ -117,6 +117,14 @@ extern "C"
 
 		virtual void ChangeShadowQuality(int newQual) = 0;
 		virtual void ReloadShaders(int shaderIndex) = 0;
+
+		/*
+		Adds an enclosing fog effect.
+		Center is the center from which the fog is calculated in a circle around.
+		Radius is how far out from center to start fading to fog.
+		FogFadeFactor is over how much of Radius the fog should fade from nothing to fully solid.
+		*/
+		virtual void SetEnclosingFogEffect(Vector3 center, float radius, float fogfadefactor = 0.1f) = 0;
 	};
 
 	/*
