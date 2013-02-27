@@ -42,3 +42,5 @@
 /WorkingDir/config.cfg
 /WorkingDir/EditorConfig.cfg
 /NDY Editor.v11.suo
+/Bin/Release/C++CLID.pdb
+/Bin/Release/C++CLID.dll
