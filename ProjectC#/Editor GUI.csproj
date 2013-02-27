@@ -59,7 +59,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C++CLI, Version=1.0.4805.26850, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="C++CLI, Version=1.0.4805.31676, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\Release\C++CLI.dll</HintPath>
     </Reference>

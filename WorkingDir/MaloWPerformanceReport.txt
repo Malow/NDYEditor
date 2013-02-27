@@ -1,0 +1,56 @@
+Performance report, times in milliseconds, IE 100 in the file = 0.1 seconds.
+
+Settings: 
+Resolution: 525 x 508
+Shadow Quality: 1
+FXAA Quality: 0
+Field of View: 75
+FarClip: 200
+MaxFPS: 30
+ShadowFit: 50
+Billboard Range: 0.75
+
+WARNING, MAXFPS IS SET!
+
+Renderer - Entire Frame: 
+Avg: 46.3636     Tot:2040, Measures: 44
+
+Renderer - Life Overhead: 
+Avg: 0.545455     Tot:24, Measures: 44
+
+Renderer - CalculateCulling: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - PreRender: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Shadows: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Deferred Geo: 
+Avg: 1.27273     Tot:56, Measures: 44
+
+Renderer - Render Billboards: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Per Pixel: 
+Avg: 0.363636     Tot:16, Measures: 44
+
+Renderer - Render Translucent: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Skybox: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Enclosing Fog: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Images: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render Text: 
+Avg: 0     Tot:0, Measures: 44
+
+Renderer - Render FXAA: 
+Avg: 0     Tot:0, Measures: 44
+
