@@ -26,6 +26,16 @@ class WorldRenderer : Observer
 
 	std::map< Vector2UINT, UPDATEENUM > zUpdatesRequired;
 	bool zShowAIMap;
+	
+	std::map< WaterQuad*, iWaterPlane* > zWaterQuads;
+
+	struct WaterCubes
+	{
+		iMesh* zCubes[4];
+	};
+
+	std::map< WaterQuad*, WaterCubes > zWaterBoxes;
+	bool zShowWaterBoxes;
 
 public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
@@ -37,7 +47,8 @@ public:
 	float GetYPosFromHeightMap(float x, float y);
 
 	void Update();
-	void ToggleAIGrid( bool state );
+	void ToggleAIGrid(bool state);
+	void ToggleWaterBoxes(bool flag);
 
 	virtual void OnEvent( Event* e );
 
@@ -49,6 +60,8 @@ protected:
 	void UpdateSectorAIGrid( const Vector2UINT& sectorCoords );
 	void CreateTerrain( const Vector2UINT& sectorCoords );
 	iTerrain* GetTerrain( const Vector2UINT& sectorCoords );
+
+	void UpdateWaterBoxes( WaterQuad* water );
 
 	void CreateEntity( Entity* e );
 	void SetEntityGraphics( Entity* e );

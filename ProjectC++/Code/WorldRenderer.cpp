@@ -1,12 +1,14 @@
 #include "WorldRenderer.h"
 #include "EntityList.h"
 #include "Entity.h"
+#include "WaterQuad.h"
 
 
 WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) : 
 	zWorld(world),
 	zGraphics(graphics),
-	zShowAIMap(false)
+	zShowAIMap(false),
+	zShowWaterBoxes(false)
 {
 	zWorld->AddObserver(this);
 
@@ -15,7 +17,7 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 		zWorld->GetSunColor(),
 		zWorld->GetSunIntensity() );
 
-	// Render Loaded SEctors
+	// Render Loaded Sectors
 	auto loadedSectors = zWorld->GetLoadedSectors();
 	if ( !loadedSectors.empty() )
 	{
@@ -48,6 +50,22 @@ WorldRenderer::~WorldRenderer()
 		zGraphics->DeleteMesh( i->second );
 	}
 
+	// Clean Water Boxes
+	for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
+	{
+		for( unsigned int x=0; x<4; ++x )
+		{
+			zGraphics->DeleteMesh( i->second.zCubes[x] );
+		}
+	}
+
+	// Clean Water Quads
+	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
+	{
+		i->first->RemoveObserver(this);
+		zGraphics->DeleteMesh( i->second );
+	}
+
 	zEntities.clear();
 }
 
@@ -62,6 +80,53 @@ void WorldRenderer::OnEvent( Event* e )
 				WLE->world->GetSunDir(),
 				WLE->world->GetSunColor(),
 				WLE->world->GetSunIntensity() );
+		}
+	}
+	else if ( WaterQuadCreatedEvent* WQCE = dynamic_cast<WaterQuadCreatedEvent*>(e) )
+	{
+		zWaterQuads[WQCE->zQuad] = zGraphics->CreateWaterPlane(Vector3(0.0f, 0.0f, 0.0f), "Media/WaterTexture.png");
+		WQCE->zQuad->AddObserver(this);
+		UpdateWaterBoxes(WQCE->zQuad);
+	}
+	else if ( WaterQuadLoadedEvent* WQLE = dynamic_cast<WaterQuadLoadedEvent*>(e) )
+	{
+		zWaterQuads[WQLE->zQuad] = zGraphics->CreateWaterPlane(Vector3(0.0f, 0.0f, 0.0f), "Media/WaterTexture.png");
+		WQLE->zQuad->AddObserver(this);
+
+		for( unsigned int x=0; x<4; ++x )
+		{
+			zWaterQuads[WQLE->zQuad]->SetVertexPosition(WQLE->zQuad->GetPosition(x), x);
+		}
+		
+		UpdateWaterBoxes(WQLE->zQuad);
+	}
+	else if ( WaterQuadEditedEvent* WQEE = dynamic_cast<WaterQuadEditedEvent*>(e) )
+	{
+		auto i = zWaterQuads.find(WQEE->zQuad);
+		if ( i != zWaterQuads.end() )
+		{
+			for( unsigned int x=0; x<4; ++x )
+			{
+				i->second->SetVertexPosition(WQEE->zQuad->GetPosition(x), x);
+			}
+		}
+		UpdateWaterBoxes(WQEE->zQuad);
+	}
+	else if ( WaterQuadDeletedEvent* WQDE = dynamic_cast<WaterQuadDeletedEvent*>(e) )
+	{
+		auto i = zWaterQuads.find(WQDE->zQuad);
+		zGraphics->DeleteWaterPlane(i->second);
+		zWaterQuads.erase(i);
+
+		// Delete Boxes
+		auto boxI = zWaterBoxes.find(WQDE->zQuad);
+		if ( boxI != zWaterBoxes.end() ) 
+		{
+			zGraphics->DeleteMesh(boxI->second.zCubes[0]);
+			zGraphics->DeleteMesh(boxI->second.zCubes[1]);
+			zGraphics->DeleteMesh(boxI->second.zCubes[2]);
+			zGraphics->DeleteMesh(boxI->second.zCubes[3]);
+			zWaterBoxes.erase(boxI);
 		}
 	}
 	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
@@ -308,7 +373,7 @@ void WorldRenderer::Update()
 	}
 }
 
-void WorldRenderer::ToggleAIGrid( bool state )
+void WorldRenderer::ToggleAIGrid(bool state)
 {
 	zShowAIMap = state;
 
@@ -325,7 +390,37 @@ void WorldRenderer::ToggleAIGrid( bool state )
 	}
 }
 
-void WorldRenderer::UpdateSectorAIGrid( const Vector2UINT& sectorCoords )
+void WorldRenderer::ToggleWaterBoxes(bool flag)
+{
+	if ( zShowWaterBoxes != flag )
+	{
+		zShowWaterBoxes = flag;
+
+		if ( zShowWaterBoxes )
+		{
+			// Create Water Boxes
+			for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
+			{
+				UpdateWaterBoxes(i->first);
+			}
+		}
+		else if ( !zShowWaterBoxes )
+		{
+			// Delete Water Boxes
+			for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
+			{
+				for( unsigned int x=0; x<4; ++x )
+				{
+					zGraphics->DeleteMesh(zWaterBoxes[i->first].zCubes[0]);
+				}
+			}
+
+			zWaterBoxes.clear();
+		}
+	}
+}
+
+void WorldRenderer::UpdateSectorAIGrid(const Vector2UINT& sectorCoords)
 {
 	if ( iTerrain* T = GetTerrain(sectorCoords) )
 	{
@@ -440,5 +535,54 @@ void WorldRenderer::DeleteEntity( Entity* e )
 		e->RemoveObserver(this);
 		zGraphics->DeleteMesh(i->second);
 		zEntities.erase(i);
+	}
+}
+
+void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
+{
+	// Create Boxes
+	if ( zShowWaterBoxes )
+	{
+		auto i = zWaterBoxes.find(quad);
+
+		if ( i != zWaterBoxes.end() )
+		{
+			// Calculate Positions
+			for( unsigned int x=0; x<4; ++x )
+			{
+				Vector3 position;
+				position = quad->GetPosition(x);
+
+				// Terrain Height Minimum
+				float terrainHeight = zWorld->GetHeightAt(position.GetXZ());
+				if ( position.y < terrainHeight ) position.y = terrainHeight;
+
+				i->second.zCubes[x]->SetPosition(position);
+			}
+		}
+		else
+		{
+			// Calculate Positions
+			Vector3 positions[4];
+			for( unsigned int x=0; x<4; ++x )
+			{
+				positions[x] = quad->GetPosition(x);
+
+				// Terrain Height Minimum
+				float terrainHeight = zWorld->GetHeightAt(positions[x].GetXZ());
+
+				if ( positions[x].y < terrainHeight ) positions[x].y = terrainHeight;
+			}
+			
+			zWaterBoxes[quad].zCubes[0] = zGraphics->CreateMesh("Media/Models/Cube_1.obj", positions[0]);
+			zWaterBoxes[quad].zCubes[1] = zGraphics->CreateMesh("Media/Models/Cube_2.obj", positions[1]);
+			zWaterBoxes[quad].zCubes[2] = zGraphics->CreateMesh("Media/Models/Cube_3.obj", positions[2]);
+			zWaterBoxes[quad].zCubes[3] = zGraphics->CreateMesh("Media/Models/Cube_4.obj", positions[3]);
+
+			for( unsigned int x=0; x<4; ++x )
+			{
+				zWaterBoxes[quad].zCubes[x]->SetScale(1.0f/20.0f);
+			}
+		}
 	}
 }

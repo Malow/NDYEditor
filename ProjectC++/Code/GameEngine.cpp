@@ -15,7 +15,7 @@
 #include "NavArrows.h"
 #include "Shuffle.h"
 #include "Entity.h"
-
+#include "WaterQuad.h"
 
 const float M_PI = 3.141592f;
 
@@ -57,6 +57,15 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	zGraphics->StartRendering();
 	prevSunDir = Vector3(0, -1, 0);
+
+	// Preload Cubes
+	const char* cubeResources[] = { 
+		"Media/Models/Cube_1.obj", 
+		"Media/Models/Cube_2.obj",
+		"Media/Models/Cube_3.obj",
+		"Media/Models/Cube_4.obj" };
+
+	zGraphics->PreLoadResources(4, cubeResources);
 
 	// Direction Arrows
 	zArrows = new NavArrows(zGraphics);
@@ -603,18 +612,24 @@ void GameEngine::CreateWorld( int width, int height )
 
 void GameEngine::ChangeMode( unsigned int mode )
 {
-	if ( zMode == AIGRIDBRUSH && mode != AIGRIDBRUSH )
+	if ( zWorldRenderer )
 	{
-		if ( zWorldRenderer )
+		if ( zMode == AIGRIDBRUSH && mode != AIGRIDBRUSH )
 		{
 			zWorldRenderer->ToggleAIGrid(false);
 		}
-	}
-	else if ( mode == AIGRIDBRUSH )
-	{
-		if ( zWorldRenderer )
+		else if ( mode == AIGRIDBRUSH )
 		{
 			zWorldRenderer->ToggleAIGrid(true);
+		}
+
+		if ( zMode == MODE::WATER && mode != MODE::WATER )
+		{
+			zWorldRenderer->ToggleWaterBoxes(false);
+		}
+		else if ( mode == MODE::WATER )
+		{
+			zWorldRenderer->ToggleWaterBoxes(true);
 		}
 	}
 
@@ -1231,11 +1246,34 @@ void GameEngine::OnRightMouseDown( unsigned int, unsigned int )
 		}
 		zRightMouseDown = true;
 	}
-	
 }
 
 void GameEngine::OnRightMouseUp( unsigned int, unsigned int )
 {
+	if ( zMode == MODE::WATER )
+	{
+		if ( zWorldRenderer )
+		{
+			CollisionData data = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if ( data.collision )
+			{
+				if ( zWorld )
+				{
+					WaterQuad* Q = zWorld->CreateWaterQuad();
+
+					Vector3 center(data.posx, data.posy, data.posz);
+					Vector3 xd(10.0f, 0.0f, 0.0f);
+					Vector3 zd(0.0f, 0.0f, 10.0f);
+
+					Q->SetPosition(0, center + xd - zd);
+					Q->SetPosition(1, center + xd + zd);
+					Q->SetPosition(2, center - xd - zd);
+					Q->SetPosition(3, center - xd + zd);
+				}
+			}
+		}
+	}
+
 	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH ) )
 		zCurrentActionGroup = 0;
 

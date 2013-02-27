@@ -28,7 +28,8 @@ namespace Editor.Forms
         DELETEENTITIES = 9,
         RESETGROUND = 10,
         AIGRID = 11,
-        SHUFFLE = 12
+        SHUFFLE = 12,
+        WATER = 13
     }
 
     public partial class NDYEditor : Form

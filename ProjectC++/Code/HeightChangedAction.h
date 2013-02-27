@@ -84,7 +84,7 @@ public:
 		}
 
 		std::set<Vector2> nodes2;
-		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+1.0, nodes2) )
+		if ( zWorld->GetHeightNodesInCircle(zCenter, zBrushSize+1.0f, nodes2) )
 		{
 			for( auto i = nodes2.begin(); i != nodes2.end(); ++i )
 			{

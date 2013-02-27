@@ -9,6 +9,7 @@
 
 class Entity;
 class World;
+class WaterQuad;
 
 class WorldAnchor
 {
@@ -38,8 +39,13 @@ private:
 	// Sectors
 	Sector*** zSectors;
 	std::set<Vector2UINT> zLoadedSectors;
-	std::map< Sector*, unsigned int > zLoadedEntityCount;
+	std::map<Sector*, unsigned int> zLoadedEntityCount;
 
+	// Water
+	std::set<WaterQuad*> zWaterQuads;
+	bool zWaterQuadsEdited;
+
+	// Entities
 	std::vector<Entity*> zEntities;
 	
 	// World Settings
@@ -69,9 +75,11 @@ public:
 	unsigned int GetNumSectorsWidth() const;
 	unsigned int GetNumSectorsHeight() const;
 	Vector2 GetWorldCenter() const;
-
 	Vector2 GetWorldSize() const;
 	bool IsInside( const Vector2& worldPos );
+
+	// Water Quads
+	WaterQuad* CreateWaterQuad();
 
 	// Sun Settings
 	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );
