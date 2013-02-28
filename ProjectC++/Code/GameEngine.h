@@ -70,6 +70,10 @@ private:
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
 
+	// Water Select Brush
+	WaterQuad* zSelectedWaterQuad;
+	unsigned int zSelectedWaterQuadIndex;
+
 	// Shuffle Brush
 	unsigned int zShuffleGroup;
 

@@ -27,6 +27,23 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 			CreateTerrain(*i);
 		}
 	}
+
+	// Render Waters
+	for( auto i = zWorld->GetWaterQuads().cbegin(); i != zWorld->GetWaterQuads().cend(); ++i )
+	{
+		zWaterQuads[*i] = zGraphics->CreateWaterPlane(Vector3(0.0f, 0.0f, 0.0f), "Media/WaterTexture.png");
+		
+		auto i2 = zWaterQuads.find(*i);
+		if ( i2 != zWaterQuads.end() )
+		{
+			for( unsigned int x=0; x<4; ++x )
+			{
+				i2->second->SetVertexPosition((*i)->GetPosition(x), x);
+			}
+		}
+
+		UpdateWaterBoxes(*i);
+	}
 }
 
 
@@ -49,6 +66,7 @@ WorldRenderer::~WorldRenderer()
 		i->first->RemoveObserver(this);
 		zGraphics->DeleteMesh( i->second );
 	}
+	zEntities.clear();
 
 	// Clean Water Boxes
 	for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
@@ -58,15 +76,15 @@ WorldRenderer::~WorldRenderer()
 			zGraphics->DeleteMesh( i->second.zCubes[x] );
 		}
 	}
+	zWaterBoxes.clear();
 
 	// Clean Water Quads
 	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
 	{
 		i->first->RemoveObserver(this);
-		zGraphics->DeleteMesh( i->second );
+		zGraphics->DeleteMesh(i->second);
 	}
-
-	zEntities.clear();
+	zWaterQuads.clear();
 }
 
 
@@ -241,6 +259,41 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	return std::numeric_limits<float>::infinity();
 }
 
+std::pair<WaterQuad*, unsigned int> WorldRenderer::GetCollisionWithWaterBoxes()
+{
+	std::pair<WaterQuad*, unsigned int> result(0, 0);
+
+	float curDistance = std::numeric_limits<float>::max();
+
+	iCamera* cam = zGraphics->GetCamera();
+	Vector3 camPos = cam->GetPosition();
+
+	for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
+	{
+		for( unsigned int x=0; x<4; ++x )
+		{
+			CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
+				camPos, 
+				cam->Get3DPickingRay(), 
+				i->second.zCubes[x]);
+
+			if(cd.collision)
+			{
+				float thisDistance = (Vector3(cd.posx, cd.posy, cd.posz) - camPos).GetLength();
+
+				if(thisDistance < curDistance)
+				{
+					result.first = i->first;
+					result.second = x;
+					curDistance = thisDistance;
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
 CollisionData WorldRenderer::Get3DRayCollisionDataWithGround()
 {
 	// Get Applicable Sectors
@@ -295,7 +348,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 		{
 			float thisDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
 
-			if( cam->Get3DPickingRay().GetDotProduct(Vector3(cd.posx,cd.posy,cd.posz) - camPos) > 0.0f && thisDistance < curDistance)
+			if(thisDistance < curDistance)
 			{
 				returnPointer = *i;
 				curDistance = thisDistance;
@@ -404,14 +457,14 @@ void WorldRenderer::ToggleWaterBoxes(bool flag)
 				UpdateWaterBoxes(i->first);
 			}
 		}
-		else if ( !zShowWaterBoxes )
+		else
 		{
 			// Delete Water Boxes
 			for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
 			{
 				for( unsigned int x=0; x<4; ++x )
 				{
-					zGraphics->DeleteMesh(zWaterBoxes[i->first].zCubes[0]);
+					zGraphics->DeleteMesh(zWaterBoxes[i->first].zCubes[x]);
 				}
 			}
 

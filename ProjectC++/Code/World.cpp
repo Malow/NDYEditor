@@ -73,25 +73,26 @@ World::~World()
 	if ( zFile ) delete zFile, zFile=0;
 
 	// Delete Anchors
-	for( auto i = zAnchors.begin(); i != zAnchors.end(); ++i )
+	for( auto i = zAnchors.cbegin(); i != zAnchors.cend(); ++i )
 	{
 		delete *i;
 	}
+	zAnchors.clear();
 
 	// Delete Entities
-	for( auto i = zEntities.begin(); i != zEntities.end(); )
+	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
 	{
 		NotifyObservers( &EntityRemovedEvent(this,*i));
 		delete *i;
-		i = zEntities.erase(i);
 	}
+	zEntities.clear();
 
 	// Delete Water Quads
-	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); )
+	for( auto i = zWaterQuads.cbegin(); i != zWaterQuads.cend(); ++i )
 	{
 		delete *i;
-		i = zWaterQuads.erase(i);
 	}
+	zWaterQuads.clear();
 
 	// Delete the zSectors pointers.
 	if ( this->zSectors )
@@ -119,7 +120,7 @@ World::~World()
 Entity* World::CreateEntity( unsigned int entityType )
 {
 	Entity* temp = new Entity(entityType);
-	zEntities.push_back(temp);
+	zEntities.insert(temp);
 	NotifyObservers( &EntityLoadedEvent(this, temp) );
 	temp->SetEdited(true);
 	return temp;
@@ -459,7 +460,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 
 					Entity* ent = new Entity(e->type, pos, rot, scale);
 					ent->SetEdited(false);
-					zEntities.push_back(ent);
+					zEntities.insert(ent);
 					NotifyObservers( &EntityLoadedEvent(this,ent) );
 
 					counter++;
@@ -538,11 +539,6 @@ void World::OnEvent( Event* e )
 		// World Has Been Loaded
 		NotifyObservers( &WorldLoadedEvent(this) );	
 	}
-	else if ( WaterQuadDeletedEvent* WQDE = dynamic_cast<WaterQuadDeletedEvent*>(e) )
-	{
-		zWaterQuads.erase(WQDE->zQuad);
-		zWaterQuadsEdited = true;
-	}
 	else if ( WaterQuadEditedEvent* WQEE = dynamic_cast<WaterQuadEditedEvent*>(e) )
 	{
 		zWaterQuadsEdited = true;
@@ -595,11 +591,11 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 
 	unsigned int counter=0;
 	
-	unsigned int xMin = ((center.x - radius) < 0.0f? 0.0f : center.x - radius) / SECTOR_WORLD_SIZE;
-	unsigned int xMax = ((center.x + radius) > (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE : (center.x + radius)) / FSECTOR_WORLD_SIZE;
+	unsigned int xMin = (unsigned int)(((center.x - radius) < 0.0f? 0.0f : center.x - radius) / FSECTOR_WORLD_SIZE);
+	unsigned int xMax = (unsigned int)(((center.x + radius) > (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE : (center.x + radius)) / FSECTOR_WORLD_SIZE);
 
-	unsigned int yMin = ((center.y - radius) < 0.0f? 0.0f : center.y - radius) / SECTOR_WORLD_SIZE;
-	unsigned int yMax = ((center.y + radius) > (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE : (center.y + radius)) / FSECTOR_WORLD_SIZE; 
+	unsigned int yMin = (unsigned int)(((center.y - radius) < 0.0f? 0.0f : center.y - radius) / FSECTOR_WORLD_SIZE);
+	unsigned int yMax = (unsigned int)(((center.y + radius) > (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE : (center.y + radius)) / FSECTOR_WORLD_SIZE); 
 
 	for( unsigned int x=xMin; x<xMax; ++x )
 	{
@@ -1180,6 +1176,12 @@ WaterQuad* World::CreateWaterQuad()
 	return WQ;
 }
 
+void World::DeleteWaterQuad( WaterQuad* quad )
+{
+	delete quad;
+	zWaterQuads.erase(quad);
+	zWaterQuadsEdited = false;
+}
 
 Vector2 World::GetWorldCenter() const
 {

@@ -46,7 +46,7 @@ private:
 	bool zWaterQuadsEdited;
 
 	// Entities
-	std::vector<Entity*> zEntities;
+	std::set<Entity*> zEntities;
 	
 	// World Settings
 	unsigned int zNrOfSectorsWidth;
@@ -80,6 +80,8 @@ public:
 
 	// Water Quads
 	WaterQuad* CreateWaterQuad();
+	void DeleteWaterQuad( WaterQuad* quad );
+	inline const std::set<WaterQuad*>& GetWaterQuads() const { return zWaterQuads; }
 
 	// Sun Settings
 	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );

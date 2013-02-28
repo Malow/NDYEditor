@@ -436,13 +436,16 @@ void WorldFile::WriteWater( const std::vector<Vector3>& waters )
 	{
 		if ( !zFile ) Open();
 		
+		// Seek Water
+		zFile->seekp( GetWaterBegin(), std::ios::beg );
+
 		// Num Water Quads
 		unsigned int numWaterQuads = waters.size()/4;
 		if ( numWaterQuads > MAX_NUM_WATER_QUADS ) numWaterQuads = MAX_NUM_WATER_QUADS;
 		zFile->write(reinterpret_cast<const char*>(&numWaterQuads), sizeof(unsigned int));
 
 		// Water Quads
-		zFile->write(reinterpret_cast<const char*>(&waters[0]), sizeof(Vector3) * 4 * numWaterQuads);
+		if ( numWaterQuads ) zFile->write(reinterpret_cast<const char*>(&waters[0]), sizeof(Vector3) * 4 * numWaterQuads);
 	}
 }
 
@@ -460,7 +463,7 @@ bool WorldFile::ReadWater( std::vector<Vector3>& waters )
 
 	// Load Water Quads
 	waters.resize(numWaterQuads*4);
-	if ( !zFile->read(reinterpret_cast<char*>(&waters[0]), sizeof(NormalsStruct))) return false;
+	if ( numWaterQuads ) if ( !zFile->read(reinterpret_cast<char*>(&waters[0]), numWaterQuads * sizeof(Vector3) * 4) ) return false;
 
 	return true;
 }

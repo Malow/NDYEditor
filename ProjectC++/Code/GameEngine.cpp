@@ -56,7 +56,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zGraphics->GetKeyListener()->SetCursorVisibility(true);
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	zGraphics->StartRendering();
-	prevSunDir = Vector3(0, -1, 0);
+	prevSunDir = Vector3(0.0f, -1.0f, 0.0f);
 
 	// Preload Cubes
 	const char* cubeResources[] = { 
@@ -132,7 +132,6 @@ void GameEngine::ProcessFrame()
 		zGraphics->SetSceneAmbientLight(zWorld->GetAmbientAtWorldPos(camera->GetPosition().GetXZ()));
 	}
 	
-
 	if(this->zMode == MODE::MOVE && !this->zTargetedEntities.empty())
 	{
 		CollisionData cd = this->zWorldRenderer->Get3DRayCollisionDataWithGround();
@@ -165,9 +164,9 @@ void GameEngine::ProcessFrame()
 
 	if( zGraphics->GetCamera()->GetCameraType() == CameraType::FPS )
 	{
-		if ( zFPSLockToGround && zWorld )
+		Vector3 pos = zGraphics->GetCamera()->GetPosition();
+		if ( zFPSLockToGround && zWorld && zWorld->IsInside(pos.GetXZ()) && !zWorld->IsBlockingAt(pos.GetXZ()) )
 		{
-			Vector3 pos = zGraphics->GetCamera()->GetPosition();
 			Vector3 forward = zGraphics->GetCamera()->GetForward();
 			forward.Normalize();
 			Vector3 sideways = zGraphics->GetCamera()->GetRightVector();
@@ -176,14 +175,16 @@ void GameEngine::ProcessFrame()
 			pos += forward * (float)(zGraphics->GetKeyListener()->IsPressed('W') - zGraphics->GetKeyListener()->IsPressed('S')) * dt * 0.001f * zMovementMulti;
 			pos += sideways * (float)(zGraphics->GetKeyListener()->IsPressed('A') - zGraphics->GetKeyListener()->IsPressed('D')) * dt * 0.001f * zMovementMulti;
 
-			if ( pos.x >= 0.0f && pos.z >= 0.0f && pos.x < zWorld->GetWorldSize().x && pos.z < zWorld->GetWorldSize().y )
+			try
 			{
-				if ( !zWorld->IsBlockingAt(pos.GetXZ()) )
-				{
-					pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + this->zHeightFromGround;
-					zGraphics->GetCamera()->SetPosition( pos );
-				}
+				pos.y = zWorld->CalcHeightAtWorldPos(pos.GetXZ()) + this->zHeightFromGround;
 			}
+			catch(...)
+			{
+
+			}
+
+			zGraphics->GetCamera()->SetPosition( pos );
 		}
 		else if ( zLockMouseToCamera )
 		{
@@ -262,14 +263,14 @@ void GameEngine::ProcessFrame()
 			}
 			else
 			{
-				zGraphics->SetSpecialCircle(-1.0f, 0.0f, Vector2(0.0f,0.0f));
+				zGraphics->SetSpecialCircle(-1.0f, 0.0f, Vector2(0.0f, 0.0f));
 			}
 			zMouseMoved = false;
 		}
 	}
 	else
 	{
-		zGraphics->SetSpecialCircle(-1.0f,0.0f,Vector2(0.0f,0.0f));
+		zGraphics->SetSpecialCircle(-1.0f, 0.0f, Vector2(0.0f, 0.0f));
 	}
 }
 
@@ -282,6 +283,9 @@ void GameEngine::OnResize(int width, int height)
 
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
+	// Reset Selected Water Quad
+	zSelectedWaterQuad = 0;
+
 	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH) )
 		zCurrentActionGroup = 0;
 
@@ -293,7 +297,16 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 {
 	if(zWorld != NULL)
 	{
-		if(this->zMode == MODE::MOVE)
+		if (zMode == MODE::WATER)
+		{
+			if ( zWorldRenderer != 0 )
+			{
+				auto coll = zWorldRenderer->GetCollisionWithWaterBoxes();
+				zSelectedWaterQuad = coll.first;
+				zSelectedWaterQuadIndex = coll.second;
+			}
+		}
+		else if(this->zMode == MODE::MOVE)
 		{
 			if(!zTargetedEntities.empty())
 			{
@@ -992,6 +1005,19 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 void GameEngine::MouseMove( int, int )
 {
 	zMouseMoved = true;
+
+	if ( zMode == MODE::WATER )
+	{
+		if ( zSelectedWaterQuad && zWorldRenderer != 0 )
+		{
+			auto coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+
+			if (coll.collision)
+			{
+				zSelectedWaterQuad->SetPosition(zSelectedWaterQuadIndex, Vector3(coll.posx, coll.posy, coll.posz));
+			}
+		}
+	}
 }
 
 

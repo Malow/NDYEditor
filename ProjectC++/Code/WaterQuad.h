@@ -4,6 +4,7 @@
 #include <Vector.h>
 
 class WaterQuad;
+class World;
 
 
 class WaterQuadDeletedEvent : public Event
@@ -22,10 +23,12 @@ class WaterQuad : public Observed
 {
 	Vector3 zPositions[4];
 
-public:
 	WaterQuad();
 	virtual ~WaterQuad();
+public:
 
 	void SetPosition( unsigned int i, const Vector3& pos );
 	const Vector3& GetPosition( unsigned int i );
+
+	friend World;
 };

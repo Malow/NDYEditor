@@ -41,7 +41,7 @@ public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
 	virtual ~WorldRenderer();
 
-	CollisionData GetCollisionDataWithGround();
+	std::pair<WaterQuad*, unsigned int> GetCollisionWithWaterBoxes();
 	CollisionData Get3DRayCollisionDataWithGround();
 	Entity* Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);
