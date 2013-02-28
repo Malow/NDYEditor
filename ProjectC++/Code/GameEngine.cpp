@@ -49,7 +49,9 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zShowArrowsFlag(false),
 	zArrows(0),
 	zShuffleList(0),
-	zShuffleGroup(1)
+	zShuffleGroup(1),
+	zSelectedWaterQuad(0),
+	zLastSelectedWaterQuad(0)
 {
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
@@ -284,6 +286,7 @@ void GameEngine::OnResize(int width, int height)
 void GameEngine::OnLeftMouseUp( unsigned int, unsigned int )
 {
 	// Reset Selected Water Quad
+	zLastSelectedWaterQuad = zSelectedWaterQuad;
 	zSelectedWaterQuad = 0;
 
 	if ( zCurrentActionGroup && ( zMode == LOWER || zMode == RAISE || zMode == DRAWTEX || zMode == DELETEBRUSH || zMode == RESETBRUSH || zMode == AIGRIDBRUSH) )
@@ -793,6 +796,14 @@ void GameEngine::KeyUp( int key )
 	{
 		zFPSLockToGround = !zFPSLockToGround;
 	}
+	else if(key == VK_DELETE)
+	{
+		if ( zLastSelectedWaterQuad ) 
+		{
+			zWorld->DeleteWaterQuad(zLastSelectedWaterQuad);
+			zLastSelectedWaterQuad = 0;
+		}
+	}
 	else if( key == VK_SUBTRACT)
 	{
 		zMovementMulti /= 2.0f;
@@ -944,6 +955,7 @@ void GameEngine::OnEvent( Event* e )
 	}
 	else if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
 	{
+		if ( zLastSelectedWaterQuad ) zLastSelectedWaterQuad = 0;
 		if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
 		if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 		if ( zWorld ) zWorld = 0;

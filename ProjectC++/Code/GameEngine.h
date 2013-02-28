@@ -71,6 +71,7 @@ private:
 	Vector3 zMoveOffSet;
 
 	// Water
+	WaterQuad* zLastSelectedWaterQuad;
 	WaterQuad* zSelectedWaterQuad;
 	unsigned int zSelectedWaterQuadIndex;
 	float zWaterQuadDepths[4];

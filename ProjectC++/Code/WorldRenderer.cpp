@@ -263,6 +263,9 @@ WaterCollisionData WorldRenderer::GetCollisionWithWaterBoxes()
 {
 	WaterCollisionData result;
 
+	// Default Settings
+	result.quad = 0; 
+
 	float curDistance = std::numeric_limits<float>::max();
 
 	iCamera* cam = zGraphics->GetCamera();

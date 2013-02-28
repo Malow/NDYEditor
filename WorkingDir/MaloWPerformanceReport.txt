@@ -14,61 +14,61 @@ WARNING, MAXFPS IS SET!
 
            Tier 1: 
 Renderer - Entire Frame: 
-Avg: 48.3134     Tot:257124, Measures: 5322
+Avg: 47.4765     Tot:50420, Measures: 1062
 
 
            Tier 2: 
 Renderer - CalculateCulling: 
-Avg: 0.0623826     Tot:332, Measures: 5322
+Avg: 0.0602637     Tot:64, Measures: 1062
 
 Renderer - PreRender: 
-Avg: 0.093198     Tot:496, Measures: 5322
+Avg: 0.094162     Tot:100, Measures: 1062
 
 Renderer - Render Shadows: 
-Avg: 0.0916949     Tot:488, Measures: 5322
+Avg: 0.101695     Tot:108, Measures: 1062
 
 Renderer - Render Deferred Geo: 
-Avg: 1.54077     Tot:8200, Measures: 5322
+Avg: 1.34463     Tot:1428, Measures: 1062
 
 Renderer - Render Billboards: 
-Avg: 0.0353251     Tot:188, Measures: 5322
+Avg: 0.0338983     Tot:36, Measures: 1062
 
 Renderer - Render Per Pixel: 
-Avg: 0.475761     Tot:2532, Measures: 5322
+Avg: 0.47081     Tot:500, Measures: 1062
 
 Renderer - Render Translucent: 
-Avg: 0.639609     Tot:3404, Measures: 5322
+Avg: 0.531073     Tot:564, Measures: 1062
 
 Renderer - Render Skybox: 
-Avg: 0.172867     Tot:920, Measures: 5322
+Avg: 0.180791     Tot:192, Measures: 1062
 
 Renderer - Render Enclosing Fog: 
-Avg: 0.0263059     Tot:140, Measures: 5322
+Avg: 0.0188324     Tot:20, Measures: 1062
 
 Renderer - Render Images: 
-Avg: 0.0744081     Tot:396, Measures: 5322
+Avg: 0.079096     Tot:84, Measures: 1062
 
 Renderer - Render Text: 
-Avg: 0.0781661     Tot:416, Measures: 5322
+Avg: 0.079096     Tot:84, Measures: 1062
 
 Renderer - Render FXAA: 
-Avg: 0.0315671     Tot:168, Measures: 5322
+Avg: 0.0150659     Tot:16, Measures: 1062
 
 Renderer - Life Overhead: 
-Avg: 0.0563698     Tot:300, Measures: 5322
+Avg: 0.0602637     Tot:64, Measures: 1062
 
 
            Tier 3: 
 Renderer - Render Deferred Geo Terrains: 
-Avg: 0.459226     Tot:2444, Measures: 5322
+Avg: 0.591337     Tot:628, Measures: 1062
 
 Renderer - Render Deferred Geo Decals: 
-Avg: 0.109733     Tot:584, Measures: 5322
+Avg: 0.0828625     Tot:88, Measures: 1062
 
 Renderer - Render Deferred Geo Objects: 
-Avg: 0.672679     Tot:3580, Measures: 5322
+Avg: 0.455744     Tot:484, Measures: 1062
 
 Renderer - Render Deferred Geo FBX: 
-Avg: 0.0999624     Tot:532, Measures: 5322
+Avg: 0.094162     Tot:100, Measures: 1062
 
 
