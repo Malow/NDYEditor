@@ -82,6 +82,7 @@ public:
 	WaterQuad* CreateWaterQuad();
 	void DeleteWaterQuad( WaterQuad* quad );
 	inline const std::set<WaterQuad*>& GetWaterQuads() const { return zWaterQuads; }
+	float GetWaterDepthAt( const Vector2& worldPos );
 
 	// Sun Settings
 	void SetSunProperties( const Vector3& dir, const Vector3& color, float intensity );

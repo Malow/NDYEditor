@@ -36,6 +36,7 @@
     <ClInclude Include="Code\World.h" />
     <ClInclude Include="Code\WorldEvents.h" />
     <ClInclude Include="Code\WorldFile.h" />
+    <ClInclude Include="Code\WorldPhysics.h" />
     <ClInclude Include="Code\WorldRenderer.h" />
     <ClInclude Include="Include\GameEngineWrapper.h" />
   </ItemGroup>

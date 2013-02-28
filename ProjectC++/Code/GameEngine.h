@@ -70,9 +70,12 @@ private:
 	std::map<Entity*, Vector3> zPrevPosOfSelected;
 	Vector3 zMoveOffSet;
 
-	// Water Select Brush
+	// Water
 	WaterQuad* zSelectedWaterQuad;
 	unsigned int zSelectedWaterQuadIndex;
+	float zWaterQuadDepths[4];
+	Vector2 zQuadCenterOffsets[4];
+	Vector2 zOldMousePos;
 
 	// Shuffle Brush
 	unsigned int zShuffleGroup;
@@ -86,7 +89,7 @@ private:
 	// Texture Brush
 	unsigned int zTexBrushSelectedTex;
 	unsigned int zSelectedSectorX, zSelectedSectorY;
-
+	
 	// Graphics Engine
 	GraphicsEngine* zGraphics;
 

@@ -1,0 +1,74 @@
+Performance report, times in milliseconds, IE 100 in the file = 0.1 seconds.
+
+Settings: 
+Resolution: 969 x 881
+Shadow Quality: 0
+FXAA Quality: 0
+Field of View: 75
+FarClip: 200
+MaxFPS: 30
+ShadowFit: 50
+Billboard Range: 0.75
+
+WARNING, MAXFPS IS SET!
+
+           Tier 1: 
+Renderer - Entire Frame: 
+Avg: 48.3134     Tot:257124, Measures: 5322
+
+
+           Tier 2: 
+Renderer - CalculateCulling: 
+Avg: 0.0623826     Tot:332, Measures: 5322
+
+Renderer - PreRender: 
+Avg: 0.093198     Tot:496, Measures: 5322
+
+Renderer - Render Shadows: 
+Avg: 0.0916949     Tot:488, Measures: 5322
+
+Renderer - Render Deferred Geo: 
+Avg: 1.54077     Tot:8200, Measures: 5322
+
+Renderer - Render Billboards: 
+Avg: 0.0353251     Tot:188, Measures: 5322
+
+Renderer - Render Per Pixel: 
+Avg: 0.475761     Tot:2532, Measures: 5322
+
+Renderer - Render Translucent: 
+Avg: 0.639609     Tot:3404, Measures: 5322
+
+Renderer - Render Skybox: 
+Avg: 0.172867     Tot:920, Measures: 5322
+
+Renderer - Render Enclosing Fog: 
+Avg: 0.0263059     Tot:140, Measures: 5322
+
+Renderer - Render Images: 
+Avg: 0.0744081     Tot:396, Measures: 5322
+
+Renderer - Render Text: 
+Avg: 0.0781661     Tot:416, Measures: 5322
+
+Renderer - Render FXAA: 
+Avg: 0.0315671     Tot:168, Measures: 5322
+
+Renderer - Life Overhead: 
+Avg: 0.0563698     Tot:300, Measures: 5322
+
+
+           Tier 3: 
+Renderer - Render Deferred Geo Terrains: 
+Avg: 0.459226     Tot:2444, Measures: 5322
+
+Renderer - Render Deferred Geo Decals: 
+Avg: 0.109733     Tot:584, Measures: 5322
+
+Renderer - Render Deferred Geo Objects: 
+Avg: 0.672679     Tot:3580, Measures: 5322
+
+Renderer - Render Deferred Geo FBX: 
+Avg: 0.0999624     Tot:532, Measures: 5322
+
+

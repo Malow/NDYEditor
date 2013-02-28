@@ -28,7 +28,8 @@ class WaterQuad : public Observed
 public:
 
 	void SetPosition( unsigned int i, const Vector3& pos );
-	const Vector3& GetPosition( unsigned int i );
+	const Vector3& GetPosition( unsigned int i ) const;
+	Vector3 CalcCenter() const;
 
 	friend World;
 };

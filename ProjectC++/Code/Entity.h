@@ -63,5 +63,5 @@ public:
 	void SetType( unsigned int& newType );
 	inline unsigned int GetType() const { return zType; }
 
-	friend class World;
+	friend World;
 };

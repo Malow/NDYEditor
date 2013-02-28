@@ -259,9 +259,9 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	return std::numeric_limits<float>::infinity();
 }
 
-std::pair<WaterQuad*, unsigned int> WorldRenderer::GetCollisionWithWaterBoxes()
+WaterCollisionData WorldRenderer::GetCollisionWithWaterBoxes()
 {
-	std::pair<WaterQuad*, unsigned int> result(0, 0);
+	WaterCollisionData result;
 
 	float curDistance = std::numeric_limits<float>::max();
 
@@ -283,10 +283,30 @@ std::pair<WaterQuad*, unsigned int> WorldRenderer::GetCollisionWithWaterBoxes()
 
 				if(thisDistance < curDistance)
 				{
-					result.first = i->first;
-					result.second = x;
+					result.quad = i->first;
+					result.cornerIndex = x;
+					result.position = Vector3(cd.posx, cd.posy, cd.posz);
 					curDistance = thisDistance;
 				}
+			}
+		}
+
+		// Test Collision With Water Quad
+		CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
+				camPos, 
+				cam->Get3DPickingRay(), 
+				zWaterQuads[i->first]);
+
+		if(cd.collision)
+		{
+			float thisDistance = (Vector3(cd.posx, cd.posy, cd.posz) - camPos).GetLength();
+
+			if(thisDistance < curDistance)
+			{
+				result.quad = i->first;
+				result.cornerIndex = 4;
+				result.position = Vector3(cd.posx, cd.posy, cd.posz);
+				curDistance = thisDistance;
 			}
 		}
 	}
@@ -607,8 +627,14 @@ void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
 				position = quad->GetPosition(x);
 
 				// Terrain Height Minimum
-				float terrainHeight = zWorld->GetHeightAt(position.GetXZ());
-				if ( position.y < terrainHeight ) position.y = terrainHeight;
+				try
+				{
+					float terrainHeight = zWorld->GetHeightAt(position.GetXZ());
+					if ( position.y < terrainHeight ) position.y = terrainHeight;
+				}
+				catch(...)
+				{
+				}
 
 				i->second.zCubes[x]->SetPosition(position);
 			}

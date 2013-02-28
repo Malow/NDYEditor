@@ -6,6 +6,7 @@
 #include <math.h>
 #include "Entity.h"
 #include "WaterQuad.h"
+#include "WorldPhysics.h"
 
 
 World::World( Observer* observer, const std::string& fileName, bool readOnly) throw(...) : 
@@ -1181,6 +1182,39 @@ void World::DeleteWaterQuad( WaterQuad* quad )
 	delete quad;
 	zWaterQuads.erase(quad);
 	zWaterQuadsEdited = false;
+}
+
+float World::GetWaterDepthAt( const Vector2& worldPos )
+{
+	float curDistance = 0.0f;
+
+	// Calc Ground Height At Position
+	Vector3 groundPos( worldPos.x, GetHeightAt(worldPos), worldPos.y );
+
+	// Ray VS Water Quads
+	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
+	{
+		WorldPhysics::CollisionData coll;
+
+		if ( WorldPhysics::RayVSTriangle(groundPos, Vector3(0.0f, 1.0f, 0.0f), (*i)->GetPosition(0), (*i)->GetPosition(1), (*i)->GetPosition(2), coll) )
+		{
+
+		}
+		else if ( WorldPhysics::RayVSTriangle(groundPos, Vector3(0.0f, 1.0f, 0.0f), (*i)->GetPosition(2), (*i)->GetPosition(3), (*i)->GetPosition(1), coll) )
+		{
+
+		}
+
+		if ( coll.collision )
+		{
+			if ( coll.distance > curDistance )
+			{
+				curDistance = coll.distance;
+			}
+		}
+	}
+
+	return curDistance;
 }
 
 Vector2 World::GetWorldCenter() const

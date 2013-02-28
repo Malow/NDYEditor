@@ -15,6 +15,19 @@ enum UPDATEENUM
 	UPDATE_ALL=15
 };
 
+
+struct WaterCollisionData
+{
+	// Specifies the quad hit
+	WaterQuad* quad;
+	
+	// Specifies the corner hit
+	unsigned int cornerIndex;
+
+	// Position of collision
+	Vector3 position;
+};
+
 class WorldRenderer : Observer
 {
 	std::vector< iTerrain* > zTerrain;
@@ -41,7 +54,7 @@ public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
 	virtual ~WorldRenderer();
 
-	std::pair<WaterQuad*, unsigned int> GetCollisionWithWaterBoxes();
+	WaterCollisionData GetCollisionWithWaterBoxes();
 	CollisionData Get3DRayCollisionDataWithGround();
 	Entity* Get3DRayCollisionWithMesh();
 	float GetYPosFromHeightMap(float x, float y);

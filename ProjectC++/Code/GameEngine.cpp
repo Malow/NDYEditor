@@ -302,8 +302,28 @@ void GameEngine::OnLeftMouseDown( unsigned int, unsigned int )
 			if ( zWorldRenderer != 0 )
 			{
 				auto coll = zWorldRenderer->GetCollisionWithWaterBoxes();
-				zSelectedWaterQuad = coll.first;
-				zSelectedWaterQuadIndex = coll.second;
+				zSelectedWaterQuad = coll.quad;
+				zSelectedWaterQuadIndex = coll.cornerIndex;
+				
+				if ( zSelectedWaterQuad )
+				{
+					Vector2 quadCenter = zSelectedWaterQuad->CalcCenter().GetXZ();
+
+					for( unsigned int x=0; x<4; ++x )
+					{
+						zQuadCenterOffsets[x] = quadCenter - zSelectedWaterQuad->GetPosition(x).GetXZ();
+
+						float groundHeight = 0.0f;
+						try
+						{
+							groundHeight = zWorld->CalcHeightAtWorldPos(zSelectedWaterQuad->GetPosition(x).GetXZ());
+						}
+						catch(...)
+						{
+						}
+						zWaterQuadDepths[x] = zSelectedWaterQuad->GetPosition(x).y - groundHeight;
+					}
+				}
 			}
 		}
 		else if(this->zMode == MODE::MOVE)
@@ -1002,19 +1022,78 @@ void GameEngine::GetNrOfSelectedEntities( int& x )
 }
 
 
-void GameEngine::MouseMove( int, int )
+void GameEngine::MouseMove( int x, int y )
 {
 	zMouseMoved = true;
 
-	if ( zMode == MODE::WATER )
-	{
-		if ( zSelectedWaterQuad && zWorldRenderer != 0 )
-		{
-			auto coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+	Vector2 newMousePos((float)x, (float)y);
+	Vector2 deltaMousePos = newMousePos - zOldMousePos;
+	zOldMousePos = newMousePos;
 
-			if (coll.collision)
+	if ( zMode == MODE::WATER && zSelectedWaterQuad && zWorldRenderer )
+	{
+		auto coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+
+		if (coll.collision)
+		{
+			if ( zGraphics->GetKeyListener()->IsPressed(VK_SHIFT) )
 			{
-				zSelectedWaterQuad->SetPosition(zSelectedWaterQuadIndex, Vector3(coll.posx, coll.posy, coll.posz));
+				float deltaPos = deltaMousePos.y * 0.01f;
+				if ( zSelectedWaterQuadIndex == 4 )
+				{
+					for( unsigned int x=0; x<4; ++x )
+					{
+						zWaterQuadDepths[x] -= deltaPos;
+					}
+				}
+				else
+				{
+					zWaterQuadDepths[zSelectedWaterQuadIndex] -= deltaPos;
+				}
+
+				for( unsigned int x=0; x<4; ++x )
+				{
+					Vector2 pos = zSelectedWaterQuad->GetPosition(x).GetXZ();
+					float groundHeight = 0.0f;
+					try
+					{
+						groundHeight = zWorld->CalcHeightAtWorldPos(pos);
+					}
+					catch(...)
+					{
+					}
+					zSelectedWaterQuad->SetPosition(x, Vector3(pos.x, groundHeight + zWaterQuadDepths[x], pos.y));
+				}
+			}
+			else
+			{
+				if ( zSelectedWaterQuadIndex == 4 )
+				{
+					Vector2 center(coll.posx, coll.posz);
+					for( unsigned int x=0; x<4; ++x )
+					{
+						Vector2 pos = center - zQuadCenterOffsets[x];
+						float groundHeight = 0.0f;
+						try
+						{
+							groundHeight = zWorld->CalcHeightAtWorldPos(pos);
+						}
+						catch(...)
+						{
+						}
+						zSelectedWaterQuad->SetPosition(x, Vector3(pos.x, groundHeight + zWaterQuadDepths[x], pos.y));
+					}
+				}
+				else
+				{
+					try
+					{
+						zSelectedWaterQuad->SetPosition(zSelectedWaterQuadIndex, Vector3(coll.posx, zWorld->CalcHeightAtWorldPos(Vector2(coll.posx, coll.posz)) + zWaterQuadDepths[zSelectedWaterQuadIndex], coll.posz));
+					}
+					catch(...)
+					{
+					}
+				}
 			}
 		}
 	}
@@ -1386,7 +1465,22 @@ void GameEngine::ToggleArrows()
 
 void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 {
-	if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
+	if ( zMode == MODE::WATER )
+	{
+		if ( zWorldRenderer )
+		{
+			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
+			if ( coll.collision )
+			{
+				float depth = zWorld->GetWaterDepthAt(Vector2(coll.posx, coll.posz));
+				depth += 0.0f;
+
+				iMesh* lol = zGraphics->CreateMesh("Media/Models/Cube_1.obj", Vector3(coll.posx, coll.posy+depth, coll.posz));
+				lol->SetScale(1.0f/20.0f);
+			}
+		}
+	}
+	else if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
 	{
 		if ( zWorldRenderer )
 		{
