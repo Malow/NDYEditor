@@ -1,7 +1,7 @@
 Number:1
 Name:Scale
-Model:Media/Scale.obj
 BlockRadius:0.5
+Model:Media/Scale.obj
 
 Number:2
 Name:Arrow
@@ -13,14 +13,16 @@ Model:Media/Models/Bush_01_v04_r.obj
 
 Number:4
 Name:Fern
-Model:Media/Models/Fern_02.ani
+Model:Media/Models/Fern_02.ani 10.0
+Model:Media/Models/Fern_02_01.obj 50.0
 
 Number:5
-Name:Tree
-Model:Media/Models/Tree_02.ani
+Name:LODTree
 BlockRadius:0.5
+Model:Media/Models/Tree_02.ani 25.0
+Model:Media/Models/Tree_01_01.obj
 Billboard:Media/TreeBillboard.png
-BillboardDistance:100
+BillboardDistance:50
 
 Number:6
 Name:Stone
@@ -83,12 +85,8 @@ Name:Tree
 Model:Media/Models/Tree_03_v03.obj
 BlockRadius:0.5
 
-Number:21
-Name:Water
-Model:Water
-
 Number:22
-Name:WaterStones	
+Name:WaterStones
 Model:Media/Models/Stone_03_v01.obj
 
 Number:23

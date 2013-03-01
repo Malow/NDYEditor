@@ -447,6 +447,24 @@ void WorldRenderer::Update()
 
 		zUpdatesRequired.erase(i);
 	}
+
+	// Ents To Update
+	std::set<Entity*> entsToUpdate;
+
+	// Update Current Entities LOD
+	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
+	{
+		entsToUpdate.insert(i->first);
+	}
+
+	// New Entities LOD
+	if ( zWorld ) zWorld->GetEntitiesInCircle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, entsToUpdate);
+
+	// Update Entities
+	for ( auto i = entsToUpdate.cbegin(); i != entsToUpdate.cend(); ++i )
+	{
+		SetEntityGraphics(*i);
+	}
 }
 
 void WorldRenderer::ToggleAIGrid(bool state)
@@ -554,44 +572,61 @@ void WorldRenderer::CreateEntity( Entity* e )
 
 void WorldRenderer::SetEntityGraphics( Entity* e )
 {
-	// Delete Old Graphics
-	auto i = zEntities.find(e);
-	if ( i != zEntities.end() )
-	{
-		zGraphics->DeleteMesh(i->second);
-	}
+	// Camera Distance
+	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
+	float distanceToCam = (camPos - e->GetPosition()).GetLength();
 
 	// New Graphics
-	const std::string& model = GetEntModel(e->GetType());
-	if ( model == "water" )
-	{
-		zEntities[e] = zGraphics->CreateWaterPlane(e->GetPosition(), "Media/WaterTexture.png");
-	}
-	else
-	{
-		float billboardDistance = GetEntBillboardDistance(e->GetType());
+	const std::string& model = GetEntModel(e->GetType(), distanceToCam);
 
-		if ( billboardDistance > 0.0f )
+	// Find Old Graphics
+	auto i = zEntities.find(e);
+
+	if ( !model.empty() && i == zEntities.end() )
+	{
+		zEntities[e] = 0;
+		i = zEntities.find(e);
+	}
+
+	std::string file;
+	if ( i != zEntities.end() && i->second ) file = i->second->GetFilePath();
+
+	if ( i != zEntities.end() && (!i->second || strcmp(model.c_str(), i->second->GetFilePath())) )
+	{
+		// Delete Old Graphics
+		if ( i->second ) zGraphics->DeleteMesh(i->second);
+
+		// Create New
+		if ( !model.empty() )
 		{
-			zEntities[e] = zGraphics->CreateMesh(
-				model.c_str(), 
-				e->GetPosition(), 
-				GetEntBillboard(e->GetType()).c_str(),
-				billboardDistance);
+			float billboardDistance = GetEntBillboardDistance(e->GetType());
+
+			if ( billboardDistance > 0.0f )
+			{
+				i->second = zGraphics->CreateMesh(
+					model.c_str(), 
+					e->GetPosition(), 
+					GetEntBillboard(e->GetType()).c_str(),
+					billboardDistance);
+			}
+			else
+			{
+				i->second = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
+			}
+
+			SetEntityTransformation(e);
 		}
 		else
 		{
-			zEntities[e] = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
+			zEntities.erase(i);
 		}
 	}
-
-	SetEntityTransformation(e);
 }
 
 void WorldRenderer::SetEntityTransformation( Entity* e )
 {
 	auto i = zEntities.find(e);
-	if ( i != zEntities.end() )
+	if ( i != zEntities.end() && i->second != 0 )
 	{
 		i->second->SetPosition(e->GetPosition());
 		i->second->SetQuaternion(Vector4(0.0f, 0.0f, 0.0f, 1.0f));
