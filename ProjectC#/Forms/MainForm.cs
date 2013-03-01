@@ -722,6 +722,11 @@ namespace Editor.Forms
                 m_GameEngine.SetBrushAttr("InnerCircle", 1.0f);
                 m_GameEngine.SetBrushAttr("OuterCircle", 0.0f);
             }
+            else if (this.m_mode == MODE.WATER)
+            {
+                btn_Move.Focus();
+                this.hideAll();
+            }
         }
         private void setDrawTex(object sender, EventArgs e)
         {
@@ -888,7 +893,6 @@ namespace Editor.Forms
 
         private void btn_Change_Mode(object sender, EventArgs e)
         {
-            
             this.m_mode = (MODE)int.Parse((sender as Button).AccessibleName);
             if (this.m_mode == MODE.MOVE)
             {
@@ -901,7 +905,6 @@ namespace Editor.Forms
             {
                 autoSwitchMove = false;
             }
-
             
             switchMode();
             this.m_GameEngine.ChangeMode((int)this.m_mode);
