@@ -31,6 +31,8 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	// Render Waters
 	for( auto i = zWorld->GetWaterQuads().cbegin(); i != zWorld->GetWaterQuads().cend(); ++i )
 	{
+		(*i)->AddObserver(this);
+
 		zWaterQuads[*i] = zGraphics->CreateWaterPlane(Vector3(0.0f, 0.0f, 0.0f), "Media/WaterTexture.png");
 		
 		auto i2 = zWaterQuads.find(*i);
@@ -270,14 +272,23 @@ WaterCollisionData WorldRenderer::GetCollisionWithWaterBoxes()
 
 	iCamera* cam = zGraphics->GetCamera();
 	Vector3 camPos = cam->GetPosition();
+	Vector3 pickDir = cam->Get3DPickingRay();
 
+	// Test Terrain To Pick Stuff Above Terrain Only
+	CollisionData terrainColl = this->Get3DRayCollisionDataWithGround();
+	if ( terrainColl.collision )
+	{
+		curDistance = terrainColl.distance;
+	}
+
+	// Water Boxes
 	for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
 	{
 		for( unsigned int x=0; x<4; ++x )
 		{
 			CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
 				camPos, 
-				cam->Get3DPickingRay(), 
+				pickDir, 
 				i->second.zCubes[x]);
 
 			if(cd.collision)
@@ -296,9 +307,9 @@ WaterCollisionData WorldRenderer::GetCollisionWithWaterBoxes()
 
 		// Test Collision With Water Quad
 		CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
-				camPos, 
-				cam->Get3DPickingRay(), 
-				zWaterQuads[i->first]);
+			camPos, 
+			pickDir,
+			zWaterQuads[i->first]);
 
 		if(cd.collision)
 		{
@@ -686,9 +697,14 @@ void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
 				positions[x] = quad->GetPosition(x);
 
 				// Terrain Height Minimum
-				float terrainHeight = zWorld->GetHeightAt(positions[x].GetXZ());
-
-				if ( positions[x].y < terrainHeight ) positions[x].y = terrainHeight;
+				try
+				{
+					float terrainHeight = zWorld->GetHeightAt(positions[x].GetXZ());
+					if ( positions[x].y < terrainHeight ) positions[x].y = terrainHeight;
+				}
+				catch(...)
+				{
+				}
 			}
 			
 			zWaterBoxes[quad].zCubes[0] = zGraphics->CreateMesh("Media/Models/Cube_1.obj", positions[0]);
