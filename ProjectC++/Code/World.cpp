@@ -517,7 +517,7 @@ void World::OnEvent( Event* e )
 			{
 				WaterQuad* quad = new WaterQuad();
 				
-				for( unsigned int y=0; y<positions.size()/4; ++y )
+				for( unsigned int y=0; y<4; ++y )
 				{
 					quad->SetPosition(y, positions[x*4+y]);
 				}
