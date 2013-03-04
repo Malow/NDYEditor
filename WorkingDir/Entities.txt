@@ -22,7 +22,7 @@ BlockRadius:0.5
 Model:Media/Models/Tree_02.ani 25.0
 Model:Media/Models/Tree_01_01.obj
 Billboard:Media/TreeBillboard.png
-BillboardDistance:50
+BillboardDistance:100
 
 Number:6
 Name:Stone

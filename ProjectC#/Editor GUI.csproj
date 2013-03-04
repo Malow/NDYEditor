@@ -59,7 +59,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C++CLID, Version=1.0.4806.28403, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="C++CLID, Version=1.0.4808.29511, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\Debug\C++CLID.dll</HintPath>
     </Reference>
