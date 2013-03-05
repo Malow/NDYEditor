@@ -18,7 +18,7 @@ Model:Media/Models/Fern_02_01.obj 50.0
 
 Number:5
 Name:LODTree
-BlockRadius:0.5
+BlockRadius:0.7
 Model:Media/Models/Tree_02.ani 25.0
 Model:Media/Models/Tree_01_01.obj
 Billboard:Media/TreeBillboard.png
@@ -83,7 +83,7 @@ Model:Media/Models/Bush_02_v02.obj
 Number:20
 Name:Tree
 Model:Media/Models/Tree_03_v03.obj
-BlockRadius:0.5
+BlockRadius:0.7
 
 Number:22
 Name:WaterStones
