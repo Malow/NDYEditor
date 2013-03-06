@@ -93,6 +93,10 @@ Number:23
 Name:Bush_misc_01	
 Model:Media/Models/Bush_misc_01.obj
 
+Number:24
+Name:Target	
+Model:Media/Models/Target.obj
+
 Number:200
 Name:Deer Spawnpoint
 Model:Media/Models/DEEEEER.obj
