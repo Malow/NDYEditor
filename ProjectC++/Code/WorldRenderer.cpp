@@ -463,7 +463,8 @@ void WorldRenderer::Update()
 	std::set<Entity*> entsToUpdate;
 
 	// Update Current Entities LOD
-	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
+	auto zEntities_end = zEntities.cend();
+	for( auto i = zEntities.cbegin(); i != zEntities_end; ++i )
 	{
 		entsToUpdate.insert(i->first);
 	}
@@ -472,7 +473,8 @@ void WorldRenderer::Update()
 	if ( zWorld ) zWorld->GetEntitiesInCircle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, entsToUpdate);
 
 	// Update Entities
-	for ( auto i = entsToUpdate.cbegin(); i != entsToUpdate.cend(); ++i )
+	auto entsToUpdate_end = entsToUpdate.cend();
+	for ( auto i = entsToUpdate.cbegin(); i != entsToUpdate_end; ++i )
 	{
 		SetEntityGraphics(*i);
 	}

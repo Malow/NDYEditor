@@ -565,8 +565,8 @@ void World::LoadAllSectors()
 unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out, unsigned int typeFilter) const
 {
 	unsigned int counter=0;
-
-	for(auto i = zEntities.cbegin(); i != zEntities.cend(); i++)
+	auto zEntities_end = zEntities.cend();
+	for(auto i = zEntities.cbegin(); i != zEntities_end; i++)
 	{
 		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
 		{
@@ -884,7 +884,8 @@ unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out,
 {
 	unsigned int counter=0;
 
-	for( auto i = zEntities.begin(); i != zEntities.end(); ++i )
+	auto zEntities_end = zEntities.end();
+	for( auto i = zEntities.begin(); i != zEntities_end; ++i )
 	{
 		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
 		{
@@ -1192,7 +1193,8 @@ float World::GetWaterDepthAt( const Vector2& worldPos )
 	Vector3 groundPos( worldPos.x, GetHeightAt(worldPos), worldPos.y );
 
 	// Ray VS Water Quads
-	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
+	auto zWaterQuads_end = zWaterQuads.end();
+	for( auto i = zWaterQuads.begin(); i != zWaterQuads_end; ++i )
 	{
 		WorldPhysics::CollisionData coll;
 
