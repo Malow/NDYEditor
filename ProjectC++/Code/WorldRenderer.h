@@ -3,7 +3,6 @@
 #include "World.h"
 #include <GraphicsEngine.h>
 #include <map>
-#include <fstream>
 
 enum UPDATEENUM
 {
@@ -14,7 +13,6 @@ enum UPDATEENUM
 	UPDATE_AIGRID=8,
 	UPDATE_ALL=15
 };
-
 
 struct WaterCollisionData
 {
