@@ -29,6 +29,11 @@ Texture2D AIMap; //Format = DXGI_FORMAT_R8_UNORM.
 //-----------------------------------------------------------------------------------------
 // Constant buffers
 //-----------------------------------------------------------------------------------------
+cbuffer PerFrame
+{
+	float3 g_CamPos;
+	float g_FarClip;
+}
 cbuffer PerObject
 {
 	//Matrices
@@ -46,7 +51,7 @@ cbuffer PerObject
 
 	//AI(editor)
 	bool useAIMap;
-	float nodesPerSide;
+	uint nodesPerSide;
 	float AIGridThickness;
 };
 //-----------------------------------------------------------------------------------------
@@ -68,16 +73,21 @@ struct PSSceneIn
 	float3 color	: COLOR;
 
 	float4 posW		: POSITION;	//world position 
+	//float depth		: SV_Depth;
 };
 
 struct PSOut			
 {
-	float4 Texture			: SV_TARGET0;	//Texture XYZ, Special Color W(not by this shader)
-	float4 NormalAndDepth	: SV_TARGET1;	//Normal XYZ, depth W
-	float4 Position			: SV_TARGET2;	//Position XYZ, Type of object W
-	float4 Specular			: SV_TARGET3;	//Specular XYZ(not by this shader), specular power W(not by this shader)
+	float4 Texture			: SV_TARGET0;	//Texture XYZ, Special Color W(not by this shader).
+	float4 NormalAndDepth	: SV_TARGET1;	//Normal XYZ, depth W.
+	float4 Position			: SV_TARGET2;	//Position XYZ, Type of object W.
+	float4 Specular			: SV_TARGET3;	//Specular XYZ(unused by this shader), specular power W(unused by this shader).
+	float4 GrassCanopy		: SV_TARGET4;	//Grass color XYZ, grass height W.
 };
 
+//-----------------------------------------------------------------------------------------
+// Functions
+//-----------------------------------------------------------------------------------------
 float3 RenderTextured(float scale, float2 tex, bool useBlendMap)
 {
 	//Sample R,G,B,A textures
@@ -93,7 +103,7 @@ float3 RenderTextured(float scale, float2 tex, bool useBlendMap)
 		float4 blendMap0Color = blendMap0.Sample(LinearClampSampler, tex); 
 		
 		// Is blendmap 0 empty?
-		if ( length(blendMap0Color) > 0.0 )
+		if ( length(blendMap0Color) > 0.0f )
 		{	
 			// Are we using multiple blendmaps?
 			if(nrOfBlendMaps == 2)
@@ -101,7 +111,7 @@ float3 RenderTextured(float scale, float2 tex, bool useBlendMap)
 				float4 blendMap1Color = blendMap1.Sample(LinearClampSampler, tex);
 
 				// Is blendmap 1 empty?
-				if ( length(blendMap1Color) > 0.0 )
+				if ( length(blendMap1Color) > 0.0f )
 				{
 					float blendSum0 = blendMap0Color.r + blendMap0Color.g + blendMap0Color.b + blendMap0Color.a;
 					float blendSum1 = blendMap1Color.r + blendMap1Color.g + blendMap1Color.b + blendMap1Color.a;
@@ -178,6 +188,35 @@ float3 RenderTextured(float scale, float2 tex, bool useBlendMap)
 	return saturate((tex0Color + tex1Color + tex2Color + tex3Color) * 0.25f) * diffuseColor;
 }
 
+float GenerateGrassHeight(float3 grassColor)
+{
+	return 0.5f; //TEMP TEST
+
+
+	//**TILLMAN TODO : global variable
+	float maxGrassLength = 0.5f; //in meter.
+
+	//Check if the color is green enough.
+	if(grassColor.g > 0.785f) //~200 on the 0-255 RGB scale.
+	{
+		if(grassColor.g / grassColor.b > 2.0f && grassColor.g / grassColor.r > 1.25f)
+		{
+			//the greener it is, the longer it is.
+			float grDiff = grassColor.g - grassColor.r; //range[0,1].
+			float gbDiff = grassColor.g - grassColor.b; //range[0,1].
+
+			//Example: **TILLMAN TODO
+			//(1 - ((1 - 1) * 0.5)) * 0.5 =
+			//(1 - (2 * 0.5)) * 0.5
+			//(1 - 1) * 0.5
+			return (grassColor.g - ((grDiff - gbDiff) * 0.5f)) * maxGrassLength;
+		}
+	}
+
+
+	//return -1.0f;
+}
+
 //-----------------------------------------------------------------------------------------
 // VertexShader: VSScene
 //-----------------------------------------------------------------------------------------
@@ -252,20 +291,52 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 	output.Texture.xyz = finalColor;
 	output.Texture.w = -1.0f;
 	
+
+
 	//NormalAndDepth RT
-	//output.NormalAndDepth = float4(input.norm, input.pos.z / input.pos.w);	
-	///** TILLMAN TEST 
 	output.NormalAndDepth.xyz = input.norm;
-	//output.NormalAndDepth.xyz = float3(0.0f, 0.1f, 0.9f);
-	float depth = length(CameraPosition.xyz - input.posW.xyz) / FarClip;		// Haxfix
+	float depth = length(g_CamPos - input.posW.xyz) / g_FarClip;		// Haxfix
 	output.NormalAndDepth.w = depth;
 
 	//Position RT
 	output.Position.xyz = input.posW.xyz;
 	output.Position.w = OBJECT_TYPE_TERRAIN; //See stdafx.fx for object types.
 	
+	
+
+
 	//Specular RT
 	output.Specular.xyzw = 0.0f;
+
+	//Grass canopy RT
+	output.GrassCanopy.xyz = finalColor; 
+	output.GrassCanopy.w = GenerateGrassHeight(finalColor);
+	
+
+
+
+	//Modify world position TEST
+	/*float3 newWorldPos = input.posW.xyz;
+	newWorldPos.y += output.GrassCanopy.w;
+
+	//NormalAndDepth RT
+	output.NormalAndDepth.xyz = input.norm;
+	float depth = length(g_CamPos.xyz - newWorldPos) / g_FarClip;		// Haxfix
+	output.NormalAndDepth.w = depth;
+	
+	//Position RT
+	output.Position.xyz = newWorldPos;
+	output.Position.w = OBJECT_TYPE_TERRAIN; //See stdafx.fx for object types.
+	*/
+
+	//oD0 = depth;
+	//oDepth
+	/*asm ps_4_0 
+	{ 
+		mov register(oDepth), depth 
+	}*/
+
+
 	
 	return output;
 }
