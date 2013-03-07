@@ -1,4 +1,4 @@
-Number:1
+ Number:1
 Name:Scale
 BlockRadius:0.5
 Model:Media/Scale.obj
@@ -14,7 +14,7 @@ Model:Media/Models/Bush_01_v04_r.obj
 Number:4
 Name:Fern
 Model:Media/Models/Fern_02.ani 10.0
-Model:Media/Models/Fern_02_01.obj 50.0
+Model:Media/Models/Fern_02_01.obj 45.0
 
 Number:5
 Name:LODTree
@@ -54,7 +54,8 @@ Model:Media/Models/SPAWN.obj
 
 Number:13
 Name:Plant-Grass
-Model:Media/Models/GrassPlant_01.ani
+Model:Media/Models/GrassPlant_01.ani 10.0
+Model:Media/Models/GrassPlant_01_01.obj 35.0
 
 Number:14
 Name:Flag
