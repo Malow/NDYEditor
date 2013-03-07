@@ -1,4 +1,4 @@
- Number:1
+Number:1
 Name:Scale
 BlockRadius:0.5
 Model:Media/Scale.obj
