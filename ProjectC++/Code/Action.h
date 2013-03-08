@@ -1,5 +1,12 @@
 #pragma once
 
+#include <vector>
+
+class Action;
+class ActionGroup;
+class GameEngine;
+
+
 class Action
 {
 public:
@@ -10,8 +17,8 @@ protected:
 	virtual void Execute() = 0;
 	virtual void Undo() = 0;
 
-	friend class GameEngine;
-	friend class ActionGroup;
+	friend GameEngine;
+	friend ActionGroup;
 };
 
 class ActionGroup : public Action

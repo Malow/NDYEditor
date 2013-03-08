@@ -10,21 +10,23 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	zShowAIMap(false),
 	zShowWaterBoxes(false)
 {
+	// Observer World
 	zWorld->AddObserver(this);
 
+	// Sun Properties
 	zGraphics->SetSunLightProperties(
 		zWorld->GetSunDir(),
 		zWorld->GetSunColor(),
 		zWorld->GetSunIntensity() );
 
-	// Render Loaded Sectors
+	// Queue Sector Loading
 	auto loadedSectors = zWorld->GetLoadedSectors();
 	if ( !loadedSectors.empty() )
 	{
-		zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
 		for( auto i = loadedSectors.cbegin(); i != loadedSectors.cend(); ++i )
 		{
-			CreateTerrain(*i);
+			UPDATEENUM& u = zUpdatesRequired[*i];
+			u = (UPDATEENUM)(u | UPDATE_ALL);
 		}
 	}
 
@@ -46,11 +48,10 @@ WorldRenderer::WorldRenderer( World* world, GraphicsEngine* graphics ) :
 	}
 }
 
-
 WorldRenderer::~WorldRenderer()
 {
 	// Stop Observing
-	zWorld->RemoveObserver(this);
+	if ( zWorld ) zWorld->RemoveObserver(this);
 
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
@@ -87,18 +88,19 @@ WorldRenderer::~WorldRenderer()
 	zWaterQuads.clear();
 }
 
-
 void WorldRenderer::OnEvent( Event* e )
 {
-	if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
+	if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
 	{
-		if ( WLE->world == zWorld )
-		{
-			zGraphics->SetSunLightProperties(
-				WLE->world->GetSunDir(),
-				WLE->world->GetSunColor(),
-				WLE->world->GetSunIntensity() );
-		}
+		zWorld->RemoveObserver(this);
+		zWorld = 0;
+	}
+	else if ( WorldLoadedEvent* WLE = dynamic_cast<WorldLoadedEvent*>(e) )
+	{
+		zGraphics->SetSunLightProperties(
+			WLE->world->GetSunDir(),
+			WLE->world->GetSunColor(),
+			WLE->world->GetSunIntensity() );
 	}
 	else if ( WaterQuadCreatedEvent* WQCE = dynamic_cast<WaterQuadCreatedEvent*>(e) )
 	{
@@ -132,6 +134,7 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( WaterQuadDeletedEvent* WQDE = dynamic_cast<WaterQuadDeletedEvent*>(e) )
 	{
+		// Find Water Plane
 		auto i = zWaterQuads.find(WQDE->zQuad);
 		zGraphics->DeleteWaterPlane(i->second);
 		zWaterQuads.erase(i);
@@ -149,18 +152,15 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
 	{
-		if ( SUE->world == zWorld )
-		{
-			unsigned int tIndex = SUE->sectorY * SUE->world->GetNumSectorsWidth() + SUE->sectorX;
-			zGraphics->DeleteTerrain(zTerrain[tIndex]);
+		unsigned int tIndex = SUE->sectorY * SUE->world->GetNumSectorsWidth() + SUE->sectorX;
+		zGraphics->DeleteTerrain(zTerrain[tIndex]);
 
-			// Remove AI Grid
-			auto grid = zAIGrids.find(zTerrain[tIndex]);
-			if ( grid != zAIGrids.end() )
-				zAIGrids.erase(grid);
+		// Remove AI Grid
+		auto grid = zAIGrids.find(zTerrain[tIndex]);
+		if ( grid != zAIGrids.end() )
+			zAIGrids.erase(grid);
 
-			zTerrain[tIndex] = 0;
-		}
+		zTerrain[tIndex] = 0;
 	}
 	else if ( WorldSunChanged* WSC = dynamic_cast<WorldSunChanged*>(e) )
 	{
@@ -171,26 +171,33 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( SectorLoadedEvent* SLE = dynamic_cast<SectorLoadedEvent*>(e) )
 	{
-		if ( SLE->world == zWorld )
-		{
-			CreateTerrain(Vector2UINT(SLE->x, SLE->y));
-		}
+		UPDATEENUM& u = zUpdatesRequired[Vector2UINT(SLE->x, SLE->y)];
+		u = (UPDATEENUM)(u | UPDATE_ALL);
 	}
 	else if ( SectorHeightMapChanged* SHMC = dynamic_cast<SectorHeightMapChanged*>(e) )
 	{
-		if ( SHMC->world == zWorld )
-		{
-			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
-			u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
-		}
+		UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
+		u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
 	}
 	else if ( SectorNormalChanged* SNC = dynamic_cast<SectorNormalChanged*>(e) )
 	{
-		if ( SNC->world == zWorld )
-		{
-			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SNC->sectorx, SNC->sectory) ];
-			u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
-		}
+		UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SNC->sectorx, SNC->sectory) ];
+		u = (UPDATEENUM)(u | UPDATE_HEIGHTMAP);
+	}
+	else if ( SectorBlendMapChanged* SHMC = dynamic_cast<SectorBlendMapChanged*>(e) )
+	{
+		UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
+		u = (UPDATEENUM)(u | UPDATE_BLENDMAP);
+	}
+	else if ( SectorBlendTexturesChanged* SBTC = dynamic_cast<SectorBlendTexturesChanged*>(e) )
+	{
+		UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SBTC->sectorX, SBTC->sectorY) ];
+		u = (UPDATEENUM)(u | UPDATE_TEXTURES);
+	}
+	else if ( SectorAIGridChanged* SBTC = dynamic_cast<SectorAIGridChanged*>(e) )
+	{
+		UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SBTC->sectorX, SBTC->sectorY) ];
+		u = (UPDATEENUM)(u | UPDATE_AIGRID);
 	}
 	else if ( EntityChangedTypeEvent* ECTE = dynamic_cast<EntityChangedTypeEvent*>(e) )
 	{
@@ -215,30 +222,6 @@ void WorldRenderer::OnEvent( Event* e )
 	{
 		DeleteEntity(ERE->entity);
 	}
-	else if ( SectorBlendMapChanged* SHMC = dynamic_cast<SectorBlendMapChanged*>(e) )
-	{
-		if ( SHMC->world == zWorld )
-		{
-			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SHMC->sectorx, SHMC->sectory) ];
-			u = (UPDATEENUM)(u | UPDATE_BLENDMAP);
-		}
-	}
-	else if ( SectorBlendTexturesChanged* SBTC = dynamic_cast<SectorBlendTexturesChanged*>(e) )
-	{
-		if ( SBTC->world == zWorld )
-		{
-			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SBTC->sectorX, SBTC->sectorY) ];
-			u = (UPDATEENUM)(u | UPDATE_TEXTURES);
-		}
-	}
-	else if ( SectorAIGridChanged* SBTC = dynamic_cast<SectorAIGridChanged*>(e) )
-	{
-		if ( SBTC->world == zWorld )
-		{
-			UPDATEENUM& u = zUpdatesRequired[ Vector2UINT(SBTC->sectorX, SBTC->sectorY) ];
-			u = (UPDATEENUM)(u | UPDATE_AIGRID);
-		}
-	}
 }
 
 float WorldRenderer::GetYPosFromHeightMap( float x, float y )
@@ -246,7 +229,7 @@ float WorldRenderer::GetYPosFromHeightMap( float x, float y )
 	if(zWorld == NULL)
 		return std::numeric_limits<float>::infinity();
 
-	unsigned int tIndex = (unsigned int)(y/(float)SECTOR_WORLD_SIZE) * zWorld->GetNumSectorsWidth() + (unsigned int)(x/(float)SECTOR_WORLD_SIZE);
+	unsigned int tIndex = (unsigned int)(y / (float)SECTOR_WORLD_SIZE) * zWorld->GetNumSectorsWidth() + (unsigned int)(x/(float)SECTOR_WORLD_SIZE);
 	
 	if ( tIndex >= zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() )
 		return std::numeric_limits<float>::infinity();
@@ -382,88 +365,33 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	return returnPointer;
 }
 
-void WorldRenderer::UpdateSectorHeightMap( const Vector2UINT& sectorCoords )
-{
-	if ( iTerrain* T = GetTerrain(sectorCoords) )
-	{
-		// Set Heightmap
-		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
-
-		// Set Normals
-		T->SetNormals(zWorld->GetSector(sectorCoords)->GetNormals());
-	}
-}
-
-void WorldRenderer::UpdateSectorBlendMap( const Vector2UINT& sectorCoords )
-{
-	if ( iTerrain* T = GetTerrain(sectorCoords) )
-	{
-		T->SetHeightMap( zWorld->GetSector(sectorCoords)->GetHeightMap() );
-
-		float* data[2] = { zWorld->GetSector(sectorCoords)->GetBlendMap(), zWorld->GetSector(sectorCoords)->GetBlendMap2()  };
-		unsigned int sizes[2] = { SECTOR_BLEND_SIZE, SECTOR_BLEND_SIZE };
-
-		T->SetBlendMaps( 
-			2,
-			&sizes[0],
-			&data[0] );
-	}
-}
-
-void WorldRenderer::UpdateSectorTextures( const Vector2UINT& sectorCoords )
-{
-	if ( iTerrain* T = GetTerrain(sectorCoords) )
-	{
-		const char* terrainTextures[8];
-		std::string files[8];
-		for( unsigned int x=0; x<8; ++x )
-		{
-			files[x] = "Media/Textures/";
-			files[x] += zWorld->GetSector(sectorCoords)->GetTextureName(x);
-			terrainTextures[x] = &files[x][0];
-		}
-		T->SetTextures(terrainTextures);
-	}
-}
-
-
 void WorldRenderer::Update()
 {
-	while ( !zUpdatesRequired.empty() )
+	// Update Terrain Routine
+	UpdateTerrain();
+
+	// Cam Pos
+	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
+
+	// Check Distance
+	if ( (zLastEntUpdatePos - camPos).GetLength() > 10.0f )
 	{
-		auto i = zUpdatesRequired.begin();
+		if ( zWorld ) 
+		{
+			zWorld->GetEntitiesInCircle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, zEntsToUpdate);
+		}
 
-		if ( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP )
-			UpdateSectorBlendMap(i->first);
-
-		if ( ( i->second & UPDATE_HEIGHTMAP ) )
-			UpdateSectorHeightMap(i->first);
-
-		if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
-			UpdateSectorTextures(i->first);
-
-		if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
-			UpdateSectorAIGrid(i->first);
-
-		zUpdatesRequired.erase(i);
+		zLastEntUpdatePos = camPos;
 	}
 
-	// Ents To Update
-	std::set<Entity*> entsToUpdate;
-
-	// Update Current Entities LOD
-	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
-	{
-		entsToUpdate.insert(i->first);
-	}
-
-	// New Entities LOD
-	if ( zWorld ) zWorld->GetEntitiesInCircle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, entsToUpdate);
-
-	// Update Entities
-	for ( auto i = entsToUpdate.cbegin(); i != entsToUpdate.cend(); ++i )
+	unsigned int x = zEntsToUpdate.size() / 10;
+	if ( x < 25 ) x = 25;
+	auto i = zEntsToUpdate.begin();
+	while( i != zEntsToUpdate.end() )
 	{
 		SetEntityGraphics(*i);
+		i = zEntsToUpdate.erase(i);
+		if ( !x || --x == 0 ) break;
 	}
 }
 
@@ -477,7 +405,6 @@ void WorldRenderer::ToggleAIGrid(bool state)
 		{
 			if ( zTerrain[i] )
 			{
-				// TODO Terrain Show Grid
 				zTerrain[i]->UseAIMap(state);
 			}
 		}
@@ -511,56 +438,6 @@ void WorldRenderer::ToggleWaterBoxes(bool flag)
 
 			zWaterBoxes.clear();
 		}
-	}
-}
-
-void WorldRenderer::UpdateSectorAIGrid(const Vector2UINT& sectorCoords)
-{
-	if ( iTerrain* T = GetTerrain(sectorCoords) )
-	{
-		// Data Access
-		AIGrid& sectorGrid = zWorld->GetSector(sectorCoords)->GetAIGrid();
-		std::vector<unsigned char> &graphicsGrid = zAIGrids[T];
-		graphicsGrid.resize(SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE);
-
-		// Bit To Byte
-		for( unsigned int x=0; x<SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE; ++x )
-		{
-			graphicsGrid[x] = sectorGrid[x] * 255;
-		}
-
-		T->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
-		T->SetAIGridThickness();
-		T->UseAIMap(zShowAIMap);
-	}
-}
-
-iTerrain* WorldRenderer::GetTerrain( const Vector2UINT& sectorCoords )
-{
-	if ( zTerrain.empty() ) return 0;
-	unsigned int tIndex = sectorCoords.y * zWorld->GetNumSectorsWidth() + sectorCoords.x;
-	return zTerrain[tIndex];
-}
-
-void WorldRenderer::CreateTerrain( const Vector2UINT& sectorCoords )
-{
-	if ( zTerrain.empty() )
-		zTerrain.resize( zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() );
-
-	// Create if it doesn't exist
-	unsigned int tIndex = sectorCoords.y * zWorld->GetNumSectorsWidth() + sectorCoords.x;
-	if ( !zTerrain[tIndex] )
-	{
-		Vector3 pos;
-		pos.x = sectorCoords.x * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
-		pos.y = 0.0f;
-		pos.z = sectorCoords.y * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
-
-		zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(FSECTOR_WORLD_SIZE, 1.0f, FSECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
-		zTerrain[tIndex]->SetTextureScale(10.0f);
-
-		UPDATEENUM& u = zUpdatesRequired[sectorCoords];
-		u = (UPDATEENUM)(u | UPDATE_ALL);
 	}
 }
 
@@ -639,6 +516,9 @@ void WorldRenderer::SetEntityTransformation( Entity* e )
 
 void WorldRenderer::DeleteEntity( Entity* e )
 {
+	// Remove From Update
+	zEntsToUpdate.erase(e);
+
 	// Delete Old Graphics
 	auto i = zEntities.find(e);
 	if ( i != zEntities.end() )
@@ -667,7 +547,7 @@ void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
 				// Terrain Height Minimum
 				try
 				{
-					float terrainHeight = zWorld->GetHeightAt(position.GetXZ());
+					float terrainHeight = zWorld->CalcHeightAtWorldPos(position.GetXZ());
 					if ( position.y < terrainHeight ) position.y = terrainHeight;
 				}
 				catch(...)
@@ -686,9 +566,14 @@ void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
 				positions[x] = quad->GetPosition(x);
 
 				// Terrain Height Minimum
-				float terrainHeight = zWorld->GetHeightAt(positions[x].GetXZ());
-
-				if ( positions[x].y < terrainHeight ) positions[x].y = terrainHeight;
+				try
+				{
+					float terrainHeight = zWorld->CalcHeightAtWorldPos(positions[x].GetXZ());
+					if ( positions[x].y < terrainHeight ) positions[x].y = terrainHeight;
+				}
+				catch(...)
+				{
+				}
 			}
 			
 			zWaterBoxes[quad].zCubes[0] = zGraphics->CreateMesh("Media/Models/Cube_1.obj", positions[0]);
@@ -701,5 +586,148 @@ void WorldRenderer::UpdateWaterBoxes( WaterQuad* quad )
 				zWaterBoxes[quad].zCubes[x]->SetScale(1.0f/20.0f);
 			}
 		}
+	}
+}
+
+void WorldRenderer::UpdateTerrain()
+{
+	// Initialize Vector
+	if ( zTerrain.empty() )
+	{
+		if ( zWorld )
+		{
+			zTerrain.resize(zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight());
+		}
+	}
+
+	// Camera Position
+	Vector2 camPos = zGraphics->GetCamera()->GetPosition().GetXZ();
+
+	// Find Closest Terrain
+	auto closestIterator = zUpdatesRequired.begin();
+
+	// Search And Compare
+	for( auto i = zUpdatesRequired.begin(); i != zUpdatesRequired.end(); ++i )
+	{	
+		// This Position
+		Vector2 newPos;
+		newPos.x = (float)i->first.x * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+		newPos.y = (float)i->first.y * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+
+		// Current Position
+		Vector2 curPos;
+		curPos.x = (float)closestIterator->first.x * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+		curPos.y = (float)closestIterator->first.y * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+
+		// Compare
+		if ( (camPos-newPos).GetLength() < (camPos-curPos).GetLength() )
+		{
+			closestIterator = i;
+		}
+	}
+
+	// Apply Effects To Closest
+	if ( closestIterator != zUpdatesRequired.end() )
+	{
+		// First Update
+		auto i = closestIterator;
+		
+		// Terrain Index
+		unsigned int tIndex = i->first.y * zWorld->GetNumSectorsWidth() + i->first.x;
+		iTerrain* ptrTerrain = zTerrain[tIndex];
+
+		// Delete 
+		if ( ( i->second & UPDATE_DELETE ) == UPDATE_DELETE )
+		{
+			if ( ptrTerrain )
+			{
+				// Destroy Terrain
+				zGraphics->DeleteTerrain(ptrTerrain);
+
+				// Remove AI Grid
+				auto grid = zAIGrids.find(ptrTerrain);
+				if ( grid != zAIGrids.end() )
+					zAIGrids.erase(grid);
+
+				// Set Pointers
+				zTerrain[tIndex] = 0;
+				ptrTerrain = 0;
+			}
+		}
+		else
+		{
+			// Terrain Object
+			if ( !ptrTerrain && ( i->second & UPDATE_CREATE ) == UPDATE_CREATE )
+			{
+				// Create if it doesn't exist
+				Vector3 pos;
+				pos.x = i->first.x * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+				pos.y = 0.0f;
+				pos.z = i->first.y * FSECTOR_WORLD_SIZE + FSECTOR_WORLD_SIZE * 0.5f;
+
+				zTerrain[tIndex] = zGraphics->CreateTerrain(pos, Vector3(FSECTOR_WORLD_SIZE, 1.0f, FSECTOR_WORLD_SIZE), SECTOR_HEIGHT_SIZE);
+				zTerrain[tIndex]->SetTextureScale(10.0f);
+
+				// Update Pointer
+				ptrTerrain = zTerrain[tIndex];
+			}
+
+			if ( ptrTerrain )
+			{
+				// Height Map And Normals
+				if ( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
+				{
+					ptrTerrain->SetHeightMap(zWorld->GetSector(i->first)->GetHeightMap());
+					ptrTerrain->SetNormals(zWorld->GetSector(i->first)->GetNormals());
+				}
+
+				// Blend Map
+				if ( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP )
+				{
+					float* data[2] = { zWorld->GetSector(i->first)->GetBlendMap(), zWorld->GetSector(i->first)->GetBlendMap2() };
+					unsigned int sizes[2] = { SECTOR_BLEND_SIZE, SECTOR_BLEND_SIZE };
+
+					ptrTerrain->SetBlendMaps(
+						2,
+						&sizes[0],
+						&data[0] );
+				}
+
+				// Textures
+				if ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES )
+				{
+					const char* terrainTextures[8];
+					std::string files[8];
+					for( unsigned int x=0; x<8; ++x )
+					{
+						files[x] = "Media/Textures/";
+						files[x] += zWorld->GetSector(i->first)->GetTextureName(x);
+						terrainTextures[x] = &files[x][0];
+					}
+					ptrTerrain->SetTextures(terrainTextures);
+				}
+
+				// AI Grid
+				if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
+				{
+					// Data Access
+					AIGrid& sectorGrid = zWorld->GetSector(i->first)->GetAIGrid();
+					std::vector<unsigned char> &graphicsGrid = zAIGrids[ptrTerrain];
+					graphicsGrid.resize(SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE);
+
+					// Bit To Byte
+					for( unsigned int x=0; x<SECTOR_AI_GRID_SIZE*SECTOR_AI_GRID_SIZE; ++x )
+					{
+						graphicsGrid[x] = sectorGrid[x] * 255;
+					}
+
+					ptrTerrain->SetAIGrid(SECTOR_AI_GRID_SIZE, &graphicsGrid[0]);
+					ptrTerrain->SetAIGridThickness();
+					ptrTerrain->UseAIMap(zShowAIMap);
+				}
+			}
+		}
+
+		zUpdatesRequired.erase(i);
 	}
 }

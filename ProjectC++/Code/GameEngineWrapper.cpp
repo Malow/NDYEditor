@@ -38,7 +38,7 @@ void GameEngineWrapper::OnResize(int width, int height)
 }
 
 
-void GameEngineWrapper::CreateWorld( int x, int y )
+void GameEngineWrapper::CreateWorld(int x, int y)
 {
 	this->m_GameEngine->CreateWorld(x, y);
 }

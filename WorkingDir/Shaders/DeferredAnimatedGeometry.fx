@@ -42,6 +42,7 @@ cbuffer EveryMesh
 cbuffer EveryFrame
 {
 	float4 CameraPosition;
+	float g_FarClip;
 };
 
 struct VSIn
@@ -86,7 +87,7 @@ struct PSout
 RTs:
 1: Texture XYZ, W Special Color
 2: Normal XYZ, W Depth
-3: Position XYZ, W Type of object
+3: Position XYZ, W Type of object(unused)
 4: Specular XYZ, W Specular Power
 
 
@@ -95,7 +96,7 @@ RTs:
 //-----------------------------------------------------------------------------------------
 // State Structures
 //-----------------------------------------------------------------------------------------
-RasterizerState Culling
+RasterizerState BackCulling
 {
 	CullMode = Back;
 };
@@ -148,7 +149,7 @@ PSout PSScene(PSSceneIn input) : SV_Target
 	output.Texture = finalColor;
 	output.NormalAndDepth = float4(input.norm.xyz, input.Pos.z / input.Pos.w);		// pos.z / pos.w should work?
 
-	float depth = length(CameraPosition.xyz - input.WorldPos.xyz) / 200.0f;		// Haxfix
+	float depth = length(CameraPosition.xyz - input.WorldPos.xyz) / g_FarClip;		// Haxfix
 	output.NormalAndDepth.w = depth;
 
 	output.Position.xyz = input.WorldPos.xyz;
@@ -190,6 +191,6 @@ technique11 BasicTech
 	    
 
 		SetDepthStencilState( EnableDepth, 0 );
-	    SetRasterizerState( Culling );
+	    SetRasterizerState( BackCulling );
     }  
 }

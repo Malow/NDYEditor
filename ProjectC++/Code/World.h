@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
-#include <map>
 #include "Sector.h"
 #include "Observer.h"
 #include "WorldFile.h"
 #include "CircleAndRect.h"
+
+#include <string>
+#include <map>
 
 class Entity;
 class World;
@@ -14,7 +15,7 @@ class WaterQuad;
 class WorldAnchor
 {
 private:
-	WorldAnchor() : position(0.0f,0.0f), radius(100.0f)
+	WorldAnchor() : position(0.0f, 0.0f), radius(100.0f)
 	{
 	}
 
@@ -62,8 +63,8 @@ private:
 	std::set<WorldAnchor*> zAnchors;
 
 public:
-	World( Observer* observer, const std::string& fileName="", bool readOnly=true ) throw(...);
-	World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight);
+	World(Observer* observer, const std::string& fileName="", bool readOnly=true) throw(...);
+	World(Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrOfSectorHeight);
 	virtual ~World();
 
 	// Save World To File

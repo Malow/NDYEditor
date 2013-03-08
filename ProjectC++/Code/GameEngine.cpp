@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include "Action.h"
 #include "MaloWFileDebug.h"
 #include "EntityList.h"
 #include "HeightChangedAction.h"
@@ -10,12 +11,14 @@
 #include "GridCalculateAction.h"
 #include "ReplaceEntityAction.h"
 #include "SmoothAction.h"
-#include <math.h>
-#include <time.h>
 #include "NavArrows.h"
 #include "Shuffle.h"
 #include "Entity.h"
 #include "WaterQuad.h"
+#include "World.h"
+#include "WaterQuad.h"
+#include <math.h>
+#include <time.h>
 
 const float M_PI = 3.141592f;
 
@@ -641,8 +644,7 @@ void GameEngine::CreateWorld( int width, int height )
 	if ( zWorld ) delete zWorld, zWorld=0;
 	
 	// Create New World
-	this->zWorld = new World(this, width, height);
-	this->zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
+	zWorld = new World(this, width, height);
 	zWorldSavedFlag = false;
 }
 
@@ -722,9 +724,11 @@ void GameEngine::SaveWorldAs( char* msg )
 
 void GameEngine::OpenWorld( char* msg )
 {
+	// Delete Previous World
 	if ( zWorld ) delete zWorld, zWorld = 0;
+
+	// Genesis
 	zWorld = new World(this, msg, false);
-	zWorldRenderer = new WorldRenderer(zWorld, zGraphics);
 	zWorldSavedFlag = true;
 }
 
@@ -952,14 +956,17 @@ void GameEngine::OnEvent( Event* e )
 		zAnchor = WLE->world->CreateAnchor();
 		zGraphics->GetCamera()->SetPosition( WLE->world->GetStartCamPos() );
 		zGraphics->GetCamera()->SetForward( WLE->world->GetStartCamRot() );
+
+		// Create World Renderer
+		zWorldRenderer = new WorldRenderer(WLE->world, zGraphics);
 	}
 	else if ( WorldDeletedEvent* WDE = dynamic_cast<WorldDeletedEvent*>(e) )
 	{
+		ClearActionHistory();
 		if ( zLastSelectedWaterQuad ) zLastSelectedWaterQuad = 0;
 		if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
 		if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
 		if ( zWorld ) zWorld = 0;
-		ClearActionHistory();
 	}
 	else if ( EntityRemovedEvent *ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{

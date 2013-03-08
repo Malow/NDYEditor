@@ -1,14 +1,23 @@
 #pragma once
 
-#include "World.h"
-#include "WorldRenderer.h"
-#include "Action.h"
+#include "Observer.h"
 
-#pragma warning ( push )
-#pragma warning ( disable : 4512 )	// The GameEngine is not meant to have a assignment operator
+#include <Vector.h>
+#include <vector>
+#include <map>
+#include <set>
 
 class NavArrows;
 class ShuffleList;
+class World;
+class WorldRenderer;
+class Action;
+class ActionGroup;
+class Entity;
+class Event;
+class GraphicsEngine;
+class WorldAnchor;
+class WaterQuad;
 
 #ifdef _DEBUG
 #include <vld.h>
@@ -32,7 +41,8 @@ enum MODE
 	WATER = 13
 };
 
-
+#pragma warning ( push )
+#pragma warning ( disable : 4512 )	// The GameEngine is not meant to have a assignment operator
 
 class GameEngine : public Observer
 {

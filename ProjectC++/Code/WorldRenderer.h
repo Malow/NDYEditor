@@ -8,13 +8,14 @@
 enum UPDATEENUM
 {
 	UPDATE_NOTHING=0,
-	UPDATE_HEIGHTMAP=1,
-	UPDATE_BLENDMAP=2,
-	UPDATE_TEXTURES=4,
-	UPDATE_AIGRID=8,
-	UPDATE_ALL=15
+	UPDATE_CREATE=1,
+	UPDATE_HEIGHTMAP=2,
+	UPDATE_BLENDMAP=4,
+	UPDATE_TEXTURES=8,
+	UPDATE_AIGRID=16,
+	UPDATE_ALL=31,
+	UPDATE_DELETE=32
 };
-
 
 struct WaterCollisionData
 {
@@ -30,16 +31,24 @@ struct WaterCollisionData
 
 class WorldRenderer : Observer
 {
-	std::vector< iTerrain* > zTerrain;
-	std::map< iTerrain*, std::vector<unsigned char> > zAIGrids;
-
+	// Components
 	World* zWorld;
 	GraphicsEngine* zGraphics;
-	std::map< Entity*, iMesh* > zEntities;
 
+	// Terrain
+	std::vector< iTerrain* > zTerrain;
 	std::map< Vector2UINT, UPDATEENUM > zUpdatesRequired;
+
+	// AI Grid
+	std::map< iTerrain*, std::vector<unsigned char> > zAIGrids;
 	bool zShowAIMap;
-	
+
+	// Entities
+	std::map< Entity*, iMesh* > zEntities;
+	std::set< Entity* > zEntsToUpdate;
+	Vector3 zLastEntUpdatePos;
+
+	// Water
 	std::map< WaterQuad*, iWaterPlane* > zWaterQuads;
 
 	struct WaterCubes
@@ -66,15 +75,8 @@ public:
 	virtual void OnEvent( Event* e );
 
 protected:
-	void UpdateSectorTextures( const Vector2UINT& sectorCoords );
-	void UpdateSectorHeightMap( const Vector2UINT& sectorCoords );
-	void UpdateSector( const Vector2UINT& sectorCoords );
-	void UpdateSectorBlendMap( const Vector2UINT& sectorCoords );
-	void UpdateSectorAIGrid( const Vector2UINT& sectorCoords );
-	void CreateTerrain( const Vector2UINT& sectorCoords );
-	iTerrain* GetTerrain( const Vector2UINT& sectorCoords );
-
 	void UpdateWaterBoxes( WaterQuad* water );
+	void UpdateTerrain();
 
 	void CreateEntity( Entity* e );
 	void SetEntityGraphics( Entity* e );
