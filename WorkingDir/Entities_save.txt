@@ -19,7 +19,8 @@ Model:Media/Models/Fern_02_01.obj 45.0
 Number:5
 Name:LODTree
 BlockRadius:0.7
-Model:Media/Models/Fern_02_01.obj
+Model:Media/Models/Tree_02.ani 25.0
+Model:Media/Models/Tree_01_01.obj
 Billboard:Media/TreeBillboard.png
 BillboardDistance:100
 
