@@ -27,6 +27,7 @@
     <ClInclude Include="Code\HeightChangedAction.h" />
     <ClInclude Include="Code\NavArrows.h" />
     <ClInclude Include="Code\Observer.h" />
+    <ClInclude Include="Code\EntQuadTree.h" />
     <ClInclude Include="Code\ReplaceEntityAction.h" />
     <ClInclude Include="Code\Sector.h" />
     <ClInclude Include="Code\Shuffle.h" />
@@ -43,6 +44,7 @@
   <ItemGroup>
     <ClCompile Include="Code\Entity.cpp" />
     <ClCompile Include="Code\EntityList.cpp" />
+    <ClCompile Include="Code\EntQuadTree.cpp" />
     <ClCompile Include="Code\GameEngine.cpp" />
     <ClCompile Include="Code\GameEngineWrapper.cpp" />
     <ClCompile Include="Code\Graphics.cpp" />

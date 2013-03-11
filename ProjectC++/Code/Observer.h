@@ -2,6 +2,7 @@
 #define _OBSERVER_HPP_
 
 #include <set>
+#include <map>
 
 class Event;
 class Observer;
@@ -25,20 +26,19 @@ protected:
 
 class Observed
 {
+private:
 	std::set<Observer*> zObservers;
+	std::map<Observer*, int> zNewObservers;
 	bool zInUse;
-
-	std::set<Observer*> zObserversToInsert;
-	std::set<Observer*> zObserversToErase;
 
 public:
 	inline void AddObserver( Observer* observer ) 
-	{ 
+	{
 		if ( observer ) 
 		{
 			if ( zInUse )
 			{
-				zObserversToInsert.insert(observer);
+				zNewObservers[observer]++;
 			}
 			else
 			{
@@ -53,7 +53,7 @@ public:
 		{
 			if ( zInUse )
 			{
-				zObserversToErase.insert(observer); 
+				zNewObservers[observer]--;
 			}
 			else
 			{
@@ -63,13 +63,15 @@ public:
 	}
 
 protected:
-	Observed( Observer* default=0 ) : 
+	Observed( Observer* default = 0 ) : 
 		zInUse(false)
 	{
 		AddObserver(default); 
 	}
 
-	virtual ~Observed() {};
+	virtual ~Observed() 
+	{
+	}
 
 	inline void NotifyObservers( Event* e ) 
 	{ 
@@ -78,24 +80,35 @@ protected:
 			zInUse = true;
 
 			// Notify Observers
-			for( std::set<Observer*>::iterator i = zObservers.begin(); i != zObservers.end(); ++i ) 
-			{ 
-				(*i)->OnEvent(e);
+			for( std::set<Observer*>::iterator i = zObservers.cbegin(); i != zObservers.cend(); ++i ) 
+			{
+				auto i2 = zNewObservers.find(*i);
+				if ( i2 == zNewObservers.cend() || i2->second > 0 )
+				{
+					try
+					{
+						(*i)->OnEvent(e);
+					}
+					catch(...)
+					{
+
+					}
+				}
 			}
 
-			// Insert New Observers
-			for( std::set<Observer*>::iterator i = zObserversToInsert.begin(); i != zObserversToInsert.end(); ++i ) 
-			{ 
-				zObservers.insert(*i);
+			// New Observers
+			for( auto i = zNewObservers.cbegin(); i != zNewObservers.cend(); ++i )
+			{
+				if ( i->second < 0 )
+				{
+					zObservers.erase(i->first);
+				}
+				else if ( i->second > 0 )
+				{
+					zObservers.insert(i->first);
+				}
 			}
-			zObserversToInsert.clear();
-
-			// Remove Observers
-			for( std::set<Observer*>::iterator i = zObserversToErase.begin(); i != zObserversToErase.end(); ++i ) 
-			{ 
-				zObservers.erase(*i);
-			}
-			zObserversToErase.clear();
+			zNewObservers.clear();
 
 			zInUse = false;
 		}

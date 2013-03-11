@@ -644,7 +644,11 @@ void GameEngine::CreateWorld( int width, int height )
 	ClearActionHistory();
 
 	// Free World
-	if ( zWorld ) delete zWorld, zWorld=0;
+	if ( zWorld ) 
+	{
+		delete zWorld;
+		zWorld = 0;
+	}
 	
 	// Create New World
 	zWorld = new World(this, width, height);
@@ -728,7 +732,11 @@ void GameEngine::SaveWorldAs( char* msg )
 void GameEngine::OpenWorld( char* msg )
 {
 	// Delete Previous World
-	if ( zWorld ) delete zWorld, zWorld = 0;
+	if ( zWorld ) 
+	{
+		delete zWorld;
+		zWorld = 0;
+	}
 
 	// Genesis
 	zWorld = new World(this, msg, false);
@@ -968,8 +976,7 @@ void GameEngine::OnEvent( Event* e )
 		ClearActionHistory();
 		if ( zLastSelectedWaterQuad ) zLastSelectedWaterQuad = 0;
 		if ( zWorldRenderer ) delete zWorldRenderer, zWorldRenderer = 0;
-		if ( zAnchor ) zWorld->DeleteAnchor( zAnchor );
-		if ( zWorld ) zWorld = 0;
+		if ( zAnchor ) WDE->world->DeleteAnchor( zAnchor );
 	}
 	else if ( EntityRemovedEvent *ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{

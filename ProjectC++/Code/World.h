@@ -4,6 +4,7 @@
 #include "Observer.h"
 #include "WorldFile.h"
 #include "CircleAndRect.h"
+#include "EntQuadTree.h"
 
 #include <string>
 #include <map>
@@ -47,7 +48,7 @@ private:
 	bool zWaterQuadsEdited;
 
 	// Entities
-	std::set<Entity*> zEntities;
+	EntQuadTree zEntTree;
 	
 	// World Settings
 	unsigned int zNrOfSectorsWidth;

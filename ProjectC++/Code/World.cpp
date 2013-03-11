@@ -1,17 +1,16 @@
 #include "World.h"
 #include "CircleAndRect.h"
-#include <windows.h>
 #include "MaloWFileDebug.h"
-#include <sstream>
-#include <math.h>
 #include "Entity.h"
 #include "WaterQuad.h"
 #include "WorldPhysics.h"
+#include <sstream>
+#include <math.h>
 
 
 World::World( Observer* observer, const std::string& fileName, bool readOnly) throw(...) : 
 	Observed(observer),
-	zSectors(NULL), 
+	zSectors(0), 
 	zNrOfSectorsWidth(0), 
 	zNrOfSectorsHeight(0),
 	zReadOnly(readOnly),
@@ -81,12 +80,14 @@ World::~World()
 	zAnchors.clear();
 
 	// Delete Entities
-	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
+	std::set<Entity*> ents;
+	if ( zEntTree.FlatScan(ents, 0) )
 	{
-		NotifyObservers( &EntityRemovedEvent(this,*i));
-		delete *i;
+		for( auto i = ents.cbegin(); i != ents.cend(); ++i )
+		{
+			RemoveEntity(*i);
+		}
 	}
-	zEntities.clear();
 
 	// Delete Water Quads
 	for( auto i = zWaterQuads.cbegin(); i != zWaterQuads.cend(); ++i )
@@ -105,7 +106,7 @@ World::~World()
 				if ( this->zSectors[i][o] )
 				{
 					delete this->zSectors[i][o];
-					this->zSectors[i][o] = NULL;
+					this->zSectors[i][o] = 0;
 				}
 			}
 			delete [] this->zSectors[i];
@@ -114,14 +115,14 @@ World::~World()
 
 		// Delete the zSector pointer.
 		delete [] this->zSectors;
-		this->zSectors = NULL;
+		this->zSectors = 0;
 	}
 }
 
 Entity* World::CreateEntity( unsigned int entityType )
 {
 	Entity* temp = new Entity(entityType);
-	zEntities.insert(temp);
+	zEntTree.Insert(temp);
 	NotifyObservers( &EntityLoadedEvent(this, temp) );
 	temp->SetEdited(true);
 	return temp;
@@ -449,7 +450,7 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 			}
 
 			// Load Entities
-			std::array<EntityStruct,256> eArray;
+			std::array<EntityStruct, 256> eArray;
 			if ( zFile->ReadEntities(y * GetNumSectorsWidth() + x, eArray) )
 			{
 				unsigned int counter=0;
@@ -461,8 +462,8 @@ Sector* World::GetSector( unsigned int x, unsigned int y ) throw(...)
 
 					Entity* ent = new Entity(e->type, pos, rot, scale);
 					ent->SetEdited(false);
-					zEntities.insert(ent);
-					NotifyObservers( &EntityLoadedEvent(this,ent) );
+					zEntTree.Insert(ent);
+					NotifyObservers(&EntityLoadedEvent(this, ent));
 
 					counter++;
 				}
@@ -564,22 +565,7 @@ void World::LoadAllSectors()
 
 unsigned int World::GetEntitiesInCircle( const Vector2& center, float radius, std::set<Entity*>& out, unsigned int typeFilter) const
 {
-	unsigned int counter=0;
-	auto zEntities_end = zEntities.cend();
-	for(auto i = zEntities.cbegin(); i != zEntities_end; i++)
-	{
-		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
-		{
-			Vector2 pos( (*i)->GetPosition().x, (*i)->GetPosition().z );
-			if( Vector2(center-pos).GetLength() < radius)
-			{
-				out.insert(*i);
-				counter++;
-			}
-		}
-	}
-
-	return counter;
+	return zEntTree.CircleScan(out, Circle(center, radius), typeFilter);
 }
 
 unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std::set<Vector2UINT>& out ) const
@@ -669,12 +655,14 @@ unsigned int World::GetNumSectorsHeight() const
 	return zNrOfSectorsHeight;
 }
 
-void World::RemoveEntity( Entity* entity )
+void World::RemoveEntity(Entity* entity)
 {
-	NotifyObservers(&EntityRemovedEvent(this, entity));
-	auto i = std::find(zEntities.begin(), zEntities.end(), entity);
-	zEntities.erase(i);
-	delete entity;
+	if ( entity )
+	{
+		NotifyObservers(&EntityRemovedEvent(this, entity));
+		zEntTree.Erase(entity);
+		delete entity;
+	}
 }
 
 unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
@@ -826,7 +814,7 @@ void World::Update()
 					unsavedEntities = true;
 				}
 
-				for( auto e = entitiesInArea.begin(); !unsavedEntities && e != entitiesInArea.end(); ++e )
+				for( auto e = entitiesInArea.cbegin(); !unsavedEntities && e != entitiesInArea.cend(); ++e )
 				{
 					if ( (*e)->IsEdited() )
 					{
@@ -845,9 +833,9 @@ void World::Update()
 	{
 		// Delete Entities
 		Rect sectorRect(Vector2(i->x * FSECTOR_WORLD_SIZE, i->y * FSECTOR_WORLD_SIZE), Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
-		std::set< Entity* > entitiesInArea;
+		std::set<Entity*> entitiesInArea;
 		GetEntitiesInRect(sectorRect, entitiesInArea);
-		for( auto e = entitiesInArea.begin(); e != entitiesInArea.end(); ++e )
+		for( auto e = entitiesInArea.cbegin(); e != entitiesInArea.cend(); ++e )
 		{
 			RemoveEntity(*e);
 		}
@@ -882,22 +870,7 @@ const char* const World::GetSectorTexture( unsigned int x, unsigned int y, unsig
 
 unsigned int World::GetEntitiesInRect( const Rect& rect, std::set<Entity*>& out, unsigned int typeFilter ) const
 {
-	unsigned int counter=0;
-
-	auto zEntities_end = zEntities.end();
-	for( auto i = zEntities.begin(); i != zEntities_end; ++i )
-	{
-		if ( !typeFilter || ( typeFilter && typeFilter == (*i)->GetType() ) )
-		{
-			if ( rect.IsInside( (*i)->GetPosition().GetXZ() ) )
-			{
-				out.insert(*i);
-				counter++;
-			}
-		}
-	}
-
-	return counter;
+	return zEntTree.RectangleScan(out, rect, typeFilter);
 }
 
 float World::CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...)

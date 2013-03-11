@@ -53,26 +53,32 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 WorldRenderer::~WorldRenderer()
 {
 	// Stop Observing
-	if ( zWorld ) zWorld->RemoveObserver(this);
+	if ( zWorld ) 
+	{
+		zWorld->RemoveObserver(this);
+		zWorld = 0;
+	}
 
 	// Clean Terrain
 	for( unsigned int x=0; x<zTerrain.size(); ++x )
 	{
 		if ( zTerrain[x] )
+		{
 			zGraphics->DeleteTerrain(zTerrain[x]);
+		}
 	}
 	zTerrain.clear();
 
 	// Clean Entities
-	for( auto i = zEntities.begin(); i != zEntities.end(); ++i )
+	for( auto i = zEntities.cbegin(); i != zEntities.cend(); ++i )
 	{
 		i->first->RemoveObserver(this);
-		zGraphics->DeleteMesh( i->second );
+		zGraphics->DeleteMesh(i->second);
 	}
 	zEntities.clear();
 
 	// Clean Water Boxes
-	for( auto i = zWaterBoxes.begin(); i != zWaterBoxes.end(); ++i )
+	for( auto i = zWaterBoxes.cbegin(); i != zWaterBoxes.cend(); ++i )
 	{
 		for( unsigned int x=0; x<4; ++x )
 		{
@@ -82,7 +88,7 @@ WorldRenderer::~WorldRenderer()
 	zWaterBoxes.clear();
 
 	// Clean Water Quads
-	for( auto i = zWaterQuads.begin(); i != zWaterQuads.end(); ++i )
+	for( auto i = zWaterQuads.cbegin(); i != zWaterQuads.cend(); ++i )
 	{
 		i->first->RemoveObserver(this);
 		zGraphics->DeleteMesh(i->second);
@@ -203,11 +209,11 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( EntityChangedTypeEvent* ECTE = dynamic_cast<EntityChangedTypeEvent*>(e) )
 	{
-		SetEntityGraphics(ECTE->entity);
+		zEntsToUpdate.insert(ECTE->entity);
 	}
 	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
 	{
-		CreateEntity(ELE->entity);
+		zEntsToUpdate.insert(ELE->entity);
 	}
 	else if ( EntitySelectedEvent* ESE = dynamic_cast<EntitySelectedEvent*>(e) )
 	{
@@ -349,26 +355,29 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	Vector3 camPos = cam->GetPosition();
 	
 	std::set<Entity*> closeEntities;
-	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), 200.0f, closeEntities);
+	zWorld->GetEntitiesInCircle(Vector2(cam->GetPosition().x, cam->GetPosition().z), zGraphics->GetEngineParameters().FarClip, closeEntities);
 
 	float curDistance = std::numeric_limits<float>::max();
 	returnPointer = 0;
 
-	for( auto i = closeEntities.begin(); i != closeEntities.end(); ++i )
+	for( auto i = closeEntities.cbegin(); i != closeEntities.cend(); ++i )
 	{
-		CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
-			cam->GetPosition(), 
-			cam->Get3DPickingRay(), 
-			zEntities[*i]);
-
-		if(cd.collision)
+		if ( zEntities[*i] )
 		{
-			float thisDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
+			CollisionData cd = zGraphics->GetPhysicsEngine()->GetCollisionRayMesh(
+				cam->GetPosition(), 
+				cam->Get3DPickingRay(), 
+				zEntities[*i]);
 
-			if(thisDistance < curDistance)
+			if(cd.collision)
 			{
-				returnPointer = *i;
-				curDistance = thisDistance;
+				float thisDistance = (Vector3(cd.posx,cd.posy,cd.posz) - camPos).GetLength();
+
+				if(thisDistance < curDistance)
+				{
+					returnPointer = *i;
+					curDistance = thisDistance;
+				}
 			}
 		}
 	}
@@ -396,7 +405,7 @@ void WorldRenderer::Update()
 		// Scan New Entities
 		if ( zWorld ) 
 		{
-			zWorld->GetEntitiesInCircle( zGraphics->GetCamera()->GetPosition().GetXZ(), zGraphics->GetEngineParameters().FarClip, zEntsToUpdate);
+			zWorld->GetEntitiesInCircle(camPos.GetXZ(), zGraphics->GetEngineParameters().FarClip, zEntsToUpdate);
 		}
 
 		// Update Position
@@ -406,6 +415,7 @@ void WorldRenderer::Update()
 	// Update a between 10% and a minimum of 25
 	unsigned int x = zEntsToUpdate.size() / 10;
 	if ( x < 25 ) x = 25;
+	if ( x > 100 ) x = 100;
 	auto i = zEntsToUpdate.begin();
 	while( i != zEntsToUpdate.end() )
 	{
@@ -511,6 +521,13 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 				i->second = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
 			}
 
+			// Randomize Animation Frame
+			if ( iAnimatedMesh* iAnimMesh = dynamic_cast<iAnimatedMesh*>(i->second) )
+			{
+				float randTime = (float)rand() / (float)RAND_MAX;
+				iAnimMesh->SetAnimationTime( randTime * (float)iAnimMesh->GetAnimationLength() * 0.001f );
+			}
+
 			SetEntityTransformation(e);
 		}
 		else
@@ -530,7 +547,7 @@ void WorldRenderer::SetEntityTransformation( Entity* e )
 		i->second->RotateAxis(Vector3(1.0f, 0.0f, 0.0f), e->GetRotation().x * (3.1415f / 180.0f));
 		i->second->RotateAxis(Vector3(0.0f, 1.0f, 0.0f), e->GetRotation().y * (3.1415f / 180.0f));
 		i->second->RotateAxis(Vector3(0.0f, 0.0f, 1.0f), e->GetRotation().z * (3.1415f / 180.0f));
-		i->second->SetScale(e->GetScale()*0.05f);
+		i->second->SetScale(e->GetScale() * 0.05f);
 	}
 }
 
