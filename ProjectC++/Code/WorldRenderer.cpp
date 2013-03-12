@@ -218,6 +218,7 @@ void WorldRenderer::OnEvent( Event* e )
 	else if ( EntityRemovedEvent* ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{
 		DeleteEntity(ERE->entity);
+		ERE->entity->RemoveObserver(this);
 	}
 }
 
@@ -481,8 +482,8 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 			i->first->RemoveObserver(this);
 			if ( i->second ) zGraphics->DeleteMesh(i->second);
 			zEntities.erase(i);
-			return;
 		}
+		return;
 	}
 
 	// New Graphics

@@ -36,8 +36,8 @@ class EntQuadTree : public Observer
 		// Erase element from node and child nodes
 		bool Erase(Entity* elem, const Vector2& pos);
 
-		// Manually set a child node, deletes existing one
-		void SetNode(unsigned int index, Node* ptrNode);
+		// Manually set a child node, deletes existing one by default
+		void SetNode(unsigned int index, Node* ptrNode, bool deleteFlag=true);
 
 		// Scan circle recursively and return amounts of additions
 		size_t CircleScan(std::set<Entity*>& ents, const Circle& circle, unsigned int entType) const;
@@ -87,6 +87,7 @@ public:
 	bool Erase(Entity* E);
 
 	// Print Tree
+	void PrintDebug(const std::string& msgLine);
 	void BranchPrint(Node*, std::ofstream& file, unsigned int level);
 	void PrintTree();
 
