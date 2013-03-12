@@ -13,22 +13,18 @@ const static size_t DIVISIONCOUNT = 16;
 EntQuadTree::Node::Node(const Rect& rect) : 
 	zRect(rect)
 {
-	for( unsigned int x=0; x<4; ++x )
-	{
-		zChildNodes[x] = 0;
-	}
+	zChildNodes[0] = 0;
+	zChildNodes[1] = 0;
+	zChildNodes[2] = 0;
+	zChildNodes[3] = 0;
 }
 
 EntQuadTree::Node::~Node()
 {
-	for( unsigned int x=0; x<4; ++x )
-	{
-		if ( zChildNodes[x] )
-		{
-			delete zChildNodes[x];
-			zChildNodes[x] = 0;
-		}
-	}
+	if ( zChildNodes[0] ) delete zChildNodes[0];
+	if ( zChildNodes[1] ) delete zChildNodes[1];
+	if ( zChildNodes[2] ) delete zChildNodes[2];
+	if ( zChildNodes[3] ) delete zChildNodes[3];
 }
 
 void EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
@@ -218,20 +214,28 @@ size_t EntQuadTree::Node::FlatScan(std::set<Entity*>& ents, unsigned int entType
 	size_t entFoundCounter = 0;
 
 	// Add Mine
-	for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
+	if ( entType )
 	{
-		if ( !entType || (*i)->GetType() == entType )
+		for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
 		{
-			ents.insert(*i);
-			entFoundCounter++;
+			if ( !entType || (*i)->GetType() == entType )
+			{
+				ents.insert(*i);
+				entFoundCounter++;
+			}
 		}
+	}
+	else
+	{
+		ents.insert(zElements.cbegin(), zElements.cend());
+		entFoundCounter = ents.size();
 	}
 
 	// Add Childrens
-	for( unsigned int x=0; x<4; ++x )
-	{
-		if ( zChildNodes[x] ) entFoundCounter += zChildNodes[x]->FlatScan(ents, entType);
-	}
+	if ( zChildNodes[0] ) entFoundCounter += zChildNodes[0]->FlatScan(ents, entType);
+	if ( zChildNodes[1] ) entFoundCounter += zChildNodes[1]->FlatScan(ents, entType);
+	if ( zChildNodes[2] ) entFoundCounter += zChildNodes[2]->FlatScan(ents, entType);
+	if ( zChildNodes[3] ) entFoundCounter += zChildNodes[3]->FlatScan(ents, entType);
 
 	return entFoundCounter;
 }
@@ -255,12 +259,20 @@ size_t EntQuadTree::Node::CalcNumEntities(unsigned int entType) const
 {
 	size_t entFoundCounter = 0;
 
-	for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
+	if ( entType )
 	{
-		if ( !entType || (*i)->GetType() == entType )
+		// Count My Elements
+		for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
 		{
-			entFoundCounter++;
+			if ( (*i)->GetType() == entType )
+			{
+				entFoundCounter++;
+			}
 		}
+	}
+	else
+	{
+		entFoundCounter = zElements.size();
 	}
 
 	// Add Childrens

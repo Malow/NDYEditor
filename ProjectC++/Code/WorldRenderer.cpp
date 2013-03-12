@@ -211,17 +211,6 @@ void WorldRenderer::OnEvent( Event* e )
 	{
 		zEntsToUpdate.insert(ECTE->entity);
 	}
-	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
-	{
-		zEntsToUpdate.insert(ELE->entity);
-	}
-	else if ( EntitySelectedEvent* ESE = dynamic_cast<EntitySelectedEvent*>(e) )
-	{
-		if(ESE->entity->GetSelected())
-			zEntities[ESE->entity]->SetSpecialColor(COLOR::RED_COLOR);
-		else
-			zEntities[ESE->entity]->SetSpecialColor(COLOR::NULL_COLOR);
-	}
 	else if ( EntityUpdatedEvent* EUE = dynamic_cast<EntityUpdatedEvent*>(e) )
 	{
 		SetEntityTransformation(EUE->entity);
@@ -483,6 +472,19 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
 	float distanceToCam = (camPos - e->GetPosition()).GetLength();
 
+	// Too Far Away
+	if ( distanceToCam >= zGraphics->GetEngineParameters().FarClip )
+	{
+		auto i = zEntities.find(e);
+		if ( i != zEntities.cend() )
+		{
+			i->first->RemoveObserver(this);
+			if ( i->second ) zGraphics->DeleteMesh(i->second);
+			zEntities.erase(i);
+			return;
+		}
+	}
+
 	// New Graphics
 	const std::string& model = GetEntModel(e->GetType(), distanceToCam);
 
@@ -491,6 +493,7 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 
 	if ( !model.empty() && i == zEntities.end() )
 	{
+		e->AddObserver(this);
 		zEntities[e] = 0;
 		i = zEntities.find(e);
 	}

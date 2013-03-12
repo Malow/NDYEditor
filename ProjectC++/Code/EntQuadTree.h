@@ -24,6 +24,7 @@ class EntQuadTree : public Observer
 		Rect zRect;
 
 		std::set<Entity*> zElements;
+		size_t zNumElementsWithChildren;
 
 	public:
 		Node(const Rect& rect);
