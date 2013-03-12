@@ -6,6 +6,7 @@ Replace:5,1.0
 Replace:20,1.0
 
 Number:2
-Name:Stones
+Name:TreeFall
 Find:5
-Replace:6,1.0
+Replace:2,0.5
+Replace:5,0.5
