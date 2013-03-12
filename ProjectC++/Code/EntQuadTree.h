@@ -31,7 +31,7 @@ class EntQuadTree : public Observer
 		virtual ~Node();
 
 		// Insert element into node or children
-		void Insert(Entity* elem, const Vector2& pos);
+		bool Insert(Entity* elem, const Vector2& pos);
 
 		// Erase element from node and child nodes
 		bool Erase(Entity* elem, const Vector2& pos);
@@ -83,7 +83,7 @@ public:
 	size_t RectangleScan(std::set<Entity*>& ents, const Rect& rect, unsigned int entType = 0) const;
 
 	// Management
-	void Insert(Entity* E);
+	bool Insert(Entity* E);
 	bool Erase(Entity* E);
 
 	// Print Tree
@@ -91,7 +91,7 @@ public:
 	void PrintTree();
 
 protected:
-	void Insert(Entity* E, const Vector2& pos);
+	bool Insert(Entity* E, const Vector2& pos);
 	bool Erase(Entity* E, const Vector2& pos);
 	virtual void OnEvent(Event* e);
 };

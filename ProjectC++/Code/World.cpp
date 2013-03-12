@@ -1057,7 +1057,7 @@ void World::GenerateSectorNormals( const Vector2UINT& sectorCoords )
 	// Density
 	float density = FSECTOR_WORLD_SIZE / (FSECTOR_NORMALS_SIZE-1.0f);
 
-	// Sector Cornera
+	// Sector Corner
 	Vector2 start;
 	start.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
 	start.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
@@ -1203,4 +1203,32 @@ const std::string& World::GetFileName() const
 	static const std::string empty = "";
 	if ( !zFile ) return empty;
 	return zFile->GetFileName();
+}
+
+float World::GetAmountOfTexture( const Vector2& worldPos, const std::string& name )
+{
+	if ( !IsInside(worldPos) ) throw("Outside World!");
+
+	// Get Sector
+	Sector* sector = GetSectorAtWorldPos(worldPos);
+	if (!sector) throw("Sector Not Loaded!");
+
+	// Calculate Local Position
+	Vector2 localPos;
+	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+
+	// Check Each Texture Name
+	BlendValues values = sector->GetBlendingAt(localPos);
+
+	float val = 0.0f;
+	for( unsigned int x=0; x<SECTOR_BLEND_CHANNELS; ++x )
+	{
+		if ( !strcmp(sector->GetTextureName(x), name.c_str()) )
+		{
+			val += values[x];
+		}
+	}
+
+	return val;
 }

@@ -119,6 +119,7 @@ public:
 	void GenerateSectorNormals( const Vector2UINT& sectorCoords );
 
 	// Modify Blend Functions
+	float GetAmountOfTexture(const Vector2& worldPos, const std::string& name );
 	void ModifyBlendingAt( const Vector2& worldPos, const BlendValues& val );
 	BlendValues GetBlendingAt( const Vector2& worldPos );
 	void SetBlendingAt( const Vector2& worldPos, const BlendValues& val );

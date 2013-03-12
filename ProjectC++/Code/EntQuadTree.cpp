@@ -10,7 +10,7 @@ const static float FMINIMUMNODESIZE = 16;
 const static size_t DIVISIONCOUNT = 16;
 
 
-EntQuadTree::Node::Node(const Rect& rect) : 
+EntQuadTree::Node::Node(const Rect& rect) :
 	zRect(rect)
 {
 	zChildNodes[0] = 0;
@@ -27,7 +27,7 @@ EntQuadTree::Node::~Node()
 	if ( zChildNodes[3] ) delete zChildNodes[3];
 }
 
-void EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
+bool EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
 {
 	// Quad Center Position
 	Vector2 nodeCenter(zRect.topLeft + zRect.size * 0.5f);
@@ -82,13 +82,19 @@ void EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
 			}
 
 			// Insert To Children
-			zChildNodes[childNodeIndex]->Insert(elem, pos);
+			return zChildNodes[childNodeIndex]->Insert(elem, pos);
 		}
 		else
 		{
-			zElements.insert(elem);
+			if ( !zElements.count(elem) )
+			{
+				zElements.insert(elem);
+				return true;
+			}
 		}
 	}
+
+	return false;
 }
 
 bool EntQuadTree::Node::Erase(Entity* elem, const Vector2& pos)
@@ -242,15 +248,16 @@ size_t EntQuadTree::Node::FlatScan(std::set<Entity*>& ents, unsigned int entType
 
 size_t EntQuadTree::Node::Transfer(Node* node)
 {
+	// My Entities
 	size_t amount = zElements.size();
 	node->zElements.insert(zElements.cbegin(), zElements.cend());
 	zElements.clear();
 
-	// Child Nodes
-	for( unsigned int x=0; x<4; ++x )
-	{
-		if ( zChildNodes[x] ) amount += zChildNodes[x]->Transfer(node);
-	}
+	// Child Entities
+	if ( zChildNodes[0] ) amount += zChildNodes[0]->Transfer(node);
+	if ( zChildNodes[1] ) amount += zChildNodes[1]->Transfer(node);
+	if ( zChildNodes[2] ) amount += zChildNodes[2]->Transfer(node);
+	if ( zChildNodes[3] ) amount += zChildNodes[3]->Transfer(node);
 
 	return amount;
 }
@@ -276,13 +283,10 @@ size_t EntQuadTree::Node::CalcNumEntities(unsigned int entType) const
 	}
 
 	// Add Childrens
-	for( unsigned int x=0; x<4; ++x )
-	{
-		if ( zChildNodes[x] )
-		{
-			entFoundCounter += zChildNodes[x]->CalcNumEntities(entType);
-		}
-	}
+	if ( zChildNodes[0] ) entFoundCounter += zChildNodes[0]->CalcNumEntities(entType);
+	if ( zChildNodes[1] ) entFoundCounter += zChildNodes[1]->CalcNumEntities(entType);
+	if ( zChildNodes[2] ) entFoundCounter += zChildNodes[2]->CalcNumEntities(entType);
+	if ( zChildNodes[3] ) entFoundCounter += zChildNodes[3]->CalcNumEntities(entType);
 
 	return entFoundCounter;
 }
@@ -341,7 +345,7 @@ size_t EntQuadTree::RectangleScan(std::set<Entity*>& ents, const Rect& rect, uns
 	return 0;
 }
 
-void EntQuadTree::Insert(Entity* ent, const Vector2& pos)
+bool EntQuadTree::Insert(Entity* ent, const Vector2& pos)
 {
 	if ( ent )
 	{
@@ -357,7 +361,8 @@ void EntQuadTree::Insert(Entity* ent, const Vector2& pos)
 			// Create Root
 			zRoot = new Node(rootRect);
 		}
-		else if ( !zRoot->GetRect().IsInside(pos) )
+
+		while ( !zRoot->GetRect().IsInside(pos) )
 		{
 			// Calc Root Level
 			float level = zRoot->GetRect().size.x / FMINIMUMNODESIZE;
@@ -389,8 +394,10 @@ void EntQuadTree::Insert(Entity* ent, const Vector2& pos)
 			zRoot = newRoot;
 		}
 
-		zRoot->Insert(ent, pos);
+		return zRoot->Insert(ent, pos);
 	}
+
+	return false;
 }
 
 bool EntQuadTree::Erase(Entity* ent, const Vector2& pos)
@@ -431,13 +438,18 @@ bool EntQuadTree::Erase(Entity* ent, const Vector2& pos)
 	return false;
 }
 
-void EntQuadTree::Insert(Entity* ent)
+bool EntQuadTree::Insert(Entity* ent)
 {
 	if ( ent ) 
 	{
-		Insert(ent, ent->GetPosition().GetXZ());
-		ent->AddObserver(this);
+		if ( Insert(ent, ent->GetPosition().GetXZ()) )
+		{
+			ent->AddObserver(this);
+			return true;
+		}
 	}
+
+	return false;
 }
 
 bool EntQuadTree::Erase(Entity* ent)
