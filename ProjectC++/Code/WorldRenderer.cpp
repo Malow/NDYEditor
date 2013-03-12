@@ -211,6 +211,10 @@ void WorldRenderer::OnEvent( Event* e )
 	{
 		zEntsToUpdate.insert(ECTE->entity);
 	}
+	else if ( EntityLoadedEvent* ELE = dynamic_cast<EntityLoadedEvent*>(e) )
+	{
+		zEntsToUpdate.insert(ELE->entity);
+	}
 	else if ( EntityUpdatedEvent* EUE = dynamic_cast<EntityUpdatedEvent*>(e) )
 	{
 		SetEntityTransformation(EUE->entity);
