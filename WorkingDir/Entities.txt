@@ -86,7 +86,7 @@ Model:Media/Scale.obj
 Number:19
 Name:Bush_02
 Model:Media/Models/Bush_02.ani 25.0
-Model:Media/Models/Bush_02_01.obj
+Model:Media/Models/Bush_02.obj
 
 Number:20
 Name:Tree
