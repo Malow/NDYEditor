@@ -58,6 +58,10 @@ class WorldRenderer : Observer
 	std::map< WaterQuad*, WaterCubes > zWaterBoxes;
 	bool zShowWaterBoxes;
 
+	// Billboard collections
+	unsigned int zGrassDensity; //Nr of grass objects per terrain.
+	std::map<iTerrain*, iBillboardCollection*> zGrass;
+
 public:
 	WorldRenderer(World* world, GraphicsEngine* graphics);
 	virtual ~WorldRenderer();
@@ -81,4 +85,6 @@ protected:
 	void SetEntityGraphics( Entity* e );
 	void SetEntityTransformation( Entity* e );
 	void DeleteEntity( Entity* e );
+
+	void GenerateGrass(iTerrain* ptrTerrain);
 };
