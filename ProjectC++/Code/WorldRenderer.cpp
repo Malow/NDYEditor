@@ -49,7 +49,7 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 		UpdateWaterBoxes(*i);
 	}
 
-	this->zGrassDensity = 625; //Tillman
+	this->zGrassDensity = 0; //Tillman
 }
 
 WorldRenderer::~WorldRenderer()
@@ -939,6 +939,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 
 			if(nrOfPassedConditions > 0)
 			{
+				//tillman todo: if x of tex 0 && x of tex 1 => 0 scalesum
 				//Set size
 				scaleSum /= (float)nrOfPassedConditions;
 				grassHeight *= scaleSum;
