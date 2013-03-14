@@ -50,8 +50,7 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 		UpdateWaterBoxes(*i);
 	}
 
-	this->zGrassDensity = zSettings.GetSetting("GrassDensity"); //Tillman
-}
+	this->zGrassDensity = zSettings.GetSetting("GrassDensity");}
 
 WorldRenderer::~WorldRenderer()
 {
@@ -177,15 +176,8 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
 	{
-		unsigned int tIndex = SUE->sectorY * SUE->world->GetNumSectorsWidth() + SUE->sectorX;
-		zGraphics->DeleteTerrain(zTerrain[tIndex]);
-
-		// Remove AI Grid
-		auto grid = zAIGrids.find(zTerrain[tIndex]);
-		if ( grid != zAIGrids.end() )
-			zAIGrids.erase(grid);
-
-		zTerrain[tIndex] = 0;
+		UPDATEENUM& u = zUpdatesRequired[Vector2UINT(SUE->sectorX, SUE->sectorY)];
+		u = (UPDATEENUM)(u | UPDATE_DELETE);
 	}
 	else if ( WorldSunChanged* WSC = dynamic_cast<WorldSunChanged*>(e) )
 	{
@@ -829,6 +821,16 @@ void WorldRenderer::UpdateTerrain()
 }
 void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 {
+	//Delete previous grass if existing.
+	auto grassData = this->zGrass.find(ptrTerrain);
+	if(grassData != this->zGrass.end())
+	{
+		//Remove from graphics engine.
+		this->zGraphics->DeleteBillboardCollection(grassData->second);
+		//Remove from map.
+		this->zGrass.erase(grassData);
+	}
+
 	float width = FSECTOR_WORLD_SIZE;
 	float depth = FSECTOR_WORLD_SIZE; 
 	unsigned int sqrtGrassDensity = (unsigned int)sqrt((long)this->zGrassDensity);
@@ -920,7 +922,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				colorSum += Vector3(RGB50, RGB100, RGB50) + rndGrassColorOffsetVec;
 			}
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
-			if(blendValueGrassLight > blendThreshHold)
+			if(blendValueGrassLight >= blendThreshHold)
 			{
 				nrOfPassedConditions++;
 				//Change height depending on blend value.
@@ -935,7 +937,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				colorSum += Vector3(RGB75, RGB125, RGB75) + rndGrassColorOffsetVec;
 			}
 			blendValueGrassDark = this->zWorld->GetAmountOfTexture(grassPos, "06_v01-MossDark.png");
-			if(blendValueGrassDark > blendThreshHold)
+			if(blendValueGrassDark >= blendThreshHold)
 			{
 				nrOfPassedConditions++;
 				//Change height depending on blend value.
@@ -952,8 +954,9 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 
 			if(nrOfPassedConditions > 0)
 			{
+				//tillman todo: if x of tex 0 && x of tex 1 => 0 scalesum
 				//Set size
-				scaleSum *= (float)nrOfPassedConditions;
+				scaleSum /= (float)nrOfPassedConditions;
 				grassHeight *= scaleSum;
 				sizes[index] = Vector2(grassWidth, grassHeight);
 				//Set position
@@ -966,15 +969,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 		}
 	}
 
-	//Delete previous grass if existing.
-	auto grassData = this->zGrass.find(ptrTerrain);
-	if(grassData != this->zGrass.end())
-	{
-		//Remove from graphics engine.
-		this->zGraphics->DeleteBillboardCollection(grassData->second);
-		//Remove from map.
-		this->zGrass.erase(grassData);
-	}
+	
 	//Add grass
 	//No offset vector needed since grass positions is in world space.
 	if(index > 0)
