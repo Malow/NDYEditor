@@ -26,6 +26,7 @@
     <ClInclude Include="Code\Shuffle.h" />
     <ClInclude Include="Code\SmoothAction.h" />
     <ClInclude Include="Code\TerrainSetHeightAction.h" />
+    <ClInclude Include="Code\World\AnyType.h" />
     <ClInclude Include="Code\World\BlendValues.h" />
     <ClInclude Include="Code\World\CircleAndRect.h" />
     <ClInclude Include="Code\World\Entity.h" />

@@ -4,7 +4,8 @@
 #include "WaterQuad.h"
 
 
-WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) : 
+WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
+	zSettings(this, "WorldRenderer.cfg"),
 	zWorld(world),
 	zGraphics(graphics),
 	zShowAIMap(false),
@@ -49,7 +50,7 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 		UpdateWaterBoxes(*i);
 	}
 
-	this->zGrassDensity = 2500; //Tillman
+	this->zGrassDensity = zSettings.GetSetting("GrassDensity"); //Tillman
 }
 
 WorldRenderer::~WorldRenderer()

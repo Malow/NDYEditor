@@ -1,5 +1,6 @@
 #pragma once
 
+#include "WorldRendererSettings.h"
 #include "World.h"
 #include <GraphicsEngine.h>
 #include <map>
@@ -30,6 +31,9 @@ struct WaterCollisionData
 
 class WorldRenderer : Observer
 {
+	// Settings
+	WorldRendererSettings zSettings;
+
 	// Components
 	World* zWorld;
 	GraphicsEngine* zGraphics;

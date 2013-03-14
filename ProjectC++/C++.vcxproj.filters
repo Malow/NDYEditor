@@ -103,6 +103,9 @@
     <ClInclude Include="Code\World\Entity.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
+    <ClInclude Include="Code\World\AnyType.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\GameEngine.cpp">
