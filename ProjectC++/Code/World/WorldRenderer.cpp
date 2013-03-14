@@ -174,17 +174,17 @@ void WorldRenderer::OnEvent( Event* e )
 			zWaterBoxes.erase(boxI);
 		}
 	}
-	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
-	{
-		UPDATEENUM& u = zUpdatesRequired[Vector2UINT(SUE->sectorX, SUE->sectorY)];
-		u = (UPDATEENUM)(u | UPDATE_DELETE);
-	}
 	else if ( WorldSunChanged* WSC = dynamic_cast<WorldSunChanged*>(e) )
 	{
 		zGraphics->SetSunLightProperties(
 			WSC->world->GetSunDir(),
 			WSC->world->GetSunColor(),
 			WSC->world->GetSunIntensity() );
+	}
+	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
+	{
+		UPDATEENUM& u = zUpdatesRequired[Vector2UINT(SUE->sectorX, SUE->sectorY)];
+		u = (UPDATEENUM)(u | UPDATE_DELETE);
 	}
 	else if ( SectorLoadedEvent* SLE = dynamic_cast<SectorLoadedEvent*>(e) )
 	{
@@ -236,24 +236,6 @@ void WorldRenderer::OnEvent( Event* e )
 	{
 		DeleteEntity(EDE->entity);
 	}
-}
-
-float WorldRenderer::GetYPosFromHeightMap( float x, float y )
-{
-	if(zWorld == NULL)
-		return std::numeric_limits<float>::infinity();
-
-	unsigned int tIndex = (unsigned int)(y / (float)SECTOR_WORLD_SIZE) * zWorld->GetNumSectorsWidth() + (unsigned int)(x/(float)SECTOR_WORLD_SIZE);
-	
-	if ( tIndex >= zWorld->GetNumSectorsWidth() * zWorld->GetNumSectorsHeight() )
-		return std::numeric_limits<float>::infinity();
-
-	if ( zTerrain[tIndex])
-	{
-		return zTerrain[tIndex]->GetYPositionAt(fmod(x, (float)SECTOR_WORLD_SIZE), fmod(y, (float)SECTOR_WORLD_SIZE));
-	}
-	
-	return std::numeric_limits<float>::infinity();
 }
 
 WaterCollisionData WorldRenderer::GetCollisionWithWaterBoxes()
@@ -819,6 +801,7 @@ void WorldRenderer::UpdateTerrain()
 		zUpdatesRequired.erase(i);
 	}
 }
+
 void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 {
 	//Delete previous grass if existing.

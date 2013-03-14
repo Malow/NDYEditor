@@ -57,7 +57,7 @@ World::World( Observer* observer, unsigned int nrOfSectorWidth, unsigned int nrO
 	zAmbient.y = 0.1f;
 	zAmbient.z = 0.1f;
 
-	zSunDir = Vector3(0.5f, -1.0f, 0.0f);
+	zSunDir = Vector3(0.5f, -1.0f, 0.5f);
 	zSunColor = Vector3(1.0f, 1.0f, 1.0f);
 	zSunIntensity = 1.0f;
 
@@ -70,7 +70,11 @@ World::~World()
 	NotifyObservers( &WorldDeletedEvent(this) );
 
 	// Close File
-	if ( zFile ) delete zFile, zFile=0;
+	if ( zFile ) 
+	{
+		delete zFile;
+		zFile = 0;
+	}
 
 	// Delete Anchors
 	for( auto i = zAnchors.cbegin(); i != zAnchors.cend(); ++i )
