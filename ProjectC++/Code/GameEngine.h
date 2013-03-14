@@ -21,6 +21,7 @@ class WaterQuad;
 
 #ifdef _DEBUG
 #include <vld.h>
+#define INCLUDE_VLD
 #endif // _DEBUG
 
 enum MODE

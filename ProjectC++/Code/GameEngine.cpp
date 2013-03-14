@@ -56,6 +56,12 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 	zSelectedWaterQuad(0),
 	zLastSelectedWaterQuad(0)
 {
+#ifdef INCLUDE_VLD
+	MaloW::Debug("(DEBUG): EDITOR: vld.h included.");
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	MaloW::Debug("(DEBUG): EDITOR: Debug flag set to: _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF).");
+#endif
+
 	zGraphics->GetCamera()->SetUpdateCamera(false);
 	zGraphics->CreateSkyBox("Media/skymap.dds");
 	zGraphics->GetKeyListener()->SetCursorVisibility(true);

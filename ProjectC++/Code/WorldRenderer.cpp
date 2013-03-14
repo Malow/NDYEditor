@@ -815,7 +815,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	float xDiff = width / sqrtGrassDensity;
 	float zDiff = depth / sqrtGrassDensity;
 	Vector2 grassPos = Vector2(0.0f);
-	Vector2 terrainPosXZ = Vector2(ptrTerrain->GetPosition().x - 16.0f, ptrTerrain->GetPosition().z - 16.0f);
+	Vector2 terrainPosXZ = Vector2(ptrTerrain->GetPosition().x - width * 0.5f, ptrTerrain->GetPosition().z - depth * 0.5f);
 	float blendValueGrassLight = 0.0f;
 	float blendValueGrass = 0.0f;
 	float blendValueGrassDark = 0.0f;
