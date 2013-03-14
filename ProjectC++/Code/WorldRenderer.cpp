@@ -176,15 +176,8 @@ void WorldRenderer::OnEvent( Event* e )
 	}
 	else if ( SectorUnloadedEvent* SUE = dynamic_cast<SectorUnloadedEvent*>(e) )
 	{
-		unsigned int tIndex = SUE->sectorY * SUE->world->GetNumSectorsWidth() + SUE->sectorX;
-		zGraphics->DeleteTerrain(zTerrain[tIndex]);
-
-		// Remove AI Grid
-		auto grid = zAIGrids.find(zTerrain[tIndex]);
-		if ( grid != zAIGrids.end() )
-			zAIGrids.erase(grid);
-
-		zTerrain[tIndex] = 0;
+		UPDATEENUM& u = zUpdatesRequired[Vector2UINT(SUE->sectorX, SUE->sectorY)];
+		u = (UPDATEENUM)(u | UPDATE_DELETE);
 	}
 	else if ( WorldSunChanged* WSC = dynamic_cast<WorldSunChanged*>(e) )
 	{
