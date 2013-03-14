@@ -806,6 +806,16 @@ void WorldRenderer::UpdateTerrain()
 }
 void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 {
+	//Delete previous grass if existing.
+	auto grassData = this->zGrass.find(ptrTerrain);
+	if(grassData != this->zGrass.end())
+	{
+		//Remove from graphics engine.
+		this->zGraphics->DeleteBillboardCollection(grassData->second);
+		//Remove from map.
+		this->zGrass.erase(grassData);
+	}
+
 	float width = FSECTOR_WORLD_SIZE;
 	float depth = FSECTOR_WORLD_SIZE; 
 	unsigned int sqrtGrassDensity = (unsigned int)sqrt((long)this->zGrassDensity);
@@ -943,15 +953,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 		}
 	}
 
-	//Delete previous grass if existing.
-	auto grassData = this->zGrass.find(ptrTerrain);
-	if(grassData != this->zGrass.end())
-	{
-		//Remove from graphics engine.
-		this->zGraphics->DeleteBillboardCollection(grassData->second);
-		//Remove from map.
-		this->zGrass.erase(grassData);
-	}
+	
 	//Add grass
 	//No offset vector needed since grass positions is in world space.
 	if(index > 0)
