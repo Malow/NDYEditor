@@ -331,7 +331,14 @@ public:
         y *= scalar;
         z *= scalar;
     }
-	
+
+	inline void operator/=(const float scalar)
+	{
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
+	}
+
 	inline bool operator==(const Vector3& v)
 	{
 		return (x == v.x && y == v.y && z == v.z);
