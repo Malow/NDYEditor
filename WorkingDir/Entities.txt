@@ -13,8 +13,8 @@ BillboardDistance:100
 
 Number:3
 Name:Bush
-Model:Media/Models/Bush_01.ani 25.0
-Model:Media/Models/Bush_01_01.obj
+Model:Media/Models/Bush_03.ani 25.0
+Model:Media/Models/Bush_03_01.obj
 
 Number:4
 Name:Fern
@@ -99,7 +99,8 @@ Model:Media/Models/Stone_03.obj
 
 Number:23
 Name:Bush_misc_01	
-Model:Media/Models/Bush_misc_01.obj
+Model:Media/Models/Bush_01.ani 25.0
+Model:Media/Models/Bush_01_01.obj
 
 Number:24
 Name:Target	
