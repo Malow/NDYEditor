@@ -334,9 +334,9 @@ public:
 
 	inline void operator/=(const float scalar)
 	{
-		x *= scalar;
-		y *= scalar;
-		z *= scalar;
+		x /= scalar;
+		y /= scalar;
+		z /= scalar;
 	}
 	
 	inline bool operator==(const Vector3& v)

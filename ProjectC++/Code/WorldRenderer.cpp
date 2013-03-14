@@ -49,7 +49,7 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 		UpdateWaterBoxes(*i);
 	}
 
-	this->zGrassDensity = 2500; //Tillman
+	this->zGrassDensity = 625; //Tillman
 }
 
 WorldRenderer::~WorldRenderer()
@@ -907,7 +907,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				colorSum += Vector3(RGB50, RGB100, RGB50) + rndGrassColorOffsetVec;
 			}
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
-			if(blendValueGrassLight > blendThreshHold)
+			if(blendValueGrassLight >= blendThreshHold)
 			{
 				nrOfPassedConditions++;
 				//Change height depending on blend value.
@@ -922,7 +922,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				colorSum += Vector3(RGB75, RGB125, RGB75) + rndGrassColorOffsetVec;
 			}
 			blendValueGrassDark = this->zWorld->GetAmountOfTexture(grassPos, "06_v01-MossDark.png");
-			if(blendValueGrassDark > blendThreshHold)
+			if(blendValueGrassDark >= blendThreshHold)
 			{
 				nrOfPassedConditions++;
 				//Change height depending on blend value.
@@ -940,7 +940,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			if(nrOfPassedConditions > 0)
 			{
 				//Set size
-				scaleSum *= (float)nrOfPassedConditions;
+				scaleSum /= (float)nrOfPassedConditions;
 				grassHeight *= scaleSum;
 				sizes[index] = Vector2(grassWidth, grassHeight);
 				//Set position
