@@ -880,7 +880,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			//Always set variables using random to ensure same pattern.
 			//Randomize size between min and max grass width and height.
 			grassWidth = fmod(rand() * rndMaxInv, maxGrassWidth - minGrassWidth) + minGrassWidth;
-			grassHeight = fmod(rand() * rndMaxInv, maxGrassWidth - minGrassWidth) + minGrassWidth;
+			grassHeight = fmod(rand() * rndMaxInv, maxGrassHeight - minGrassHeight) + minGrassHeight;
 			//Randomize RGB = rgb[-10,10]
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB10 + RGB10) - RGB10;
 			rndGrassColorOffsetVec.x = rndGrassColorOffset;
