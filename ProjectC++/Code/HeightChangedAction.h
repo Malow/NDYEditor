@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Vector.h>
-#include "World.h"
+#include "World/World.h"
 #include "Action.h"
-#include "WorldRenderer.h"
+#include "World/WorldRenderer.h"
 
 
 

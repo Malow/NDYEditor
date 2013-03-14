@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Action.h"
-#include "World.h"
-#include "Entity.h"
+#include "World/World.h"
+#include "World/Entity.h"
 
 
 class ReplaceEntityAction : public Action, public Observer

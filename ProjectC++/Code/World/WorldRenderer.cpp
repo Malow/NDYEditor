@@ -238,7 +238,10 @@ void WorldRenderer::OnEvent( Event* e )
 	else if ( EntityRemovedEvent* ERE = dynamic_cast<EntityRemovedEvent*>(e) )
 	{
 		DeleteEntity(ERE->entity);
-		ERE->entity->RemoveObserver(this);
+	}
+	else if ( EntityDeletedEvent* EDE = dynamic_cast<EntityDeletedEvent*>(e) )
+	{
+		DeleteEntity(EDE->entity);
 	}
 }
 
@@ -499,10 +502,19 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 		auto i = zEntities.find(e);
 		if ( i != zEntities.cend() )
 		{
+			// Remove observer
 			i->first->RemoveObserver(this);
-			if ( i->second ) zGraphics->DeleteMesh(i->second);
+
+			// Delete graphics
+			if ( i->second ) 
+			{
+				zGraphics->DeleteMesh(i->second);
+			}
+
+			// Erase from set
 			zEntities.erase(i);
 		}
+
 		return;
 	}
 
@@ -512,22 +524,31 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 	// Find Old Graphics
 	auto i = zEntities.find(e);
 
-	if ( !model.empty() && i == zEntities.end() )
+	// Insert Entity
+	if ( i == zEntities.cend() && !model.empty() )
 	{
 		e->AddObserver(this);
 		zEntities[e] = 0;
 		i = zEntities.find(e);
 	}
 
-	std::string file;
-	if ( i != zEntities.end() && i->second ) file = i->second->GetFilePath();
-
-	if ( i != zEntities.end() && (!i->second || strcmp(model.c_str(), i->second->GetFilePath())) )
+	// Load Graphics
+	if ( i != zEntities.cend() )
 	{
-		// Delete Old Graphics
-		if ( i->second ) zGraphics->DeleteMesh(i->second);
+		// Delete previous
+		if ( i->second )
+		{
+			// Get previous filename
+			std::string file = i->second->GetFilePath();
+			if ( strcmp(model.c_str(), i->second->GetFilePath()) )
+			{
+				// Delete previous mesh
+				zGraphics->DeleteMesh(i->second);
+				i->second = 0;
+			}
+		}
 
-		// Create New
+		// Create new
 		if ( !model.empty() )
 		{
 			float billboardDistance = GetEntBillboardDistance(e->GetType());
@@ -545,13 +566,14 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 				i->second = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
 			}
 
-			// Randomize Animation Frame
+			// Randomize animation frame
 			if ( iAnimatedMesh* iAnimMesh = dynamic_cast<iAnimatedMesh*>(i->second) )
 			{
 				float randTime = (float)rand() / (float)RAND_MAX;
 				iAnimMesh->SetAnimationTime( randTime * (float)iAnimMesh->GetAnimationLength() * 0.001f );
 			}
 
+			// Entity transformation
 			SetEntityTransformation(e);
 		}
 		else
@@ -564,7 +586,7 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 void WorldRenderer::SetEntityTransformation( Entity* e )
 {
 	auto i = zEntities.find(e);
-	if ( i != zEntities.end() && i->second != 0 )
+	if ( i != zEntities.cend() && i->second )
 	{
 		i->second->SetPosition(e->GetPosition());
 		i->second->SetQuaternion(Vector4(0.0f, 0.0f, 0.0f, 1.0f));

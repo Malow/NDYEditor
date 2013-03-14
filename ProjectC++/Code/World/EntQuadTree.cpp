@@ -11,7 +11,8 @@ const static size_t DIVISIONCOUNT = 16;
 
 
 EntQuadTree::Node::Node(const Rect& rect) :
-	zRect(rect)
+	zRect(rect),
+	zNumElementsWithChildren(0)
 {
 	zChildNodes[0] = 0;
 	zChildNodes[1] = 0;
@@ -38,7 +39,11 @@ bool EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
 	// Insert To Child Node
 	if ( zChildNodes[childNodeIndex] )
 	{
-		return zChildNodes[childNodeIndex]->Insert(elem, pos);
+		if ( zChildNodes[childNodeIndex]->Insert(elem, pos) )
+		{
+			zNumElementsWithChildren++;
+			return true;
+		}
 	}
 	else
 	{
@@ -82,13 +87,18 @@ bool EntQuadTree::Node::Insert(Entity* elem, const Vector2& pos)
 			}
 
 			// Insert To Children
-			return zChildNodes[childNodeIndex]->Insert(elem, pos);
+			if ( zChildNodes[childNodeIndex]->Insert(elem, pos) )
+			{
+				zNumElementsWithChildren++;
+				return true;
+			}
 		}
 		else
 		{
 			if ( !zElements.count(elem) )
 			{
 				zElements.insert(elem);
+				zNumElementsWithChildren++;
 				return true;
 			}
 		}
@@ -110,13 +120,15 @@ bool EntQuadTree::Node::Erase(Entity* elem, const Vector2& pos)
 	{
 		if ( zChildNodes[childNodeIndex]->Erase(elem, pos) )
 		{
+			zNumElementsWithChildren--;
+
 			if ( zChildNodes[childNodeIndex]->CalcNumEntities() == 0 )
 			{
 				delete zChildNodes[childNodeIndex];
 				zChildNodes[childNodeIndex] = 0;
 			}
 
-			if ( CalcNumEntities() < DIVISIONCOUNT )
+			if ( GetTotalElements() < DIVISIONCOUNT )
 			{
 				for( unsigned int x=0; x<4; ++x )
 				{
@@ -133,7 +145,13 @@ bool EntQuadTree::Node::Erase(Entity* elem, const Vector2& pos)
 		}
 	}
 
-	return zElements.erase(elem) > 0;
+	if ( zElements.erase(elem) )
+	{
+		zNumElementsWithChildren--;
+		return true;
+	}
+
+	return false;
 }
 
 void EntQuadTree::Node::SetNode(unsigned int index, Node* node, bool deleteFlag)
@@ -497,7 +515,7 @@ void EntQuadTree::BranchPrint(EntQuadTree::Node* node, std::ofstream& file, unsi
 
 		// Print Num Elements
 		file << pad << "NumElements: " << node->GetNumElements() << std::endl;
-		file << pad << "TotalElements: " << node->CalcNumEntities() << std::endl;
+		file << pad << "TotalElements: " << node->GetTotalElements() << std::endl;
 
 		for( unsigned int x=0; x<4; ++x )
 		{

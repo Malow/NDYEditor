@@ -3,8 +3,7 @@
 #pragma once
 
 #include "Action.h"
-#include "World.h"
-
+#include "World/World.h"
 
 
 class EntityRemovedAction : public Action

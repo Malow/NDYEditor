@@ -13,15 +13,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\WorldFile.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\World.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Sector.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Debug.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
@@ -32,21 +23,6 @@
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphics.h">
-      <Filter>Source Files\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Observer.h">
-      <Filter>Source Files\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Entity.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\CircleAndRect.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\WorldEvents.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\WorldRenderer.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Code\HeightChangedAction.h">
@@ -79,38 +55,56 @@
     <ClInclude Include="Code\NavArrows.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Code\BlendValues.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\EntityList.h">
-      <Filter>Source Files\World</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Shuffle.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Code\ReplaceEntityAction.h">
       <Filter>Source Files\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Code\WaterQuad.h">
+    <ClInclude Include="Code\World\EntityList.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
-    <ClInclude Include="Code\WorldPhysics.h">
+    <ClInclude Include="Code\World\EntQuadTree.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
-    <ClInclude Include="Code\EntQuadTree.h">
+    <ClInclude Include="Code\World\Observer.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\Sector.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WaterQuad.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\World.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WorldEvents.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WorldFile.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WorldPhysics.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WorldRenderer.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\WorldRendererSettings.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\BlendValues.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\CircleAndRect.h">
+      <Filter>Source Files\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\World\Entity.h">
       <Filter>Source Files\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\WorldFile.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\World.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Sector.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
     <ClCompile Include="Code\GameEngine.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
@@ -120,25 +114,37 @@
     <ClCompile Include="Code\Graphics.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Entity.cpp">
-      <Filter>Source Files\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\WorldRenderer.cpp">
-      <Filter>Source Files\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Code\NavArrows.cpp">
       <Filter>Source Files\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\EntityList.cpp">
-      <Filter>Source Files\World</Filter>
     </ClCompile>
     <ClCompile Include="Code\Shuffle.cpp">
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="Code\WaterQuad.cpp">
+    <ClCompile Include="Code\World\EntityList.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
-    <ClCompile Include="Code\EntQuadTree.cpp">
+    <ClCompile Include="Code\World\EntQuadTree.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\Sector.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\WaterQuad.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\World.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\WorldFile.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\WorldRenderer.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\WorldRendererSettings.cpp">
+      <Filter>Source Files\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\World\Entity.cpp">
       <Filter>Source Files\World</Filter>
     </ClCompile>
   </ItemGroup>

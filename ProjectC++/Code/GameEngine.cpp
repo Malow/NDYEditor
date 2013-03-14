@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include "Action.h"
 #include "MaloWFileDebug.h"
-#include "EntityList.h"
+#include "World/EntityList.h"
 #include "HeightChangedAction.h"
 #include "BlendChangedAction.h"
 #include "EntityPlacedAction.h"
@@ -13,10 +13,10 @@
 #include "SmoothAction.h"
 #include "NavArrows.h"
 #include "Shuffle.h"
-#include "Entity.h"
-#include "WaterQuad.h"
-#include "World.h"
-#include "WaterQuad.h"
+#include "World/Entity.h"
+#include "World/WaterQuad.h"
+#include "World/World.h"
+#include "World/WaterQuad.h"
 #include <math.h>
 #include <time.h>
 

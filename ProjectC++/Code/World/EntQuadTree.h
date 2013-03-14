@@ -57,6 +57,9 @@ class EntQuadTree : public Observer
 		// Child node count
 		inline size_t GetNumNodes() const { return (zChildNodes[0]!=0) + (zChildNodes[1]!=0) + (zChildNodes[2]!=0) + (zChildNodes[3]!=0); }
 
+		// Number of my elements and the child node elements
+		inline size_t GetTotalElements() const { return zNumElementsWithChildren; }
+
 		// Iterative entity count
 		size_t CalcNumEntities(unsigned int entType=0) const;
 
