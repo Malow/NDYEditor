@@ -319,6 +319,41 @@ size_t EntQuadTree::Node::CalcNumEntities(unsigned int entType) const
 	return entFoundCounter;
 }
 
+size_t EntQuadTree::Node::CountInRect( const Rect& rect ) const
+{
+	// Fully enclosed
+	if( rect.Contains(zRect) ) 
+	{
+		return zNumElementsWithChildren;
+	}
+	else if ( DoesIntersect(rect, zRect) )
+	{
+		// Counter
+		size_t entFoundCounter = 0;
+
+		// Count my elements
+		for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
+		{
+			if ( rect.IsInside((*i)->GetPosition().GetXZ()) )
+			{
+				entFoundCounter++;
+			}
+		}
+
+		// Child node elements
+		if ( zChildNodes[0] ) entFoundCounter += zChildNodes[0]->CountInRect(rect);
+		if ( zChildNodes[1] ) entFoundCounter += zChildNodes[1]->CountInRect(rect);
+		if ( zChildNodes[2] ) entFoundCounter += zChildNodes[2]->CountInRect(rect);
+		if ( zChildNodes[3] ) entFoundCounter += zChildNodes[3]->CountInRect(rect);
+
+		return entFoundCounter;
+	}
+	else
+	{
+		return 0;
+	}	
+}
+
 EntQuadTree::EntQuadTree() : 
 	zRoot(0)
 {
@@ -559,4 +594,10 @@ void EntQuadTree::PrintTree()
 	}
 
 	file.close();
+}
+
+size_t EntQuadTree::CountInRect( const Rect& rect ) const
+{
+	if ( zRoot ) return zRoot->CountInRect(rect);
+	return 0;
 }

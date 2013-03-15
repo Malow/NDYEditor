@@ -1313,10 +1313,9 @@ int GameEngine::CountEntitiesInSector()
 	
 	Vector2UINT cSector = zWorld->WorldPosToSector( zGraphics->GetCamera()->GetPosition().GetXZ() );
 
-	std::set<Entity*> entities;
 	Rect r( Vector2(cSector.x * (float)SECTOR_WORLD_SIZE, cSector.y * (float)SECTOR_WORLD_SIZE), Vector2((float)SECTOR_WORLD_SIZE, (float)SECTOR_WORLD_SIZE) );
 
-	return zWorld->GetEntitiesInRect(r,entities);
+	return zWorld->CountEntitiesInRect(r);
 }
 
 
