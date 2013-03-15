@@ -83,6 +83,10 @@ extern "C"
 
 		virtual void UseShadow(bool useShadow) = 0;
 
+		// Grass settings
+		virtual void SetGrassFilePath(const char* filePath) = 0;
+		virtual void RenderGrass(bool flag) = 0;
+
 		/*! OBS! InnerRadius has to be greater than zero. */
 		virtual void SetSpecialCircle(float innerRadius, float outerRadius, Vector2& targetPos) const = 0;
 		virtual void ResetPerfLogging() = 0;
@@ -117,9 +121,14 @@ extern "C"
 
 		virtual void ResizeGraphicsEngine(unsigned int width, unsigned int height) = 0;
 
+		virtual void UseSeperateLoadingThread(bool use) = 0;
+
 		virtual void LoadingScreen(const char* BackgroundTexture = "", const char* ProgressBarTexture = "", 
 			float FadeBlackInInTime = 0.0f, float FadeBlackInOutTime = 0.0f, float FadeBlackOutInTime = 0.0f, 
 			float FadeBlackOutOutTime = 0.0f) = 0;
+
+		virtual void ShowLoadingScreen(const char* BackgroundTexture = "", const char* ProgressBarTexture = "", 
+			float FadeBlackInInTime = 0.0f, float FadeBlackInOutTime = 0.0f) = 0;
 
 		virtual iWaterPlane* CreateWaterPlane(Vector3& pos, const char* texture) = 0;
 		virtual void DeleteWaterPlane(iWaterPlane* del) = 0;
