@@ -156,11 +156,17 @@ bool EntQuadTree::Node::Erase(Entity* elem, const Vector2& pos)
 
 void EntQuadTree::Node::SetNode(unsigned int index, Node* node, bool deleteFlag)
 {
-	if ( zChildNodes[index] && deleteFlag ) 
+	// Delete if requested
+	if ( deleteFlag && zChildNodes[index] ) 
 	{ 
 		delete zChildNodes[index];
 	}
 
+	// Update Element Counter
+	if ( zChildNodes[index] ) zNumElementsWithChildren -= zChildNodes[index]->GetTotalElements();
+	if ( node ) zNumElementsWithChildren += node->GetTotalElements();
+
+	// Set New Node
 	zChildNodes[index] = node;
 }
 
@@ -277,6 +283,9 @@ size_t EntQuadTree::Node::Transfer(Node* node)
 	if ( zChildNodes[2] ) amount += zChildNodes[2]->Transfer(node);
 	if ( zChildNodes[3] ) amount += zChildNodes[3]->Transfer(node);
 
+	// Update Counter
+	zNumElementsWithChildren -= amount;
+
 	return amount;
 }
 
@@ -308,6 +317,41 @@ size_t EntQuadTree::Node::CalcNumEntities(unsigned int entType) const
 	if ( zChildNodes[3] ) entFoundCounter += zChildNodes[3]->CalcNumEntities(entType);
 
 	return entFoundCounter;
+}
+
+size_t EntQuadTree::Node::CountInRect( const Rect& rect ) const
+{
+	// Fully enclosed
+	if( rect.Contains(zRect) ) 
+	{
+		return zNumElementsWithChildren;
+	}
+	else if ( DoesIntersect(rect, zRect) )
+	{
+		// Counter
+		size_t entFoundCounter = 0;
+
+		// Count my elements
+		for( auto i = zElements.cbegin(); i != zElements.cend(); ++i )
+		{
+			if ( rect.IsInside((*i)->GetPosition().GetXZ()) )
+			{
+				entFoundCounter++;
+			}
+		}
+
+		// Child node elements
+		if ( zChildNodes[0] ) entFoundCounter += zChildNodes[0]->CountInRect(rect);
+		if ( zChildNodes[1] ) entFoundCounter += zChildNodes[1]->CountInRect(rect);
+		if ( zChildNodes[2] ) entFoundCounter += zChildNodes[2]->CountInRect(rect);
+		if ( zChildNodes[3] ) entFoundCounter += zChildNodes[3]->CountInRect(rect);
+
+		return entFoundCounter;
+	}
+	else
+	{
+		return 0;
+	}	
 }
 
 EntQuadTree::EntQuadTree() : 
@@ -550,4 +594,10 @@ void EntQuadTree::PrintTree()
 	}
 
 	file.close();
+}
+
+size_t EntQuadTree::CountInRect( const Rect& rect ) const
+{
+	if ( zRoot ) return zRoot->CountInRect(rect);
+	return 0;
 }

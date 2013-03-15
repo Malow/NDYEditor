@@ -459,22 +459,18 @@ void WorldRenderer::ToggleWaterBoxes(bool flag)
 	}
 }
 
-void WorldRenderer::CreateEntity( Entity* e )
-{
-	e->AddObserver(this);
-	SetEntityGraphics(e);
-}
-
 void WorldRenderer::SetEntityGraphics( Entity* e )
 {
 	// Camera Distance
 	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
 	float distanceToCam = (camPos - e->GetPosition()).GetLength();
 
+	// Entity in map
+	auto i = zEntities.find(e);
+
 	// Too Far Away
 	if ( distanceToCam >= zGraphics->GetEngineParameters().FarClip )
 	{
-		auto i = zEntities.find(e);
 		if ( i != zEntities.cend() )
 		{
 			// Remove observer
@@ -493,11 +489,39 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 		return;
 	}
 
-	// New Graphics
+	// New graphics file name
 	const std::string& model = GetEntModel(e->GetType(), distanceToCam);
 
-	// Find Old Graphics
-	auto i = zEntities.find(e);
+	// Empty model
+	if ( model.empty() )
+	{
+		// Is it mapped?
+		if ( i != zEntities.cend() )
+		{
+			e->RemoveObserver(this);
+
+			if ( i->second ) 
+			{
+				zGraphics->DeleteMesh(i->second);
+			}
+			
+			zEntities.erase(i);
+		}
+
+		return;
+	}
+
+	// Compare Current Name
+	if ( i != zEntities.cend() && i->second )
+	{
+		// Get previous filename
+		std::string file = i->second->GetFilePath();
+		if ( !strcmp(model.c_str(), i->second->GetFilePath()) )
+		{
+			// Save Name, Return
+			return;
+		}
+	}
 
 	// Insert Entity
 	if ( i == zEntities.cend() && !model.empty() )
@@ -507,54 +531,46 @@ void WorldRenderer::SetEntityGraphics( Entity* e )
 		i = zEntities.find(e);
 	}
 
-	// Load Graphics
-	if ( i != zEntities.cend() )
+	// New Mesh
+	iMesh* newMesh = 0;
+
+	// Create new
+	float billboardDistance = GetEntBillboardDistance(e->GetType());	
+
+	// Check billboard
+	if ( billboardDistance > 0.0f )
 	{
-		// Delete previous
-		if ( i->second )
-		{
-			// Get previous filename
-			std::string file = i->second->GetFilePath();
-			if ( strcmp(model.c_str(), i->second->GetFilePath()) )
-			{
-				// Delete previous mesh
-				zGraphics->DeleteMesh(i->second);
-				i->second = 0;
-			}
-		}
+		newMesh = zGraphics->CreateMesh(
+			model.c_str(), 
+			e->GetPosition(), 
+			GetEntBillboard(e->GetType()).c_str(),
+			billboardDistance);
+	}
+	else
+	{
+		newMesh = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
+	}
 
-		// Create new
-		if ( !model.empty() )
-		{
-			float billboardDistance = GetEntBillboardDistance(e->GetType());
+	// Randomize animation frame
+	if ( iAnimatedMesh* iAnimMesh = dynamic_cast<iAnimatedMesh*>(newMesh) )
+	{
+		float randTime = (float)rand() / (float)RAND_MAX;
+		iAnimMesh->SetAnimationTime( randTime * (float)iAnimMesh->GetAnimationLength() * 0.001f );
+	}
 
-			if ( billboardDistance > 0.0f )
-			{
-				i->second = zGraphics->CreateMesh(
-					model.c_str(), 
-					e->GetPosition(), 
-					GetEntBillboard(e->GetType()).c_str(),
-					billboardDistance);
-			}
-			else
-			{
-				i->second = zGraphics->CreateMesh(model.c_str(), e->GetPosition());
-			}
+	// Delete Current
+	if ( i->second ) 
+	{
+		zGraphics->DeleteMesh(i->second);
+	}
 
-			// Randomize animation frame
-			if ( iAnimatedMesh* iAnimMesh = dynamic_cast<iAnimatedMesh*>(i->second) )
-			{
-				float randTime = (float)rand() / (float)RAND_MAX;
-				iAnimMesh->SetAnimationTime( randTime * (float)iAnimMesh->GetAnimationLength() * 0.001f );
-			}
+	// Set Mesh
+	i->second = newMesh;
 
-			// Entity transformation
-			SetEntityTransformation(e);
-		}
-		else
-		{
-			zEntities.erase(i);
-		}
+	// Update entity transformation
+	if ( newMesh ) 
+	{
+		SetEntityTransformation(e);
 	}
 }
 

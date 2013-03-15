@@ -639,6 +639,11 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 	return counter;
 }
 
+unsigned int World::CountEntitiesInRect(const Rect& rect) const
+{
+	return zEntTree.CountInRect(rect);
+}
+
 unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius, std::set<Vector2>& out ) const
 {
 	unsigned int counter=0;
