@@ -85,7 +85,6 @@ protected:
 	void UpdateWaterBoxes( WaterQuad* water );
 	void UpdateTerrain();
 
-	void CreateEntity( Entity* e );
 	void SetEntityGraphics( Entity* e );
 	void SetEntityTransformation( Entity* e );
 	void DeleteEntity( Entity* e );

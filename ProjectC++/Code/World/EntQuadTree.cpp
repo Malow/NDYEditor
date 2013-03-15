@@ -156,11 +156,17 @@ bool EntQuadTree::Node::Erase(Entity* elem, const Vector2& pos)
 
 void EntQuadTree::Node::SetNode(unsigned int index, Node* node, bool deleteFlag)
 {
-	if ( zChildNodes[index] && deleteFlag ) 
+	// Delete if requested
+	if ( deleteFlag && zChildNodes[index] ) 
 	{ 
 		delete zChildNodes[index];
 	}
 
+	// Update Element Counter
+	if ( zChildNodes[index] ) zNumElementsWithChildren -= zChildNodes[index]->GetTotalElements();
+	if ( node ) zNumElementsWithChildren += node->GetTotalElements();
+
+	// Set New Node
 	zChildNodes[index] = node;
 }
 
@@ -276,6 +282,9 @@ size_t EntQuadTree::Node::Transfer(Node* node)
 	if ( zChildNodes[1] ) amount += zChildNodes[1]->Transfer(node);
 	if ( zChildNodes[2] ) amount += zChildNodes[2]->Transfer(node);
 	if ( zChildNodes[3] ) amount += zChildNodes[3]->Transfer(node);
+
+	// Update Counter
+	zNumElementsWithChildren -= amount;
 
 	return amount;
 }
