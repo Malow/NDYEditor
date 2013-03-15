@@ -773,8 +773,6 @@ void WorldRenderer::UpdateTerrain()
 						2,
 						&sizes[0],
 						&data[0] );
-
-					this->GenerateGrass(ptrTerrain);
 				}
 
 				// Textures
@@ -789,9 +787,14 @@ void WorldRenderer::UpdateTerrain()
 						terrainTextures[x] = &files[x][0];
 					}
 					ptrTerrain->SetTextures(terrainTextures);
+				}
 
+				// Generate grass
+				if( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES || ( i->second & UPDATE_TEXTURES ) == UPDATE_BLENDMAP)
+				{
 					this->GenerateGrass(ptrTerrain);
 				}
+
 
 				// AI Grid
 				if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
@@ -820,6 +823,29 @@ void WorldRenderer::UpdateTerrain()
 
 void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 {
+	//First check if the sector has any grass texture
+	Sector* sector = this->zWorld->GetSectorAtWorldPos(ptrTerrain->GetPosition().GetXZ());
+	bool found = false;
+	for(unsigned int i = 0; i < SECTOR_BLEND_CHANNELS && !found; ++i)
+	{
+		if(strcmp(sector->GetTextureName(i), "01_v02-Moss.png") == 0)
+		{
+			found = true;
+		}
+		else if(strcmp(sector->GetTextureName(i), "06_v01-MossDark.png") == 0)
+		{
+			found = true;
+		}
+		else if(strcmp(sector->GetTextureName(i), "07_v01-MossLight.png") == 0)
+		{
+			found = true;
+		}
+	}
+	if(!found)
+	{
+		return;
+	}
+	
 	//Delete previous grass if existing.
 	auto grassData = this->zGrass.find(ptrTerrain);
 	if(grassData != this->zGrass.end())
@@ -933,18 +959,22 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				totBlendValue = tmp;
 				//Set size
 				grassHeight *= totBlendValue; //modify grassheight depending on blend values
-				sizes[index] = Vector2(grassWidth, grassHeight);
-				//Set position
-				positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
-				//Set color
-				Vector3 test = 	rndGrassColorOffsetVecGrassLight * blendValueGrassLight
-					+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
-					+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
-					+	Vector3(1.0f, 1.0f, 1.0f) //Color is a multiplier.
-					-	Vector3(0.66f, 0.66f, 0.66f); //Adjust ambient & diffuse TTILLMAN
-				colors[index] =	test;
-				//Increase index(number of grass objects)
-				index++;
+				//If it is below minGrassHeight, don't add it. (It can never be greater than maxHeight)
+				if(grassHeight >= minGrassHeight)
+				{
+					sizes[index] = Vector2(grassWidth, grassHeight);
+					//Set position
+					positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
+					//Set color
+					Vector3 test = 	rndGrassColorOffsetVecGrassLight * blendValueGrassLight
+						+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
+						+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
+						+	Vector3(1.0f, 1.0f, 1.0f) //Color is a multiplier.
+						-	Vector3(0.66f, 0.66f, 0.66f); //Adjust ambient & diffuse TTILLMAN
+					colors[index] =	test;
+					//Increase index(number of grass objects)
+					index++;
+				}
 			}
 		}
 	}
