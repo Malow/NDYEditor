@@ -50,7 +50,12 @@ WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 		UpdateWaterBoxes(*i);
 	}
 
-	this->zGrassDensity = zSettings.GetSetting("GrassDensity");}
+	zLastGrassUpdatePos = zGraphics->GetCamera()->GetPosition().GetXZ();
+	zGrassDensity = zSettings.GetSetting("GrassDensity");
+	zGrassFarDistance = zSettings.GetSetting("GrassFarDistance");
+	zGrassNearDistance = zSettings.GetSetting("GrassNearDistance");
+	zGrassUpdateDistance = zSettings.GetSetting("GrassUpdateDistance");
+}
 
 WorldRenderer::~WorldRenderer()
 {
@@ -380,6 +385,53 @@ void WorldRenderer::Update()
 
 	// Cam Pos
 	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
+
+	// Update Grass If No Terrains are to be loaded
+	if ( zWorld )
+	{
+		if ( (zLastGrassUpdatePos - camPos.GetXZ()).GetLength() >= zGrassUpdateDistance )
+		{
+			std::map<Vector2UINT, int> grassSectors;
+
+			// Remove Current Grass Sectors
+			for( auto i = zGrass.cbegin(); i != zGrass.cend(); ++i )
+			{
+				grassSectors[i->first]--;
+			}
+
+			// Insert New Sectors
+			std::set<Vector2UINT> newSectorsSet;
+			zWorld->GetSectorsInCicle(camPos.GetXZ(), zGrassFarDistance, newSectorsSet);
+			for( auto i = newSectorsSet.cbegin(); i != newSectorsSet.cend(); ++i )
+			{
+				grassSectors[*i]++;
+			}
+
+			// Update Sector Grasses
+			for( auto i = grassSectors.cbegin(); i != grassSectors.cend(); ++i )
+			{
+				if ( i->second < 0 )
+				{
+					auto grassIt = zGrass.find(i->first);
+					if ( grassIt != zGrass.cend() )
+					{
+						if ( grassIt->second )
+						{
+							zGraphics->DeleteBillboardCollection(grassIt->second);
+						}
+
+						zGrass.erase(grassIt);
+					}
+				}
+				else if ( i->second > 0 )
+				{
+					GenerateGrass(i->first);
+				}
+			}
+
+			zLastGrassUpdatePos = camPos.GetXZ();
+		}
+	}
 
 	// Check Distance
 	if ( (zLastEntUpdatePos - camPos).GetLength() > 10.0f )
@@ -716,11 +768,11 @@ void WorldRenderer::UpdateTerrain()
 			if ( ptrTerrain )
 			{
 				//Delete previous grass if existing.
-				auto grassData = this->zGrass.find(ptrTerrain);
-				if(grassData != this->zGrass.end())
+				auto grassIterator = zGrass.find(i->first);
+				if(grassIterator != this->zGrass.end())
 				{
-					this->zGraphics->DeleteBillboardCollection(grassData->second);
-					this->zGrass.erase(grassData);
+					this->zGraphics->DeleteBillboardCollection(grassIterator->second);
+					this->zGrass.erase(grassIterator);
 				}
 
 				// Remove AI Grid
@@ -792,9 +844,8 @@ void WorldRenderer::UpdateTerrain()
 				// Generate grass
 				if( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES || ( i->second & UPDATE_TEXTURES ) == UPDATE_BLENDMAP)
 				{
-					this->GenerateGrass(ptrTerrain);
+					this->GenerateGrass(i->first);
 				}
-
 
 				// AI Grid
 				if ( ( i->second & UPDATE_AIGRID ) == UPDATE_AIGRID )
@@ -821,10 +872,54 @@ void WorldRenderer::UpdateTerrain()
 	}
 }
 
-void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
+void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 {
-	//First check if the sector has any grass texture
-	Sector* sector = this->zWorld->GetSectorAtWorldPos(ptrTerrain->GetPosition().GetXZ());
+	// Grass Turned Off
+	if ( !zGrassDensity ) 
+	{
+		return;
+	}
+
+	// Delete previous grass if existing.
+	auto grassIterator = this->zGrass.find(sectorCoords);
+
+	// Create Sector Rect
+	Rect sectorRect;
+	sectorRect.topLeft.x = (float)sectorCoords.x * FSECTOR_WORLD_SIZE;
+	sectorRect.topLeft.y = (float)sectorCoords.y * FSECTOR_WORLD_SIZE;
+	sectorRect.size.x = FSECTOR_WORLD_SIZE;
+	sectorRect.size.y = FSECTOR_WORLD_SIZE;
+
+	// Check if inside clip range
+	Circle clipCircle(zGraphics->GetCamera()->GetPosition().GetXZ(), zGrassFarDistance);
+
+	// Check Intersection
+	if ( !DoesIntersect(sectorRect, clipCircle) )
+	{
+		if ( grassIterator != this->zGrass.end() )
+		{
+			// Remove from graphics engine.
+			this->zGraphics->DeleteBillboardCollection(grassIterator->second);
+
+			// Remove from map.
+			this->zGrass.erase(grassIterator);
+		}
+		
+		return;
+	}
+
+	// Delete Old Grass
+	if( grassIterator != this->zGrass.end() )
+	{
+		// Remove from graphics engine.
+		this->zGraphics->DeleteBillboardCollection(grassIterator->second);
+
+		// Reset
+		grassIterator->second = 0;
+	}
+
+	// First check if the sector has any grass texture
+	Sector* sector = this->zWorld->GetSector(sectorCoords);
 	bool found = false;
 	for(unsigned int i = 0; i < SECTOR_BLEND_CHANNELS && !found; ++i)
 	{
@@ -845,16 +940,6 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	{
 		return;
 	}
-	
-	//Delete previous grass if existing.
-	auto grassData = this->zGrass.find(ptrTerrain);
-	if(grassData != this->zGrass.end())
-	{
-		//Remove from graphics engine.
-		this->zGraphics->DeleteBillboardCollection(grassData->second);
-		//Remove from map.
-		this->zGrass.erase(grassData);
-	}
 
 	float width = FSECTOR_WORLD_SIZE;
 	float depth = FSECTOR_WORLD_SIZE; 
@@ -862,7 +947,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	float xDiff = width / sqrtGrassDensity;
 	float zDiff = depth / sqrtGrassDensity;
 	Vector2 grassPos = Vector2(0.0f);
-	Vector2 terrainPosXZ = Vector2(ptrTerrain->GetPosition().x - width * 0.5f, ptrTerrain->GetPosition().z - depth * 0.5f);
+	Vector2 terrainPosXZ = sectorRect.topLeft;
 	float blendValueGrassLight = 0.0f;
 	float blendValueGrassMedium = 0.0f;
 	float blendValueGrassDark = 0.0f;
@@ -885,8 +970,8 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	Vector3* positions = new Vector3[this->zGrassDensity];
 	Vector2* sizes = new Vector2[this->zGrassDensity];
 	Vector3* colors = new Vector3[this->zGrassDensity];
-	srand(ptrTerrain->GetPosition().x + ptrTerrain->GetPosition().z); //Use same, unique seed for terrain every time.
-	float rndMaxInv = 1.0f / RAND_MAX;
+	srand(sectorCoords.x + sectorCoords.y);
+	float rndMaxInv = 1.0f / (float)RAND_MAX;
 	float grassWidth = 0.0f;
 	float grassHeight = 0.0f;
 	float rndGrassColorOffset = 0.0f;
@@ -914,9 +999,11 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 		{
 			//Initial position
 			grassPos = terrainPosXZ + Vector2((float)x * xDiff, (float)z * zDiff) + offsetVector;
+
 			//Move initial position randomly
-			grassPos.x += fmod(rand() * rndMaxInv, minMaxDistX + minMaxDistX) - minMaxDistZ;
-			grassPos.y += fmod(rand() * rndMaxInv, minMaxDistZ + minMaxDistZ) - minMaxDistZ;
+			grassPos.x += rand() * rndMaxInv * 2.0f * minMaxDistX - minMaxDistX;
+			grassPos.y += rand() * rndMaxInv * 2.0f * minMaxDistZ - minMaxDistZ;
+
 			try
 			{
 				terrainY = zWorld->CalcHeightAtWorldPos(grassPos);
@@ -995,8 +1082,8 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	//No offset vector needed since grass positions is in world space.
 	if(index > 0)
 	{
-		this->zGrass[ptrTerrain] = this->zGraphics->CreateBillboardCollection(index, positions, sizes, colors, Vector3(0.0f, 0.0f, 0.0f), "Media/Grass.png"); 
-		this->zGrass[ptrTerrain]->SetRenderShadowFlag(false); //Don't render shadows.
+		this->zGrass[sectorCoords] = this->zGraphics->CreateBillboardCollection(index, positions, sizes, colors, Vector3(0.0f, 0.0f, 0.0f), "Media/Grass.png"); 
+		this->zGrass[sectorCoords]->SetRenderShadowFlag(false); //Don't render shadows.
 	}
 	
 	//Delete data 
