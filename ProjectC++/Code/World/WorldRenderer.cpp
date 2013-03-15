@@ -890,7 +890,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			grassWidth = fmod(rand() * rndMaxInv, maxGrassWidth - minGrassWidth) + minGrassWidth;
 			grassHeight = fmod(rand() * rndMaxInv, maxGrassHeight - minGrassHeight) + minGrassHeight;
 
-			float RGB_MIN_MAX = RGB75;
+			float RGB_MIN_MAX = RGB40;
 
 			//Randomize dark grass RGB = g[-RGB_MIN_MAX, 0]
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
@@ -930,11 +930,14 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 								+	colorGrassDark * blendValueGrassDark
 								+	rndGrassColorOffsetVec;
 				*/
-				colors[index] =		rndGrassColorOffsetVecGrassLight * blendValueGrassLight
-								+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
-								+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
-								+	Vector3(0.5f, 0.5f, 0.5f); //Color is a multiplier.
+				Vector3 test = 	rndGrassColorOffsetVecGrassLight * blendValueGrassLight
+					+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
+					+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
+					+	Vector3(1.0f, 1.0f, 1.0f); //Color is a multiplier.
 				
+				colors[index] =	test;
+				
+				/*colors[index] = Vector3(1.0f, 1.0f, 1.0f);*/
 				//Increase index(number of grass objects)
 				index++;
 			}
