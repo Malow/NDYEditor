@@ -827,7 +827,10 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	//1 / nrOfGrassTextures - epsilon for the special case when blend value of all 3 grass textures is equal(1/3).
 	float blendThreshHold = 0.32f;
 	const static float RGB10 = 10.0f / 255.0f;
+	const static float RGB20 = 20.0f / 255.0f;
 	const static float RGB25 = 25.0f / 255.0f;
+	const static float RGB30 = 30.0f / 255.0f;
+	const static float RGB40 = 40.0f / 255.0f;
 	const static float RGB50 = 50.0f / 255.0f;
 	const static float RGB75 = 75.0f / 255.0f;
 	const static float RGB100 = 100.0f / 255.0f;
@@ -844,7 +847,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	float grassWidth = 0.0f;
 	float grassHeight = 0.0f;
 	float rndGrassColorOffset = 0.0f;
-	Vector3 rndGrassColorOffsetVec = Vector3(0.0f, 0.0f, 0.0f);
+	//Vector3 rndGrassColorOffsetVec = Vector3(0.0f, 0.0f, 0.0f);
 	float terrainY = 0.0f;
 	Vector2 offsetVector = Vector2(xDiff, zDiff) * 0.5f;
 	/*float diff = 0.0f; 
@@ -857,13 +860,16 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 
 	unsigned int index = 0;
 	float totBlendValue = 0.0f;
-	/*Vector3 colorGrassLight = Vector3(RGB50, RGB100, RGB50);
-	Vector3 colorGrassMedium = Vector3(RGB25, RGB75, RGB25);
-	Vector3 colorGrassDark = Vector3(0.0f, RGB50, 0.0f);*/
+	//Vector3 colorGrassLight = Vector3(0.0f, RGB75, 0.0f);
+	//Vector3 colorGrassMedium = Vector3(0.0f, RGB50, 0.0f);
+	//Vector3 colorGrassDark = Vector3(0.0f, RGB25, 0.0f);
+	Vector3 rndGrassColorOffsetVecGrassLight = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 rndGrassColorOffsetVecGrassMedium = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3 rndGrassColorOffsetVecGrassDark = Vector3(0.0f, 0.0f, 0.0f);
 
-	Vector3 colorGrassLight = Vector3(RGB75, RGB125, RGB75);
+	/*Vector3 colorGrassLight = Vector3(RGB75, RGB125, RGB75);
 	Vector3 colorGrassMedium = Vector3(RGB50, RGB100, RGB50);
-	Vector3 colorGrassDark = Vector3(RGB25, RGB75, RGB25);
+	Vector3 colorGrassDark = Vector3(RGB25, RGB75, RGB25);*/
 
 	for(unsigned int x = 0; x < sqrtGrassDensity; ++x)
 	{
@@ -883,13 +889,18 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			//Randomize size between min and max grass width and height.
 			grassWidth = fmod(rand() * rndMaxInv, maxGrassWidth - minGrassWidth) + minGrassWidth;
 			grassHeight = fmod(rand() * rndMaxInv, maxGrassHeight - minGrassHeight) + minGrassHeight;
-			//Randomize RGB = rgb[-10,10]
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB10 + RGB10) - RGB10;
-			rndGrassColorOffsetVec.x = rndGrassColorOffset;
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB10 + RGB10) - RGB10;
-			rndGrassColorOffsetVec.y = rndGrassColorOffset;
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB10 + RGB10) - RGB10;
-			rndGrassColorOffsetVec.z = rndGrassColorOffset;
+
+			float RGB_MIN_MAX = RGB75;
+
+			//Randomize dark grass RGB = g[-RGB_MIN_MAX, 0]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
+			rndGrassColorOffsetVecGrassDark.y = rndGrassColorOffset;
+			//Randomize medium grass RGB = g[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
+			rndGrassColorOffsetVecGrassMedium.y = rndGrassColorOffset;
+			//Randomize light grass RGB = g[0, RGB_MIN_MAX]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
+			rndGrassColorOffsetVecGrassLight.y = rndGrassColorOffset;
 
 			//blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark -> range[0,1]
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
@@ -914,10 +925,16 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
 				//Set color
 				//Col = Lc * Lb +  Mc * Mb + Dc * Db + Rc
-				colors[index] =		colorGrassLight * blendValueGrassLight 
+				/*colors[index] =		colorGrassLight * blendValueGrassLight 
 								+	colorGrassMedium * blendValueGrassMedium
 								+	colorGrassDark * blendValueGrassDark
-								+	rndGrassColorOffsetVec;;
+								+	rndGrassColorOffsetVec;
+				*/
+				colors[index] =		rndGrassColorOffsetVecGrassLight * blendValueGrassLight
+								+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
+								+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
+								+	Vector3(0.5f, 0.5f, 0.5f); //Color is a multiplier.
+				
 				//Increase index(number of grass objects)
 				index++;
 			}
