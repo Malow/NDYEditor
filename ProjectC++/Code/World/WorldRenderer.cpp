@@ -881,6 +881,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	float maxGrassWidth = 1.0f; //global variabel?
 	float minGrassHeight = 0.25f; //global variabel?
 	float maxGrassHeight = 0.5f; //global variabel?
+	float minDistToNeighbour = 0.2f; //global variabel?
 	Vector3* positions = new Vector3[this->zGrassDensity];
 	Vector2* sizes = new Vector2[this->zGrassDensity];
 	Vector3* colors = new Vector3[this->zGrassDensity];
@@ -895,22 +896,27 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	
 	unsigned int index = 0;
 	float totBlendValue = 0.0f;
-	//Vector3 colorGrassLight = Vector3(0.0f, RGB75, 0.0f);
-	//Vector3 colorGrassMedium = Vector3(0.0f, RGB50, 0.0f);
-	//Vector3 colorGrassDark = Vector3(0.0f, RGB25, 0.0f);
+	
+	//Values taken from average texture color.
+	Vector3 colorGrassLight = Vector3(91.0f, 131.0f, 65.0f) / 255.0f;
+	Vector3 colorGrassMedium = Vector3(107.0f, 142.0f, 77.0f) / 255.0f;
+	Vector3 colorGrassDark = Vector3(68.0f, 104.0f, 45.0f)  / 255.0f;
 	Vector3 rndGrassColorOffsetVecGrassLight = Vector3(0.0f, 0.0f, 0.0f);
 	Vector3 rndGrassColorOffsetVecGrassMedium = Vector3(0.0f, 0.0f, 0.0f);
 	Vector3 rndGrassColorOffsetVecGrassDark = Vector3(0.0f, 0.0f, 0.0f);
 
-	/*Vector3 colorGrassLight = Vector3(RGB75, RGB125, RGB75);
-	Vector3 colorGrassMedium = Vector3(RGB50, RGB100, RGB50);
-	Vector3 colorGrassDark = Vector3(RGB25, RGB75, RGB25);*/
+	float minMaxDistX = xDiff * 0.5f - minDistToNeighbour * 0.5f;
+	float minMaxDistZ = zDiff * 0.5f - minDistToNeighbour * 0.5f;
 
 	for(unsigned int x = 0; x < sqrtGrassDensity; ++x)
 	{
 		for(unsigned int z = 0; z < sqrtGrassDensity; ++z)
 		{
+			//Initial position
 			grassPos = terrainPosXZ + Vector2((float)x * xDiff, (float)z * zDiff) + offsetVector;
+			//Move initial position randomly
+			grassPos.x += fmod(rand() * rndMaxInv, minMaxDistX + minMaxDistX) - minMaxDistZ;
+			grassPos.y += fmod(rand() * rndMaxInv, minMaxDistZ + minMaxDistZ) - minMaxDistZ;
 			try
 			{
 				terrainY = zWorld->CalcHeightAtWorldPos(grassPos);
@@ -925,25 +931,30 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			grassWidth = fmod(rand() * rndMaxInv, maxGrassWidth - minGrassWidth) + minGrassWidth;
 			grassHeight = fmod(rand() * rndMaxInv, maxGrassHeight - minGrassHeight) + minGrassHeight;
 
-			float RGB_MIN_MAX = RGB40;
+			float RGB_MIN_MAX = RGB50;
 
-			//Randomize dark grass RGB = g[-RGB_MIN_MAX, 0]
-			/*rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
+			//Randomize dark grass RGB = rgb[-RGB_MIN_MAX, 0]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
+			//rndGrassColorOffsetVecGrassDark.x = rndGrassColorOffset;
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
 			rndGrassColorOffsetVecGrassDark.y = rndGrassColorOffset;
-			//Randomize medium grass RGB = g[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
+			//rndGrassColorOffsetVecGrassDark.z = rndGrassColorOffset;
+			//Randomize medium grass RGB = rgb[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
+			//rndGrassColorOffsetVecGrassMedium.x = rndGrassColorOffset;
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
 			rndGrassColorOffsetVecGrassMedium.y = rndGrassColorOffset;
-			//Randomize light grass RGB = g[0, RGB_MIN_MAX]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
+			//rndGrassColorOffsetVecGrassMedium.z = rndGrassColorOffset;
+			//Randomize light grass RGB = rgb[0, RGB_MIN_MAX]
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
+			//rndGrassColorOffsetVecGrassLight.x = rndGrassColorOffset;
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
 			rndGrassColorOffsetVecGrassLight.y = rndGrassColorOffset;
-			*/
-
-
-			//**TILLMAN TEST
-			rndGrassColorOffsetVecGrassLight = Vector3(91.0f, 131.0f, 65.0f) / 255.0f;
-			rndGrassColorOffsetVecGrassMedium = Vector3(107.0f, 142.0f, 77.0f) / 255.0f;
-			rndGrassColorOffsetVecGrassDark = Vector3(68.0f, 104.0f, 45.0f)  / 255.0f;
-
+			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
+			//rndGrassColorOffsetVecGrassLight.z = rndGrassColorOffset;
+			
 
 			//blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark -> range[0,1]
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
@@ -966,11 +977,11 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 					//Set position
 					positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
 					//Set color
-					Vector3 test = 	rndGrassColorOffsetVecGrassLight * blendValueGrassLight
-						+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
-						+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
-						+	Vector3(1.0f, 1.0f, 1.0f) //Color is a multiplier.
-						-	Vector3(0.66f, 0.66f, 0.66f); //Adjust ambient & diffuse TTILLMAN
+					Vector3 test = 	(colorGrassLight + rndGrassColorOffsetVecGrassLight) * blendValueGrassLight
+								+	(colorGrassMedium + rndGrassColorOffsetVecGrassMedium) * blendValueGrassMedium
+								+	(colorGrassDark + rndGrassColorOffsetVecGrassDark) * blendValueGrassDark
+								+	Vector3(1.0f, 1.0f, 1.0f) //Color is a multiplier.
+								-	Vector3(0.8f, 0.8f, 0.8f); //Adjust ambient & diffuse TTILLMAN
 					colors[index] =	test;
 					//Increase index(number of grass objects)
 					index++;
