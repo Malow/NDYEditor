@@ -866,14 +866,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 	//Vector3 rndGrassColorOffsetVec = Vector3(0.0f, 0.0f, 0.0f);
 	float terrainY = 0.0f;
 	Vector2 offsetVector = Vector2(xDiff, zDiff) * 0.5f;
-	/*float diff = 0.0f; 
-	float diffPow = 0.0f;
-	float maxDiff = 0.0f;
-	float maxDiffPow = 0.0f;
-	float tmp = 0.0f;
-	float scale = 0.0f;
-	float scaleSum = 0.0f;*/
-
+	
 	unsigned int index = 0;
 	float totBlendValue = 0.0f;
 	//Vector3 colorGrassLight = Vector3(0.0f, RGB75, 0.0f);
@@ -909,7 +902,7 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			float RGB_MIN_MAX = RGB40;
 
 			//Randomize dark grass RGB = g[-RGB_MIN_MAX, 0]
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
+			/*rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
 			rndGrassColorOffsetVecGrassDark.y = rndGrassColorOffset;
 			//Randomize medium grass RGB = g[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
@@ -917,6 +910,14 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			//Randomize light grass RGB = g[0, RGB_MIN_MAX]
 			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
 			rndGrassColorOffsetVecGrassLight.y = rndGrassColorOffset;
+			*/
+
+
+			//**TILLMAN TEST
+			rndGrassColorOffsetVecGrassLight = Vector3(91.0f, 131.0f, 65.0f) / 255.0f;
+			rndGrassColorOffsetVecGrassMedium = Vector3(107.0f, 142.0f, 77.0f) / 255.0f;
+			rndGrassColorOffsetVecGrassDark = Vector3(68.0f, 104.0f, 45.0f)  / 255.0f;
+
 
 			//blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark -> range[0,1]
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
@@ -926,10 +927,6 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 			totBlendValue = blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark;
 			if(totBlendValue > blendThreshHold) //Not equal to to avoid division by zero
 			{
-				if(totBlendValue < blendThreshHold + 0.1f)
-				{
-					float derp = 1.0f;
-				}
 				//totBlendValue range[blendThreshHold, 1], we want [0,1]
 				float tmp = totBlendValue - blendThreshHold; //range[0, 1 - blendThreshHold];
 				tmp /= 1.0f - blendThreshHold;
@@ -940,90 +937,15 @@ void WorldRenderer::GenerateGrass(iTerrain* ptrTerrain)
 				//Set position
 				positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
 				//Set color
-				//Col = Lc * Lb +  Mc * Mb + Dc * Db + Rc
-				/*colors[index] =		colorGrassLight * blendValueGrassLight 
-								+	colorGrassMedium * blendValueGrassMedium
-								+	colorGrassDark * blendValueGrassDark
-								+	rndGrassColorOffsetVec;
-				*/
 				Vector3 test = 	rndGrassColorOffsetVecGrassLight * blendValueGrassLight
 					+	rndGrassColorOffsetVecGrassMedium * blendValueGrassMedium
 					+	rndGrassColorOffsetVecGrassDark * blendValueGrassDark
-					+	Vector3(1.0f, 1.0f, 1.0f); //Color is a multiplier.
-				
+					+	Vector3(1.0f, 1.0f, 1.0f) //Color is a multiplier.
+					-	Vector3(0.66f, 0.66f, 0.66f); //Adjust ambient & diffuse TTILLMAN
 				colors[index] =	test;
-				
-				/*colors[index] = Vector3(1.0f, 1.0f, 1.0f);*/
 				//Increase index(number of grass objects)
 				index++;
 			}
-
-			
-
-			//if(blendValueGrass >= blendThreshHold)
-			//{
-			//	nrOfPassedConditions++;
-			//	//Change height depending on blend value.
-			//	//Convert blend value from range[blendThreshHold, 1] to range[0, 1].
-			//	/*diff = blendValueGrass - blendThreshHold; 
-			//	diffPow = diff * diff;
-			//	maxDiff = 1.0f - blendThreshHold;
-			//	maxDiffPow = maxDiff * maxDiff;
-			//	tmp = pow(maxDiff / maxDiffPow, 2.0f);
-			//	scale = diffPow * tmp;
-			//	scaleSum += scale;
-			//	*/
-			//	colorSum += Vector3(RGB50, RGB100, RGB50) + rndGrassColorOffsetVec;
-			//	totBlendValue += blendValueGrass;
-			//}
-			//if(blendValueGrassLight >= blendThreshHold)
-			//{
-			//	nrOfPassedConditions++;
-			//	//Change height depending on blend value.
-			//	//Convert blend value from range[blendThreshHold, 1] to range[0, 1].
-			//	/*diff = blendValueGrassLight - blendThreshHold; 
-			//	diffPow = diff * diff;
-			//	maxDiff = 1.0f - blendThreshHold;
-			//	maxDiffPow = maxDiff * maxDiff;
-			//	tmp = pow(maxDiff / maxDiffPow, 2.0f);
-			//	scale = diffPow * tmp;
-			//	scaleSum += scale;
-			//	*/
-			//	colorSum += Vector3(RGB75, RGB125, RGB75) + rndGrassColorOffsetVec;
-			//	totBlendValue += blendValueGrassLight;
-			//}
-			//if(blendValueGrassDark >= blendThreshHold)
-			//{
-			//	nrOfPassedConditions++;
-			//	//Change height depending on blend value.
-			//	//Convert blend value from range[blendThreshHold, 1] to range[0, 1].
-			//	/*diff = blendValueGrassDark - blendThreshHold; 
-			//	diffPow = diff * diff;
-			//	maxDiff = 1.0f - blendThreshHold;
-			//	maxDiffPow = maxDiff * maxDiff;
-			//	tmp = pow(maxDiff / maxDiffPow, 2.0f);
-			//	scale = diffPow * tmp;
-			//	scaleSum += scale;
-			//	*/
-			//	colorSum += Vector3(RGB25, RGB75, RGB25) + rndGrassColorOffsetVec;
-			//	totBlendValue += blendValueGrassDark;
-			//}
-
-			//if(nrOfPassedConditions > 0)
-			//{
-			//	//tillman todo: if x of tex 0 && x of tex 1 => 0 scalesum
-			//	//Set size
-			//	//scaleSum /= (float)nrOfPassedConditions;
-			//	//grassHeight *= scaleSum;
-			//	grassHeight *= totBlendValue;
-			//	sizes[index] = Vector2(grassWidth, grassHeight);
-			//	//Set position
-			//	positions[index] = Vector3(grassPos.x, terrainY + grassHeight * 0.5f, grassPos.y);
-			//	//Set color
-			//	colorSum /= (float)nrOfPassedConditions;
-			//	colors[index] = colorSum;
-			//	index++;
-			//}
 		}
 	}
 
