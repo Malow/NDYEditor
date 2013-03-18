@@ -385,7 +385,7 @@ Entity* WorldRenderer::Get3DRayCollisionWithMesh()
 	return returnPointer;
 }
 
-void WorldRenderer::Update()
+bool WorldRenderer::Update()
 {
 	// Update Terrain Routine
 	UpdateTerrain();
@@ -393,50 +393,55 @@ void WorldRenderer::Update()
 	// Cam Pos
 	Vector3 camPos = zGraphics->GetCamera()->GetPosition();
 
-	// Update Grass If No Terrains are to be loaded
+	// Don't update grass if we don't have a world
 	if ( zWorld )
 	{
-		if ( (zLastGrassUpdatePos - camPos.GetXZ()).GetLength() >= zGrassUpdateDistance )
+		// Check if we should render grass
+		zGraphics->SetGrassFilePath("Media/Grass.png");
+		if ( zGraphics->GetRenderGrassFlag() )
 		{
-			std::map<Vector2UINT, int> grassSectors;
-
-			// Remove Current Grass Sectors
-			for( auto i = zGrass.cbegin(); i != zGrass.cend(); ++i )
+			if ( (zLastGrassUpdatePos - camPos.GetXZ()).GetLength() >= zGrassUpdateDistance )
 			{
-				grassSectors[i->first]--;
-			}
+				std::map<Vector2UINT, int> grassSectors;
 
-			// Insert New Sectors
-			std::set<Vector2UINT> newSectorsSet;
-			zWorld->GetSectorsInCicle(camPos.GetXZ(), zGrassFarDistance, newSectorsSet);
-			for( auto i = newSectorsSet.cbegin(); i != newSectorsSet.cend(); ++i )
-			{
-				grassSectors[*i]++;
-			}
-
-			// Update Sector Grasses
-			for( auto i = grassSectors.cbegin(); i != grassSectors.cend(); ++i )
-			{
-				if ( i->second < 0 )
+				// Remove Current Grass Sectors
+				for( auto i = zGrass.cbegin(); i != zGrass.cend(); ++i )
 				{
-					auto grassIt = zGrass.find(i->first);
-					if ( grassIt != zGrass.cend() )
-					{
-						if ( grassIt->second )
-						{
-							zGraphics->DeleteBillboardCollection(grassIt->second);
-						}
+					grassSectors[i->first]--;
+				}
 
-						zGrass.erase(grassIt);
+				// Insert New Sectors
+				std::set<Vector2UINT> newSectorsSet;
+				zWorld->GetSectorsInCicle(camPos.GetXZ(), zGrassFarDistance, newSectorsSet);
+				for( auto i = newSectorsSet.cbegin(); i != newSectorsSet.cend(); ++i )
+				{
+					grassSectors[*i]++;
+				}
+
+				// Update Sector Grasses
+				for( auto i = grassSectors.cbegin(); i != grassSectors.cend(); ++i )
+				{
+					if ( i->second < 0 )
+					{
+						auto grassIt = zGrass.find(i->first);
+						if ( grassIt != zGrass.cend() )
+						{
+							if ( grassIt->second )
+							{
+								zGraphics->DeleteBillboardCollection(grassIt->second);
+							}
+
+							zGrass.erase(grassIt);
+						}
+					}
+					else if ( i->second > 0 )
+					{
+						GenerateGrass(i->first);
 					}
 				}
-				else if ( i->second > 0 )
-				{
-					GenerateGrass(i->first);
-				}
-			}
 
-			zLastGrassUpdatePos = camPos.GetXZ();
+				zLastGrassUpdatePos = camPos.GetXZ();
+			}
 		}
 	}
 
@@ -470,6 +475,9 @@ void WorldRenderer::Update()
 		i = zEntsToUpdate.erase(i);
 		if ( !x || !--x ) break;
 	}
+
+	// Check if there is more to be updated
+	return ( zEntsToUpdate.size() > 0 || zUpdatesRequired.size() > 0 );
 }
 
 void WorldRenderer::ToggleAIGrid(bool state)
