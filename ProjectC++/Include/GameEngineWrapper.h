@@ -60,6 +60,7 @@ public:
 	void GetWorldSize( float& x, float& y );
 	void TeleportTo(float x, float y, float z);
 	void ToggleShadows(bool flag);
+	void ToggleGrass(bool flag);
 	void SetShuffleGroup(unsigned int index);
 	void CalculateAIGrid();
 	float GetSunOnOff();

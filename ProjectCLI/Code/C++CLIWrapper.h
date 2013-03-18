@@ -71,6 +71,7 @@ namespace System { namespace Windows { namespace Interop
 		void GetSunOnOff([Out] float% onOff);
 		void SunOnOff(bool value);
 		void ToggleShadows(bool flag);
+		void ToggleGrass(bool flag);
 		void SetShuffleGroup(unsigned int index);
 	};
 }}}

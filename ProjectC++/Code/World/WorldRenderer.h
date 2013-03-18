@@ -67,6 +67,11 @@ class WorldRenderer : Observer
 	float zGrassNearDistance;		// Distance between camera and grass
 	float zGrassFarDistance;		// Distance between grass and far clip
 	float zGrassUpdateDistance;		// Distance you have to walk to update grass
+	float zGrassWidthMin;			// Minimum grass width
+	float zGrassWidthMax;			// Maximum grass width
+	float zGrassHeightMin;			// Minimum grass height
+	float zGrassHeightMax;			// Maximum grass height
+	float zGrassNeightbourDistance;	// Minimal distance between grass
 	Vector2 zLastGrassUpdatePos;	// Last camera position when grass was generated
 	std::map<Vector2UINT, iBillboardCollection*> zGrass;
 	

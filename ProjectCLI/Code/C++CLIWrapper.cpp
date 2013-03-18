@@ -418,6 +418,11 @@ namespace System { namespace Windows { namespace Interop
 		m_GameEngine->ToggleShadows(flag);
 	}
 
+	void CppCLI::ToggleGrass( bool flag )
+	{
+		m_GameEngine->ToggleGrass(flag);
+	}
+
 	void CppCLI::IncSelectedObjectInfo( String^ info, float x, float y, float z )
 	{
 		char* lpText = nullptr;

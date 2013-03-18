@@ -12,6 +12,11 @@ WorldRendererSettings::WorldRendererSettings(Observer* observer, const std::stri
 	zSettings["GrassNearDistance"] = 2.0f;
 	zSettings["GrassFarDistance"] = 64.0f;
 	zSettings["GrassUpdateDistance"] = 1.0f;
+	zSettings["GrassWidthMin"] = 0.5f;
+	zSettings["GrassWidthMax"] = 1.0f;
+	zSettings["GrassHeightMin"] = 0.25f;
+	zSettings["GrassHeightMax"] = 0.5f;
+	zSettings["GrassMinNeightbourDistance"] = 0.2f;
 
 	// LOD Default Settings
 	zSettings["LODUpdateDistance"] = 10.0f;

@@ -1487,12 +1487,21 @@ void GameEngine::GetWorldSize( float &x, float&y )
 
 void GameEngine::TeleportTo( float x, float y, float z )
 {
-	zGraphics->GetCamera()->SetPosition( Vector3(x, y, z) );
+	if ( zGraphics ) zGraphics->GetCamera()->SetPosition( Vector3(x, y, z) );
 }
 
 void GameEngine::ToggleShadows( bool flag )
 {
-	zGraphics->UseShadow(flag);
+	if ( zGraphics ) zGraphics->UseShadow(flag);
+}
+
+void GameEngine::ToggleGrass(bool flag)
+{
+	if ( zGraphics )
+	{
+		zGraphics->SetGrassFilePath("Media/Grass.png");
+		zGraphics->RenderGrass(flag);
+	}
 }
 
 void GameEngine::IncSelectedObjectInfo( char* info, float x, float y, float z )

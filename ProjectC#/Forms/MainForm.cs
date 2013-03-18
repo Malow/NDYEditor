@@ -1016,6 +1016,12 @@ namespace Editor.Forms
             this.m_GameEngine.SetShuffleGroup(uint.Parse(this.comboBox_shuffle.Text.Split(':')[0]));
         }
 
+        private void grassToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            (sender as ToolStripMenuItem).Checked = !(sender as ToolStripMenuItem).Checked;
+            m_GameEngine.ToggleGrass((sender as ToolStripMenuItem).Checked);
+        }
+
        /* private void textBox1_TextChanged(object sender, EventArgs e)
         {
             int x = 0;
