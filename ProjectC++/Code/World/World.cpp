@@ -1202,6 +1202,33 @@ void World::DeleteWaterQuad( WaterQuad* quad )
 	zWaterQuadsEdited = false;
 }
 
+float World::GetWaterSoundVolume( const Vector2& worldPos )
+{
+	float soundLevel = 0.0f;
+
+	for( auto i = zWaterQuads.cbegin(); i != zWaterQuads.cend(); ++i )
+	{
+		// Distance
+		float distance = ((*i)->CalcCenter().GetXZ() - worldPos).GetLength();
+		float size = (*i)->CalcRadius();
+		float distanceFactor = ( distance < size? 1.0f : 1.0 - distance * 0.01f);
+		if ( distanceFactor < 0.0f ) continue;
+
+		// Flow Factor
+		float flowFactor = 1.0f - (*i)->CalcNormal().GetDotProduct(Vector3(0.0f, 1.0f, 0.0f));
+		if ( flowFactor < 0.0f ) continue;
+
+		// This Sound Level
+		float curSoundLevel = 1.0f * distanceFactor * flowFactor;
+		if ( curSoundLevel > soundLevel )
+		{
+			soundLevel = curSoundLevel;
+		}
+	}
+
+	return soundLevel * 0.5f;
+}
+
 float World::GetWaterDepthAt( const Vector2& worldPos )
 {
 	float curDistance = 0.0f;

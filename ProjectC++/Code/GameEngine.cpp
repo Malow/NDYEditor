@@ -1310,7 +1310,7 @@ void GameEngine::SetAmbientLight( char* info, float x, float y, float z )
 int GameEngine::CountEntitiesInSector()
 {
 	if ( !zWorld ) return 0;
-	
+
 	Vector2UINT cSector = zWorld->WorldPosToSector( zGraphics->GetCamera()->GetPosition().GetXZ() );
 
 	Rect r( Vector2(cSector.x * (float)SECTOR_WORLD_SIZE, cSector.y * (float)SECTOR_WORLD_SIZE), Vector2((float)SECTOR_WORLD_SIZE, (float)SECTOR_WORLD_SIZE) );
