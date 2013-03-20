@@ -34,8 +34,12 @@ Name:Stone
 Model:Media/Models/Stone_01.obj
 
 Number:7
-Name:Placeholder
-Model:Media/Scale.obj
+Name:Tree_4
+BlockRadius:0.7
+Model:Media/Models/Tree_04.ani 25.0
+Model:Media/Models/Tree_04_01.obj
+Billboard:Media/TreeBillboard.png
+BillboardDistance:100
 
 Number:8
 Name:Placeholder
