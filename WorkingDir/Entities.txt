@@ -89,9 +89,12 @@ Model:Media/Models/Bush_02.ani 25.0
 Model:Media/Models/Bush_02.obj
 
 Number:20
-Name:Tree
-Model:Media/Models/Tree_03.obj
+Name:Tree_3
 BlockRadius:0.7
+Model:Media/Models/Tree_03.ani 25.0
+Model:Media/Models/Tree_03_01.obj
+Billboard:Media/TreeBillboard.png
+BillboardDistance:100
 
 Number:22
 Name:WaterStones
