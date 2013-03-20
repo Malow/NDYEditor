@@ -10,3 +10,10 @@ Name:TreeFall
 Find:5
 Replace:2,0.1
 Replace:5,0.9
+
+Number:3
+Name:TreeFall2
+Find:5
+Replace:20,0.1
+Replace:7,0.1
+Replace:5,0.9
