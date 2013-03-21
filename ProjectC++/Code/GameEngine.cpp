@@ -842,10 +842,13 @@ void GameEngine::KeyUp( int key )
 	}
 	else if(key == VK_DELETE)
 	{
-		if ( zLastSelectedWaterQuad ) 
+		if ( zMode == WATER )
 		{
-			zWorld->DeleteWaterQuad(zLastSelectedWaterQuad);
-			zLastSelectedWaterQuad = 0;
+			if ( zLastSelectedWaterQuad ) 
+			{
+				zWorld->DeleteWaterQuad(zLastSelectedWaterQuad);
+				zLastSelectedWaterQuad = 0;
+			}
 		}
 	}
 	else if( key == VK_SUBTRACT)
