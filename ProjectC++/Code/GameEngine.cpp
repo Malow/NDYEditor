@@ -1550,22 +1550,7 @@ void GameEngine::ToggleArrows()
 
 void GameEngine::OnMiddleMouseUp( unsigned int, unsigned int )
 {
-	if ( zMode == MODE::WATER )
-	{
-		if ( zWorldRenderer )
-		{
-			CollisionData coll = zWorldRenderer->Get3DRayCollisionDataWithGround();
-			if ( coll.collision )
-			{
-				float depth = zWorld->GetWaterDepthAt(Vector2(coll.posx, coll.posz));
-				depth += 0.0f;
-
-				iMesh* lol = zGraphics->CreateMesh("Media/Models/Cube_1.obj", Vector3(coll.posx, coll.posy+depth, coll.posz));
-				lol->SetScale(1.0f/20.0f);
-			}
-		}
-	}
-	else if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
+	if ( zMode == MODE::RAISE || zMode == MODE::LOWER )
 	{
 		if ( zWorldRenderer )
 		{
