@@ -611,30 +611,39 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 {
 	if ( radius == 0.0f )
 	{
-		out.insert(this->WorldPosToSector(center));
-		return 1;
+		if ( IsInside(center) )
+		{
+			out.insert(this->WorldPosToSector(center));
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	unsigned int counter = 0;
 	
-	int xMin = (center.x - radius) / FSECTOR_WORLD_SIZE;
-	int xMax = (center.x + radius) / FSECTOR_WORLD_SIZE;
+	// Min point
+	int xMin = (int)((center.x - radius) / FSECTOR_WORLD_SIZE);
+	int yMin = (int)((center.y - radius) / FSECTOR_WORLD_SIZE);
 
-	int yMin = (center.y - radius) / FSECTOR_WORLD_SIZE + 1;
-	int yMax = (center.y + radius) / FSECTOR_WORLD_SIZE + 1;
+	// Max point
+	int xMax = (int)((center.x + radius) / FSECTOR_WORLD_SIZE) + 1;
+	int yMax = (int)((center.y + radius) / FSECTOR_WORLD_SIZE) + 1;
 
-	// Limit To Borders
+	// Limit to borders
 	if ( xMin < 0 ) xMin = 0;
 	if ( yMin < 0 ) yMin = 0;
+	if ( xMax > (int)zNrOfSectorsWidth ) xMax = zNrOfSectorsWidth;
+	if ( yMax > (int)zNrOfSectorsHeight ) yMax = zNrOfSectorsHeight;
 
-	if ( xMax >= zNrOfSectorsWidth ) xMax = zNrOfSectorsWidth - 1;
-	if ( yMax >= zNrOfSectorsHeight ) yMax = zNrOfSectorsHeight - 1;
 
-	for( int x=xMin; x<xMax; ++x )
+	for( int x = xMin; x < xMax; ++x )
 	{
-		for( int y=yMin; y<yMax; ++y )
+		for( int y = yMin; y < yMax; ++y )
 		{
-			Rect sectorRect(Vector2(x * FSECTOR_WORLD_SIZE, y * FSECTOR_WORLD_SIZE), Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
+			Rect sectorRect(Vector2((float)x, (float)y) * FSECTOR_WORLD_SIZE, Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
 			if ( DoesIntersect(sectorRect, Circle(center, radius)) )
 			{
 				counter++;
@@ -672,8 +681,8 @@ unsigned int World::GetHeightNodesInCircle( const Vector2& center, float radius,
 
 			// Snap it
 			Vector2 snap;
-			snap.x = floor(x / density) * density;
-			snap.y = floor(y / density) * density;
+			snap.x = floorf(x / density) * density;
+			snap.y = floorf(y / density) * density;
 
 
 			if ( Circle(Vector2(center.x, center.y), radius).IsInside(Vector2(snap.x, snap.y) ) )
@@ -736,8 +745,8 @@ unsigned int World::GetTextureNodesInCircle( const Vector2& center, float radius
 				continue;
 
 			Vector2 snap;
-			snap.x = floor(x / density) * density;
-			snap.y = floor(y / density) * density;
+			snap.x = floorf(x / density) * density;
+			snap.y = floorf(y / density) * density;
 
 			if (Circle(center,radius).IsInside(snap))
 			{
@@ -763,8 +772,8 @@ BlendValues World::GetBlendingAt( const Vector2& worldPos )
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
-	snapPos.x = floor(localPos.x * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
-	snapPos.y = floor(localPos.y * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+	snapPos.x = floorf(localPos.x * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
+	snapPos.y = floorf(localPos.y * (SECTOR_BLEND_SIZE-1)) / (SECTOR_BLEND_SIZE-1);
 
 	return GetSector(sectorX, sectorY)->GetBlendingAt( snapPos );
 }
@@ -784,8 +793,8 @@ void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
-	snapPos.x = floor(localPos.x * (FSECTOR_BLEND_SIZE-1.0f)) / (FSECTOR_BLEND_SIZE-1.0f);
-	snapPos.y = floor(localPos.y * (FSECTOR_BLEND_SIZE-1.0f)) / (FSECTOR_BLEND_SIZE-1.0f);
+	snapPos.x = floorf(localPos.x * (FSECTOR_BLEND_SIZE-1.0f)) / (FSECTOR_BLEND_SIZE-1.0f);
+	snapPos.y = floorf(localPos.y * (FSECTOR_BLEND_SIZE-1.0f)) / (FSECTOR_BLEND_SIZE-1.0f);
 
 	GetSector(sectorX, sectorY)->SetBlendingAt(snapPos, val);
 
@@ -936,8 +945,8 @@ float World::CalcHeightAtWorldPos( const Vector2& worldPos ) throw(...)
 	float density = (float)SECTOR_WORLD_SIZE / (float)(SECTOR_HEIGHT_SIZE-1);
 
 	// Snap To Lower
-	float minX = floor(worldPos.x / density) * density;
-	float minY = floor(worldPos.y / density) * density;
+	float minX = floorf(worldPos.x / density) * density;
+	float minY = floorf(worldPos.y / density) * density;
 
 	// Snap To Lower
 	float maxX = minX + density;
@@ -1174,7 +1183,7 @@ Vector2 World::GetWorldSize() const
 	return Vector2( GetNumSectorsWidth() * FSECTOR_WORLD_SIZE, GetNumSectorsHeight() * FSECTOR_WORLD_SIZE );
 }
 
-bool World::IsInside( const Vector2& worldPos )
+bool World::IsInside( const Vector2& worldPos ) const
 {
 	// Invalid Floats
 	if ( worldPos.x != worldPos.x ) return false;
@@ -1183,6 +1192,7 @@ bool World::IsInside( const Vector2& worldPos )
 	if ( worldPos.x < 0.0f || worldPos.y < 0.0f ) return false;
 	if ( worldPos.x >= GetWorldSize().x ) return false;
 	if ( worldPos.y >= GetWorldSize().y ) return false;
+
 	return true;
 }
 

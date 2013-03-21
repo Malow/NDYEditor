@@ -78,7 +78,7 @@ public:
 	unsigned int GetNumSectorsHeight() const;
 	Vector2 GetWorldCenter() const;
 	Vector2 GetWorldSize() const;
-	bool IsInside( const Vector2& worldPos );
+	bool IsInside( const Vector2& worldPos ) const;
 
 	// Water Quads
 	WaterQuad* CreateWaterQuad();
