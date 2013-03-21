@@ -42,10 +42,8 @@ cbuffer PerCascade
 //----------------------------------------------------------------------------------------
 struct VSIn
 {
-	//Reusing input layout(this is why dumm2 semantic name is still 'COLOR'. //TILLMAN
 	float4 posWAndSizeX	: POSITION_AND_SIZE_X; 
 	float sizeY			: SIZE_Y; 
-	//float3 color		: COLOR; //= dummy
 };
 
 struct GSIn 
@@ -67,28 +65,7 @@ struct PSIn
 	float2 tex	: TEXCOORD;
 };*/
 
-//-----------------------------------------------------------------------------------------
-// Functions
-//----------------------------------------------------------------------------------------
-/*float4 gPositions[4];
-void GeneratePositionsCircle(in float radius)
-{
-	float radius = 0.0f;
-	angleDiff = 2.0f * PI / 4.0f;
-	uint counter = 0;
-	for(float radius = 0.0f; radius < 2.0f * PI; angle += angleDiff)
-	{
-		counter++; //**tillman todo
-		if(counter % 3 == 0)
-		{
-			gPositions[counter] = float4(0.0f, 0.0f, 0.0f, 1.0f);
-		}
-		else
-		{
-			gPositions[counter] = float4(radius * cos(angle), radius * sin(angle), 0.0f, 1.0f);
-		}
-	}
-}*/
+
 
 //-----------------------------------------------------------------------------------------
 // Shaders
@@ -97,7 +74,7 @@ GSIn VS(VSIn input)
 {
 	GSIn output = (GSIn)0;
 	
-	output.posCenterW = input.posWAndSizeX.xyz;	
+	output.posCenterW = input.posWAndSizeX.xyz - gSunDir * 0.45f;	
 	output.size = float2(input.posWAndSizeX.w, input.sizeY);
 
 	return output;
@@ -132,7 +109,7 @@ void GS(point GSIn input[1], inout TriangleStream<PSIn> triStream)
 	
 	//float4 pixelW = mul(float4(input[0].posCenterW, 1.0f), W); //test
 	
-	float radius = halfWidth * 0.6666666f; //**Tillman - why not 0.5f*?
+	float radius = halfWidth * 0.6666666f; //Should be 0.5f???
 	output.posCenterW = float4(input[0].posCenterW, 1.0f);
 	output.posW = mul(positions[0], W);
 	output.posH = mul(positions[0], lightWVP); //Transform positions to light's clip space [-w,-w]

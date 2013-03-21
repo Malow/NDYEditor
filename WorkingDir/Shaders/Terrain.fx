@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------------------
+/*//-----------------------------------------------------------------------------------------
 //
 //	Written by Markus Tillman for project "Not dead yet" at Blekinge Tekniska Högskola.
 //	
@@ -16,11 +16,15 @@ Texture2D tex2; //B-channel in blendmap. ex: leaves
 Texture2D tex3; //A-channel in blendmap. ex: extra
 Texture2D<float4> blendMap;
 
-//**TILLMAN OPT TODO: beräkna texturkoordinater i terrängklassen (texture scale)**
 
 //-----------------------------------------------------------------------------------------
 // Constant buffers
 //-----------------------------------------------------------------------------------------
+cbuffer PerFrame
+{
+	float gFarClip; //TODO: send from CPU
+
+};
 cbuffer PerObject
 {
 	//Matrices
@@ -104,10 +108,10 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 		
 		//Sample R,G,B,A textures
 		float2 texCoord = input.tex * texScale;
-		float3 tex1Color = tex0.Sample(LinearWrapSampler, texCoord).rgb; //**tillman opti, FORMAT = RGB och inte A**
-		float3 tex2Color = tex1.Sample(LinearWrapSampler, texCoord).rgb; //**tillman opti, FORMAT = RGB och inte A**
-		float3 tex3Color = tex2.Sample(LinearWrapSampler, texCoord).rgb; //**tillman opti, FORMAT = RGB och inte A**
-		float3 tex4Color = tex3.Sample(LinearWrapSampler, texCoord).rgb; //**tillman opti, FORMAT = RGB och inte A**
+		float3 tex1Color = tex0.Sample(LinearWrapSampler, texCoord).rgb; 
+		float3 tex2Color = tex1.Sample(LinearWrapSampler, texCoord).rgb; 
+		float3 tex3Color = tex2.Sample(LinearWrapSampler, texCoord).rgb; 
+		float3 tex4Color = tex3.Sample(LinearWrapSampler, texCoord).rgb; 
 		
 		if(blendMapped)
 		{
@@ -141,7 +145,7 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 
 	//NormalAndDepth RT
 	output.NormalAndDepth = float4(input.norm, input.pos.z / input.pos.w);	
-	float depth = length(CameraPosition.xyz - input.posW.xyz) / FarClip;		// Haxfix
+	float depth = length(CameraPosition.xyz - input.posW.xyz) / gFarClip;		// Haxfix
 	output.NormalAndDepth.w = depth;
 
 	//Position RT
@@ -172,4 +176,4 @@ technique11 TerrainEditorTech
 		SetDepthStencilState( EnableDepth, 0 );
 	    SetRasterizerState( BackCulling );
     }  
-}
+}*/

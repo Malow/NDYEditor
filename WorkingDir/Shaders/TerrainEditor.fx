@@ -11,19 +11,19 @@
 //	Global variables (non-numeric values cannot be added to a constantbuffer.)
 //-----------------------------------------------------------------------------------------
 //Textures used to make the blend map
-Texture2D tex0; //R-channel in blendmap0. 
-Texture2D tex1; //G-channel in blendmap0. 
-Texture2D tex2; //B-channel in blendmap0. 
-Texture2D tex3; //A-channel in blendmap0.
-Texture2D tex4; //R-channel in blendmap1. 
-Texture2D tex5; //G-channel in blendmap2. 
-Texture2D tex6; //B-channel in blendmap3. 
-Texture2D tex7; //A-channel in blendmap4.
-Texture2D<float4> blendMap0; //**TILLMAN TODO: testa sänka format 
-Texture2D<float4> blendMap1; //**TILLMAN TODO: testa sänka format 
-//Texture2D<uint> AIMap;
-Texture2D AIMap; //Format = DXGI_FORMAT_R8_UNORM.
-//Texture2D<int> AIMap; //**uint
+Texture2D tex0 : register(t0); //R-channel in blendMap0.
+Texture2D tex1 : register(t1); //G-channel in blendMap0.
+Texture2D tex2 : register(t2); //B-channel in blendMap0.
+Texture2D tex3 : register(t3); //A-channel in blendMap0
+Texture2D tex4 : register(t4); //R-channel in blendMap1.
+Texture2D tex5 : register(t5); //G-channel in blendMap1.
+Texture2D tex6 : register(t6); //B-channel in blendMap1.
+Texture2D tex7 : register(t7); //A-channel in blendMap1
+
+Texture2D<float4> blendMap0; 
+Texture2D<float4> blendMap1; 
+Texture2D AIMap; //Format = DXGI_FORMAT_R8_UNORM. //Tillman todo: ersätta med terrain.fx
+
 
 
 //-----------------------------------------------------------------------------------------
@@ -73,7 +73,6 @@ struct PSSceneIn
 	float3 color	: COLOR;
 
 	float4 posW		: POSITION;	//world position 
-	//float depth		: SV_Depth;
 };
 
 struct PSOut			
@@ -82,7 +81,6 @@ struct PSOut
 	float4 NormalAndDepth	: SV_TARGET1;	//Normal XYZ, depth W.
 	float4 Position			: SV_TARGET2;	//Position XYZ, Type of object W.
 	float4 Specular			: SV_TARGET3;	//Specular XYZ(unused by this shader), specular power W(unused by this shader).
-	//float4 GrassCanopy		: SV_TARGET4;	//Grass color XYZ, grass height W.
 };
 
 //-----------------------------------------------------------------------------------------
@@ -188,34 +186,7 @@ float3 RenderTextured(float scale, float2 tex, bool useBlendMap)
 	return saturate((tex0Color + tex1Color + tex2Color + tex3Color) * 0.25f) * diffuseColor;
 }
 
-float GenerateGrassHeight(float3 grassColor)
-{
-	return 0.5f; //TEMP TEST
 
-
-	//**TILLMAN TODO : global variable
-	float maxGrassLength = 0.5f; //in meter.
-
-	//Check if the color is green enough.
-	if(grassColor.g > 0.785f) //~200 on the 0-255 RGB scale.
-	{
-		if(grassColor.g / grassColor.b > 2.0f && grassColor.g / grassColor.r > 1.25f)
-		{
-			//the greener it is, the longer it is.
-			float grDiff = grassColor.g - grassColor.r; //range[0,1].
-			float gbDiff = grassColor.g - grassColor.b; //range[0,1].
-
-			//Example: **TILLMAN TODO
-			//(1 - ((1 - 1) * 0.5)) * 0.5 =
-			//(1 - (2 * 0.5)) * 0.5
-			//(1 - 1) * 0.5
-			return (grassColor.g - ((grDiff - gbDiff) * 0.5f)) * maxGrassLength;
-		}
-	}
-
-
-	//return -1.0f;
-}
 
 //-----------------------------------------------------------------------------------------
 // VertexShader: VSScene
@@ -302,41 +273,8 @@ PSOut PSScene(PSSceneIn input) : SV_Target
 	output.Position.xyz = input.posW.xyz;
 	output.Position.w = OBJECT_TYPE_TERRAIN; //See stdafx.fx for object types.
 	
-	
-
-	//TILLMAN - unused:
-	//Specular RT
-	/*output.Specular.xyzw = 0.0f;
-
-	//Grass canopy RT
-	output.GrassCanopy.xyz = finalColor;  //Grass color
-	output.GrassCanopy.w = GenerateGrassHeight(finalColor); //Grass height
-	*/
-
-
-
-	//Modify world position TEST
-	/*float3 newWorldPos = input.posW.xyz;
-	newWorldPos.y += output.GrassCanopy.w;
-
-	//NormalAndDepth RT
-	output.NormalAndDepth.xyz = input.norm;
-	float depth = length(g_CamPos.xyz - newWorldPos) / g_FarClip;		// Haxfix
-	output.NormalAndDepth.w = depth;
-	
-	//Position RT
-	output.Position.xyz = newWorldPos;
-	output.Position.w = OBJECT_TYPE_TERRAIN; //See stdafx.fx for object types.
-	*/
-
-	//oD0 = depth;
-	//oDepth
-	/*asm ps_4_0 
-	{ 
-		mov register(oDepth), depth 
-	}*/
-
-
+	//Specular RT(unused)
+	output.Specular.xyzw = 0.0f;
 	
 	return output;
 }
@@ -357,5 +295,6 @@ technique11 TerrainEditorTech
 
 		SetDepthStencilState( EnableDepth, 0 );
 	    SetRasterizerState( BackCulling );
+		SetBlendState(NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }  
 }

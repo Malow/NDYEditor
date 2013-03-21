@@ -16,6 +16,27 @@ Texture2D Texture;
 Texture2D NormalAndDepth;
 Texture2D Position;
 Texture2D Specular;
+
+struct Light
+{
+	float4 LightPosition;
+	float4 LightColor;
+	float LightIntensity;
+	matrix LightViewProj;
+};
+
+struct Cascade
+{
+	matrix viewProj;
+};
+
+struct SunLight
+{
+	float4 Direction;
+	float4 LightColor;
+	float LightIntensity;
+};
+
 SamplerState linearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -53,6 +74,15 @@ BlendState SrcAlphaBlendingAdd
 //-----------------------------------------------------------------------------------------
 cbuffer ef
 {
+	float3		gCameraPosition;
+	float4x4	gCameraVP;
+	float		gNrOfLights;
+	Light		gLights[10];
+	float3		gSceneAmbientLight;
+	bool		gUseSun;
+	SunLight	gSun;
+	Cascade		gCascades[10];
+
 	//Single sampling
 	float SMAP_DX; 
 
@@ -226,14 +256,13 @@ float SampleCascades(uint cascadeIndex, uint otherCascadeIndex, float2 pixelPosT
 	}
 
 
-	//**TILLMAN TODO: X3511: flatten/unroll, stoppa alla shadowmaps i en texture, etc**
 	
 	float CSM_SHADOW_EPSILON = 0.005f;// - (cascadeIndex * 0.0005f);// - (pixelDepth * 0.001f); //**finputsa, lägga till pixelDepth?**
 	float shadow = 0.0f; 
 	bool withinBlendingDistance = false;
 	if(blendCascades) //global variable
 	{
-		//**TILLMAN START OF BLENDING**
+		//**START OF BLENDING**
 
 		//Convert pixel depth to view space units.
 		/*float pixelDepthViewSpace = pixelDepth * cascadeFarPlanes[nrOfCascades - 1];
@@ -265,15 +294,15 @@ float SampleCascades(uint cascadeIndex, uint otherCascadeIndex, float2 pixelPosT
 		//If pixel was not in blending distance (and therefore not blended), do normal PCF. //**kanske strunta i bool helt?**
 		//if(!withinBlendingDistance) //**kanske strunta i bool helt?**
 
-		//**TILLMAN END OF BLENDING**
+		//**END OF BLENDING**
 		{
 
 
-			//**todo CHECK** TILLMAN
+			//Todo: check
 			//if true, sample both and lerp samples**
 			//else: kod under**
 
-			if(PCF_SIZE > 0) //**TILLMAN, ersätta med if PCF_SIZE != 0??**
+			if(PCF_SIZE > 0)
 			{
 				for(float s = 0; s < PCF_SIZE; s++) // error X3511: forced to unroll loop, but unrolling failed.
 				{
@@ -403,7 +432,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 	
 	float4 WorldPos = Position.Sample(linearSampler, input.tex);
 
-	float4 AmbientLight = SceneAmbientLight;
+	float4 AmbientLight = float4(gSceneAmbientLight, 1.0f);
 
 	float SpecularPower = Specular.Sample(linearSampler, input.tex).w;
 	float4 SpecularColor = float4(Specular.Sample(linearSampler, input.tex).xyz, 1.0f);
@@ -411,9 +440,9 @@ float4 PSScene(PSSceneIn input) : SV_Target
 	float diffuseLighting = 0.0f;
 	float specLighting = 0.0f;
 	
-	for(int i = 0; i < NrOfLights; i++)
+	for(int i = 0; i < gNrOfLights; i++)
 	{
-		float3 LightDirection = WorldPos.xyz - lights[i].LightPosition.xyz;
+		float3 LightDirection = WorldPos.xyz - gLights[i].LightPosition.xyz;
 		float DistanceToLight = length(LightDirection);
 		LightDirection = normalize(LightDirection);
 
@@ -421,12 +450,12 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		float difflight = saturate(dot(NormsAndDepth.xyz, -LightDirection));
 
 		// Spec Light
-		float3 h = normalize(normalize(CameraPosition.xyz - WorldPos.xyz) - LightDirection);
+		float3 h = normalize(normalize(gCameraPosition.xyz - WorldPos.xyz) - LightDirection);
 		float speclight = pow(saturate(dot(h, NormsAndDepth.xyz)), SpecularPower);
 
 
 		// Shadow Mappings
-		float4 posLight = mul(WorldPos, lights[i].LightViewProj);
+		float4 posLight = mul(WorldPos, gLights[i].LightViewProj);
 		posLight.xy /= posLight.w;
 
 
@@ -462,7 +491,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 
 
 		// Fall off test 3
-		float coef = (lights[i].LightIntensity / 1000.0f) + (DistanceToLight * DistanceToLight) / (lights[i].LightIntensity * lights[i].LightIntensity);
+		float coef = (gLights[i].LightIntensity * 0.001f) + (DistanceToLight * DistanceToLight) / (gLights[i].LightIntensity * gLights[i].LightIntensity);
 
 		difflight /= coef;
 
@@ -479,21 +508,21 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		specLighting += speclight;
 	}
 	
-	if(NrOfLights > 0)
+	if(gNrOfLights > 0)
 	{
-		diffuseLighting = saturate(diffuseLighting / NrOfLights);
-		specLighting = saturate(specLighting / NrOfLights);
+		diffuseLighting = saturate(diffuseLighting / gNrOfLights);
+		specLighting = saturate(specLighting / gNrOfLights);
 	}
 	
 	
 	// Sun
-	if(UseSun)
+	if(gUseSun)
 	{
 		// Diff light
-		float diffLight = saturate(dot(NormsAndDepth.xyz, -sun.Direction.xyz)) * sun.LightIntensity;
+		float diffLight = saturate(dot(NormsAndDepth.xyz, -gSun.Direction.xyz)) * gSun.LightIntensity;
 		// Spec Light
-		float3 h = normalize(normalize(CameraPosition.xyz - WorldPos.xyz) - sun.Direction.xyz);
-		float specLight = pow(saturate(dot(h, NormsAndDepth.xyz)), SpecularPower) * sun.LightIntensity;
+		float3 h = normalize(normalize(gCameraPosition.xyz - WorldPos.xyz) - gSun.Direction.xyz);
+		float specLight = pow(saturate(dot(h, NormsAndDepth.xyz)), SpecularPower) * gSun.LightIntensity;
 
 		
 		//SHADOW: //TILLMAN START OF CSM**
@@ -506,11 +535,11 @@ float4 PSScene(PSSceneIn input) : SV_Target
 			uint cascadeIndex = -1;
 			cascadeIndex = FindCascade(pixelDepthCameraViewSpace);
 
-			//**TILLMAN TODO** early exit: if (CascadeIndex == -1), warning dock! kan reducera fps istället**
+			//Todo: early exit: if (CascadeIndex == -1)
 
 
 			//Determine the second cascade to use if blending between cascades is enabled:
-			uint otherCascadeIndex = -1; //**TILLMAN TODO**
+			uint otherCascadeIndex = -1; 
 			if(blendCascades)
 			{
 				otherCascadeIndex = FindCascadeToBlendWith(cascadeIndex, pixelDepthCameraViewSpace); 
@@ -520,7 +549,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 			float shadow = 0.0f;
 		
 			//Get the texture coordinates to sample with by first transforming the pixel from world space to LIGHT's clip space xy[-w,w], z[0,w].
-			float4 pixelPosTexelSpace = mul(WorldPos, cascades[cascadeIndex].viewProj); 
+			float4 pixelPosTexelSpace = mul(WorldPos, gCascades[cascadeIndex].viewProj); 
 			//Then convert it to normalized device coordinates xy[-1,1], z[0,1].
 			pixelPosTexelSpace.xyz /= pixelPosTexelSpace.w;
 			//Finally convert it to texel space xy[0,1]. (Don't forget that the y-axis needs to be inverted).
@@ -530,13 +559,18 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		
 			//And finally sample the cascades(s).
 			shadow = SampleCascades(cascadeIndex, otherCascadeIndex, pixelPosTexelSpace.xy, pixelPosTexelSpace.z); 
-		
+			if(shadow < 1.0f)	// reduce shadow for translucent planes.
+			{
+				shadow += 2;
+				shadow *= 0.3333f;
+			}	
+			
 			//Multiply the shadow into the light.
 			diffLight *= shadow;
 			specLight *= shadow;
 		}
 		
-		//**tillman end of CSM
+		//**end of CSM**
 		
 		diffuseLighting += diffLight;
 		specLighting += specLight;
@@ -568,8 +602,8 @@ float4 PSScene(PSSceneIn input) : SV_Target
 		SpecularColor.xyz * specLighting), 
 		1.0f);
 
-	if(UseSun)
-		finalColor.xyz *= sun.LightColor.xyz;
+	if(gUseSun)
+		finalColor.xyz *= gSun.LightColor.xyz;
 
 	
 	
@@ -614,9 +648,9 @@ float4 PSScene(PSSceneIn input) : SV_Target
 	
 
 		
-	//if(finalColor.a >= 0.00001f && finalColor.a <= 0.9999f) //**tillman - haxlösning?**
+	//if(finalColor.a >= 0.00001f && finalColor.a <= 0.9999f) 
 	//{
-		//finalColor = SSAO(input.tex, NormalAndDepth, Position); //**tillman opt(position tex)**
+		//finalColor = SSAO(input.tex, NormalAndDepth, Position); 
 	
 	finalColor.rgb = HighlightArea(WorldPos.xz, finalColor.rgb); //Position is in world space
 	//}
