@@ -3,6 +3,14 @@
 #include "Entity.h"
 #include "WaterQuad.h"
 
+// Fast Rand
+static unsigned int fast_rand_seed;
+static inline int fastrand()
+{
+	fast_rand_seed = (214013*fast_rand_seed+2531011);
+	return (fast_rand_seed>>16)&0x7FFF;
+}
+
 
 WorldRenderer::WorldRenderer(World* world, GraphicsEngine* graphics) :
 	zSettings(this, "WorldRenderer.cfg"),
@@ -973,11 +981,11 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 	float blendValueGrassDark = 0.0f;
 	//1 / nrOfGrassTextures - epsilon for the special case when blend value of all 3 grass textures is equal(1/3).
 	float blendThreshHold = 0.32f;
-	const static float RGB50 = 50.0f / 255.0f;
+	const static float RGB_MIN_MAX = 50.0f / 255.0f;
 	Vector3* positions = new Vector3[this->zGrassDensity];
 	Vector2* sizes = new Vector2[this->zGrassDensity];
 	Vector3* colors = new Vector3[this->zGrassDensity];
-	srand(sectorCoords.x + sectorCoords.y);
+	fast_rand_seed = sectorCoords.x + sectorCoords.y;
 	float rndMaxInv = 1.0f / (float)RAND_MAX;
 	float grassWidth = 0.0f;
 	float grassHeight = 0.0f;
@@ -1004,12 +1012,25 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 	{
 		for(unsigned int z = 0; z < sqrtGrassDensity; ++z)
 		{
-			//Initial position
+			// Initial position
 			grassPos = terrainPosXZ + Vector2((float)x * xDiff, (float)z * zDiff) + offsetVector;
 
-			//Move initial position randomly
-			grassPos.x += rand() * rndMaxInv * 2.0f * minMaxDistX - minMaxDistX;
-			grassPos.y += rand() * rndMaxInv * 2.0f * minMaxDistZ - minMaxDistZ;
+			// Move initial position randomly
+			grassPos.x += fastrand() * rndMaxInv * 2.0f * minMaxDistX - minMaxDistX;
+			grassPos.y += fastrand() * rndMaxInv * 2.0f * minMaxDistZ - minMaxDistZ;
+
+			// Randomize Size
+			grassWidth = fastrand() * rndMaxInv * (zGrassWidthMax-zGrassWidthMin) + zGrassWidthMin;
+			grassHeight = fastrand() * rndMaxInv * (zGrassHeightMax-zGrassHeightMin) + zGrassHeightMin;
+
+			// Randomize dark grass RGB = rgb[-RGB_MIN_MAX, 0]
+			rndGrassColorOffsetVecGrassDark.y = fastrand() * rndMaxInv * RGB_MIN_MAX - RGB_MIN_MAX;
+
+			// Randomize medium grass RGB = rgb[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
+			rndGrassColorOffsetVecGrassMedium.y = (fastrand() * rndMaxInv * 2.0f * RGB_MIN_MAX - RGB_MIN_MAX)*0.5f;
+
+			// Randomize light grass RGB = rgb[0, RGB_MIN_MAX]
+			rndGrassColorOffsetVecGrassLight.y = fastrand() * rndMaxInv * RGB_MIN_MAX;
 
 			try
 			{
@@ -1019,24 +1040,6 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 			{
 				continue;
 			}
-
-			//Always set variables using random to ensure same pattern.
-			//Randomize size between min and max grass width and height.
-			grassWidth = fmod(rand() * rndMaxInv, zGrassWidthMax - zGrassWidthMin) + zGrassWidthMin;
-			grassHeight = fmod(rand() * rndMaxInv, zGrassHeightMax - zGrassHeightMin) + zGrassHeightMin;
-
-			float RGB_MIN_MAX = RGB50;
-
-			//Randomize dark grass RGB = rgb[-RGB_MIN_MAX, 0]
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX) - RGB_MIN_MAX; //RGB_MIN_MAX = min
-			rndGrassColorOffsetVecGrassDark.y = rndGrassColorOffset;
-			//Randomize medium grass RGB = rgb[-RGB_MIN_MAX / 2, RGB_MIN_MAX / 2]
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX * 0.5f + RGB_MIN_MAX * 0.5f) - RGB_MIN_MAX * 0.5f;
-			rndGrassColorOffsetVecGrassMedium.y = rndGrassColorOffset;
-			//Randomize light grass RGB = rgb[0, RGB_MIN_MAX]
-			rndGrassColorOffset = fmod(rand() * rndMaxInv, RGB_MIN_MAX); //RGB_MIN_MAX = max
-			rndGrassColorOffsetVecGrassLight.y = rndGrassColorOffset;
-			
 
 			//blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark -> range[0,1]
 			blendValueGrassLight = this->zWorld->GetAmountOfTexture(grassPos, "07_v01-MossLight.png");
