@@ -857,7 +857,10 @@ void WorldRenderer::UpdateTerrain()
 				}
 
 				// Generate grass
-				if( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES || ( i->second & UPDATE_TEXTURES ) == UPDATE_BLENDMAP)
+				if( ( ( i->second & UPDATE_TEXTURES ) == UPDATE_TEXTURES ) ||
+					( ( i->second & UPDATE_BLENDMAP ) == UPDATE_BLENDMAP ) ||
+					( ( i->second & UPDATE_HEIGHTMAP ) == UPDATE_HEIGHTMAP )
+					)
 				{
 					this->GenerateGrass(i->first);
 				}

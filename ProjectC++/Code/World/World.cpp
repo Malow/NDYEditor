@@ -1211,7 +1211,7 @@ float World::GetWaterSoundVolume( const Vector2& worldPos )
 		// Distance
 		float distance = ((*i)->CalcCenter().GetXZ() - worldPos).GetLength();
 		float size = (*i)->CalcRadius();
-		float distanceFactor = ( distance < size? 1.0f : 1.0 - distance * 0.01f);
+		float distanceFactor = ( distance < size? 1.0f : 1.0f - distance * 0.01f);
 		if ( distanceFactor < 0.0f ) continue;
 
 		// Flow Factor
