@@ -142,8 +142,8 @@ void World::SetHeightAt( float x, float y, float val )
 	unsigned int sectorX = (unsigned int)x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)y / SECTOR_WORLD_SIZE;
 
-	float localX = fmod(x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
-	float localY = fmod(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localX = fmodf(x, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
+	float localY = fmodf(y, (float)SECTOR_WORLD_SIZE) / SECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	float snapX = floor(localX * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
@@ -184,8 +184,8 @@ float World::GetHeightAt( const Vector2& worldPos )
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
 
-	float localX = fmod(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
-	float localY = fmod(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localX = fmodf(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localY = fmodf(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	float snapX = floor(localX * (SECTOR_HEIGHT_SIZE-1)) / (SECTOR_HEIGHT_SIZE-1);
@@ -615,23 +615,30 @@ unsigned int World::GetSectorsInCicle( const Vector2& center, float radius, std:
 		return 1;
 	}
 
-	unsigned int counter=0;
+	unsigned int counter = 0;
 	
-	unsigned int xMin = (unsigned int)(((center.x - radius) < 0.0f? 0.0f : center.x - radius) / FSECTOR_WORLD_SIZE);
-	unsigned int xMax = (unsigned int)(((center.x + radius) > (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsWidth * FSECTOR_WORLD_SIZE : (center.x + radius)) / FSECTOR_WORLD_SIZE);
+	int xMin = (center.x - radius) / FSECTOR_WORLD_SIZE;
+	int xMax = (center.x + radius) / FSECTOR_WORLD_SIZE;
 
-	unsigned int yMin = (unsigned int)(((center.y - radius) < 0.0f? 0.0f : center.y - radius) / FSECTOR_WORLD_SIZE);
-	unsigned int yMax = (unsigned int)(((center.y + radius) > (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE? (float)zNrOfSectorsHeight * FSECTOR_WORLD_SIZE : (center.y + radius)) / FSECTOR_WORLD_SIZE); 
+	int yMin = (center.y - radius) / FSECTOR_WORLD_SIZE + 1;
+	int yMax = (center.y + radius) / FSECTOR_WORLD_SIZE + 1;
 
-	for( unsigned int x=xMin; x<xMax; ++x )
+	// Limit To Borders
+	if ( xMin < 0 ) xMin = 0;
+	if ( yMin < 0 ) yMin = 0;
+
+	if ( xMax >= zNrOfSectorsWidth ) xMax = zNrOfSectorsWidth - 1;
+	if ( yMax >= zNrOfSectorsHeight ) yMax = zNrOfSectorsHeight - 1;
+
+	for( int x=xMin; x<xMax; ++x )
 	{
-		for( unsigned int y=yMin; y<yMax; ++y )
+		for( int y=yMin; y<yMax; ++y )
 		{
-			Rect sectorRect(Vector2(x * FSECTOR_WORLD_SIZE, y * FSECTOR_WORLD_SIZE), Vector2(32,32));
-			if ( DoesIntersect(sectorRect, Circle(center,radius)) )
+			Rect sectorRect(Vector2(x * FSECTOR_WORLD_SIZE, y * FSECTOR_WORLD_SIZE), Vector2(FSECTOR_WORLD_SIZE, FSECTOR_WORLD_SIZE));
+			if ( DoesIntersect(sectorRect, Circle(center, radius)) )
 			{
 				counter++;
-				out.insert( Vector2UINT(x,y) );
+				out.insert( Vector2UINT((unsigned int)x, (unsigned int)y) );
 			}
 		}
 	}
@@ -751,8 +758,8 @@ BlendValues World::GetBlendingAt( const Vector2& worldPos )
 
 	// Local Coordinates
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.x = fmodf(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.y = fmodf(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
@@ -772,8 +779,8 @@ void World::SetBlendingAt( const Vector2& worldPos, const BlendValues& val )
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.x = fmodf(worldPos.x, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
+	localPos.y = fmodf(worldPos.y, FSECTOR_WORLD_SIZE)/FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
@@ -1001,8 +1008,8 @@ bool World::IsBlockingAt( const Vector2& pos )
 {
 	unsigned int sectorX = (unsigned int)(pos.x / FSECTOR_WORLD_SIZE);
 	unsigned int sectorY = (unsigned int)(pos.y / FSECTOR_WORLD_SIZE);
-	float localX = fmod(pos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
-	float localY = fmod(pos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localX = fmodf(pos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localY = fmodf(pos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
 
 	return GetSector(sectorX, sectorY)->GetBlocking( Vector2(localX, localY) );
 }
@@ -1011,8 +1018,8 @@ void World::SetBlockingAt( const Vector2& pos, const bool& flag )
 {
 	unsigned int sectorX = (unsigned int)(pos.x / FSECTOR_WORLD_SIZE);
 	unsigned int sectorY = (unsigned int)(pos.y / FSECTOR_WORLD_SIZE);
-	float localX = fmod(pos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
-	float localY = fmod(pos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localX = fmodf(pos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	float localY = fmodf(pos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
 
 	GetSector(sectorX, sectorY)->SetBlocking( Vector2(localX, localY), flag );
 
@@ -1055,8 +1062,8 @@ void World::SetNormalAt( const Vector2& worldPos, const Vector3& val ) throw(...
 	unsigned int sectorX = (unsigned int)worldPos.x / SECTOR_WORLD_SIZE;
 	unsigned int sectorY = (unsigned int)worldPos.y / SECTOR_WORLD_SIZE;
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.x = fmodf(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.y = fmodf(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
 
 	// Snap Local Coordinates
 	Vector2 snapPos;
@@ -1286,8 +1293,8 @@ float World::GetAmountOfTexture( const Vector2& worldPos, const std::string& nam
 
 	// Calculate Local Position
 	Vector2 localPos;
-	localPos.x = fmod(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
-	localPos.y = fmod(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.x = fmodf(worldPos.x, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
+	localPos.y = fmodf(worldPos.y, FSECTOR_WORLD_SIZE) / FSECTOR_WORLD_SIZE;
 
 	// Check Each Texture Name
 	BlendValues values = sector->GetBlendingAt(localPos);

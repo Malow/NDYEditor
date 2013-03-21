@@ -979,7 +979,6 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 	float blendValueGrassLight = 0.0f;
 	float blendValueGrassMedium = 0.0f;
 	float blendValueGrassDark = 0.0f;
-	//1 / nrOfGrassTextures - epsilon for the special case when blend value of all 3 grass textures is equal(1/3).
 	float blendThreshHold = 0.32f;
 	const static float RGB_MIN_MAX = 50.0f / 255.0f;
 	Vector3* positions = new Vector3[this->zGrassDensity];
@@ -989,8 +988,6 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 	float rndMaxInv = 1.0f / (float)RAND_MAX;
 	float grassWidth = 0.0f;
 	float grassHeight = 0.0f;
-	float rndGrassColorOffset = 0.0f;
-	//Vector3 rndGrassColorOffsetVec = Vector3(0.0f, 0.0f, 0.0f);
 	float terrainY = 0.0f;
 	Vector2 offsetVector = Vector2(xDiff, zDiff) * 0.5f;
 	
