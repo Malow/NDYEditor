@@ -970,15 +970,7 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 	float blendValueGrassDark = 0.0f;
 	//1 / nrOfGrassTextures - epsilon for the special case when blend value of all 3 grass textures is equal(1/3).
 	float blendThreshHold = 0.32f;
-	const static float RGB10 = 10.0f / 255.0f;
-	const static float RGB20 = 20.0f / 255.0f;
-	const static float RGB25 = 25.0f / 255.0f;
-	const static float RGB30 = 30.0f / 255.0f;
-	const static float RGB40 = 40.0f / 255.0f;
 	const static float RGB50 = 50.0f / 255.0f;
-	const static float RGB75 = 75.0f / 255.0f;
-	const static float RGB100 = 100.0f / 255.0f;
-	const static float RGB125 = 125.0f / 255.0f;
 	Vector3* positions = new Vector3[this->zGrassDensity];
 	Vector2* sizes = new Vector2[this->zGrassDensity];
 	Vector3* colors = new Vector3[this->zGrassDensity];
@@ -1049,7 +1041,7 @@ void WorldRenderer::GenerateGrass(const Vector2UINT& sectorCoords)
 			blendValueGrassDark = this->zWorld->GetAmountOfTexture(grassPos, "06_v01-MossDark.png");
 
 			totBlendValue = blendValueGrassLight + blendValueGrassMedium + blendValueGrassDark;
-			if(totBlendValue > blendThreshHold) //Not equal to to avoid division by zero
+			if(totBlendValue > blendThreshHold) 
 			{
 				//totBlendValue range[blendThreshHold, 1], we want [0,1]
 				float tmp = totBlendValue - blendThreshHold; //range[0, 1 - blendThreshHold];
