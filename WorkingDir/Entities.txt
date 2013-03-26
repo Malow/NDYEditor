@@ -133,6 +133,14 @@ Number:29
 Name:LightPole
 Model:Media/Models/LightPole.obj
 
+Number:30
+Name:LightPole
+Model:Media/Models/Gravestones/paya.obj
+
+Number:31
+Name:LightPole
+Model:Media/Models/Gravestones/MaloWGravestone.obj
+
 Number:200
 Name:Deer Spawnpoint
 Model:Media/Models/Deer.obj
