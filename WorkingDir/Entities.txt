@@ -43,11 +43,11 @@ BillboardDistance:100
 
 Number:8
 Name:Grave Alex
-Model:Media/Gravestones/alex.obj
+Model:Media/Models/Gravestones/alex.obj
 
 Number:9
 Name:Grave Crant
-Model:Media/Gravestones/crant.obj
+Model:Media/Models/Gravestones/crant.obj
 
 Number:10
 Name:Veins
@@ -55,7 +55,7 @@ Model:Media/Models/Veins_01.obj
 
 Number:11
 Name:Grave Filip
-Model:Media/Gravestones/filip.obj
+Model:Media/Models/Gravestones/filip.obj
 
 Number:12
 Name:Grave henke
@@ -68,7 +68,7 @@ Model:Media/Models/GrassPlant_01_01.obj 35.0
 
 Number:14
 Name:Grave Boom
-Model:Media/Gravestones/klover.obj
+Model:Media/Models/Gravestones/klover.obj
 
 Number:15
 Name:Stone_02
@@ -85,7 +85,7 @@ Model:Media/Models/WaterGrass_02_01.obj
 
 Number:18
 Name:Grave maxUtbult
-Model:Media/Gravestones/max_utbult.obj
+Model:Media/Models/Gravestones/max_utbult.obj
 
 Number:19
 Name:Bush_02
