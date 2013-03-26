@@ -127,7 +127,11 @@ Model:Media/Models/Gravestones/tille.obj
 
 Number:28
 Name:Grave wilhem
-Model:Media/Models/Gravestones/wilhem.obj
+Model:Media/Models/Gravestones/wilhelm.obj
+
+Number:29
+Name:LightPole
+Model:Media/Models/LightPole.obj
 
 Number:200
 Name:Deer Spawnpoint
