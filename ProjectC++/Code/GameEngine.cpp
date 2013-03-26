@@ -63,7 +63,7 @@ GameEngine::GameEngine( GraphicsEngine* GE ) :
 #endif
 
 	zGraphics->GetCamera()->SetUpdateCamera(false);
-	zGraphics->CreateSkyBox("Media/skymap.dds");
+	zGraphics->ChangeSkyBox("Media/skymap.dds");
 	zGraphics->GetKeyListener()->SetCursorVisibility(true);
 	zGraphics->SetSceneAmbientLight(Vector3(0.4f, 0.4f, 0.4f));
 	zGraphics->StartRendering();
